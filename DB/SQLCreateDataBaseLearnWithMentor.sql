@@ -163,14 +163,12 @@ CREATE TABLE Comments
     Id INT IDENTITY,
     Task_Id INT NOT NULL,    
     Text NVARCHAR(2000) NOT NULL,
-	Create_Id INT NOT NULL,
-	Mod_Id INT,
+	Create_Id INT NOT NULL,	
 	Create_Date DATETIME NOT NULL,
 	Mod_Date DATETIME,
 
  CONSTRAINT PK_Comments_Id PRIMARY KEY (Id),
  CONSTRAINT FK_Comments_To_Tasks FOREIGN KEY (Task_Id)  REFERENCES Tasks (Id),
- CONSTRAINT FK_Comments_To_UsersC FOREIGN KEY (Create_Id)  REFERENCES Users (Id),
- CONSTRAINT FK_Comments_To_UsersM FOREIGN KEY (Mod_Id)  REFERENCES Users (Id)
+ CONSTRAINT FK_Comments_To_UsersC FOREIGN KEY (Create_Id)  REFERENCES Users (Id)
 )
 
