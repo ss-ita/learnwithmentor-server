@@ -1,0 +1,1 @@
+﻿Put here DAL models (referenced to db tables)
