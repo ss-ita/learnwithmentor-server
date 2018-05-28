@@ -14,6 +14,16 @@ delete Groups;
 delete Users;
 delete Roles;
 
+go
+
+DBCC CHECKIDENT ('[Messages]', RESEED, 0);
+DBCC CHECKIDENT ('[Comments]', RESEED, 0);
+DBCC CHECKIDENT ('[UserTasks]', RESEED, 0);
+DBCC CHECKIDENT ('[Tasks]', RESEED, 0);
+DBCC CHECKIDENT ('[Sections]', RESEED, 0);
+DBCC CHECKIDENT ('[Plans]', RESEED, 0);
+DBCC CHECKIDENT ('[Users]', RESEED, 0);
+DBCC CHECKIDENT ('[Roles]', RESEED, 0);
 
 go 
 insert into Roles (Name) values ('Mentor'),('Student'),('Admin');
