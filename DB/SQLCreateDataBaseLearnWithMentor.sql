@@ -233,10 +233,10 @@ BEGIN
 	WHERE Id IN (SELECT Id FROM INSERTED)
 END;
 
-IF OBJECT_ID('[dbo].[GROUPS_PLANS_TASKS]') IS NOT NULL
-  DROP VIEW [dbo].[GROUPS_PLANS_TASKS]
+IF OBJECT_ID('[dbo].[GROUPS_-PLANS-TASKS]') IS NOT NULL
+  DROP VIEW [dbo].[GROUPS-PLANS-TASKS]
 GO
-CREATE VIEW [dbo].[GROUPS_PLANS_TASKS]
+CREATE VIEW [dbo].[GROUPS-PLANS-TASKS]
 AS
 SELECT        dbo.Plans.Name, dbo.Plans.Description, dbo.Plans.Create_Date, dbo.Plans.Mod_Date, dbo.Plans.Published, dbo.PlanTasks.Priority, dbo.Sections.Name AS Section_Name, dbo.Tasks.Name AS Task_Name, dbo.Tasks.Description AS Task_Description, 
                          dbo.Tasks.Create_Date AS Tasks_Create_Date, dbo.Tasks.Mod_Date AS Task_Mod_Date, dbo.Tasks.Private
