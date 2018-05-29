@@ -248,9 +248,9 @@ FROM            dbo.Plans INNER JOIN
 GO
 
 IF OBJECT_ID('[dbo].[UERS_ROLES]') IS NOT NULL
-  DROP VIEW [dbo].[UERS_ROLES]
+  DROP VIEW [dbo].[USERS_ROLES]
 GO
-CREATE VIEW [dbo].[UERS_ROLES]
+CREATE VIEW [dbo].[USERS_ROLES]
 AS
 SELECT        dbo.Users.FirstName, dbo.Users.LastName, dbo.Roles.Name AS Roles_Name, dbo.Users.Email
 FROM            dbo.Roles INNER JOIN
