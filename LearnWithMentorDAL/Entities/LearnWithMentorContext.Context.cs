@@ -7,16 +7,18 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace LearnWithMentorDAL.Models
+namespace LearnWithMentorDAL.Entities
 {
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
-    public partial class LearnWithMentorContext : DbContext
+    public partial class LearnWithMentor_DBEntities : DbContext
     {
-        public LearnWithMentorContext()
-            : base("name=LearnWithMentorContext")
+        public LearnWithMentor_DBEntities()
+            : base("name=LearnWithMentor_DBEntities")
         {
         }
     
@@ -38,5 +40,10 @@ namespace LearnWithMentorDAL.Models
         public virtual DbSet<PlanTasks> PlanTasks { get; set; }
         public virtual DbSet<GROUPS_PLANS_TASKS> GROUPS_PLANS_TASKS { get; set; }
         public virtual DbSet<UERS_ROLES> UERS_ROLES { get; set; }
+    
+        public virtual int sp_Total_Ammount_of_Users(ObjectParameter total)
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_Total_Ammount_of_Users", total);
+        }
     }
 }
