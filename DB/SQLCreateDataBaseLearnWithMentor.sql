@@ -17,7 +17,8 @@ CONSTRAINT PK_Role_Id PRIMARY KEY (Id),
 CREATE TABLE Users
 (
     Id INT IDENTITY,
-    Name NVARCHAR(50) NOT NULL,
+    FirstName NVARCHAR(50) NOT NULL,
+	LastName NVARCHAR(50) NOT NULL,
     Email NVARCHAR(50) NOT NULL,
     Password NVARCHAR(50) NOT NULL,
 	Role_Id INT NOT NULL,
@@ -251,7 +252,7 @@ IF OBJECT_ID('[dbo].[UERS_ROLES]') IS NOT NULL
 GO
 CREATE VIEW [dbo].[UERS_ROLES]
 AS
-SELECT        dbo.Users.Name, dbo.Roles.Name AS Roles_Name, dbo.Users.Email
+SELECT        dbo.Users.FirstName, dbo.Users.LastName, dbo.Roles.Name AS Roles_Name, dbo.Users.Email
 FROM            dbo.Roles INNER JOIN
                          dbo.Users ON dbo.Roles.Id = dbo.Users.Role_Id
 GO
