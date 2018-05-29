@@ -1,0 +1,1342 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="LearnWithMentor_DBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Comments">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Task_Id" Type="int" Nullable="false" />
+          <Property Name="Text" Type="nvarchar" MaxLength="2000" Nullable="false" />
+          <Property Name="Create_Id" Type="int" Nullable="false" />
+          <Property Name="Create_Date" Type="datetime" />
+          <Property Name="Mod_Date" Type="datetime" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'LearnWithMentor_DB.dbo.GroupPlans' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="GroupPlans">
+          <Key>
+            <PropertyRef Name="Group_Id" />
+            <PropertyRef Name="Plan_Id" />
+          </Key>
+          <Property Name="Group_Id" Type="int" Nullable="false" />
+          <Property Name="Plan_Id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Groups">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="Mentor_Id" Type="int" />
+        </EntityType>
+        <EntityType Name="Messages">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="User_Id" Type="int" Nullable="false" />
+          <Property Name="Text" Type="nvarchar" MaxLength="1000" Nullable="false" />
+          <Property Name="Send_Time" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Plans">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" />
+          <Property Name="Published" Type="bit" Nullable="false" />
+          <Property Name="Create_Id" Type="int" Nullable="false" />
+          <Property Name="Mod_Id" Type="int" />
+          <Property Name="Create_Date" Type="datetime" />
+          <Property Name="Mod_Date" Type="datetime" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'LearnWithMentor_DB.dbo.PlanSuggestion' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="PlanSuggestion">
+          <Key>
+            <PropertyRef Name="Plan_Id" />
+            <PropertyRef Name="User_Id" />
+            <PropertyRef Name="Mentor_Id" />
+            <PropertyRef Name="Text" />
+          </Key>
+          <Property Name="Plan_Id" Type="int" Nullable="false" />
+          <Property Name="User_Id" Type="int" Nullable="false" />
+          <Property Name="Mentor_Id" Type="int" Nullable="false" />
+          <Property Name="Text" Type="nvarchar" MaxLength="1000" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'LearnWithMentor_DB.dbo.PlanTasks' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="PlanTasks">
+          <Key>
+            <PropertyRef Name="Plan_Id" />
+            <PropertyRef Name="Task_Id" />
+          </Key>
+          <Property Name="Plan_Id" Type="int" Nullable="false" />
+          <Property Name="Task_Id" Type="int" Nullable="false" />
+          <Property Name="Priority" Type="int" />
+          <Property Name="Section_Id" Type="int" />
+        </EntityType>
+        <EntityType Name="Roles">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Sections">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tasks">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="Private" Type="bit" Nullable="false" />
+          <Property Name="Create_Id" Type="int" Nullable="false" />
+          <Property Name="Mod_Id" Type="int" />
+          <Property Name="Create_Date" Type="datetime" />
+          <Property Name="Mod_Date" Type="datetime" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'LearnWithMentor_DB.dbo.UserGroups' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="UserGroups">
+          <Key>
+            <PropertyRef Name="Group_Id" />
+            <PropertyRef Name="User_Id" />
+          </Key>
+          <Property Name="Group_Id" Type="int" Nullable="false" />
+          <Property Name="User_Id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Role_Id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserTasks">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="User_Id" Type="int" Nullable="false" />
+          <Property Name="Task_Id" Type="int" Nullable="false" />
+          <Property Name="State" Type="nchar" MaxLength="1" Nullable="false" />
+          <Property Name="End_Date" Type="datetime" Nullable="false" />
+          <Property Name="Result" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Propose_End_Date" Type="datetime" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'LearnWithMentor_DB.dbo.UserTasksMessages' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="UserTasksMessages">
+          <Key>
+            <PropertyRef Name="Message_Id" />
+            <PropertyRef Name="Usertask_Id" />
+          </Key>
+          <Property Name="Message_Id" Type="int" Nullable="false" />
+          <Property Name="Usertask_Id" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'LearnWithMentor_DB.dbo.GROUPS-PLANS-TASKS' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="GROUPS-PLANS-TASKS">
+          <Key>
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="Published" />
+            <PropertyRef Name="Section_Name" />
+            <PropertyRef Name="Task_Name" />
+            <PropertyRef Name="Private" />
+          </Key>
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" />
+          <Property Name="Create_Date" Type="datetime" />
+          <Property Name="Mod_Date" Type="datetime" />
+          <Property Name="Published" Type="bit" Nullable="false" />
+          <Property Name="Priority" Type="int" />
+          <Property Name="Section_Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Task_Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Task_Description" Type="nvarchar(max)" />
+          <Property Name="Tasks_Create_Date" Type="datetime" />
+          <Property Name="Task_Mod_Date" Type="datetime" />
+          <Property Name="Private" Type="bit" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'LearnWithMentor_DB.dbo.UERS_ROLES' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="UERS_ROLES">
+          <Key>
+            <PropertyRef Name="FirstName" />
+            <PropertyRef Name="LastName" />
+            <PropertyRef Name="Roles_Name" />
+            <PropertyRef Name="Email" />
+          </Key>
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Roles_Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Comments_To_Tasks">
+          <End Role="Tasks" Type="Self.Tasks" Multiplicity="1" />
+          <End Role="Comments" Type="Self.Comments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tasks">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Comments">
+              <PropertyRef Name="Task_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Comments_To_UsersC">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Comments" Type="Self.Comments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Comments">
+              <PropertyRef Name="Create_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GroupPlans_To_Groups">
+          <End Role="Groups" Type="Self.Groups" Multiplicity="1" />
+          <End Role="GroupPlans" Type="Self.GroupPlans" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Groups">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GroupPlans">
+              <PropertyRef Name="Group_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GroupPlans_To_Plans">
+          <End Role="Plans" Type="Self.Plans" Multiplicity="1" />
+          <End Role="GroupPlans" Type="Self.GroupPlans" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plans">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GroupPlans">
+              <PropertyRef Name="Plan_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Groups_To_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Groups" Type="Self.Groups" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Groups">
+              <PropertyRef Name="Mentor_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Masssage_To_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Messages" Type="Self.Messages" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Messages">
+              <PropertyRef Name="User_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Plans_To_UsersC">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Plans" Type="Self.Plans" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Plans">
+              <PropertyRef Name="Create_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Plans_To_UsersM">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Plans" Type="Self.Plans" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Plans">
+              <PropertyRef Name="Mod_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PlanSuggestion_To_Plans">
+          <End Role="Plans" Type="Self.Plans" Multiplicity="1" />
+          <End Role="PlanSuggestion" Type="Self.PlanSuggestion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plans">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PlanSuggestion">
+              <PropertyRef Name="Plan_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PlanSuggestion_To_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="PlanSuggestion" Type="Self.PlanSuggestion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PlanSuggestion">
+              <PropertyRef Name="User_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PlanSuggestion_To_Users1">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="PlanSuggestion" Type="Self.PlanSuggestion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PlanSuggestion">
+              <PropertyRef Name="Mentor_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PlanTasks_To_Plans">
+          <End Role="Plans" Type="Self.Plans" Multiplicity="1" />
+          <End Role="PlanTasks" Type="Self.PlanTasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plans">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PlanTasks">
+              <PropertyRef Name="Plan_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PlanTasks_To_Sections">
+          <End Role="Sections" Type="Self.Sections" Multiplicity="0..1" />
+          <End Role="PlanTasks" Type="Self.PlanTasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sections">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PlanTasks">
+              <PropertyRef Name="Section_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PlanTasks_To_Tasks">
+          <End Role="Tasks" Type="Self.Tasks" Multiplicity="1" />
+          <End Role="PlanTasks" Type="Self.PlanTasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tasks">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PlanTasks">
+              <PropertyRef Name="Task_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tasks_To_UsersC">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Tasks" Type="Self.Tasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tasks">
+              <PropertyRef Name="Create_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tasks_To_UsersM">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Tasks" Type="Self.Tasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tasks">
+              <PropertyRef Name="Mod_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserGroups_To_Groups">
+          <End Role="Groups" Type="Self.Groups" Multiplicity="1" />
+          <End Role="UserGroups" Type="Self.UserGroups" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Groups">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserGroups">
+              <PropertyRef Name="Group_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserGroups_To_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="UserGroups" Type="Self.UserGroups" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserGroups">
+              <PropertyRef Name="User_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Users_To_Roles">
+          <End Role="Roles" Type="Self.Roles" Multiplicity="1" />
+          <End Role="Users" Type="Self.Users" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Roles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Users">
+              <PropertyRef Name="Role_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserTasks_To_Activities">
+          <End Role="Tasks" Type="Self.Tasks" Multiplicity="1" />
+          <End Role="UserTasks" Type="Self.UserTasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tasks">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserTasks">
+              <PropertyRef Name="Task_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserTasks_To_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="UserTasks" Type="Self.UserTasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserTasks">
+              <PropertyRef Name="User_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserTasksMessages_To_Messsages">
+          <End Role="Messages" Type="Self.Messages" Multiplicity="1" />
+          <End Role="UserTasksMessages" Type="Self.UserTasksMessages" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Messages">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserTasksMessages">
+              <PropertyRef Name="Message_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserTasksMessages_To_UserTasks">
+          <End Role="UserTasks" Type="Self.UserTasks" Multiplicity="1" />
+          <End Role="UserTasksMessages" Type="Self.UserTasksMessages" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserTasks">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserTasksMessages">
+              <PropertyRef Name="Usertask_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="sp_Total_Ammount_of_Users" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Total" Type="int" Mode="InOut" />
+        </Function>
+        <EntityContainer Name="LearnWithMentor_DBModelStoreContainer">
+          <EntitySet Name="Comments" EntityType="Self.Comments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Groups" EntityType="Self.Groups" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Messages" EntityType="Self.Messages" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Plans" EntityType="Self.Plans" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Sections" EntityType="Self.Sections" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tasks" EntityType="Self.Tasks" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserTasks" EntityType="Self.UserTasks" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GroupPlans" EntityType="Self.GroupPlans" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [GroupPlans].[Group_Id] AS [Group_Id], 
+    [GroupPlans].[Plan_Id] AS [Plan_Id]
+    FROM [dbo].[GroupPlans] AS [GroupPlans]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="PlanSuggestion" EntityType="Self.PlanSuggestion" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [PlanSuggestion].[Plan_Id] AS [Plan_Id], 
+    [PlanSuggestion].[User_Id] AS [User_Id], 
+    [PlanSuggestion].[Mentor_Id] AS [Mentor_Id], 
+    [PlanSuggestion].[Text] AS [Text]
+    FROM [dbo].[PlanSuggestion] AS [PlanSuggestion]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="PlanTasks" EntityType="Self.PlanTasks" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [PlanTasks].[Plan_Id] AS [Plan_Id], 
+    [PlanTasks].[Task_Id] AS [Task_Id], 
+    [PlanTasks].[Priority] AS [Priority], 
+    [PlanTasks].[Section_Id] AS [Section_Id]
+    FROM [dbo].[PlanTasks] AS [PlanTasks]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="UserGroups" EntityType="Self.UserGroups" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [UserGroups].[Group_Id] AS [Group_Id], 
+    [UserGroups].[User_Id] AS [User_Id]
+    FROM [dbo].[UserGroups] AS [UserGroups]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="UserTasksMessages" EntityType="Self.UserTasksMessages" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [UserTasksMessages].[Message_Id] AS [Message_Id], 
+    [UserTasksMessages].[Usertask_Id] AS [Usertask_Id]
+    FROM [dbo].[UserTasksMessages] AS [UserTasksMessages]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="GROUPS-PLANS-TASKS" EntityType="Self.GROUPS-PLANS-TASKS" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [GROUPS-PLANS-TASKS].[Name] AS [Name], 
+    [GROUPS-PLANS-TASKS].[Description] AS [Description], 
+    [GROUPS-PLANS-TASKS].[Create_Date] AS [Create_Date], 
+    [GROUPS-PLANS-TASKS].[Mod_Date] AS [Mod_Date], 
+    [GROUPS-PLANS-TASKS].[Published] AS [Published], 
+    [GROUPS-PLANS-TASKS].[Priority] AS [Priority], 
+    [GROUPS-PLANS-TASKS].[Section_Name] AS [Section_Name], 
+    [GROUPS-PLANS-TASKS].[Task_Name] AS [Task_Name], 
+    [GROUPS-PLANS-TASKS].[Task_Description] AS [Task_Description], 
+    [GROUPS-PLANS-TASKS].[Tasks_Create_Date] AS [Tasks_Create_Date], 
+    [GROUPS-PLANS-TASKS].[Task_Mod_Date] AS [Task_Mod_Date], 
+    [GROUPS-PLANS-TASKS].[Private] AS [Private]
+    FROM [dbo].[GROUPS-PLANS-TASKS] AS [GROUPS-PLANS-TASKS]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="UERS_ROLES" EntityType="Self.UERS_ROLES" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [UERS_ROLES].[FirstName] AS [FirstName], 
+    [UERS_ROLES].[LastName] AS [LastName], 
+    [UERS_ROLES].[Roles_Name] AS [Roles_Name], 
+    [UERS_ROLES].[Email] AS [Email]
+    FROM [dbo].[UERS_ROLES] AS [UERS_ROLES]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_Comments_To_Tasks" Association="Self.FK_Comments_To_Tasks">
+            <End Role="Tasks" EntitySet="Tasks" />
+            <End Role="Comments" EntitySet="Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Comments_To_UsersC" Association="Self.FK_Comments_To_UsersC">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Comments" EntitySet="Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GroupPlans_To_Groups" Association="Self.FK_GroupPlans_To_Groups">
+            <End Role="Groups" EntitySet="Groups" />
+            <End Role="GroupPlans" EntitySet="GroupPlans" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GroupPlans_To_Plans" Association="Self.FK_GroupPlans_To_Plans">
+            <End Role="Plans" EntitySet="Plans" />
+            <End Role="GroupPlans" EntitySet="GroupPlans" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Groups_To_Users" Association="Self.FK_Groups_To_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Groups" EntitySet="Groups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Masssage_To_Users" Association="Self.FK_Masssage_To_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Messages" EntitySet="Messages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Plans_To_UsersC" Association="Self.FK_Plans_To_UsersC">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Plans" EntitySet="Plans" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Plans_To_UsersM" Association="Self.FK_Plans_To_UsersM">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Plans" EntitySet="Plans" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PlanSuggestion_To_Plans" Association="Self.FK_PlanSuggestion_To_Plans">
+            <End Role="Plans" EntitySet="Plans" />
+            <End Role="PlanSuggestion" EntitySet="PlanSuggestion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PlanSuggestion_To_Users" Association="Self.FK_PlanSuggestion_To_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="PlanSuggestion" EntitySet="PlanSuggestion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PlanSuggestion_To_Users1" Association="Self.FK_PlanSuggestion_To_Users1">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="PlanSuggestion" EntitySet="PlanSuggestion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PlanTasks_To_Plans" Association="Self.FK_PlanTasks_To_Plans">
+            <End Role="Plans" EntitySet="Plans" />
+            <End Role="PlanTasks" EntitySet="PlanTasks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PlanTasks_To_Sections" Association="Self.FK_PlanTasks_To_Sections">
+            <End Role="Sections" EntitySet="Sections" />
+            <End Role="PlanTasks" EntitySet="PlanTasks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PlanTasks_To_Tasks" Association="Self.FK_PlanTasks_To_Tasks">
+            <End Role="Tasks" EntitySet="Tasks" />
+            <End Role="PlanTasks" EntitySet="PlanTasks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tasks_To_UsersC" Association="Self.FK_Tasks_To_UsersC">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Tasks" EntitySet="Tasks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tasks_To_UsersM" Association="Self.FK_Tasks_To_UsersM">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Tasks" EntitySet="Tasks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserGroups_To_Groups" Association="Self.FK_UserGroups_To_Groups">
+            <End Role="Groups" EntitySet="Groups" />
+            <End Role="UserGroups" EntitySet="UserGroups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserGroups_To_Users" Association="Self.FK_UserGroups_To_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserGroups" EntitySet="UserGroups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Users_To_Roles" Association="Self.FK_Users_To_Roles">
+            <End Role="Roles" EntitySet="Roles" />
+            <End Role="Users" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserTasks_To_Activities" Association="Self.FK_UserTasks_To_Activities">
+            <End Role="Tasks" EntitySet="Tasks" />
+            <End Role="UserTasks" EntitySet="UserTasks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserTasks_To_Users" Association="Self.FK_UserTasks_To_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserTasks" EntitySet="UserTasks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserTasksMessages_To_Messsages" Association="Self.FK_UserTasksMessages_To_Messsages">
+            <End Role="Messages" EntitySet="Messages" />
+            <End Role="UserTasksMessages" EntitySet="UserTasksMessages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserTasksMessages_To_UserTasks" Association="Self.FK_UserTasksMessages_To_UserTasks">
+            <End Role="UserTasks" EntitySet="UserTasks" />
+            <End Role="UserTasksMessages" EntitySet="UserTasksMessages" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="LearnWithMentor_DBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Comments">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Task_Id" Type="Int32" Nullable="false" />
+          <Property Name="Text" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Create_Id" Type="Int32" Nullable="false" />
+          <Property Name="Create_Date" Type="DateTime" Precision="3" />
+          <Property Name="Mod_Date" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Tasks" Relationship="Self.FK_Comments_To_Tasks" FromRole="Comments" ToRole="Tasks" />
+          <NavigationProperty Name="Users" Relationship="Self.FK_Comments_To_UsersC" FromRole="Comments" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="Groups">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Mentor_Id" Type="Int32" />
+          <NavigationProperty Name="Users" Relationship="Self.FK_Groups_To_Users" FromRole="Groups" ToRole="Users" />
+          <NavigationProperty Name="Plans" Relationship="Self.GroupPlans" FromRole="Groups" ToRole="Plans" />
+          <NavigationProperty Name="Users1" Relationship="Self.UserGroups" FromRole="Groups" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="Messages">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="User_Id" Type="Int32" Nullable="false" />
+          <Property Name="Text" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Send_Time" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Users" Relationship="Self.FK_Masssage_To_Users" FromRole="Messages" ToRole="Users" />
+          <NavigationProperty Name="UserTasks" Relationship="Self.UserTasksMessages" FromRole="Messages" ToRole="UserTasks" />
+        </EntityType>
+        <EntityType Name="Plans">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Published" Type="Boolean" Nullable="false" />
+          <Property Name="Create_Id" Type="Int32" Nullable="false" />
+          <Property Name="Mod_Id" Type="Int32" />
+          <Property Name="Create_Date" Type="DateTime" Precision="3" />
+          <Property Name="Mod_Date" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Users" Relationship="Self.FK_Plans_To_UsersC" FromRole="Plans" ToRole="Users" />
+          <NavigationProperty Name="Users1" Relationship="Self.FK_Plans_To_UsersM" FromRole="Plans" ToRole="Users" />
+          <NavigationProperty Name="PlanSuggestion" Relationship="Self.FK_PlanSuggestion_To_Plans" FromRole="Plans" ToRole="PlanSuggestion" />
+          <NavigationProperty Name="PlanTasks" Relationship="Self.FK_PlanTasks_To_Plans" FromRole="Plans" ToRole="PlanTasks" />
+          <NavigationProperty Name="Groups" Relationship="Self.GroupPlans" FromRole="Plans" ToRole="Groups" />
+        </EntityType>
+        <EntityType Name="Roles">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Users" Relationship="Self.FK_Users_To_Roles" FromRole="Roles" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="Sections">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="PlanTasks" Relationship="Self.FK_PlanTasks_To_Sections" FromRole="Sections" ToRole="PlanTasks" />
+        </EntityType>
+        <EntityType Name="Tasks">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Private" Type="Boolean" Nullable="false" />
+          <Property Name="Create_Id" Type="Int32" Nullable="false" />
+          <Property Name="Mod_Id" Type="Int32" />
+          <Property Name="Create_Date" Type="DateTime" Precision="3" />
+          <Property Name="Mod_Date" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Comments" Relationship="Self.FK_Comments_To_Tasks" FromRole="Tasks" ToRole="Comments" />
+          <NavigationProperty Name="PlanTasks" Relationship="Self.FK_PlanTasks_To_Tasks" FromRole="Tasks" ToRole="PlanTasks" />
+          <NavigationProperty Name="Users" Relationship="Self.FK_Tasks_To_UsersC" FromRole="Tasks" ToRole="Users" />
+          <NavigationProperty Name="Users1" Relationship="Self.FK_Tasks_To_UsersM" FromRole="Tasks" ToRole="Users" />
+          <NavigationProperty Name="UserTasks" Relationship="Self.FK_UserTasks_To_Activities" FromRole="Tasks" ToRole="UserTasks" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Role_Id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Comments" Relationship="Self.FK_Comments_To_UsersC" FromRole="Users" ToRole="Comments" />
+          <NavigationProperty Name="Groups" Relationship="Self.FK_Groups_To_Users" FromRole="Users" ToRole="Groups" />
+          <NavigationProperty Name="Messages" Relationship="Self.FK_Masssage_To_Users" FromRole="Users" ToRole="Messages" />
+          <NavigationProperty Name="Plans" Relationship="Self.FK_Plans_To_UsersC" FromRole="Users" ToRole="Plans" />
+          <NavigationProperty Name="Plans1" Relationship="Self.FK_Plans_To_UsersM" FromRole="Users" ToRole="Plans" />
+          <NavigationProperty Name="Roles" Relationship="Self.FK_Users_To_Roles" FromRole="Users" ToRole="Roles" />
+          <NavigationProperty Name="Tasks" Relationship="Self.FK_Tasks_To_UsersC" FromRole="Users" ToRole="Tasks" />
+          <NavigationProperty Name="Tasks1" Relationship="Self.FK_Tasks_To_UsersM" FromRole="Users" ToRole="Tasks" />
+          <NavigationProperty Name="PlanSuggestion" Relationship="Self.FK_PlanSuggestion_To_Users" FromRole="Users" ToRole="PlanSuggestion" />
+          <NavigationProperty Name="PlanSuggestion1" Relationship="Self.FK_PlanSuggestion_To_Users1" FromRole="Users" ToRole="PlanSuggestion" />
+          <NavigationProperty Name="UserTasks" Relationship="Self.FK_UserTasks_To_Users" FromRole="Users" ToRole="UserTasks" />
+          <NavigationProperty Name="Groups1" Relationship="Self.UserGroups" FromRole="Users" ToRole="Groups" />
+        </EntityType>
+        <EntityType Name="UserTasks">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="User_Id" Type="Int32" Nullable="false" />
+          <Property Name="Task_Id" Type="Int32" Nullable="false" />
+          <Property Name="State" Type="String" MaxLength="1" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="End_Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Result" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Propose_End_Date" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Tasks" Relationship="Self.FK_UserTasks_To_Activities" FromRole="UserTasks" ToRole="Tasks" />
+          <NavigationProperty Name="Users" Relationship="Self.FK_UserTasks_To_Users" FromRole="UserTasks" ToRole="Users" />
+          <NavigationProperty Name="Messages" Relationship="Self.UserTasksMessages" FromRole="UserTasks" ToRole="Messages" />
+        </EntityType>
+        <EntityType Name="PlanSuggestion">
+          <Key>
+            <PropertyRef Name="Plan_Id" />
+            <PropertyRef Name="User_Id" />
+            <PropertyRef Name="Mentor_Id" />
+            <PropertyRef Name="Text" />
+          </Key>
+          <Property Name="Plan_Id" Type="Int32" Nullable="false" />
+          <Property Name="User_Id" Type="Int32" Nullable="false" />
+          <Property Name="Mentor_Id" Type="Int32" Nullable="false" />
+          <Property Name="Text" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Plans" Relationship="Self.FK_PlanSuggestion_To_Plans" FromRole="PlanSuggestion" ToRole="Plans" />
+          <NavigationProperty Name="Users" Relationship="Self.FK_PlanSuggestion_To_Users" FromRole="PlanSuggestion" ToRole="Users" />
+          <NavigationProperty Name="Users1" Relationship="Self.FK_PlanSuggestion_To_Users1" FromRole="PlanSuggestion" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="PlanTasks">
+          <Key>
+            <PropertyRef Name="Plan_Id" />
+            <PropertyRef Name="Task_Id" />
+          </Key>
+          <Property Name="Plan_Id" Type="Int32" Nullable="false" />
+          <Property Name="Task_Id" Type="Int32" Nullable="false" />
+          <Property Name="Priority" Type="Int32" />
+          <Property Name="Section_Id" Type="Int32" />
+          <NavigationProperty Name="Plans" Relationship="Self.FK_PlanTasks_To_Plans" FromRole="PlanTasks" ToRole="Plans" />
+          <NavigationProperty Name="Sections" Relationship="Self.FK_PlanTasks_To_Sections" FromRole="PlanTasks" ToRole="Sections" />
+          <NavigationProperty Name="Tasks" Relationship="Self.FK_PlanTasks_To_Tasks" FromRole="PlanTasks" ToRole="Tasks" />
+        </EntityType>
+        <EntityType Name="GROUPS_PLANS_TASKS">
+          <Key>
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="Published" />
+            <PropertyRef Name="Section_Name" />
+            <PropertyRef Name="Task_Name" />
+            <PropertyRef Name="Private" />
+          </Key>
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Create_Date" Type="DateTime" Precision="3" />
+          <Property Name="Mod_Date" Type="DateTime" Precision="3" />
+          <Property Name="Published" Type="Boolean" Nullable="false" />
+          <Property Name="Priority" Type="Int32" />
+          <Property Name="Section_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Task_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Task_Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Tasks_Create_Date" Type="DateTime" Precision="3" />
+          <Property Name="Task_Mod_Date" Type="DateTime" Precision="3" />
+          <Property Name="Private" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UERS_ROLES">
+          <Key>
+            <PropertyRef Name="FirstName" />
+            <PropertyRef Name="LastName" />
+            <PropertyRef Name="Roles_Name" />
+            <PropertyRef Name="Email" />
+          </Key>
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Roles_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Comments_To_Tasks">
+          <End Role="Tasks" Type="Self.Tasks" Multiplicity="1" />
+          <End Role="Comments" Type="Self.Comments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tasks">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Comments">
+              <PropertyRef Name="Task_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Comments_To_UsersC">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Comments" Type="Self.Comments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Comments">
+              <PropertyRef Name="Create_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Groups_To_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Groups" Type="Self.Groups" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Groups">
+              <PropertyRef Name="Mentor_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Masssage_To_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Messages" Type="Self.Messages" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Messages">
+              <PropertyRef Name="User_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Plans_To_UsersC">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Plans" Type="Self.Plans" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Plans">
+              <PropertyRef Name="Create_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Plans_To_UsersM">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Plans" Type="Self.Plans" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Plans">
+              <PropertyRef Name="Mod_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PlanSuggestion_To_Plans">
+          <End Role="Plans" Type="Self.Plans" Multiplicity="1" />
+          <End Role="PlanSuggestion" Type="Self.PlanSuggestion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plans">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PlanSuggestion">
+              <PropertyRef Name="Plan_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PlanTasks_To_Plans">
+          <End Role="Plans" Type="Self.Plans" Multiplicity="1" />
+          <End Role="PlanTasks" Type="Self.PlanTasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plans">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PlanTasks">
+              <PropertyRef Name="Plan_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Users_To_Roles">
+          <End Role="Roles" Type="Self.Roles" Multiplicity="1" />
+          <End Role="Users" Type="Self.Users" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Roles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Users">
+              <PropertyRef Name="Role_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PlanTasks_To_Sections">
+          <End Role="Sections" Type="Self.Sections" Multiplicity="0..1" />
+          <End Role="PlanTasks" Type="Self.PlanTasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sections">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PlanTasks">
+              <PropertyRef Name="Section_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PlanTasks_To_Tasks">
+          <End Role="Tasks" Type="Self.Tasks" Multiplicity="1" />
+          <End Role="PlanTasks" Type="Self.PlanTasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tasks">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PlanTasks">
+              <PropertyRef Name="Task_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tasks_To_UsersC">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Tasks" Type="Self.Tasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tasks">
+              <PropertyRef Name="Create_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tasks_To_UsersM">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Tasks" Type="Self.Tasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tasks">
+              <PropertyRef Name="Mod_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserTasks_To_Activities">
+          <End Role="Tasks" Type="Self.Tasks" Multiplicity="1" />
+          <End Role="UserTasks" Type="Self.UserTasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tasks">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserTasks">
+              <PropertyRef Name="Task_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PlanSuggestion_To_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="PlanSuggestion" Type="Self.PlanSuggestion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PlanSuggestion">
+              <PropertyRef Name="User_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PlanSuggestion_To_Users1">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="PlanSuggestion" Type="Self.PlanSuggestion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PlanSuggestion">
+              <PropertyRef Name="Mentor_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserTasks_To_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="UserTasks" Type="Self.UserTasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserTasks">
+              <PropertyRef Name="User_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="GroupPlans">
+          <End Role="Groups" Type="Self.Groups" Multiplicity="*" />
+          <End Role="Plans" Type="Self.Plans" Multiplicity="*" />
+        </Association>
+        <Association Name="UserGroups">
+          <End Role="Groups" Type="Self.Groups" Multiplicity="*" />
+          <End Role="Users" Type="Self.Users" Multiplicity="*" />
+        </Association>
+        <Association Name="UserTasksMessages">
+          <End Role="Messages" Type="Self.Messages" Multiplicity="*" />
+          <End Role="UserTasks" Type="Self.UserTasks" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="LearnWithMentor_DBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Comments" EntityType="Self.Comments" />
+          <EntitySet Name="Groups" EntityType="Self.Groups" />
+          <EntitySet Name="Messages" EntityType="Self.Messages" />
+          <EntitySet Name="Plans" EntityType="Self.Plans" />
+          <EntitySet Name="Roles" EntityType="Self.Roles" />
+          <EntitySet Name="Sections" EntityType="Self.Sections" />
+          <EntitySet Name="Tasks" EntityType="Self.Tasks" />
+          <EntitySet Name="Users" EntityType="Self.Users" />
+          <EntitySet Name="UserTasks" EntityType="Self.UserTasks" />
+          <EntitySet Name="PlanSuggestion" EntityType="Self.PlanSuggestion" />
+          <EntitySet Name="PlanTasks" EntityType="Self.PlanTasks" />
+          <EntitySet Name="GROUPS_PLANS_TASKS" EntityType="Self.GROUPS_PLANS_TASKS" />
+          <EntitySet Name="UERS_ROLES" EntityType="Self.UERS_ROLES" />
+          <AssociationSet Name="FK_Comments_To_Tasks" Association="Self.FK_Comments_To_Tasks">
+            <End Role="Tasks" EntitySet="Tasks" />
+            <End Role="Comments" EntitySet="Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Comments_To_UsersC" Association="Self.FK_Comments_To_UsersC">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Comments" EntitySet="Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Groups_To_Users" Association="Self.FK_Groups_To_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Groups" EntitySet="Groups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Masssage_To_Users" Association="Self.FK_Masssage_To_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Messages" EntitySet="Messages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Plans_To_UsersC" Association="Self.FK_Plans_To_UsersC">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Plans" EntitySet="Plans" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Plans_To_UsersM" Association="Self.FK_Plans_To_UsersM">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Plans" EntitySet="Plans" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PlanSuggestion_To_Plans" Association="Self.FK_PlanSuggestion_To_Plans">
+            <End Role="Plans" EntitySet="Plans" />
+            <End Role="PlanSuggestion" EntitySet="PlanSuggestion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PlanTasks_To_Plans" Association="Self.FK_PlanTasks_To_Plans">
+            <End Role="Plans" EntitySet="Plans" />
+            <End Role="PlanTasks" EntitySet="PlanTasks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Users_To_Roles" Association="Self.FK_Users_To_Roles">
+            <End Role="Roles" EntitySet="Roles" />
+            <End Role="Users" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PlanTasks_To_Sections" Association="Self.FK_PlanTasks_To_Sections">
+            <End Role="Sections" EntitySet="Sections" />
+            <End Role="PlanTasks" EntitySet="PlanTasks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PlanTasks_To_Tasks" Association="Self.FK_PlanTasks_To_Tasks">
+            <End Role="Tasks" EntitySet="Tasks" />
+            <End Role="PlanTasks" EntitySet="PlanTasks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tasks_To_UsersC" Association="Self.FK_Tasks_To_UsersC">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Tasks" EntitySet="Tasks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tasks_To_UsersM" Association="Self.FK_Tasks_To_UsersM">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Tasks" EntitySet="Tasks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserTasks_To_Activities" Association="Self.FK_UserTasks_To_Activities">
+            <End Role="Tasks" EntitySet="Tasks" />
+            <End Role="UserTasks" EntitySet="UserTasks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PlanSuggestion_To_Users" Association="Self.FK_PlanSuggestion_To_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="PlanSuggestion" EntitySet="PlanSuggestion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PlanSuggestion_To_Users1" Association="Self.FK_PlanSuggestion_To_Users1">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="PlanSuggestion" EntitySet="PlanSuggestion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserTasks_To_Users" Association="Self.FK_UserTasks_To_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserTasks" EntitySet="UserTasks" />
+          </AssociationSet>
+          <AssociationSet Name="GroupPlans" Association="Self.GroupPlans">
+            <End Role="Groups" EntitySet="Groups" />
+            <End Role="Plans" EntitySet="Plans" />
+          </AssociationSet>
+          <AssociationSet Name="UserGroups" Association="Self.UserGroups">
+            <End Role="Groups" EntitySet="Groups" />
+            <End Role="Users" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="UserTasksMessages" Association="Self.UserTasksMessages">
+            <End Role="Messages" EntitySet="Messages" />
+            <End Role="UserTasks" EntitySet="UserTasks" />
+          </AssociationSet>
+          <FunctionImport Name="sp_Total_Ammount_of_Users">
+            <Parameter Name="Total" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="LearnWithMentor_DBModelStoreContainer" CdmEntityContainer="LearnWithMentor_DBEntities">
+          <EntitySetMapping Name="Comments">
+            <EntityTypeMapping TypeName="LearnWithMentor_DBModel.Comments">
+              <MappingFragment StoreEntitySet="Comments">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Task_Id" ColumnName="Task_Id" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="Create_Id" ColumnName="Create_Id" />
+                <ScalarProperty Name="Create_Date" ColumnName="Create_Date" />
+                <ScalarProperty Name="Mod_Date" ColumnName="Mod_Date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Groups">
+            <EntityTypeMapping TypeName="LearnWithMentor_DBModel.Groups">
+              <MappingFragment StoreEntitySet="Groups">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Mentor_Id" ColumnName="Mentor_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Messages">
+            <EntityTypeMapping TypeName="LearnWithMentor_DBModel.Messages">
+              <MappingFragment StoreEntitySet="Messages">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="User_Id" ColumnName="User_Id" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="Send_Time" ColumnName="Send_Time" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Plans">
+            <EntityTypeMapping TypeName="LearnWithMentor_DBModel.Plans">
+              <MappingFragment StoreEntitySet="Plans">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Published" ColumnName="Published" />
+                <ScalarProperty Name="Create_Id" ColumnName="Create_Id" />
+                <ScalarProperty Name="Mod_Id" ColumnName="Mod_Id" />
+                <ScalarProperty Name="Create_Date" ColumnName="Create_Date" />
+                <ScalarProperty Name="Mod_Date" ColumnName="Mod_Date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="LearnWithMentor_DBModel.Roles">
+              <MappingFragment StoreEntitySet="Roles">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sections">
+            <EntityTypeMapping TypeName="LearnWithMentor_DBModel.Sections">
+              <MappingFragment StoreEntitySet="Sections">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tasks">
+            <EntityTypeMapping TypeName="LearnWithMentor_DBModel.Tasks">
+              <MappingFragment StoreEntitySet="Tasks">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Private" ColumnName="Private" />
+                <ScalarProperty Name="Create_Id" ColumnName="Create_Id" />
+                <ScalarProperty Name="Mod_Id" ColumnName="Mod_Id" />
+                <ScalarProperty Name="Create_Date" ColumnName="Create_Date" />
+                <ScalarProperty Name="Mod_Date" ColumnName="Mod_Date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="LearnWithMentor_DBModel.Users">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Role_Id" ColumnName="Role_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserTasks">
+            <EntityTypeMapping TypeName="LearnWithMentor_DBModel.UserTasks">
+              <MappingFragment StoreEntitySet="UserTasks">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="User_Id" ColumnName="User_Id" />
+                <ScalarProperty Name="Task_Id" ColumnName="Task_Id" />
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="End_Date" ColumnName="End_Date" />
+                <ScalarProperty Name="Result" ColumnName="Result" />
+                <ScalarProperty Name="Propose_End_Date" ColumnName="Propose_End_Date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PlanSuggestion">
+            <EntityTypeMapping TypeName="LearnWithMentor_DBModel.PlanSuggestion">
+              <MappingFragment StoreEntitySet="PlanSuggestion">
+                <ScalarProperty Name="Plan_Id" ColumnName="Plan_Id" />
+                <ScalarProperty Name="User_Id" ColumnName="User_Id" />
+                <ScalarProperty Name="Mentor_Id" ColumnName="Mentor_Id" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PlanTasks">
+            <EntityTypeMapping TypeName="LearnWithMentor_DBModel.PlanTasks">
+              <MappingFragment StoreEntitySet="PlanTasks">
+                <ScalarProperty Name="Plan_Id" ColumnName="Plan_Id" />
+                <ScalarProperty Name="Task_Id" ColumnName="Task_Id" />
+                <ScalarProperty Name="Priority" ColumnName="Priority" />
+                <ScalarProperty Name="Section_Id" ColumnName="Section_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GROUPS_PLANS_TASKS">
+            <EntityTypeMapping TypeName="LearnWithMentor_DBModel.GROUPS_PLANS_TASKS">
+              <MappingFragment StoreEntitySet="GROUPS-PLANS-TASKS">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Create_Date" ColumnName="Create_Date" />
+                <ScalarProperty Name="Mod_Date" ColumnName="Mod_Date" />
+                <ScalarProperty Name="Published" ColumnName="Published" />
+                <ScalarProperty Name="Priority" ColumnName="Priority" />
+                <ScalarProperty Name="Section_Name" ColumnName="Section_Name" />
+                <ScalarProperty Name="Task_Name" ColumnName="Task_Name" />
+                <ScalarProperty Name="Task_Description" ColumnName="Task_Description" />
+                <ScalarProperty Name="Tasks_Create_Date" ColumnName="Tasks_Create_Date" />
+                <ScalarProperty Name="Task_Mod_Date" ColumnName="Task_Mod_Date" />
+                <ScalarProperty Name="Private" ColumnName="Private" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UERS_ROLES">
+            <EntityTypeMapping TypeName="LearnWithMentor_DBModel.UERS_ROLES">
+              <MappingFragment StoreEntitySet="UERS_ROLES">
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="Roles_Name" ColumnName="Roles_Name" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="GroupPlans" TypeName="LearnWithMentor_DBModel.GroupPlans" StoreEntitySet="GroupPlans">
+            <EndProperty Name="Groups">
+              <ScalarProperty Name="Id" ColumnName="Group_Id" />
+            </EndProperty>
+            <EndProperty Name="Plans">
+              <ScalarProperty Name="Id" ColumnName="Plan_Id" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="UserGroups" TypeName="LearnWithMentor_DBModel.UserGroups" StoreEntitySet="UserGroups">
+            <EndProperty Name="Groups">
+              <ScalarProperty Name="Id" ColumnName="Group_Id" />
+            </EndProperty>
+            <EndProperty Name="Users">
+              <ScalarProperty Name="Id" ColumnName="User_Id" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="UserTasksMessages" TypeName="LearnWithMentor_DBModel.UserTasksMessages" StoreEntitySet="UserTasksMessages">
+            <EndProperty Name="Messages">
+              <ScalarProperty Name="Id" ColumnName="Message_Id" />
+            </EndProperty>
+            <EndProperty Name="UserTasks">
+              <ScalarProperty Name="Id" ColumnName="Usertask_Id" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <FunctionImportMapping FunctionImportName="sp_Total_Ammount_of_Users" FunctionName="LearnWithMentor_DBModel.Store.sp_Total_Ammount_of_Users" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

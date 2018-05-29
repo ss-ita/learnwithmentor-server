@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="3a6c983f26e2421ca8ce871612c2e3e9" Name="Diagram1">
+        <EntityTypeShape EntityType="LearnWithMentor_DBModel.Comments" Width="1.5" PointX="7.5" PointY="11.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="LearnWithMentor_DBModel.Groups" Width="1.5" PointX="5.25" PointY="8.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="LearnWithMentor_DBModel.Messages" Width="1.5" PointX="5.25" PointY="11.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="LearnWithMentor_DBModel.Plans" Width="1.5" PointX="7.5" PointY="7.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="LearnWithMentor_DBModel.Roles" Width="1.5" PointX="0.75" PointY="9.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="LearnWithMentor_DBModel.Sections" Width="1.5" PointX="10.5" PointY="15.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="LearnWithMentor_DBModel.Tasks" Width="1.5" PointX="5.25" PointY="14.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="LearnWithMentor_DBModel.Users" Width="1.5" PointX="3" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LearnWithMentor_DBModel.UserTasks" Width="1.5" PointX="10.5" PointY="11.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="LearnWithMentor_DBModel.PlanSuggestion" Width="1.5" PointX="9.75" PointY="7.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="LearnWithMentor_DBModel.PlanTasks" Width="1.5" PointX="12.75" PointY="11.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="LearnWithMentor_DBModel.GROUPS_PLANS_TASKS" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LearnWithMentor_DBModel.UERS_ROLES" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <AssociationConnector Association="LearnWithMentor_DBModel.FK_Comments_To_Tasks" ManuallyRouted="false" />
+        <AssociationConnector Association="LearnWithMentor_DBModel.FK_Comments_To_UsersC" ManuallyRouted="false" />
+        <AssociationConnector Association="LearnWithMentor_DBModel.FK_Groups_To_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="LearnWithMentor_DBModel.FK_Masssage_To_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="LearnWithMentor_DBModel.FK_Plans_To_UsersC" ManuallyRouted="false" />
+        <AssociationConnector Association="LearnWithMentor_DBModel.FK_Plans_To_UsersM" ManuallyRouted="false" />
+        <AssociationConnector Association="LearnWithMentor_DBModel.FK_PlanSuggestion_To_Plans" ManuallyRouted="false" />
+        <AssociationConnector Association="LearnWithMentor_DBModel.FK_PlanTasks_To_Plans" ManuallyRouted="false" />
+        <AssociationConnector Association="LearnWithMentor_DBModel.FK_Users_To_Roles" ManuallyRouted="false" />
+        <AssociationConnector Association="LearnWithMentor_DBModel.FK_PlanTasks_To_Sections" ManuallyRouted="false" />
+        <AssociationConnector Association="LearnWithMentor_DBModel.FK_PlanTasks_To_Tasks" ManuallyRouted="false" />
+        <AssociationConnector Association="LearnWithMentor_DBModel.FK_Tasks_To_UsersC" ManuallyRouted="false" />
+        <AssociationConnector Association="LearnWithMentor_DBModel.FK_Tasks_To_UsersM" ManuallyRouted="false" />
+        <AssociationConnector Association="LearnWithMentor_DBModel.FK_UserTasks_To_Activities" ManuallyRouted="false" />
+        <AssociationConnector Association="LearnWithMentor_DBModel.FK_PlanSuggestion_To_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="LearnWithMentor_DBModel.FK_PlanSuggestion_To_Users1" ManuallyRouted="false" />
+        <AssociationConnector Association="LearnWithMentor_DBModel.FK_UserTasks_To_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="LearnWithMentor_DBModel.GroupPlans" ManuallyRouted="false" />
+        <AssociationConnector Association="LearnWithMentor_DBModel.UserGroups" ManuallyRouted="false" />
+        <AssociationConnector Association="LearnWithMentor_DBModel.UserTasksMessages" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
