@@ -28,13 +28,13 @@ DBCC CHECKIDENT ('[Roles]', RESEED, 0);
 go 
 insert into Roles (Name) values ('Mentor'),('Student'),('Admin');
 
-insert into Users ( Name, Email,Password, Role_Id) SELECT 'Volodymyr', 'v.v@gmail.com','123', Id FROM Roles WHERE Name = 'Mentor';
-insert into Users ( Name, Email,Password, Role_Id) SELECT 'Vyacheslav', 'vyacheslav@gmail.com','123',  Id FROM Roles WHERE Name = 'Mentor';
-insert into Users ( Name, Email,Password, Role_Id) SELECT 'Andrew', 'andrew.l@gmail.com','123',  Id FROM Roles WHERE Name = 'Student';
-insert into Users ( Name, Email,Password, Role_Id) SELECT 'Roman', 'roman.p@gmail.com','123', Id FROM Roles WHERE Name = 'Student';
-insert into Users ( Name, Email,Password, Role_Id) SELECT 'Andriy', 'andr@gmail.com','123',  Id FROM Roles WHERE Name = 'Student';
-insert into Users ( Name, Email,Password, Role_Id) SELECT 'Roman', 'riman@gmail.com','123',  Id FROM Roles WHERE Name = 'Student';
-insert into Users ( Name, Email,Password, Role_Id) SELECT 'admin', 'admin@gmail.com','123',  Id FROM Roles WHERE Name = 'Admin';
+insert into Users ( FirstName, LastName, Email, Password, Role_Id) SELECT 'Volodymyr', 'Savchuk' 'v.v@gmail.com','123', Id FROM Roles WHERE Name = 'Mentor';
+insert into Users ( FirstName, LastName, Email, Password, Role_Id) SELECT 'Vyacheslav', 'Koldovsky', 'vyacheslav@gmail.com','123',  Id FROM Roles WHERE Name = 'Mentor';
+insert into Users ( FirstName, LastName, Email, Password, Role_Id) SELECT 'Andrew', 'Lysyi', 'andrew.l@gmail.com','123',  Id FROM Roles WHERE Name = 'Student';
+insert into Users ( FirstName, LastName, Email, Password, Role_Id) SELECT 'Roman', 'Parobiy', 'roman.p@gmail.com','123', Id FROM Roles WHERE Name = 'Student';
+insert into Users ( FirstName, LastName, Email, Password, Role_Id) SELECT 'Andriy', 'Panchyshyn', 'andr@gmail.com','123',  Id FROM Roles WHERE Name = 'Student';
+insert into Users ( FirstName, LastName, Email, Password, Role_Id) SELECT 'Roman', 'Maksymyshyn', 'riman@gmail.com','123',  Id FROM Roles WHERE Name = 'Student';
+insert into Users ( FirstName, LastName, Email, Password, Role_Id) SELECT 'admin', 'admin', 'admin@gmail.com','123',  Id FROM Roles WHERE Name = 'Admin';
 
 
 insert into Groups(Name, Description,Mentor_Id) SELECT 'lv.net319', '.net group', Id FROM Users WHERE Email = 'v.v@gmail.com';
