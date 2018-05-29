@@ -1,1 +1,0 @@
-﻿Put here interfaces for repositories
