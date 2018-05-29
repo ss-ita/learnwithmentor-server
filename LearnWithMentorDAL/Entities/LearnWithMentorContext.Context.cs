@@ -39,7 +39,7 @@ namespace LearnWithMentorDAL.Entities
         public virtual DbSet<PlanSuggestion> PlanSuggestion { get; set; }
         public virtual DbSet<PlanTasks> PlanTasks { get; set; }
         public virtual DbSet<GROUPS_PLANS_TASKS> GROUPS_PLANS_TASKS { get; set; }
-        public virtual DbSet<UERS_ROLES> UERS_ROLES { get; set; }
+        public virtual DbSet<USERS_ROLES> USERS_ROLES { get; set; }
     
         public virtual int sp_Total_Ammount_of_Users(ObjectParameter total)
         {

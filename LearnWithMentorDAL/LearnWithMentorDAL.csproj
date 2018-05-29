@@ -94,10 +94,10 @@
     <Compile Include="Entities\Tasks.cs">
       <DependentUpon>LearnWithMentorContext.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\UERS_ROLES.cs">
+    <Compile Include="Entities\Users.cs">
       <DependentUpon>LearnWithMentorContext.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\Users.cs">
+    <Compile Include="Entities\USERS_ROLES.cs">
       <DependentUpon>LearnWithMentorContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\UserTasks.cs">
