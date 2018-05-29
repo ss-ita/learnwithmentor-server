@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="LearnWithMentor_DBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="LearnWithMentor_DBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Comments">
           <Key>
             <PropertyRef Name="Id" />
@@ -177,8 +177,8 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.GROUPS-PLANS-TASKS' does no
           <Property Name="Private" Type="bit" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'LearnWithMentor_DB.dbo.UERS_ROLES' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-        <EntityType Name="UERS_ROLES">
+warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="USERS_ROLES">
           <Key>
             <PropertyRef Name="FirstName" />
             <PropertyRef Name="LastName" />
@@ -529,13 +529,13 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.UERS_ROLES' does not have a
     [GROUPS-PLANS-TASKS].[Private] AS [Private]
     FROM [dbo].[GROUPS-PLANS-TASKS] AS [GROUPS-PLANS-TASKS]</DefiningQuery>
           </EntitySet>
-          <EntitySet Name="UERS_ROLES" EntityType="Self.UERS_ROLES" store:Type="Views" store:Schema="dbo">
+          <EntitySet Name="USERS_ROLES" EntityType="Self.USERS_ROLES" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
-    [UERS_ROLES].[FirstName] AS [FirstName], 
-    [UERS_ROLES].[LastName] AS [LastName], 
-    [UERS_ROLES].[Roles_Name] AS [Roles_Name], 
-    [UERS_ROLES].[Email] AS [Email]
-    FROM [dbo].[UERS_ROLES] AS [UERS_ROLES]</DefiningQuery>
+    [USERS_ROLES].[FirstName] AS [FirstName], 
+    [USERS_ROLES].[LastName] AS [LastName], 
+    [USERS_ROLES].[Roles_Name] AS [Roles_Name], 
+    [USERS_ROLES].[Email] AS [Email]
+    FROM [dbo].[USERS_ROLES] AS [USERS_ROLES]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="FK_Comments_To_Tasks" Association="Self.FK_Comments_To_Tasks">
             <End Role="Tasks" EntitySet="Tasks" />
@@ -630,8 +630,7 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.UERS_ROLES' does not have a
             <End Role="UserTasksMessages" EntitySet="UserTasksMessages" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="LearnWithMentor_DBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -809,18 +808,6 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.UERS_ROLES' does not have a
           <Property Name="Tasks_Create_Date" Type="DateTime" Precision="3" />
           <Property Name="Task_Mod_Date" Type="DateTime" Precision="3" />
           <Property Name="Private" Type="Boolean" Nullable="false" />
-        </EntityType>
-        <EntityType Name="UERS_ROLES">
-          <Key>
-            <PropertyRef Name="FirstName" />
-            <PropertyRef Name="LastName" />
-            <PropertyRef Name="Roles_Name" />
-            <PropertyRef Name="Email" />
-          </Key>
-          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Roles_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
         <Association Name="FK_Comments_To_Tasks">
           <End Role="Tasks" Type="Self.Tasks" Multiplicity="1" />
@@ -1051,7 +1038,6 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.UERS_ROLES' does not have a
           <EntitySet Name="PlanSuggestion" EntityType="Self.PlanSuggestion" />
           <EntitySet Name="PlanTasks" EntityType="Self.PlanTasks" />
           <EntitySet Name="GROUPS_PLANS_TASKS" EntityType="Self.GROUPS_PLANS_TASKS" />
-          <EntitySet Name="UERS_ROLES" EntityType="Self.UERS_ROLES" />
           <AssociationSet Name="FK_Comments_To_Tasks" Association="Self.FK_Comments_To_Tasks">
             <End Role="Tasks" EntitySet="Tasks" />
             <End Role="Comments" EntitySet="Comments" />
@@ -1133,9 +1119,22 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.UERS_ROLES' does not have a
             <End Role="UserTasks" EntitySet="UserTasks" />
           </AssociationSet>
           <FunctionImport Name="sp_Total_Ammount_of_Users">
-            <Parameter Name="Total" Mode="InOut" Type="Int32" />
+          <Parameter Name="Total" Mode="InOut" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="USERS_ROLES" EntityType="LearnWithMentor_DBModel.USERS_ROLES" />
         </EntityContainer>
+        <EntityType Name="USERS_ROLES">
+          <Key>
+            <PropertyRef Name="FirstName" />
+            <PropertyRef Name="LastName" />
+            <PropertyRef Name="Roles_Name" />
+            <PropertyRef Name="Email" />
+          </Key>
+          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Roles_Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1281,16 +1280,6 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.UERS_ROLES' does not have a
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="UERS_ROLES">
-            <EntityTypeMapping TypeName="LearnWithMentor_DBModel.UERS_ROLES">
-              <MappingFragment StoreEntitySet="UERS_ROLES">
-                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
-                <ScalarProperty Name="LastName" ColumnName="LastName" />
-                <ScalarProperty Name="Roles_Name" ColumnName="Roles_Name" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <AssociationSetMapping Name="GroupPlans" TypeName="LearnWithMentor_DBModel.GroupPlans" StoreEntitySet="GroupPlans">
             <EndProperty Name="Groups">
               <ScalarProperty Name="Id" ColumnName="Group_Id" />
@@ -1316,6 +1305,16 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.UERS_ROLES' does not have a
             </EndProperty>
           </AssociationSetMapping>
           <FunctionImportMapping FunctionImportName="sp_Total_Ammount_of_Users" FunctionName="LearnWithMentor_DBModel.Store.sp_Total_Ammount_of_Users" />
+          <EntitySetMapping Name="USERS_ROLES">
+            <EntityTypeMapping TypeName="LearnWithMentor_DBModel.USERS_ROLES">
+              <MappingFragment StoreEntitySet="USERS_ROLES">
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Roles_Name" ColumnName="Roles_Name" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

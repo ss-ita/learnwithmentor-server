@@ -12,7 +12,7 @@ namespace LearnWithMentorDAL.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class UERS_ROLES
+    public partial class USERS_ROLES
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
