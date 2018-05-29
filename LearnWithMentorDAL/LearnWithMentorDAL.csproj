@@ -104,10 +104,11 @@
       <DependentUpon>LearnWithMentorContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\BaseRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="EF\" />
-    <Folder Include="Repositories\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
