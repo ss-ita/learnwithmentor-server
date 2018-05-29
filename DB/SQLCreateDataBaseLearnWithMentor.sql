@@ -256,3 +256,8 @@ SELECT        dbo.Users.FirstName, dbo.Users.LastName, dbo.Roles.Name AS Roles_N
 FROM            dbo.Roles INNER JOIN
                          dbo.Users ON dbo.Roles.Id = dbo.Users.Role_Id
 GO
+
+CREATE PROCEDURE sp_Total_Ammount_of_Users
+	@Total INT OUTPUT
+AS
+SELECT @Total = COUNT(*) FROM Users
