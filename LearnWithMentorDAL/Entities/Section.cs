@@ -12,18 +12,18 @@ namespace LearnWithMentorDAL.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class Sections
+    public partial class Section
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Sections()
+        public Section()
         {
-            this.PlanTasks = new HashSet<PlanTasks>();
+            this.PlanTasks = new HashSet<PlanTask>();
         }
     
         public int Id { get; set; }
         public string Name { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PlanTasks> PlanTasks { get; set; }
+        public virtual ICollection<PlanTask> PlanTasks { get; set; }
     }
 }

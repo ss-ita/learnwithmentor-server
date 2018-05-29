@@ -12,32 +12,32 @@ namespace LearnWithMentorDAL.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class Tasks
+    public partial class Plan
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Tasks()
+        public Plan()
         {
-            this.Comments = new HashSet<Comments>();
-            this.PlanTasks = new HashSet<PlanTasks>();
-            this.UserTasks = new HashSet<UserTasks>();
+            this.PlanSuggestion = new HashSet<PlanSuggestion>();
+            this.PlanTasks = new HashSet<PlanTask>();
+            this.Groups = new HashSet<Group>();
         }
     
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public bool Private { get; set; }
+        public bool Published { get; set; }
         public int Create_Id { get; set; }
         public Nullable<int> Mod_Id { get; set; }
         public Nullable<System.DateTime> Create_Date { get; set; }
         public Nullable<System.DateTime> Mod_Date { get; set; }
     
+        public virtual User Users { get; set; }
+        public virtual User Users1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Comments> Comments { get; set; }
+        public virtual ICollection<PlanSuggestion> PlanSuggestion { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PlanTasks> PlanTasks { get; set; }
-        public virtual Users Users { get; set; }
-        public virtual Users Users1 { get; set; }
+        public virtual ICollection<PlanTask> PlanTasks { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<UserTasks> UserTasks { get; set; }
+        public virtual ICollection<Group> Groups { get; set; }
     }
 }

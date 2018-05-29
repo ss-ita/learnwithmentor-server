@@ -49,13 +49,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\Comments.cs">
+    <Compile Include="Entities\Comment.cs">
       <DependentUpon>LearnWithMentorContext.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\Groups.cs">
+    <Compile Include="Entities\Group.cs">
       <DependentUpon>LearnWithMentorContext.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\GROUPS_PLANS_TASKS.cs">
+    <Compile Include="Entities\GROUP_PLAN_TASK.cs">
       <DependentUpon>LearnWithMentorContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\LearnWithMentorContext.Context.cs">
@@ -73,34 +73,34 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>LearnWithMentorContext.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Entities\Messages.cs">
+    <Compile Include="Entities\Message.cs">
       <DependentUpon>LearnWithMentorContext.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\Plans.cs">
+    <Compile Include="Entities\Plan.cs">
       <DependentUpon>LearnWithMentorContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\PlanSuggestion.cs">
       <DependentUpon>LearnWithMentorContext.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\PlanTasks.cs">
+    <Compile Include="Entities\PlanTask.cs">
       <DependentUpon>LearnWithMentorContext.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\Roles.cs">
+    <Compile Include="Entities\Role.cs">
       <DependentUpon>LearnWithMentorContext.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\Sections.cs">
+    <Compile Include="Entities\Section.cs">
       <DependentUpon>LearnWithMentorContext.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\Tasks.cs">
+    <Compile Include="Entities\Task.cs">
       <DependentUpon>LearnWithMentorContext.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\Users.cs">
+    <Compile Include="Entities\User.cs">
       <DependentUpon>LearnWithMentorContext.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\USERS_ROLES.cs">
+    <Compile Include="Entities\UserTask.cs">
       <DependentUpon>LearnWithMentorContext.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\UserTasks.cs">
+    <Compile Include="Entities\USER_ROLE.cs">
       <DependentUpon>LearnWithMentorContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />

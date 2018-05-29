@@ -12,16 +12,19 @@ namespace LearnWithMentorDAL.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class Comments
+    public partial class GROUP_PLAN_TASK
     {
-        public int Id { get; set; }
-        public int Task_Id { get; set; }
-        public string Text { get; set; }
-        public int Create_Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
         public Nullable<System.DateTime> Create_Date { get; set; }
         public Nullable<System.DateTime> Mod_Date { get; set; }
-    
-        public virtual Tasks Tasks { get; set; }
-        public virtual Users Users { get; set; }
+        public bool Published { get; set; }
+        public Nullable<int> Priority { get; set; }
+        public string Section_Name { get; set; }
+        public string Task_Name { get; set; }
+        public string Task_Description { get; set; }
+        public Nullable<System.DateTime> Tasks_Create_Date { get; set; }
+        public Nullable<System.DateTime> Task_Mod_Date { get; set; }
+        public bool Private { get; set; }
     }
 }

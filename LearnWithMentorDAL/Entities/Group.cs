@@ -12,32 +12,24 @@ namespace LearnWithMentorDAL.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class Plans
+    public partial class Group
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Plans()
+        public Group()
         {
-            this.PlanSuggestion = new HashSet<PlanSuggestion>();
-            this.PlanTasks = new HashSet<PlanTasks>();
-            this.Groups = new HashSet<Groups>();
+            this.Plans = new HashSet<Plan>();
+            this.Users1 = new HashSet<User>();
         }
     
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public bool Published { get; set; }
-        public int Create_Id { get; set; }
-        public Nullable<int> Mod_Id { get; set; }
-        public Nullable<System.DateTime> Create_Date { get; set; }
-        public Nullable<System.DateTime> Mod_Date { get; set; }
+        public Nullable<int> Mentor_Id { get; set; }
     
-        public virtual Users Users { get; set; }
-        public virtual Users Users1 { get; set; }
+        public virtual User Users { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PlanSuggestion> PlanSuggestion { get; set; }
+        public virtual ICollection<Plan> Plans { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PlanTasks> PlanTasks { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Groups> Groups { get; set; }
+        public virtual ICollection<User> Users1 { get; set; }
     }
 }
