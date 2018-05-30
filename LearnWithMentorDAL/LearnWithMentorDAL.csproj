@@ -124,7 +124,6 @@
     <Compile Include="Repositories\SectionRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="Repositories\UserRoleViewRepository.cs" />
-
     <Compile Include="Repositories\Interfaces\IMessageRepository.cs" />
     <Compile Include="Repositories\Interfaces\IPlanRepository.cs" />
     <Compile Include="Repositories\Interfaces\ITaskRepository.cs" />
@@ -133,6 +132,8 @@
     <Compile Include="Repositories\PlanRepository.cs" />
     <Compile Include="Repositories\TaskRepository.cs" />
     <Compile Include="Repositories\UserTaskRepository.cs" />
+    <Compile Include="UnitOfWork\IUnitOfWork.cs" />
+    <Compile Include="UnitOfWork\UnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="EF\" />
