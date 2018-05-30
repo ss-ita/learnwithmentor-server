@@ -12,12 +12,12 @@ namespace LearnWithMentorDAL.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class Messages
+    public partial class Message
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Messages()
+        public Message()
         {
-            this.UserTasks = new HashSet<UserTasks>();
+            this.UserTasks = new HashSet<UserTask>();
         }
     
         public int Id { get; set; }
@@ -25,8 +25,8 @@ namespace LearnWithMentorDAL.Entities
         public string Text { get; set; }
         public System.DateTime Send_Time { get; set; }
     
-        public virtual Users Users { get; set; }
+        public virtual User Users { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<UserTasks> UserTasks { get; set; }
+        public virtual ICollection<UserTask> UserTasks { get; set; }
     }
 }

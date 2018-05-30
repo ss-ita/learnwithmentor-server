@@ -15,11 +15,6 @@ namespace ContextsTest
 
             using (LearnWithMentor_DBEntities db = new LearnWithMentor_DBEntities())
             {
-                var rr = db.Users.Where(u => u.Id == 1).FirstOrDefault();
-                rr.LastName = "Galant";
-                db.SaveChanges();
-               var coll = db.Users;
-                
                 foreach (var g in coll)
                     Console.WriteLine("User: {0} {1}", g.FirstName, g.LastName);
             }

@@ -27,19 +27,19 @@ namespace LearnWithMentorDAL.Entities
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Comments> Comments { get; set; }
-        public virtual DbSet<Groups> Groups { get; set; }
-        public virtual DbSet<Messages> Messages { get; set; }
-        public virtual DbSet<Plans> Plans { get; set; }
-        public virtual DbSet<Roles> Roles { get; set; }
-        public virtual DbSet<Sections> Sections { get; set; }
-        public virtual DbSet<Tasks> Tasks { get; set; }
-        public virtual DbSet<Users> Users { get; set; }
-        public virtual DbSet<UserTasks> UserTasks { get; set; }
+        public virtual DbSet<Comment> Comments { get; set; }
+        public virtual DbSet<Group> Groups { get; set; }
+        public virtual DbSet<Message> Messages { get; set; }
+        public virtual DbSet<Plan> Plans { get; set; }
+        public virtual DbSet<Role> Roles { get; set; }
+        public virtual DbSet<Section> Sections { get; set; }
+        public virtual DbSet<Task> Tasks { get; set; }
+        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<UserTask> UserTasks { get; set; }
         public virtual DbSet<PlanSuggestion> PlanSuggestion { get; set; }
-        public virtual DbSet<PlanTasks> PlanTasks { get; set; }
-        public virtual DbSet<GROUPS_PLANS_TASKS> GROUPS_PLANS_TASKS { get; set; }
-        public virtual DbSet<USERS_ROLES> USERS_ROLES { get; set; }
+        public virtual DbSet<PlanTask> PlanTasks { get; set; }
+        public virtual DbSet<GROUP_PLAN_TASK> GROUPS_PLANS_TASKS { get; set; }
+        public virtual DbSet<USER_ROLE> USERS_ROLES { get; set; }
     
         public virtual int sp_Total_Ammount_of_Users(ObjectParameter total)
         {

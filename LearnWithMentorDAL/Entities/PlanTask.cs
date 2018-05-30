@@ -12,15 +12,15 @@ namespace LearnWithMentorDAL.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class PlanTasks
+    public partial class PlanTask
     {
         public int Plan_Id { get; set; }
         public int Task_Id { get; set; }
         public Nullable<int> Priority { get; set; }
         public Nullable<int> Section_Id { get; set; }
     
-        public virtual Plans Plans { get; set; }
-        public virtual Sections Sections { get; set; }
-        public virtual Tasks Tasks { get; set; }
+        public virtual Plan Plans { get; set; }
+        public virtual Section Sections { get; set; }
+        public virtual Task Tasks { get; set; }
     }
 }
