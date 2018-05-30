@@ -7,8 +7,8 @@ using LearnWithMentorDAL.Entities;
 
 namespace LearnWithMentorDAL.Repositories
 {
-    public interface IPlanRepository: IRepository<Plan>
+    public interface ITaskRepository: IRepository<Entities.Task>
     {
-        Plan Get(int id);
+        Entities.Task Get(int id);
     }
 }

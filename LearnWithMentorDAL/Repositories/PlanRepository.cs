@@ -7,7 +7,7 @@ using LearnWithMentorDAL.Entities;
 
 namespace LearnWithMentorDAL.Repositories
 {
-    class PlanRepository: BaseRepository<Plan>, IPlanRepository
+    public class PlanRepository: BaseRepository<Plan>, IPlanRepository
     {
         public PlanRepository(LearnWithMentor_DBEntities _context) : base(_context)
         {

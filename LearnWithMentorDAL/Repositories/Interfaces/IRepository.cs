@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LearnWithMentorDAL.Repositories
 {
-    interface IRepository<T> where T: class
+    public interface IRepository<T> where T: class
     {
         IEnumerable<T> GetAll();
         void Add(T item);
