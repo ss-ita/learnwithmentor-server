@@ -3,15 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LearnWithMentorDAL.Entities;
 
 namespace LearnWithMentorDAL.Repositories
 {
-   public interface IRepository<T> where T: class
-
+    public interface IMessageRepository : IRepository<Message>
     {
-        IEnumerable<T> GetAll();
-        void Add(T item);
-        void Update(T item);
-        void Remove(T item);
+        Message Get(int id);
     }
 }
