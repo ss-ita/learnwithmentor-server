@@ -8,7 +8,7 @@ using System.Data.Entity;
 
 namespace LearnWithMentorDAL.Repositories
 {
-    class BaseRepository<T>: IRepository<T> where T : class
+    public class BaseRepository<T>: IRepository<T> where T : class
     {
         protected readonly LearnWithMentor_DBEntities context;
         public BaseRepository(LearnWithMentor_DBEntities _context)
