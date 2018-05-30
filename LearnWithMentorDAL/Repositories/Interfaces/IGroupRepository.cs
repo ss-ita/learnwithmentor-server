@@ -7,7 +7,7 @@ using LearnWithMentorDAL.Entities;
 
 namespace LearnWithMentorDAL.Repositories
 {
-    interface IGroupRepository: IRepository<Group>
+    public interface IGroupRepository: IRepository<Group>
     {
         Group Get(int id);
     }

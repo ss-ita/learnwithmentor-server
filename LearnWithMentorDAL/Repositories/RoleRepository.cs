@@ -7,7 +7,7 @@ using LearnWithMentorDAL.Entities;
 
 namespace LearnWithMentorDAL.Repositories
 {
-    class RoleRepository : BaseRepository<Role>, IRoleRepository
+    public class RoleRepository : BaseRepository<Role>, IRoleRepository
     {
         public RoleRepository(LearnWithMentor_DBEntities _context) : base(_context)
         {

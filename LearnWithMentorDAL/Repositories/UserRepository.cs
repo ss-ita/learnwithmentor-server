@@ -7,7 +7,7 @@ using LearnWithMentorDAL.Entities;
 
 namespace LearnWithMentorDAL.Repositories
 {
-    class UserRepository: BaseRepository<User>, IUserRepository
+    public class UserRepository: BaseRepository<User>, IUserRepository
     {
         public UserRepository(LearnWithMentor_DBEntities _context) : base(_context)
         {

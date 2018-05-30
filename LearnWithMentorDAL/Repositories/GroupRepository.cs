@@ -7,7 +7,7 @@ using LearnWithMentorDAL.Entities;
 
 namespace LearnWithMentorDAL.Repositories
 {
-    class GroupRepository : BaseRepository<Group>, IGroupRepository
+    public class GroupRepository : BaseRepository<Group>, IGroupRepository
     {
         public GroupRepository(LearnWithMentor_DBEntities _context) : base(_context)
         {

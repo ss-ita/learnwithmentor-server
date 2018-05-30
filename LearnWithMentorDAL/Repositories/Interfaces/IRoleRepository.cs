@@ -7,7 +7,7 @@ using LearnWithMentorDAL.Entities;
 
 namespace LearnWithMentorDAL.Repositories
 {
-    interface IRoleRepository : IRepository<Role>
+    public interface IRoleRepository : IRepository<Role>
     {
         Role Get(int id);
     }
