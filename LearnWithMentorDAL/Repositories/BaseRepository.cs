@@ -13,7 +13,7 @@ namespace LearnWithMentorDAL.Repositories
         protected readonly LearnWithMentor_DBEntities context;
         public BaseRepository(LearnWithMentor_DBEntities _context)
         {
-            _context = context;
+            context = _context;
         }
         public IEnumerable<T> GetAll()
         {
