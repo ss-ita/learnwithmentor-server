@@ -15,7 +15,7 @@ namespace ContextsTest
 
             using (LearnWithMentor_DBEntities db = new LearnWithMentor_DBEntities())
             {
-                foreach (var g in coll)
+                foreach (var g in db.Users)
                     Console.WriteLine("User: {0} {1}", g.FirstName, g.LastName);
             }
 
