@@ -32,7 +32,6 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.GroupPlans' does not have a
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Description" Type="nvarchar" MaxLength="500" Nullable="false" />
           <Property Name="Mentor_Id" Type="int" />
         </EntityType>
         <EntityType Name="Messages">
@@ -653,7 +652,6 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Mentor_Id" Type="Int32" />
           <NavigationProperty Name="Users" Relationship="Self.FK_Groups_To_Users" FromRole="Groups" ToRole="Users" />
           <NavigationProperty Name="Plans" Relationship="Self.GroupPlans" FromRole="Groups" ToRole="Plans" />
@@ -1158,7 +1156,6 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
               <MappingFragment StoreEntitySet="Groups">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Mentor_Id" ColumnName="Mentor_Id" />
               </MappingFragment>
             </EntityTypeMapping>

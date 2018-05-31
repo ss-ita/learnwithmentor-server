@@ -37,10 +37,10 @@ insert into Users ( FirstName, LastName, Email, Password, Role_Id) SELECT 'Roman
 insert into Users ( FirstName, LastName, Email, Password, Role_Id) SELECT 'admin', 'admin', 'admin@gmail.com','123',  Id FROM Roles WHERE Name = 'Admin';
 
 
-insert into Groups(Name, Description,Mentor_Id) SELECT 'lv.net319', '.net group', Id FROM Users WHERE Email = 'v.v@gmail.com';
-insert into Groups(Name, Description,Mentor_Id) SELECT 'lv.net307', 'pokemons group', Id FROM Users WHERE Email = 'vyacheslav@gmail.com';
-insert into Groups(Name, Description,Mentor_Id) SELECT 'lvjava304', 'java group', Id FROM Users WHERE Email = 'vyacheslav@gmail.com';
-insert into Groups(Name, Description,Mentor_Id) SELECT 'lvdevops318', 'devOps group', Id FROM Users WHERE Email = 'vyacheslav@gmail.com';
+insert into Groups(Name, Mentor_Id) SELECT 'lv.net319', Id FROM Users WHERE Email = 'v.v@gmail.com';
+insert into Groups(Name, Mentor_Id) SELECT 'lv.net307', Id FROM Users WHERE Email = 'vyacheslav@gmail.com';
+insert into Groups(Name, Mentor_Id) SELECT 'lvjava304', Id FROM Users WHERE Email = 'vyacheslav@gmail.com';
+insert into Groups(Name, Mentor_Id) SELECT 'lvdevops318', Id FROM Users WHERE Email = 'vyacheslav@gmail.com';
 
 insert into UserGroups( Group_Id, User_Id) SELECT Groups.Id, Users.Id FROM Groups, Users WHERE Groups.Name = 'lv.net319' AND Users.Email = 'andrew.l@gmail.com';
 insert into UserGroups( Group_Id, User_Id) SELECT Groups.Id, Users.Id FROM Groups, Users WHERE Groups.Name = 'lv.net319' AND Users.Email = 'roman.p@gmail.com';

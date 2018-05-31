@@ -23,7 +23,6 @@ namespace LearnWithMentorDAL.Entities
     
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
         public Nullable<int> Mentor_Id { get; set; }
     
         public virtual User Users { get; set; }

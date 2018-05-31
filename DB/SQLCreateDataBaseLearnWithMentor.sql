@@ -32,7 +32,6 @@ CREATE TABLE Groups
 (
     Id INT IDENTITY,
     Name NVARCHAR(50) NOT NULL,
-    Description NVARCHAR(500) NOT NULL,
     Mentor_Id INT,
 
 CONSTRAINT PK_Group_Id PRIMARY KEY (Id),
