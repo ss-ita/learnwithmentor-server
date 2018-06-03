@@ -35,18 +35,27 @@ namespace LearnWithMentor.Controllers
         }
 
         // POST: api/User
-        public void Post([FromBody]string value)
+        public IHttpActionResult Post([FromBody]UserDTO value)
         {
+            UoW.Users.Add(value, "123");
+            UoW.Save();
+            return Ok();
         }
 
         // PUT: api/User/5
-        public void Put(int id, [FromBody]string value)
+        public IHttpActionResult Put(int id, [FromBody]UserDTO value)
         {
+            UoW.Users.UpdateById(id, value);
+            UoW.Save();
+            return Ok();
         }
 
         // DELETE: api/User/5
-        public void Delete(int id)
+        public IHttpActionResult Delete(int id)
         {
+            UoW.Users.RemoveById(id);
+            UoW.Save();
+            return Ok();
         }
     }
 }
