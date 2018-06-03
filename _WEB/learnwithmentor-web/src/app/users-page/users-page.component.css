@@ -1,0 +1,16 @@
+.main{
+    width: 90%;
+}
+mat-form-field {
+    width:90%;
+}
+.search{  
+    text-align: center;
+}
+
+.select {
+    width:20%;
+}
+h1{
+    text-align: center;
+}
