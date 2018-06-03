@@ -61,6 +61,10 @@
       <Project>{a64146da-5d32-4cf9-bd7a-0918284822e0}</Project>
       <Name>LearnWithMentorDAL</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LearnWithMentorDTO\LearnWithMentorDTO.csproj">
+      <Project>{2fc0c932-6883-4d97-b516-3623bde9222b}</Project>
+      <Name>LearnWithMentorDTO</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
