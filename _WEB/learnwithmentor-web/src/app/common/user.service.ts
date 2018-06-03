@@ -34,7 +34,8 @@ export class UserService {
     );
   }
 
-  deleteUser(id: number): Observable<User>{
+  deleteUser(user: User | number): Observable<User>{
+    const id = typeof user === 'number' ? user : user.Id;
     return this.http.delete<User>(`${this.userUrl}/${id}`).pipe(
       catchError(this.handleError<User>(`getUser id=${id}`))
     );
