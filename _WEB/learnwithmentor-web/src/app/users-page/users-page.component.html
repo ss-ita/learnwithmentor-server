@@ -1,0 +1,21 @@
+<div class="main">
+      <div class="search">
+        <mat-form-field >
+          <input matInput placeholder="Users search" >
+        </mat-form-field>
+      </div>
+
+      <div class="select">
+      <mat-form-field>
+        <mat-select placeholder="Choose roles">
+          <mat-option *ngFor="let role of roles" [value]="role.value">
+            {{ role.viewValue }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      </div>
+</div>
+ <h1>All users</h1>
+
+<app-user-block>
+</app-user-block>
