@@ -61,13 +61,20 @@ namespace LearnWithMentor.Controllers
         [Route("api/user/search")]
         public IEnumerable<UserDTO> Search(string q)
         {
-            string[] lines = q.Split(' ');
-            List<UserDTO> dto = new List<UserDTO>();
-            foreach (var u in UoW.Users.Search(lines))
+            if (q == null)
             {
-                dto.Add(new UserDTO(u.Id, u.FirstName, u.LastName, u.Email, u.Roles.Name));
+                return Get();
             }
-            return dto;
+            else
+            {
+                string[] lines = q.Split(' ');
+                List<UserDTO> dto = new List<UserDTO>();
+                foreach (var u in UoW.Users.Search(lines))
+                {
+                    dto.Add(new UserDTO(u.Id, u.FirstName, u.LastName, u.Email, u.Roles.Name));
+                }
+                return dto;
+            }
         }
     }
 }
