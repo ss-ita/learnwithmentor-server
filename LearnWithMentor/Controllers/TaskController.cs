@@ -91,6 +91,7 @@ namespace LearnWithMentor.Controllers
                 Mod_Date = t.Mod_Date
             };
             UoW.Tasks.Add(new_task);
+            UoW.Save();
         }
 
         // PUT api/Task/5
@@ -109,6 +110,7 @@ namespace LearnWithMentor.Controllers
                 Mod_Date = t.Mod_Date
             };
             UoW.Tasks.Update(new_task);
+            UoW.Save();
         }
 
         // DELETE api/Task/5
@@ -117,6 +119,7 @@ namespace LearnWithMentor.Controllers
         {
             Task t = UoW.Tasks.Get(id);
             UoW.Tasks.Remove(t);
+            UoW.Save();
         }
     }
 }
