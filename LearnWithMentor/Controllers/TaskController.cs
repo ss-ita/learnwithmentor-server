@@ -63,7 +63,7 @@ namespace LearnWithMentor.Controllers
         public TaskDTO Get(int _plan_id, int id)
         {
             Task t = UoW.Tasks.Get(id);
-            if (t == null || _plan_id == 0) return null;
+            if (t == null || _plan_id < 1) return null;
             return new TaskDTO(t.Id,
                                t.Name,
                                t.Description,
