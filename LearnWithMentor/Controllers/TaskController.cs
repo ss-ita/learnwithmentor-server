@@ -59,7 +59,6 @@ namespace LearnWithMentor.Controllers
         }
 
         [HttpGet]
-        [Route("api/Task/{plan_id}/{id}")]
         // GET api/Task/{plan_id}/5
         public TaskDTO Get(int _plan_id, int id)
         {
