@@ -57,5 +57,24 @@ namespace LearnWithMentor.Controllers
             UoW.Save();
             return Ok();
         }
+        [HttpGet]
+        [Route("api/user/search")]
+        public IEnumerable<UserDTO> Search(string q)
+        {
+            if (q == null)
+            {
+                return Get();
+            }
+            else
+            {
+                string[] lines = q.Split(' ');
+                List<UserDTO> dto = new List<UserDTO>();
+                foreach (var u in UoW.Users.Search(lines))
+                {
+                    dto.Add(new UserDTO(u.Id, u.FirstName, u.LastName, u.Email, u.Roles.Name));
+                }
+                return dto;
+            }
+        }
     }
 }

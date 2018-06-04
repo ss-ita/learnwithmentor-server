@@ -53,5 +53,21 @@ namespace LearnWithMentorDAL.Repositories
             toAdd.LastName = userDTO.LastName;
             context.Users.Add(toAdd);
         }
+        public IEnumerable<User> Search(string[] str)
+        {
+            List<User> ret = new List<User>();
+            foreach (var s in str)
+            {
+                var found = context.Users.Where(u => u.FirstName.Contains(s) || u.LastName.Contains(s));
+                foreach (var f in found)
+                {
+                    if (!ret.Contains(f))
+                    {
+                        ret.Add(f);
+                    }
+                }
+            }
+            return ret;
+        }
     }
 }
