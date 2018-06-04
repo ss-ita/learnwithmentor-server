@@ -1,12 +1,13 @@
 <div class="user-blocks">
 
-  <ul>
-    <li> <mat-checkbox>   
-      </mat-checkbox></li>
-    <li><a href="#">{{Name}}</a></li>
-    <li><a href="#">{{Surname}}</a></li>
-    <li><a href="#">{{Email}}</a></li>
-    <li><a href="#">{{Role}}</a></li>
+  <ul class="users">
+    <li *ngFor="let user of users">
+      <a routerLink="/users/{{user.Id}}">
+        <span class="badge">{{user.Id}}</span> {{user.FirstName}} | {{user.LastName}} | {{user.Email}} | {{user.Role}}
+      </a>
+      <button class="delete" title="delete user"
+      (click)="delete(user)">x</button>
+    </li>
   </ul>
 
  </div>
