@@ -57,6 +57,7 @@ namespace LearnWithMentor.Controllers
             UoW.Save();
             return Ok();
         }
+
         [HttpGet]
         [Route("api/user/search")]
         public IEnumerable<UserDTO> Search(string q)
@@ -75,6 +76,17 @@ namespace LearnWithMentor.Controllers
                 }
                 return dto;
             }
+        }
+
+        [Route("api/user/roles")]
+        public IEnumerable<RoleDTO> GetRoles()
+        {
+            var dtos = new List<RoleDTO>();
+            foreach(var role in UoW.Roles.GetAll())
+            {
+                dtos.Add(new RoleDTO(role.Id, role.Name));
+            }
+            return dtos;
         }
     }
 }
