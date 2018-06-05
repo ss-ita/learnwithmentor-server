@@ -15,5 +15,6 @@ namespace LearnWithMentorDAL.Repositories
         void UpdateById(int id, UserDTO user);
         void Add(UserDTO dto, string password);
         IEnumerable<User> Search(string[] str);
+        string ExtractFullName(Nullable<int> id);
     }
 }

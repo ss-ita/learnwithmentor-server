@@ -69,5 +69,16 @@ namespace LearnWithMentorDAL.Repositories
             }
             return ret;
         }
+
+        public string ExtractFullName(Nullable<int> id)
+        {
+            if (id == null)
+                return null;
+            User currentUser = context.Users.Where(u => u.Id == id).FirstOrDefault();
+            string fullName = null;
+            if (currentUser!=null)
+                fullName=string.Concat(currentUser.FirstName, " ", currentUser.LastName);
+            return fullName;
+        }
     }
 }
