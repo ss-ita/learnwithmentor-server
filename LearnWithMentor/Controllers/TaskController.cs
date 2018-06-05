@@ -121,5 +121,36 @@ namespace LearnWithMentor.Controllers
             UoW.Tasks.Remove(t);
             UoW.Save();
         }
+
+        [Route("api/task/{taskId}/comment")]
+        public IEnumerable<CommentDTO> GetComments(int taskId)
+        {
+            var comments = UoW.Comments.GetAll().Where(c => c.Task_Id == taskId);
+            if (comments == null) return null;
+            List<CommentDTO> dto = new List<CommentDTO>();
+            foreach (var a in comments)
+            {
+                dto.Add(new CommentDTO(a.Id, a.Text, a.Create_Id, a.Users.FirstName, a.Users.LastName, a.Create_Date, a.Mod_Date));
+            }
+            return dto;
+        }
+
+        [HttpPost]
+        [Route("api/task/{taskId}/comment")]
+        public IHttpActionResult AddComment([FromBody]CommentDTO value, int taskId)
+        {
+            UoW.Comments.Add(value, taskId);
+            UoW.Save();
+            return Ok();
+        }
+
+        [HttpPut]
+        [Route("api/task/{taskId}/comment")]
+        public IHttpActionResult PutComment([FromBody]CommentDTO value, int taskId)
+        {
+            UoW.Comments.UpdateById(value, taskId);
+            UoW.Save();
+            return Ok();
+        }
     }
 }
