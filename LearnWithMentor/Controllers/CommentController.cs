@@ -20,7 +20,7 @@ namespace LearnWithMentor.Controllers
         {
             Comment comment = UoW.Comments.Get(id);
             if (comment == null) return null;
-            return new CommentDTO(comment.id, comment.Text, comment.Create_Id, comment.Users.FirstName, comment.Users.LastName, comment.Create_Date, comment.Mod_Date);
+            return new CommentDTO(comment.Id, comment.Text, comment.Create_Id, comment.Users.FirstName, comment.Users.LastName, comment.Create_Date, comment.Mod_Date);
         }
 
         [HttpDelete]
