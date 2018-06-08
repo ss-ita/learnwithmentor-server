@@ -7,7 +7,7 @@ namespace LearnWithMentorDAL.Repositories
     {
         Comment Get(int id);
         void RemoveById(int id);
-        void UpdateById(CommentDTO comment, int id);
+        void Update(CommentDTO comment);
         void Add(CommentDTO dto, int taskId);
     }
 }

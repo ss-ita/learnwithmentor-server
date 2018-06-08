@@ -143,14 +143,5 @@ namespace LearnWithMentor.Controllers
             UoW.Save();
             return Ok();
         }
-
-        [HttpPut]
-        [Route("api/task/{taskId}/comment")]
-        public IHttpActionResult PutComment([FromBody]CommentDTO value, int taskId)
-        {
-            UoW.Comments.UpdateById(value, taskId);
-            UoW.Save();
-            return Ok();
-        }
     }
 }
