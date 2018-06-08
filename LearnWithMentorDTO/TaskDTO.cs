@@ -8,27 +8,27 @@ namespace LearnWithMentorDTO
 {
     public class TaskDTO
     {
-        public TaskDTO(int _id,
-                        string _name,
-                        string _description,
+        public TaskDTO(int id,
+                        string name,
+                        string description,
                         bool _private,
-                        int _create_id,
-                        Nullable<int> _mod_id,
-                        Nullable<System.DateTime> _create_date,
-                        Nullable<System.DateTime> _mod_date,
-                        Nullable<int> _priority,
-                        Nullable<int> _section_id)
+                        int createId,
+                        Nullable<int> modId,
+                        Nullable<System.DateTime> createDate,
+                        Nullable<System.DateTime> modDate,
+                        Nullable<int> priority,
+                        Nullable<int> sectionId)
         {
-            Id = _id;
-            Name = _name;
-            Description = _description;
+            Id = id;
+            Name = name;
+            Description = description;
             Private = _private;
-            Create_Date = _create_date;
-            Mod_Date = _mod_date;
-            Creator_Id = _create_id;
-            Modifier_Id = _mod_id;
-            Priority = _priority;
-            Section_Id = _section_id;
+            Create_Date = createDate;
+            Mod_Date = modDate;
+            Creator_Id = createId;
+            Modifier_Id = modId;
+            Priority = priority;
+            Section_Id = sectionId;
         }
         public int Id { get; set; }
         public string Name { get; set; }
