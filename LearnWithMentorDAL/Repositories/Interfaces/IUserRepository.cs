@@ -9,7 +9,7 @@ namespace LearnWithMentorDAL.Repositories
         User Get(int id);
         void RemoveById(int id);
         void UpdateById(int id, UserDTO user);
-        void Add(UserDTO dto, string password);
+        bool Add(UserDTO dto, string password);
         IEnumerable<User> Search(string[] str, int? role_id);
     }
 }
