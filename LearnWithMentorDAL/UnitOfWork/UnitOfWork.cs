@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using LearnWithMentorDAL.Entities;
 using LearnWithMentorDAL.Repositories;
 
-namespace LearnWithMentorDAL
+namespace LearnWithMentorDAL.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {

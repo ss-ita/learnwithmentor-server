@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
-using LearnWithMentorDAL;
 using LearnWithMentorDAL.Entities;
+using LearnWithMentorDAL.UnitOfWork;
 using LearnWithMentorDTO;
 
 namespace LearnWithMentor.Controllers
@@ -17,9 +14,10 @@ namespace LearnWithMentor.Controllers
         {
             UoW = new UnitOfWork(new LearnWithMentor_DBEntities());
         }
-        
-        // GET api/Task
+
+        // GET api/task      
         [HttpGet]
+        [Route("api/task")]
         public IEnumerable<TaskDTO> Get()
         {
             List<TaskDTO> dto = new List<TaskDTO>();
@@ -42,8 +40,9 @@ namespace LearnWithMentor.Controllers
             return dto;
         }
 
-        // GET api/Task/5
+        // GET api/task/5
         [HttpGet]
+        [Route("api/task")]
         public TaskDTO Get(int id)
         {
             Task t = UoW.Tasks.Get(id);
@@ -64,11 +63,11 @@ namespace LearnWithMentor.Controllers
 
         // GET api/task/{id}/plan/{plan_id}
         [HttpGet]
-        [Route("api/task/{id}/plan/{plan_id}")]
-        public TaskDTO Get(int id,int plan_id )
+        [Route("api/task")]
+        public TaskDTO Get(int id,int planid )
         {
             Task t = UoW.Tasks.Get(id);
-            if (t == null || plan_id < 1) return null;
+            if (t == null || !UoW.PlanTasks.ContainsTaskInPlan(id,planid)) return null;
             return new TaskDTO(t.Id,
                                t.Name,
                                t.Description,
@@ -79,56 +78,62 @@ namespace LearnWithMentor.Controllers
                                UoW.Users.ExtractFullName(t.Mod_Id),
                                t.Create_Date,
                                t.Mod_Date,
-                               t.PlanTasks.Where(pt => pt.Task_Id == t.Id && pt.Plan_Id == plan_id).First().Priority,
-                               t.PlanTasks.Where(pt => pt.Task_Id == t.Id && pt.Plan_Id == plan_id).First().Section_Id);
+                               t.PlanTasks.Where(pt => pt.Task_Id == t.Id && pt.Plan_Id == planid).FirstOrDefault().Priority,
+                               t.PlanTasks.Where(pt => pt.Task_Id == t.Id && pt.Plan_Id == planid).FirstOrDefault().Section_Id);
         }
-        
-        // POST api/Task
+        [HttpGet]
+        [Route("api/task/search")]
+        public IEnumerable<TaskDTO> Search(string key, int? planId)
+        {
+            if (key == null)
+            {
+                return Get();
+            }
+            else
+            {
+                string[] lines = key.Split(' ');
+                List<TaskDTO> dto = new List<TaskDTO>();
+                foreach (var t in UoW.Tasks.Search(lines, planId))
+                {
+                    dto.Add(new TaskDTO(t.Id,
+                                       t.Name,
+                                       t.Description,
+                                       t.Private,
+                                       t.Create_Id,
+                                       UoW.Users.ExtractFullName(t.Create_Id),
+                                       t.Mod_Id,
+                                       UoW.Users.ExtractFullName(t.Mod_Id),
+                                       t.Create_Date,
+                                       t.Mod_Date,
+                                       t.PlanTasks.Where(pt => pt.Task_Id == t.Id && pt.Plan_Id == planId).FirstOrDefault().Priority,
+                                       t.PlanTasks.Where(pt => pt.Task_Id == t.Id && pt.Plan_Id == planId).FirstOrDefault().Section_Id));
+                }
+                return dto;
+            }
+        }
+        // POST api/task
         [HttpPost]
         public IHttpActionResult Post([FromBody]TaskDTO t)
         {
-            Task new_task = new Task()
-            {
-                Id = t.Id,
-                Name = t.Name,
-                Description = t.Description,
-                Private = t.Private,
-                Create_Id = t.Creator_Id,
-                Mod_Id = t.Modifier_Id,
-                Create_Date = t.Create_Date,
-                Mod_Date = t.Mod_Date
-            };
-            UoW.Tasks.Add(new_task);
+            UoW.Tasks.Add(t);
             UoW.Save();
             return Ok();
         }
 
-        // PUT api/Task/5
+        // PUT api/task/5
         [HttpPut]
         public IHttpActionResult Put(int id, [FromBody]TaskDTO t)
         {
-            Task new_task = new Task()
-            {
-                Id = id,
-                Name = t.Name,
-                Description = t.Description,
-                Private = t.Private,
-                Create_Id = t.Creator_Id,
-                Mod_Id = t.Modifier_Id,
-                Create_Date = t.Create_Date,
-                Mod_Date = t.Mod_Date
-            };
-            UoW.Tasks.Update(new_task);
+            UoW.Tasks.UpdateById(id,t);
             UoW.Save();
             return Ok();
         }
 
-        // DELETE api/Task/5
+        // DELETE api/task/5
         [HttpDelete]
         public IHttpActionResult Delete(int id)
         {
-            Task t = UoW.Tasks.Get(id);
-            UoW.Tasks.Remove(t);
+            UoW.Tasks.RemoveById(id);
             UoW.Save();
             return Ok();
         }
@@ -151,15 +156,6 @@ namespace LearnWithMentor.Controllers
         public IHttpActionResult AddComment([FromBody]CommentDTO value, int taskId)
         {
             UoW.Comments.Add(value, taskId);
-            UoW.Save();
-            return Ok();
-        }
-
-        [HttpPut]
-        [Route("api/task/{taskId}/comment")]
-        public IHttpActionResult PutComment([FromBody]CommentDTO value, int taskId)
-        {
-            UoW.Comments.UpdateById(value, taskId);
             UoW.Save();
             return Ok();
         }

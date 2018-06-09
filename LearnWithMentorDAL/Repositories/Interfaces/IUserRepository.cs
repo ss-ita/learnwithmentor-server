@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using LearnWithMentorDAL.Entities;
 using LearnWithMentorDTO;
 
@@ -14,7 +10,7 @@ namespace LearnWithMentorDAL.Repositories
         void RemoveById(int id);
         void UpdateById(int id, UserDTO user);
         void Add(UserDTO dto, string password);
-        IEnumerable<User> Search(string[] str);
-        string ExtractFullName(Nullable<int> id);
+        IEnumerable<User> Search(string[] str, int? roleId);
+        string ExtractFullName(int? id);
     }
 }

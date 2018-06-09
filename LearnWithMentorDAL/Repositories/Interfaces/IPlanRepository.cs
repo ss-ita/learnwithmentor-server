@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LearnWithMentorDAL.Entities;
+﻿using LearnWithMentorDAL.Entities;
+using LearnWithMentorDTO;
 
 namespace LearnWithMentorDAL.Repositories
 {
     public interface IPlanRepository: IRepository<Plan>
     {
         Plan Get(int id);
+        void RemoveById(int id);
+        void UpdateById(PlanDTO plan, int id);
+        void Add(PlanDTO dto);
+        bool ContainsId(int id);
     }
 }

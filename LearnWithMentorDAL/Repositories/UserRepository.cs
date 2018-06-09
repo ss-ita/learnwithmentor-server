@@ -1,27 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using LearnWithMentorDAL.Entities;
-using System.Data.Entity;
 using LearnWithMentorDTO;
 
 namespace LearnWithMentorDAL.Repositories
 {
     public class UserRepository: BaseRepository<User>, IUserRepository
     {
-        public UserRepository(LearnWithMentor_DBEntities _context) : base(_context)
+        public UserRepository(LearnWithMentor_DBEntities context) : base(context)
         {
         }
         public User Get(int id)
         {
-            return context.Users.Where(u => u.Id == id).FirstOrDefault();
+            return context.Users.FirstOrDefault(u => u.Id == id);
         }
         public void RemoveById(int id)
         {
             var item = context.Users.Where(u => u.Id == id);
-            if (item != null)
+            if (item.Any())
             {
                 context.Users.RemoveRange(item);
             }
@@ -29,14 +25,14 @@ namespace LearnWithMentorDAL.Repositories
         public void UpdateById(int id, UserDTO user)
         {
             var item = context.Users.Where(u => u.Id == id);
-            if (item != null)
+            if (item.Any())
             {
                 User toUpdate = item.First();
                 toUpdate.FirstName = user.FirstName;
                 toUpdate.LastName = user.LastName;
-                if (context.Roles.Where(r => r.Name == user.Role) != null)
+                if (context.Roles.Any(r => r.Name == user.Role))
                 {
-                    toUpdate.Role_Id = context.Roles.Where(r => r.Name == user.Role).FirstOrDefault().Id;
+                    toUpdate.Role_Id = context.Roles.FirstOrDefault(r => r.Name == user.Role).Id;
                 }
                 Update(toUpdate);
             }
@@ -53,12 +49,13 @@ namespace LearnWithMentorDAL.Repositories
             toAdd.LastName = userDTO.LastName;
             context.Users.Add(toAdd);
         }
-        public IEnumerable<User> Search(string[] str)
+        public IEnumerable<User> Search(string[] str, int? roleId)
         {
             List<User> ret = new List<User>();
             foreach (var s in str)
             {
-                var found = context.Users.Where(u => u.FirstName.Contains(s) || u.LastName.Contains(s));
+                var found = roleId == null ? context.Users.Where(u => u.FirstName.Contains(s) || u.LastName.Contains(s)) :
+                    context.Users.Where(u => u.Role_Id == roleId).Where(u => u.FirstName.Contains(s) || u.LastName.Contains(s));
                 foreach (var f in found)
                 {
                     if (!ret.Contains(f))
@@ -70,11 +67,11 @@ namespace LearnWithMentorDAL.Repositories
             return ret;
         }
 
-        public string ExtractFullName(Nullable<int> id)
+        public string ExtractFullName(int? id)
         {
             if (id == null)
                 return null;
-            User currentUser = context.Users.Where(u => u.Id == id).FirstOrDefault();
+            User currentUser = context.Users.FirstOrDefault(u => u.Id == id);
             string fullName = null;
             if (currentUser!=null)
                 fullName=string.Concat(currentUser.FirstName, " ", currentUser.LastName);

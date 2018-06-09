@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using LearnWithMentorDAL.Entities;
 
 namespace LearnWithMentorDAL.Repositories
 {
     public class MessageRepository : BaseRepository<Message>, IMessageRepository
     {
-        public MessageRepository(LearnWithMentor_DBEntities _context) : base(_context)
+        public MessageRepository(LearnWithMentor_DBEntities context) : base(context)
         {
         }
         public Message Get(int id)
         {
-            return context.Messages.Where(m => m.Id == id).FirstOrDefault();
+            return context.Messages.FirstOrDefault(m => m.Id == id);
         }
     }
 }

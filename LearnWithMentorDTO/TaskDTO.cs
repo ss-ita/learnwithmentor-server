@@ -8,43 +8,43 @@ namespace LearnWithMentorDTO
 {
     public class TaskDTO
     {
-        public TaskDTO(int _id,
-                        string _name,
-                        string _description,
+        public TaskDTO(int id,
+                        string name,
+                        string description,
                         bool _private,
-                        int _create_id,
-                        string _creator_name,
-                        Nullable<int> _mod_id,
-                        string _modifier_name,
-                        Nullable<System.DateTime> _create_date,
-                        Nullable<System.DateTime> _mod_date,
-                        Nullable<int> _priority,
-                        Nullable<int> _section_id)
+                        int createId,
+                        string creatorName,
+                        int? modId,
+                        string modifierName,
+                        DateTime? createDate,
+                        DateTime? modDate,
+                        int? priority,
+                        int? sectionId)
         {
-            Id = _id;
-            Name = _name;
-            Description = _description;
+            Id = id;
+            Name = name;
+            Description = description;
             Private = _private;
-            Create_Date = _create_date;
-            Mod_Date = _mod_date;
-            Creator_Id = _create_id;
-            Creator_Name = _creator_name;
-            Modifier_Name = _modifier_name;
-            Modifier_Id = _mod_id;
-            Priority = _priority;
-            Section_Id = _section_id;
+            CreateDate = createDate;
+            ModDate = modDate;
+            CreatorId = createId;
+            CreatorName = creatorName;
+            ModifierId = modId;
+            ModifierName = modifierName;
+            Priority = priority;
+            SectionId = sectionId;
         }
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public bool Private { get; set; }
-        public int Creator_Id { get; set; }
-        public string Creator_Name { get; set; }
-        public Nullable<int> Modifier_Id { get; set; }
-        public string Modifier_Name { get; set; }
-        public Nullable<System.DateTime> Create_Date { get; set; }
-        public Nullable<System.DateTime> Mod_Date { get; set; }
-        public Nullable<int> Priority { get; set; }
-        public Nullable<int> Section_Id { get; set; }
+        public int CreatorId { get; set; }
+        public string CreatorName { get; set; }
+        public int? ModifierId { get; set; }
+        public string ModifierName { get; set; }
+        public DateTime? CreateDate { get; set; }
+        public DateTime? ModDate { get; set; }
+        public int? Priority { get; set; }
+        public int? SectionId { get; set; }
     }
 }
