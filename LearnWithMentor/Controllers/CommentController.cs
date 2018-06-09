@@ -1,6 +1,6 @@
 ﻿using System.Web.Http;
-using LearnWithMentorDAL;
 using LearnWithMentorDAL.Entities;
+using LearnWithMentorDAL.UnitOfWork;
 using LearnWithMentorDTO;
 
 namespace LearnWithMentor.Controllers

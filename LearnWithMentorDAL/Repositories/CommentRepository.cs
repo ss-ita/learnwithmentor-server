@@ -6,18 +6,18 @@ namespace LearnWithMentorDAL.Repositories
 {
     public class CommentRepository: BaseRepository<Comment>, ICommentRepository
     {
-        public CommentRepository(LearnWithMentor_DBEntities _context) : base(_context)
+        public CommentRepository(LearnWithMentor_DBEntities context) : base(context)
         {
         }
 
         public Comment Get(int id)
         {
-            return context.Comments.Where(t => t.Id == id).FirstOrDefault();
+            return context.Comments.FirstOrDefault(t => t.Id == id);
         }
 
         public void Add(CommentDTO comment, int taskId)
         {
-            Comment newComment = new Comment()
+            var newComment = new Comment()
             {
                 Id = comment.Id,
                 Task_Id = taskId,
@@ -40,7 +40,7 @@ namespace LearnWithMentorDAL.Repositories
         public void RemoveById(int id)
         {
             var item = context.Comments.Where(c => c.Id == id);
-            if (item != null)
+            if (item.Any())
             {
                 context.Comments.RemoveRange(item);
             }
