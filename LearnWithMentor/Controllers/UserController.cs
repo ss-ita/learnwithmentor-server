@@ -60,7 +60,7 @@ namespace LearnWithMentor.Controllers
 
         [HttpGet]
         [Route("api/user/search")]
-        public IEnumerable<UserDTO> Search(string q)
+        public IEnumerable<UserDTO> Search(string q, string role)
         {
             if (q == null)
             {
@@ -68,9 +68,11 @@ namespace LearnWithMentor.Controllers
             }
             else
             {
+                Role criteria;
+                bool existsRole = UoW.Roles.TryGetByName(role, out criteria);
                 string[] lines = q.Split(' ');
                 List<UserDTO> dto = new List<UserDTO>();
-                foreach (var u in UoW.Users.Search(lines))
+                foreach (var u in existsRole ? UoW.Users.Search(lines,criteria.Id) : UoW.Users.Search(lines, null))
                 {
                     dto.Add(new UserDTO(u.Id, u.FirstName, u.LastName, u.Email, u.Roles.Name));
                 }
