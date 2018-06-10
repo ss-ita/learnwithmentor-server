@@ -22,32 +22,52 @@ namespace LearnWithMentorDAL.Repositories
                 context.Users.RemoveRange(item);
             }
         }
-        public void UpdateById(int id, UserDTO user)
+        public bool UpdateById(int id, UserDTO user)
         {
+            bool modified = false;
             var item = context.Users.Where(u => u.Id == id);
             if (item.Any())
             {
                 User toUpdate = item.First();
-                toUpdate.FirstName = user.FirstName;
-                toUpdate.LastName = user.LastName;
-                if (context.Roles.Any(r => r.Name == user.Role))
+                if (user.FirstName != null)
                 {
-                    toUpdate.Role_Id = context.Roles.FirstOrDefault(r => r.Name == user.Role).Id;
+                    toUpdate.FirstName = user.FirstName;
+                    modified = true;
+                }
+                if (user.LastName != null)
+                {
+                    toUpdate.LastName = user.LastName;
+                    modified = true;
+                }
+                var updatedRole = context.Roles.Where(r => r.Name == user.Role);
+                if (updatedRole.Any())
+                {
+                    toUpdate.Role_Id = updatedRole.First().Id;
+                    modified = true;
                 }
                 Update(toUpdate);
             }
+            return modified;
         }
-        public void Add(UserDTO userDTO, string password)
+        public bool Add(UserDTO userDTO, string password)
         {
-            User toAdd = new User();
-            toAdd.Email = userDTO.Email;
-            //add hashing
-            toAdd.Password = password;
-            toAdd.Role_Id = context.Roles.Where(r => r.Name == userDTO.Role) != null ?
-                context.Roles.Where(r => r.Name == userDTO.Role).First().Id : context.Roles.Where(r => r.Name == "Student").FirstOrDefault().Id;
-            toAdd.FirstName = userDTO.FirstName;
-            toAdd.LastName = userDTO.LastName;
-            context.Users.Add(toAdd);
+            if (userDTO.Email == null || userDTO.FirstName == null || userDTO.LastName == null || password == null)
+            {
+                return false;
+            }
+            else
+            {
+                User toAdd = new User();
+                toAdd.Email = userDTO.Email;
+                //add hashing
+                toAdd.Password = password;
+                toAdd.Role_Id = context.Roles.Where(r => r.Name == userDTO.Role).Any() ?
+                    context.Roles.Where(r => r.Name == userDTO.Role).First().Id : context.Roles.Where(r => r.Name == "Student").First().Id;
+                toAdd.FirstName = userDTO.FirstName;
+                toAdd.LastName = userDTO.LastName;
+                context.Users.Add(toAdd);
+                return true;
+            }
         }
         public IEnumerable<User> Search(string[] str, int? roleId)
         {
