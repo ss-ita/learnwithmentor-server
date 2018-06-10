@@ -42,7 +42,7 @@ namespace LearnWithMentor.Controllers
 
         // GET api/task/5
         [HttpGet]
-        [Route("api/task")]
+        [Route("api/task/{id}")]
         public TaskDTO Get(int id)
         {
             Task t = UoW.Tasks.Get(id);
@@ -105,14 +105,15 @@ namespace LearnWithMentor.Controllers
                                        UoW.Users.ExtractFullName(t.Mod_Id),
                                        t.Create_Date,
                                        t.Mod_Date,
-                                       t.PlanTasks.Where(pt => pt.Task_Id == t.Id && pt.Plan_Id == planId).FirstOrDefault().Priority,
-                                       t.PlanTasks.Where(pt => pt.Task_Id == t.Id && pt.Plan_Id == planId).FirstOrDefault().Section_Id));
+                                       t.PlanTasks.Where(pt => pt.Task_Id == t.Id && pt.Plan_Id == planId).FirstOrDefault()?.Priority,
+                                       t.PlanTasks.Where(pt => pt.Task_Id == t.Id && pt.Plan_Id == planId).FirstOrDefault()?.Section_Id));
                 }
                 return dto;
             }
         }
         // POST api/task
         [HttpPost]
+        [Route("api/task")]
         public IHttpActionResult Post([FromBody]TaskDTO t)
         {
             UoW.Tasks.Add(t);
@@ -122,6 +123,7 @@ namespace LearnWithMentor.Controllers
 
         // PUT api/task/5
         [HttpPut]
+        [Route("api/task/{id}")]
         public IHttpActionResult Put(int id, [FromBody]TaskDTO t)
         {
             UoW.Tasks.UpdateById(id,t);
@@ -131,6 +133,7 @@ namespace LearnWithMentor.Controllers
 
         // DELETE api/task/5
         [HttpDelete]
+        [Route("api/task/{id}")]
         public IHttpActionResult Delete(int id)
         {
             UoW.Tasks.RemoveById(id);

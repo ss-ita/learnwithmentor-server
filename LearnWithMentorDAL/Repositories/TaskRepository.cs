@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Data.Entity;
 using LearnWithMentorDAL.Entities;
 using LearnWithMentorDTO;
 
@@ -57,7 +56,9 @@ namespace LearnWithMentorDAL.Repositories
                 else if (!context.Plans.Any(p=>p.Id==planId))
                     return null;
                 else
-                    found = context.PlanTasks.Where(p => p.Plan_Id == planId).Select(t => t.Tasks);
+                    found = context.PlanTasks.Where(p => p.Plan_Id == planId)
+                                             .Select(t => t.Tasks)
+                                             .Where(t=>t.Name.Contains(s));
                 foreach (var f in found)
                 {
                     if (!ret.Contains(f))
