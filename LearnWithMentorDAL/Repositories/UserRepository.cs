@@ -22,8 +22,9 @@ namespace LearnWithMentorDAL.Repositories
                 context.Users.RemoveRange(item);
             }
         }
-        public void UpdateById(int id, UserDTO user)
+        public bool UpdateById(int id, UserDTO user)
         {
+            bool modified = false;
             var item = context.Users.Where(u => u.Id == id);
             if (item.Any())
             {
@@ -31,18 +32,22 @@ namespace LearnWithMentorDAL.Repositories
                 if (user.FirstName != null)
                 {
                     toUpdate.FirstName = user.FirstName;
+                    modified = true;
                 }
                 if (user.LastName != null)
                 {
                     toUpdate.LastName = user.LastName;
+                    modified = true;
                 }
                 var updatedRole = context.Roles.Where(r => r.Name == user.Role);
                 if (updatedRole.Any())
                 {
                     toUpdate.Role_Id = updatedRole.First().Id;
+                    modified = true;
                 }
                 Update(toUpdate);
             }
+            return modified;
         }
         public bool Add(UserDTO userDTO, string password)
         {

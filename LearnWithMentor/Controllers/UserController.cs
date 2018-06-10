@@ -48,9 +48,16 @@ namespace LearnWithMentor.Controllers
         // PUT: api/User/5
         public IHttpActionResult Put(int id, [FromBody]UserDTO value)
         {
-            UoW.Users.UpdateById(id, value);
-            UoW.Save();
-            return Ok();
+            bool success = UoW.Users.UpdateById(id, value);
+            if (success)
+            {
+                UoW.Save();
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
         // DELETE: api/User/5
