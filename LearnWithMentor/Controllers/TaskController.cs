@@ -61,7 +61,7 @@ namespace LearnWithMentor.Controllers
                                null);
         }
 
-        // GET api/task/{id}/plan/{plan_id}
+        // GET api/task/search?id={id}&planid={planid}
         [HttpGet]
         [Route("api/task")]
         public TaskDTO Get(int id,int planid )
@@ -81,6 +81,7 @@ namespace LearnWithMentor.Controllers
                                t.PlanTasks.Where(pt => pt.Task_Id == t.Id && pt.Plan_Id == planid).FirstOrDefault().Priority,
                                t.PlanTasks.Where(pt => pt.Task_Id == t.Id && pt.Plan_Id == planid).FirstOrDefault().Section_Id);
         }
+        // GET api/task/search?key={key}&planid={planid}
         [HttpGet]
         [Route("api/task/search")]
         public IEnumerable<TaskDTO> Search(string key, int? planId)
@@ -89,27 +90,24 @@ namespace LearnWithMentor.Controllers
             {
                 return Get();
             }
-            else
+            string[] lines = key.Split(' ');
+            List<TaskDTO> dto = new List<TaskDTO>();
+            foreach (var t in UoW.Tasks.Search(lines, planId))
             {
-                string[] lines = key.Split(' ');
-                List<TaskDTO> dto = new List<TaskDTO>();
-                foreach (var t in UoW.Tasks.Search(lines, planId))
-                {
-                    dto.Add(new TaskDTO(t.Id,
-                                       t.Name,
-                                       t.Description,
-                                       t.Private,
-                                       t.Create_Id,
-                                       UoW.Users.ExtractFullName(t.Create_Id),
-                                       t.Mod_Id,
-                                       UoW.Users.ExtractFullName(t.Mod_Id),
-                                       t.Create_Date,
-                                       t.Mod_Date,
-                                       t.PlanTasks.Where(pt => pt.Task_Id == t.Id && pt.Plan_Id == planId).FirstOrDefault()?.Priority,
-                                       t.PlanTasks.Where(pt => pt.Task_Id == t.Id && pt.Plan_Id == planId).FirstOrDefault()?.Section_Id));
-                }
-                return dto;
+                dto.Add(new TaskDTO(t.Id,
+                                    t.Name,
+                                    t.Description,
+                                    t.Private,
+                                    t.Create_Id,
+                                    UoW.Users.ExtractFullName(t.Create_Id),
+                                    t.Mod_Id,
+                                    UoW.Users.ExtractFullName(t.Mod_Id),
+                                    t.Create_Date,
+                                    t.Mod_Date,
+                                    t.PlanTasks.Where(pt => pt.Task_Id == t.Id && pt.Plan_Id == planId).FirstOrDefault()?.Priority,
+                                    t.PlanTasks.Where(pt => pt.Task_Id == t.Id && pt.Plan_Id == planId).FirstOrDefault()?.Section_Id));
             }
+            return dto;
         }
         // POST api/task
         [HttpPost]
