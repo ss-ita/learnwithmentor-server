@@ -45,7 +45,10 @@ namespace LearnWithMentorDAL.Repositories
                 Create_Id = dto.Creatorid
             };
             context.Plans.Add(plan);
-
+        }
+        public bool ContainsId(int id)
+        {
+            return context.Plans.Any(p => p.Id == id);
         }
     }
 }

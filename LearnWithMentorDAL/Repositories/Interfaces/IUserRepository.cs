@@ -11,5 +11,6 @@ namespace LearnWithMentorDAL.Repositories
         bool UpdateById(int id, UserDTO user);
         bool Add(UserDTO dto, string password);
         IEnumerable<User> Search(string[] str, int? role_id);
+        string ExtractFullName(int? id);
     }
 }

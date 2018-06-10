@@ -1,4 +1,5 @@
-﻿using LearnWithMentorDAL.Entities;
+﻿using System.Linq;
+using LearnWithMentorDAL.Entities;
 
 namespace LearnWithMentorDAL.Repositories
 {
@@ -6,6 +7,10 @@ namespace LearnWithMentorDAL.Repositories
     {
         public PlanTaskRepository(LearnWithMentor_DBEntities context) : base(context)
         {
+        }
+        public bool ContainsTaskInPlan(int taskId, int planId)
+        {
+            return context.PlanTasks.Any(pt => pt.Task_Id == taskId && pt.Plan_Id == planId);
         }
     }
 }

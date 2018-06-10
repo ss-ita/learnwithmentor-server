@@ -13,32 +13,38 @@ namespace LearnWithMentorDTO
                         string description,
                         bool _private,
                         int createId,
-                        Nullable<int> modId,
-                        Nullable<System.DateTime> createDate,
-                        Nullable<System.DateTime> modDate,
-                        Nullable<int> priority,
-                        Nullable<int> sectionId)
+                        string creatorName,
+                        int? modId,
+                        string modifierName,
+                        DateTime? createDate,
+                        DateTime? modDate,
+                        int? priority,
+                        int? sectionId)
         {
             Id = id;
             Name = name;
             Description = description;
             Private = _private;
-            Create_Date = createDate;
-            Mod_Date = modDate;
-            Creator_Id = createId;
-            Modifier_Id = modId;
+            CreateDate = createDate;
+            ModDate = modDate;
+            CreatorId = createId;
+            CreatorName = creatorName;
+            ModifierId = modId;
+            ModifierName = modifierName;
             Priority = priority;
-            Section_Id = sectionId;
+            SectionId = sectionId;
         }
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public bool Private { get; set; }
-        public int Creator_Id { get; set; }
-        public Nullable<int> Modifier_Id { get; set; }
-        public Nullable<System.DateTime> Create_Date { get; set; }
-        public Nullable<System.DateTime> Mod_Date { get; set; }
-        public Nullable<int> Priority { get; set; }
-        public Nullable<int> Section_Id { get; set; }
+        public int CreatorId { get; set; }
+        public string CreatorName { get; set; }
+        public int? ModifierId { get; set; }
+        public string ModifierName { get; set; }
+        public DateTime? CreateDate { get; set; }
+        public DateTime? ModDate { get; set; }
+        public int? Priority { get; set; }
+        public int? SectionId { get; set; }
     }
 }

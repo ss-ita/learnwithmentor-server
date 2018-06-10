@@ -69,13 +69,13 @@ namespace LearnWithMentorDAL.Repositories
                 return true;
             }
         }
-        public IEnumerable<User> Search(string[] str, int? role_id)
+        public IEnumerable<User> Search(string[] str, int? roleId)
         {
             List<User> ret = new List<User>();
             foreach (var s in str)
             {
-                var found = role_id == null ? context.Users.Where(u => u.FirstName.Contains(s) || u.LastName.Contains(s)) :
-                    context.Users.Where(u => u.Role_Id == role_id).Where(u => u.FirstName.Contains(s) || u.LastName.Contains(s));
+                var found = roleId == null ? context.Users.Where(u => u.FirstName.Contains(s) || u.LastName.Contains(s)) :
+                    context.Users.Where(u => u.Role_Id == roleId).Where(u => u.FirstName.Contains(s) || u.LastName.Contains(s));
                 foreach (var f in found)
                 {
                     if (!ret.Contains(f))
@@ -85,6 +85,17 @@ namespace LearnWithMentorDAL.Repositories
                 }
             }
             return ret;
+        }
+
+        public string ExtractFullName(int? id)
+        {
+            if (id == null)
+                return null;
+            User currentUser = context.Users.FirstOrDefault(u => u.Id == id);
+            string fullName = null;
+            if (currentUser!=null)
+                fullName=string.Concat(currentUser.FirstName, " ", currentUser.LastName);
+            return fullName;
         }
     }
 }
