@@ -100,11 +100,13 @@ CONSTRAINT FK_Tasks_To_UsersM FOREIGN KEY (Mod_Id)  REFERENCES Users (Id)
 
 CREATE TABLE PlanTasks
 (
+	Id INT IDENTITY,
     Plan_Id INT NOT NULL,
     Task_Id INT NOT NULL,
 	Priority INT,
 	Section_Id INT,   
     
+ CONSTRAINT PK_PlanTasks_Id PRIMARY KEY (Id),
  CONSTRAINT FK_PlanTasks_To_Plans FOREIGN KEY (Plan_Id)  REFERENCES Plans (Id),
  CONSTRAINT FK_PlanTasks_To_Tasks FOREIGN KEY (Task_Id)  REFERENCES Tasks (Id),
  CONSTRAINT FK_PlanTasks_To_Sections FOREIGN KEY (Section_Id)  REFERENCES Sections (Id)
@@ -161,14 +163,14 @@ CREATE TABLE PlanSuggestion
 CREATE TABLE Comments
 (
     Id INT IDENTITY,
-    Task_Id INT NOT NULL,    
+    PlanTask_Id INT NOT NULL,    
     Text NVARCHAR(2000) NOT NULL,
 	Create_Id INT NOT NULL,	
 	Create_Date DATETIME,
 	Mod_Date DATETIME,
 
  CONSTRAINT PK_Comments_Id PRIMARY KEY (Id),
- CONSTRAINT FK_Comments_To_Tasks FOREIGN KEY (Task_Id)  REFERENCES Tasks (Id),
+ CONSTRAINT FK_Comments_To_PlanTasks FOREIGN KEY (PlanTask_Id)  REFERENCES PlanTasks (Id),
  CONSTRAINT FK_Comments_To_UsersC FOREIGN KEY (Create_Id)  REFERENCES Users (Id)
 )
 
