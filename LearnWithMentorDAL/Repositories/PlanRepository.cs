@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization.Formatters;
 using LearnWithMentorDTO;
 using LearnWithMentorDAL.Entities;
 
@@ -24,20 +25,42 @@ namespace LearnWithMentorDAL.Repositories
             }
         }
 
-        public void UpdateById(PlanDTO plan, int id)
+        public bool UpdateById(PlanDTO plan, int id)
         {
+            var modified = false;
             var item = context.Plans.Where(c => c.Id == id);
-            if (!item.Any()) return;
-            var toUpdate = item.First();
-            toUpdate.Name = plan.Name;
-            toUpdate.Description = plan.Description;
-            toUpdate.Mod_Id = plan.Modid;
-            toUpdate.Published = plan.Published;
-            Update(toUpdate);
+            if (item.Any())
+            {
+                var toUpdate = item.First();
+                if (!string.IsNullOrEmpty(plan.Name))
+                {
+                    toUpdate.Name = plan.Name;
+                    modified = true;
+                }
+
+                if (plan.Description != null)
+                {
+                    toUpdate.Description = plan.Description;
+                    modified = true;
+                }
+
+                if (plan.Modid != null)
+                {
+                    toUpdate.Mod_Id = plan.Modid;
+                    modified = true;
+                }
+
+                toUpdate.Published = plan.Published;
+                Update(toUpdate);
+            }
+
+            return modified;
         }
 
-        public void Add(PlanDTO dto )
+        public bool Add(PlanDTO dto )
         {
+            if (string.IsNullOrEmpty(dto.Name)|| dto.Description=="" || !context.Users.Any(u => u.Id == dto.Creatorid))
+                return false;
             var plan = new Plan
             {
                 Name = dto.Name,
@@ -45,6 +68,7 @@ namespace LearnWithMentorDAL.Repositories
                 Create_Id = dto.Creatorid
             };
             context.Plans.Add(plan);
+            return true;
         }
         public bool ContainsId(int id)
         {

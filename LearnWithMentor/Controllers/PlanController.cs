@@ -65,7 +65,43 @@ namespace LearnWithMentor.Controllers
                 p.Mod_Date);
         }
 
+        // POST: api/plan
+        public IHttpActionResult Post([FromBody]PlanDTO value)
+        {
+            var success = UoW.Plans.Add(value);
+            if (success)
+            {
+                UoW.Save();
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
 
+        // PUT: api/plan/5
+        public IHttpActionResult Put(int id, [FromBody]PlanDTO value)
+        {
+            var success = UoW.Plans.UpdateById(value, id);
+            if (success)
+            {
+                UoW.Save();
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        // DELETE: api/plan/5
+        public IHttpActionResult Delete(int id)
+        {
+            UoW.Plans.RemoveById(id);
+            UoW.Save();
+            return Ok();
+        }
 
     }
 }
