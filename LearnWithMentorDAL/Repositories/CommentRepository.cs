@@ -15,12 +15,13 @@ namespace LearnWithMentorDAL.Repositories
             return context.Comments.FirstOrDefault(t => t.Id == id);
         }
 
+        //task id here is actually PlanTask id
         public void Add(CommentDTO comment, int taskId)
         {
             var newComment = new Comment()
             {
                 Id = comment.Id,
-                Task_Id = taskId,
+                PlanTask_Id = taskId,
                 Create_Id = comment.Id,
                 Create_Date = null,
                 Mod_Date = null

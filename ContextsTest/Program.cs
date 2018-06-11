@@ -25,12 +25,15 @@ namespace ContextsTest
             List<TaskDTO> dto = new List<TaskDTO>();
             foreach (var t in UoW.Tasks.GetAll())
             {
+                //added null params to replace creator and modifier names
                 dto.Add(new TaskDTO(t.Id,
                                     t.Name,
                                     t.Description,
                                     t.Private,
                                     t.Create_Id,
+                                    null,
                                     t.Mod_Id,
+                                    null,
                                     t.Create_Date,
                                     t.Mod_Date,
                                     null,

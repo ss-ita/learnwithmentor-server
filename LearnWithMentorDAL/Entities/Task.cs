@@ -17,7 +17,6 @@ namespace LearnWithMentorDAL.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Task()
         {
-            this.Comments = new HashSet<Comment>();
             this.PlanTasks = new HashSet<PlanTask>();
             this.UserTasks = new HashSet<UserTask>();
         }
@@ -31,8 +30,6 @@ namespace LearnWithMentorDAL.Entities
         public Nullable<System.DateTime> Create_Date { get; set; }
         public Nullable<System.DateTime> Mod_Date { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Comment> Comments { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PlanTask> PlanTasks { get; set; }
         public virtual User Users { get; set; }

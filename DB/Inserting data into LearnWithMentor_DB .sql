@@ -75,10 +75,10 @@ insert into UserTasks(User_Id,Task_Id,State,End_Date,Result) SELECT Users.Id, Ta
 insert into UserTasks(User_Id,Task_Id,State,End_Date,Result) SELECT Users.Id, Tasks.Id, 'p','2018-10-09','link github' FROM Users, Tasks WHERE Users.Email = 'andrew.l@gmail.com' AND Tasks.Name = 'Exceptions';
 insert into UserTasks(User_Id,Task_Id,State,End_Date,Result, Propose_End_Date) SELECT Users.Id, Tasks.Id, 'p','2018-08-03','link google.com', '2018-08-13T14:25:10' FROM Users, Tasks WHERE Users.Email = 'andrew.l@gmail.com' AND Tasks.Name = 'Exceptions';
 
-insert into Comments(Create_Id, Task_Id, Text) SELECT Users.Id, Tasks.Id, 'first comment' FROM Users, Tasks WHERE Users.Email = 'roman.p@gmail.com' AND Tasks.Name = 'OOP';
-insert into Comments(Create_Id, Task_Id, Text) SELECT Users.Id, Tasks.Id, 'second comment' FROM Users, Tasks WHERE Users.Email = 'andrew.l@gmail.com' AND Tasks.Name = 'Collections';
-insert into Comments(Create_Id, Task_Id, Text) SELECT Users.Id, Tasks.Id, 'third comment' FROM Users, Tasks WHERE Users.Email = 'riman@gmail.com' AND Tasks.Name = 'OOP';
-insert into Comments(Create_Id, Task_Id, Text) SELECT Users.Id, Tasks.Id, 'another comment' FROM Users, Tasks WHERE Users.Email = 'riman@gmail.com' AND Tasks.Name = 'Collections';
+insert into Comments(Create_Id, PlanTask_Id, Text) SELECT Users.Id, PlanTasks.Id, 'first comment' FROM Users, PlanTasks WHERE Users.Email = 'roman.p@gmail.com' AND PlanTasks.Id = 1;
+insert into Comments(Create_Id, PlanTask_Id, Text) SELECT Users.Id, PlanTasks.Id, 'second comment' FROM Users, PlanTasks WHERE Users.Email = 'andrew.l@gmail.com' AND PlanTasks.Id = 1;
+insert into Comments(Create_Id, PlanTask_Id, Text) SELECT Users.Id, PlanTasks.Id, 'third comment' FROM Users, PlanTasks WHERE Users.Email = 'riman@gmail.com' AND PlanTasks.Id = 2;
+insert into Comments(Create_Id, PlanTask_Id, Text) SELECT Users.Id, PlanTasks.Id, 'another comment' FROM Users, PlanTasks WHERE Users.Email = 'riman@gmail.com' AND PlanTasks.Id = 2;
 
 insert into Messages(User_Id, Text, Send_Time) SELECT Id, 'Hello', '2018-08-13T14:25:15' FROM Users WHERE Email = 'vyacheslav@gmail.com';
 insert into Messages(User_Id, Text, Send_Time) SELECT Id, 'Hello guys', '2018-08-13T14:15:10' FROM Users WHERE Email = 'vyacheslav@gmail.com';

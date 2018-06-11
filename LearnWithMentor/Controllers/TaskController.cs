@@ -142,7 +142,7 @@ namespace LearnWithMentor.Controllers
         [Route("api/task/{taskId}/comment")]
         public IEnumerable<CommentDTO> GetComments(int taskId)
         {
-            var comments = UoW.Comments.GetAll().Where(c => c.Task_Id == taskId);
+            var comments = UoW.Comments.GetAll().Where(c => c.PlanTask_Id == taskId);
             if (comments == null) return null;
             List<CommentDTO> dto = new List<CommentDTO>();
             foreach (var a in comments)

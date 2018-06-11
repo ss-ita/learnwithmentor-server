@@ -10,7 +10,7 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Task_Id" Type="int" Nullable="false" />
+          <Property Name="PlanTask_Id" Type="int" Nullable="false" />
           <Property Name="Text" Type="nvarchar" MaxLength="2000" Nullable="false" />
           <Property Name="Create_Id" Type="int" Nullable="false" />
           <Property Name="Create_Date" Type="datetime" />
@@ -70,13 +70,11 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.PlanSuggestion' does not ha
           <Property Name="Mentor_Id" Type="int" Nullable="false" />
           <Property Name="Text" Type="nvarchar" MaxLength="1000" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'LearnWithMentor_DB.dbo.PlanTasks' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="PlanTasks">
           <Key>
-            <PropertyRef Name="Plan_Id" />
-            <PropertyRef Name="Task_Id" />
+            <PropertyRef Name="Id" />
           </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Plan_Id" Type="int" Nullable="false" />
           <Property Name="Task_Id" Type="int" Nullable="false" />
           <Property Name="Priority" Type="int" />
@@ -189,15 +187,15 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
           <Property Name="Roles_Name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
-        <Association Name="FK_Comments_To_Tasks">
-          <End Role="Tasks" Type="Self.Tasks" Multiplicity="1" />
+        <Association Name="FK_Comments_To_PlanTasks">
+          <End Role="PlanTasks" Type="Self.PlanTasks" Multiplicity="1" />
           <End Role="Comments" Type="Self.Comments" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Tasks">
+            <Principal Role="PlanTasks">
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Comments">
-              <PropertyRef Name="Task_Id" />
+              <PropertyRef Name="PlanTask_Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -473,6 +471,7 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
           <EntitySet Name="Groups" EntityType="Self.Groups" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Messages" EntityType="Self.Messages" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Plans" EntityType="Self.Plans" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PlanTasks" EntityType="Self.PlanTasks" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Sections" EntityType="Self.Sections" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tasks" EntityType="Self.Tasks" Schema="dbo" store:Type="Tables" />
@@ -491,14 +490,6 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
     [PlanSuggestion].[Mentor_Id] AS [Mentor_Id], 
     [PlanSuggestion].[Text] AS [Text]
     FROM [dbo].[PlanSuggestion] AS [PlanSuggestion]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="PlanTasks" EntityType="Self.PlanTasks" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [PlanTasks].[Plan_Id] AS [Plan_Id], 
-    [PlanTasks].[Task_Id] AS [Task_Id], 
-    [PlanTasks].[Priority] AS [Priority], 
-    [PlanTasks].[Section_Id] AS [Section_Id]
-    FROM [dbo].[PlanTasks] AS [PlanTasks]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="UserGroups" EntityType="Self.UserGroups" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -536,8 +527,8 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
     [USERS_ROLES].[Email] AS [Email]
     FROM [dbo].[USERS_ROLES] AS [USERS_ROLES]</DefiningQuery>
           </EntitySet>
-          <AssociationSet Name="FK_Comments_To_Tasks" Association="Self.FK_Comments_To_Tasks">
-            <End Role="Tasks" EntitySet="Tasks" />
+          <AssociationSet Name="FK_Comments_To_PlanTasks" Association="Self.FK_Comments_To_PlanTasks">
+            <End Role="PlanTasks" EntitySet="PlanTasks" />
             <End Role="Comments" EntitySet="Comments" />
           </AssociationSet>
           <AssociationSet Name="FK_Comments_To_UsersC" Association="Self.FK_Comments_To_UsersC">
@@ -633,29 +624,127 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="LearnWithMentor_DBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="LearnWithMentor_DBEntities" annotation:LazyLoadingEnabled="true">
+          <FunctionImport Name="sp_Total_Ammount_of_Users">
+          <Parameter Name="Total" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="Comments" EntityType="LearnWithMentor_DBModel.Comment" />
+          <EntitySet Name="Groups" EntityType="LearnWithMentor_DBModel.Group" />
+          <EntitySet Name="Messages" EntityType="LearnWithMentor_DBModel.Message" />
+          <EntitySet Name="Plans" EntityType="LearnWithMentor_DBModel.Plan" />
+          <EntitySet Name="PlanTasks" EntityType="LearnWithMentor_DBModel.PlanTask" />
+          <EntitySet Name="Roles" EntityType="LearnWithMentor_DBModel.Role" />
+          <EntitySet Name="Sections" EntityType="LearnWithMentor_DBModel.Section" />
+          <EntitySet Name="Tasks" EntityType="LearnWithMentor_DBModel.Task" />
+          <EntitySet Name="Users" EntityType="LearnWithMentor_DBModel.User" />
+          <EntitySet Name="UserTasks" EntityType="LearnWithMentor_DBModel.UserTask" />
+          <EntitySet Name="PlanSuggestion" EntityType="LearnWithMentor_DBModel.PlanSuggestion" />
+          <EntitySet Name="GROUPS_PLANS_TASKS" EntityType="LearnWithMentor_DBModel.GROUP_PLAN_TASK" />
+          <EntitySet Name="USERS_ROLES" EntityType="LearnWithMentor_DBModel.USER_ROLE" />
+          <AssociationSet Name="FK_Comments_To_PlanTasks" Association="LearnWithMentor_DBModel.FK_Comments_To_PlanTasks">
+            <End Role="PlanTasks" EntitySet="PlanTasks" />
+            <End Role="Comments" EntitySet="Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Comments_To_UsersC" Association="LearnWithMentor_DBModel.FK_Comments_To_UsersC">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Comments" EntitySet="Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Groups_To_Users" Association="LearnWithMentor_DBModel.FK_Groups_To_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Groups" EntitySet="Groups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Masssage_To_Users" Association="LearnWithMentor_DBModel.FK_Masssage_To_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Messages" EntitySet="Messages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Plans_To_UsersC" Association="LearnWithMentor_DBModel.FK_Plans_To_UsersC">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Plans" EntitySet="Plans" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Plans_To_UsersM" Association="LearnWithMentor_DBModel.FK_Plans_To_UsersM">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Plans" EntitySet="Plans" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PlanSuggestion_To_Plans" Association="LearnWithMentor_DBModel.FK_PlanSuggestion_To_Plans">
+            <End Role="Plans" EntitySet="Plans" />
+            <End Role="PlanSuggestion" EntitySet="PlanSuggestion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PlanTasks_To_Plans" Association="LearnWithMentor_DBModel.FK_PlanTasks_To_Plans">
+            <End Role="Plans" EntitySet="Plans" />
+            <End Role="PlanTasks" EntitySet="PlanTasks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PlanTasks_To_Sections" Association="LearnWithMentor_DBModel.FK_PlanTasks_To_Sections">
+            <End Role="Sections" EntitySet="Sections" />
+            <End Role="PlanTasks" EntitySet="PlanTasks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PlanTasks_To_Tasks" Association="LearnWithMentor_DBModel.FK_PlanTasks_To_Tasks">
+            <End Role="Tasks" EntitySet="Tasks" />
+            <End Role="PlanTasks" EntitySet="PlanTasks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Users_To_Roles" Association="LearnWithMentor_DBModel.FK_Users_To_Roles">
+            <End Role="Roles" EntitySet="Roles" />
+            <End Role="Users" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tasks_To_UsersC" Association="LearnWithMentor_DBModel.FK_Tasks_To_UsersC">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Tasks" EntitySet="Tasks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tasks_To_UsersM" Association="LearnWithMentor_DBModel.FK_Tasks_To_UsersM">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Tasks" EntitySet="Tasks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserTasks_To_Activities" Association="LearnWithMentor_DBModel.FK_UserTasks_To_Activities">
+            <End Role="Tasks" EntitySet="Tasks" />
+            <End Role="UserTasks" EntitySet="UserTasks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PlanSuggestion_To_Users" Association="LearnWithMentor_DBModel.FK_PlanSuggestion_To_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="PlanSuggestion" EntitySet="PlanSuggestion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PlanSuggestion_To_Users1" Association="LearnWithMentor_DBModel.FK_PlanSuggestion_To_Users1">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="PlanSuggestion" EntitySet="PlanSuggestion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserTasks_To_Users" Association="LearnWithMentor_DBModel.FK_UserTasks_To_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserTasks" EntitySet="UserTasks" />
+          </AssociationSet>
+          <AssociationSet Name="GroupPlans" Association="LearnWithMentor_DBModel.GroupPlans">
+            <End Role="Groups" EntitySet="Groups" />
+            <End Role="Plans" EntitySet="Plans" />
+          </AssociationSet>
+          <AssociationSet Name="UserGroups" Association="LearnWithMentor_DBModel.UserGroups">
+            <End Role="Groups" EntitySet="Groups" />
+            <End Role="Users" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="UserTasksMessages" Association="LearnWithMentor_DBModel.UserTasksMessages">
+            <End Role="Messages" EntitySet="Messages" />
+            <End Role="UserTasks" EntitySet="UserTasks" />
+          </AssociationSet>
+          </EntityContainer>
         <EntityType Name="Comment">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Task_Id" Type="Int32" Nullable="false" />
-          <Property Name="Text" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PlanTask_Id" Type="Int32" Nullable="false" />
+          <Property Name="Text" Type="String" Nullable="false" MaxLength="2000" FixedLength="false" Unicode="true" />
           <Property Name="Create_Id" Type="Int32" Nullable="false" />
           <Property Name="Create_Date" Type="DateTime" Precision="3" />
           <Property Name="Mod_Date" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Tasks" Relationship="Self.FK_Comments_To_Tasks" FromRole="Comments" ToRole="Tasks" />
-          <NavigationProperty Name="Users" Relationship="Self.FK_Comments_To_UsersC" FromRole="Comments" ToRole="Users" />
+          <NavigationProperty Name="PlanTasks" Relationship="LearnWithMentor_DBModel.FK_Comments_To_PlanTasks" FromRole="Comments" ToRole="PlanTasks" />
+          <NavigationProperty Name="Users" Relationship="LearnWithMentor_DBModel.FK_Comments_To_UsersC" FromRole="Comments" ToRole="Users" />
         </EntityType>
         <EntityType Name="Group">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Mentor_Id" Type="Int32" />
-          <NavigationProperty Name="Users" Relationship="Self.FK_Groups_To_Users" FromRole="Groups" ToRole="Users" />
-          <NavigationProperty Name="Plans" Relationship="Self.GroupPlans" FromRole="Groups" ToRole="Plans" />
-          <NavigationProperty Name="Users1" Relationship="Self.UserGroups" FromRole="Groups" ToRole="Users" />
+          <NavigationProperty Name="Users" Relationship="LearnWithMentor_DBModel.FK_Groups_To_Users" FromRole="Groups" ToRole="Users" />
+          <NavigationProperty Name="Plans" Relationship="LearnWithMentor_DBModel.GroupPlans" FromRole="Groups" ToRole="Plans" />
+          <NavigationProperty Name="Users1" Relationship="LearnWithMentor_DBModel.UserGroups" FromRole="Groups" ToRole="Users" />
         </EntityType>
         <EntityType Name="Message">
           <Key>
@@ -663,85 +752,98 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="User_Id" Type="Int32" Nullable="false" />
-          <Property Name="Text" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Text" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="true" />
           <Property Name="Send_Time" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Users" Relationship="Self.FK_Masssage_To_Users" FromRole="Messages" ToRole="Users" />
-          <NavigationProperty Name="UserTasks" Relationship="Self.UserTasksMessages" FromRole="Messages" ToRole="UserTasks" />
+          <NavigationProperty Name="Users" Relationship="LearnWithMentor_DBModel.FK_Masssage_To_Users" FromRole="Messages" ToRole="Users" />
+          <NavigationProperty Name="UserTasks" Relationship="LearnWithMentor_DBModel.UserTasksMessages" FromRole="Messages" ToRole="UserTasks" />
         </EntityType>
         <EntityType Name="Plan">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="Published" Type="Boolean" Nullable="false" />
           <Property Name="Create_Id" Type="Int32" Nullable="false" />
           <Property Name="Mod_Id" Type="Int32" />
           <Property Name="Create_Date" Type="DateTime" Precision="3" />
           <Property Name="Mod_Date" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Users" Relationship="Self.FK_Plans_To_UsersC" FromRole="Plans" ToRole="Users" />
-          <NavigationProperty Name="Users1" Relationship="Self.FK_Plans_To_UsersM" FromRole="Plans" ToRole="Users" />
-          <NavigationProperty Name="PlanSuggestion" Relationship="Self.FK_PlanSuggestion_To_Plans" FromRole="Plans" ToRole="PlanSuggestion" />
-          <NavigationProperty Name="PlanTasks" Relationship="Self.FK_PlanTasks_To_Plans" FromRole="Plans" ToRole="PlanTasks" />
-          <NavigationProperty Name="Groups" Relationship="Self.GroupPlans" FromRole="Plans" ToRole="Groups" />
+          <NavigationProperty Name="Users" Relationship="LearnWithMentor_DBModel.FK_Plans_To_UsersC" FromRole="Plans" ToRole="Users" />
+          <NavigationProperty Name="Users1" Relationship="LearnWithMentor_DBModel.FK_Plans_To_UsersM" FromRole="Plans" ToRole="Users" />
+          <NavigationProperty Name="PlanSuggestion" Relationship="LearnWithMentor_DBModel.FK_PlanSuggestion_To_Plans" FromRole="Plans" ToRole="PlanSuggestion" />
+          <NavigationProperty Name="PlanTasks" Relationship="LearnWithMentor_DBModel.FK_PlanTasks_To_Plans" FromRole="Plans" ToRole="PlanTasks" />
+          <NavigationProperty Name="Groups" Relationship="LearnWithMentor_DBModel.GroupPlans" FromRole="Plans" ToRole="Groups" />
+        </EntityType>
+        <EntityType Name="PlanTask">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Plan_Id" Type="Int32" Nullable="false" />
+          <Property Name="Task_Id" Type="Int32" Nullable="false" />
+          <Property Name="Priority" Type="Int32" />
+          <Property Name="Section_Id" Type="Int32" />
+          <NavigationProperty Name="Comments" Relationship="LearnWithMentor_DBModel.FK_Comments_To_PlanTasks" FromRole="PlanTasks" ToRole="Comments" />
+          <NavigationProperty Name="Plans" Relationship="LearnWithMentor_DBModel.FK_PlanTasks_To_Plans" FromRole="PlanTasks" ToRole="Plans" />
+          <NavigationProperty Name="Sections" Relationship="LearnWithMentor_DBModel.FK_PlanTasks_To_Sections" FromRole="PlanTasks" ToRole="Sections" />
+          <NavigationProperty Name="Tasks" Relationship="LearnWithMentor_DBModel.FK_PlanTasks_To_Tasks" FromRole="PlanTasks" ToRole="Tasks" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Users" Relationship="Self.FK_Users_To_Roles" FromRole="Roles" ToRole="Users" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Users" Relationship="LearnWithMentor_DBModel.FK_Users_To_Roles" FromRole="Roles" ToRole="Users" />
         </EntityType>
         <EntityType Name="Section">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="PlanTasks" Relationship="Self.FK_PlanTasks_To_Sections" FromRole="Sections" ToRole="PlanTasks" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="PlanTasks" Relationship="LearnWithMentor_DBModel.FK_PlanTasks_To_Sections" FromRole="Sections" ToRole="PlanTasks" />
         </EntityType>
         <EntityType Name="Task">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Private" Type="Boolean" Nullable="false" />
           <Property Name="Create_Id" Type="Int32" Nullable="false" />
           <Property Name="Mod_Id" Type="Int32" />
           <Property Name="Create_Date" Type="DateTime" Precision="3" />
           <Property Name="Mod_Date" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Comments" Relationship="Self.FK_Comments_To_Tasks" FromRole="Tasks" ToRole="Comments" />
-          <NavigationProperty Name="PlanTasks" Relationship="Self.FK_PlanTasks_To_Tasks" FromRole="Tasks" ToRole="PlanTasks" />
-          <NavigationProperty Name="Users" Relationship="Self.FK_Tasks_To_UsersC" FromRole="Tasks" ToRole="Users" />
-          <NavigationProperty Name="Users1" Relationship="Self.FK_Tasks_To_UsersM" FromRole="Tasks" ToRole="Users" />
-          <NavigationProperty Name="UserTasks" Relationship="Self.FK_UserTasks_To_Activities" FromRole="Tasks" ToRole="UserTasks" />
+          <NavigationProperty Name="PlanTasks" Relationship="LearnWithMentor_DBModel.FK_PlanTasks_To_Tasks" FromRole="Tasks" ToRole="PlanTasks" />
+          <NavigationProperty Name="Users" Relationship="LearnWithMentor_DBModel.FK_Tasks_To_UsersC" FromRole="Tasks" ToRole="Users" />
+          <NavigationProperty Name="Users1" Relationship="LearnWithMentor_DBModel.FK_Tasks_To_UsersM" FromRole="Tasks" ToRole="Users" />
+          <NavigationProperty Name="UserTasks" Relationship="LearnWithMentor_DBModel.FK_UserTasks_To_Activities" FromRole="Tasks" ToRole="UserTasks" />
         </EntityType>
         <EntityType Name="User">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Role_Id" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Comments" Relationship="Self.FK_Comments_To_UsersC" FromRole="Users" ToRole="Comments" />
-          <NavigationProperty Name="Groups" Relationship="Self.FK_Groups_To_Users" FromRole="Users" ToRole="Groups" />
-          <NavigationProperty Name="Messages" Relationship="Self.FK_Masssage_To_Users" FromRole="Users" ToRole="Messages" />
-          <NavigationProperty Name="Plans" Relationship="Self.FK_Plans_To_UsersC" FromRole="Users" ToRole="Plans" />
-          <NavigationProperty Name="Plans1" Relationship="Self.FK_Plans_To_UsersM" FromRole="Users" ToRole="Plans" />
-          <NavigationProperty Name="Roles" Relationship="Self.FK_Users_To_Roles" FromRole="Users" ToRole="Roles" />
-          <NavigationProperty Name="Tasks" Relationship="Self.FK_Tasks_To_UsersC" FromRole="Users" ToRole="Tasks" />
-          <NavigationProperty Name="Tasks1" Relationship="Self.FK_Tasks_To_UsersM" FromRole="Users" ToRole="Tasks" />
-          <NavigationProperty Name="PlanSuggestion" Relationship="Self.FK_PlanSuggestion_To_Users" FromRole="Users" ToRole="PlanSuggestion" />
-          <NavigationProperty Name="PlanSuggestion1" Relationship="Self.FK_PlanSuggestion_To_Users1" FromRole="Users" ToRole="PlanSuggestion" />
-          <NavigationProperty Name="UserTasks" Relationship="Self.FK_UserTasks_To_Users" FromRole="Users" ToRole="UserTasks" />
-          <NavigationProperty Name="Groups1" Relationship="Self.UserGroups" FromRole="Users" ToRole="Groups" />
+          <NavigationProperty Name="Comments" Relationship="LearnWithMentor_DBModel.FK_Comments_To_UsersC" FromRole="Users" ToRole="Comments" />
+          <NavigationProperty Name="Groups" Relationship="LearnWithMentor_DBModel.FK_Groups_To_Users" FromRole="Users" ToRole="Groups" />
+          <NavigationProperty Name="Messages" Relationship="LearnWithMentor_DBModel.FK_Masssage_To_Users" FromRole="Users" ToRole="Messages" />
+          <NavigationProperty Name="Plans" Relationship="LearnWithMentor_DBModel.FK_Plans_To_UsersC" FromRole="Users" ToRole="Plans" />
+          <NavigationProperty Name="Plans1" Relationship="LearnWithMentor_DBModel.FK_Plans_To_UsersM" FromRole="Users" ToRole="Plans" />
+          <NavigationProperty Name="Roles" Relationship="LearnWithMentor_DBModel.FK_Users_To_Roles" FromRole="Users" ToRole="Roles" />
+          <NavigationProperty Name="Tasks" Relationship="LearnWithMentor_DBModel.FK_Tasks_To_UsersC" FromRole="Users" ToRole="Tasks" />
+          <NavigationProperty Name="Tasks1" Relationship="LearnWithMentor_DBModel.FK_Tasks_To_UsersM" FromRole="Users" ToRole="Tasks" />
+          <NavigationProperty Name="PlanSuggestion" Relationship="LearnWithMentor_DBModel.FK_PlanSuggestion_To_Users" FromRole="Users" ToRole="PlanSuggestion" />
+          <NavigationProperty Name="PlanSuggestion1" Relationship="LearnWithMentor_DBModel.FK_PlanSuggestion_To_Users1" FromRole="Users" ToRole="PlanSuggestion" />
+          <NavigationProperty Name="UserTasks" Relationship="LearnWithMentor_DBModel.FK_UserTasks_To_Users" FromRole="Users" ToRole="UserTasks" />
+          <NavigationProperty Name="Groups1" Relationship="LearnWithMentor_DBModel.UserGroups" FromRole="Users" ToRole="Groups" />
         </EntityType>
         <EntityType Name="UserTask">
           <Key>
@@ -750,13 +852,13 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="User_Id" Type="Int32" Nullable="false" />
           <Property Name="Task_Id" Type="Int32" Nullable="false" />
-          <Property Name="State" Type="String" MaxLength="1" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="State" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="true" />
           <Property Name="End_Date" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Result" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Result" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Propose_End_Date" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Tasks" Relationship="Self.FK_UserTasks_To_Activities" FromRole="UserTasks" ToRole="Tasks" />
-          <NavigationProperty Name="Users" Relationship="Self.FK_UserTasks_To_Users" FromRole="UserTasks" ToRole="Users" />
-          <NavigationProperty Name="Messages" Relationship="Self.UserTasksMessages" FromRole="UserTasks" ToRole="Messages" />
+          <NavigationProperty Name="Tasks" Relationship="LearnWithMentor_DBModel.FK_UserTasks_To_Activities" FromRole="UserTasks" ToRole="Tasks" />
+          <NavigationProperty Name="Users" Relationship="LearnWithMentor_DBModel.FK_UserTasks_To_Users" FromRole="UserTasks" ToRole="Users" />
+          <NavigationProperty Name="Messages" Relationship="LearnWithMentor_DBModel.UserTasksMessages" FromRole="UserTasks" ToRole="Messages" />
         </EntityType>
         <EntityType Name="PlanSuggestion">
           <Key>
@@ -768,23 +870,10 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
           <Property Name="Plan_Id" Type="Int32" Nullable="false" />
           <Property Name="User_Id" Type="Int32" Nullable="false" />
           <Property Name="Mentor_Id" Type="Int32" Nullable="false" />
-          <Property Name="Text" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Plans" Relationship="Self.FK_PlanSuggestion_To_Plans" FromRole="PlanSuggestion" ToRole="Plans" />
-          <NavigationProperty Name="Users" Relationship="Self.FK_PlanSuggestion_To_Users" FromRole="PlanSuggestion" ToRole="Users" />
-          <NavigationProperty Name="Users1" Relationship="Self.FK_PlanSuggestion_To_Users1" FromRole="PlanSuggestion" ToRole="Users" />
-        </EntityType>
-        <EntityType Name="PlanTask">
-          <Key>
-            <PropertyRef Name="Plan_Id" />
-            <PropertyRef Name="Task_Id" />
-          </Key>
-          <Property Name="Plan_Id" Type="Int32" Nullable="false" />
-          <Property Name="Task_Id" Type="Int32" Nullable="false" />
-          <Property Name="Priority" Type="Int32" />
-          <Property Name="Section_Id" Type="Int32" />
-          <NavigationProperty Name="Plans" Relationship="Self.FK_PlanTasks_To_Plans" FromRole="PlanTasks" ToRole="Plans" />
-          <NavigationProperty Name="Sections" Relationship="Self.FK_PlanTasks_To_Sections" FromRole="PlanTasks" ToRole="Sections" />
-          <NavigationProperty Name="Tasks" Relationship="Self.FK_PlanTasks_To_Tasks" FromRole="PlanTasks" ToRole="Tasks" />
+          <Property Name="Text" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Plans" Relationship="LearnWithMentor_DBModel.FK_PlanSuggestion_To_Plans" FromRole="PlanSuggestion" ToRole="Plans" />
+          <NavigationProperty Name="Users" Relationship="LearnWithMentor_DBModel.FK_PlanSuggestion_To_Users" FromRole="PlanSuggestion" ToRole="Users" />
+          <NavigationProperty Name="Users1" Relationship="LearnWithMentor_DBModel.FK_PlanSuggestion_To_Users1" FromRole="PlanSuggestion" ToRole="Users" />
         </EntityType>
         <EntityType Name="GROUP_PLAN_TASK">
           <Key>
@@ -794,333 +883,19 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
             <PropertyRef Name="Task_Name" />
             <PropertyRef Name="Private" />
           </Key>
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="Create_Date" Type="DateTime" Precision="3" />
           <Property Name="Mod_Date" Type="DateTime" Precision="3" />
           <Property Name="Published" Type="Boolean" Nullable="false" />
           <Property Name="Priority" Type="Int32" />
-          <Property Name="Section_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Task_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Section_Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Task_Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Task_Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Tasks_Create_Date" Type="DateTime" Precision="3" />
           <Property Name="Task_Mod_Date" Type="DateTime" Precision="3" />
           <Property Name="Private" Type="Boolean" Nullable="false" />
         </EntityType>
-        <Association Name="FK_Comments_To_Tasks">
-          <End Role="Tasks" Type="LearnWithMentor_DBModel.Task" Multiplicity="1" />
-          <End Role="Comments" Type="LearnWithMentor_DBModel.Comment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Tasks">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Comments">
-              <PropertyRef Name="Task_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Comments_To_UsersC">
-          <End Role="Users" Type="LearnWithMentor_DBModel.User" Multiplicity="1" />
-          <End Role="Comments" Type="LearnWithMentor_DBModel.Comment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Comments">
-              <PropertyRef Name="Create_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Groups_To_Users">
-          <End Role="Users" Type="LearnWithMentor_DBModel.User" Multiplicity="0..1" />
-          <End Role="Groups" Type="LearnWithMentor_DBModel.Group" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Groups">
-              <PropertyRef Name="Mentor_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Masssage_To_Users">
-          <End Role="Users" Type="LearnWithMentor_DBModel.User" Multiplicity="1" />
-          <End Role="Messages" Type="LearnWithMentor_DBModel.Message" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Messages">
-              <PropertyRef Name="User_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Plans_To_UsersC">
-          <End Role="Users" Type="LearnWithMentor_DBModel.User" Multiplicity="1" />
-          <End Role="Plans" Type="LearnWithMentor_DBModel.Plan" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Plans">
-              <PropertyRef Name="Create_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Plans_To_UsersM">
-          <End Role="Users" Type="LearnWithMentor_DBModel.User" Multiplicity="0..1" />
-          <End Role="Plans" Type="LearnWithMentor_DBModel.Plan" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Plans">
-              <PropertyRef Name="Mod_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PlanSuggestion_To_Plans">
-          <End Role="Plans" Type="LearnWithMentor_DBModel.Plan" Multiplicity="1" />
-          <End Role="PlanSuggestion" Type="Self.PlanSuggestion" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Plans">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="PlanSuggestion">
-              <PropertyRef Name="Plan_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PlanTasks_To_Plans">
-          <End Role="Plans" Type="LearnWithMentor_DBModel.Plan" Multiplicity="1" />
-          <End Role="PlanTasks" Type="LearnWithMentor_DBModel.PlanTask" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Plans">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="PlanTasks">
-              <PropertyRef Name="Plan_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Users_To_Roles">
-          <End Role="Roles" Type="LearnWithMentor_DBModel.Role" Multiplicity="1" />
-          <End Role="Users" Type="LearnWithMentor_DBModel.User" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Roles">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Users">
-              <PropertyRef Name="Role_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PlanTasks_To_Sections">
-          <End Role="Sections" Type="LearnWithMentor_DBModel.Section" Multiplicity="0..1" />
-          <End Role="PlanTasks" Type="LearnWithMentor_DBModel.PlanTask" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Sections">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="PlanTasks">
-              <PropertyRef Name="Section_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PlanTasks_To_Tasks">
-          <End Role="Tasks" Type="LearnWithMentor_DBModel.Task" Multiplicity="1" />
-          <End Role="PlanTasks" Type="LearnWithMentor_DBModel.PlanTask" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Tasks">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="PlanTasks">
-              <PropertyRef Name="Task_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Tasks_To_UsersC">
-          <End Role="Users" Type="LearnWithMentor_DBModel.User" Multiplicity="1" />
-          <End Role="Tasks" Type="LearnWithMentor_DBModel.Task" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Tasks">
-              <PropertyRef Name="Create_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Tasks_To_UsersM">
-          <End Role="Users" Type="LearnWithMentor_DBModel.User" Multiplicity="0..1" />
-          <End Role="Tasks" Type="LearnWithMentor_DBModel.Task" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Tasks">
-              <PropertyRef Name="Mod_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_UserTasks_To_Activities">
-          <End Role="Tasks" Type="LearnWithMentor_DBModel.Task" Multiplicity="1" />
-          <End Role="UserTasks" Type="LearnWithMentor_DBModel.UserTask" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Tasks">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="UserTasks">
-              <PropertyRef Name="Task_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PlanSuggestion_To_Users">
-          <End Role="Users" Type="LearnWithMentor_DBModel.User" Multiplicity="1" />
-          <End Role="PlanSuggestion" Type="Self.PlanSuggestion" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="PlanSuggestion">
-              <PropertyRef Name="User_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PlanSuggestion_To_Users1">
-          <End Role="Users" Type="LearnWithMentor_DBModel.User" Multiplicity="1" />
-          <End Role="PlanSuggestion" Type="Self.PlanSuggestion" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="PlanSuggestion">
-              <PropertyRef Name="Mentor_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_UserTasks_To_Users">
-          <End Role="Users" Type="LearnWithMentor_DBModel.User" Multiplicity="1" />
-          <End Role="UserTasks" Type="LearnWithMentor_DBModel.UserTask" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="UserTasks">
-              <PropertyRef Name="User_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="GroupPlans">
-          <End Role="Groups" Type="LearnWithMentor_DBModel.Group" Multiplicity="*" />
-          <End Role="Plans" Type="LearnWithMentor_DBModel.Plan" Multiplicity="*" />
-        </Association>
-        <Association Name="UserGroups">
-          <End Role="Groups" Type="LearnWithMentor_DBModel.Group" Multiplicity="*" />
-          <End Role="Users" Type="LearnWithMentor_DBModel.User" Multiplicity="*" />
-        </Association>
-        <Association Name="UserTasksMessages">
-          <End Role="Messages" Type="LearnWithMentor_DBModel.Message" Multiplicity="*" />
-          <End Role="UserTasks" Type="LearnWithMentor_DBModel.UserTask" Multiplicity="*" />
-        </Association>
-        <EntityContainer Name="LearnWithMentor_DBEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Comments" EntityType="LearnWithMentor_DBModel.Comment" />
-          <EntitySet Name="Groups" EntityType="LearnWithMentor_DBModel.Group" />
-          <EntitySet Name="Messages" EntityType="LearnWithMentor_DBModel.Message" />
-          <EntitySet Name="Plans" EntityType="LearnWithMentor_DBModel.Plan" />
-          <EntitySet Name="Roles" EntityType="LearnWithMentor_DBModel.Role" />
-          <EntitySet Name="Sections" EntityType="LearnWithMentor_DBModel.Section" />
-          <EntitySet Name="Tasks" EntityType="LearnWithMentor_DBModel.Task" />
-          <EntitySet Name="Users" EntityType="LearnWithMentor_DBModel.User" />
-          <EntitySet Name="UserTasks" EntityType="LearnWithMentor_DBModel.UserTask" />
-          <EntitySet Name="PlanSuggestion" EntityType="Self.PlanSuggestion" />
-          <EntitySet Name="PlanTasks" EntityType="LearnWithMentor_DBModel.PlanTask" />
-          <EntitySet Name="GROUPS_PLANS_TASKS" EntityType="LearnWithMentor_DBModel.GROUP_PLAN_TASK" />
-          <AssociationSet Name="FK_Comments_To_Tasks" Association="Self.FK_Comments_To_Tasks">
-            <End Role="Tasks" EntitySet="Tasks" />
-            <End Role="Comments" EntitySet="Comments" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Comments_To_UsersC" Association="Self.FK_Comments_To_UsersC">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Comments" EntitySet="Comments" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Groups_To_Users" Association="Self.FK_Groups_To_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Groups" EntitySet="Groups" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Masssage_To_Users" Association="Self.FK_Masssage_To_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Messages" EntitySet="Messages" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Plans_To_UsersC" Association="Self.FK_Plans_To_UsersC">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Plans" EntitySet="Plans" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Plans_To_UsersM" Association="Self.FK_Plans_To_UsersM">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Plans" EntitySet="Plans" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PlanSuggestion_To_Plans" Association="Self.FK_PlanSuggestion_To_Plans">
-            <End Role="Plans" EntitySet="Plans" />
-            <End Role="PlanSuggestion" EntitySet="PlanSuggestion" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PlanTasks_To_Plans" Association="Self.FK_PlanTasks_To_Plans">
-            <End Role="Plans" EntitySet="Plans" />
-            <End Role="PlanTasks" EntitySet="PlanTasks" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Users_To_Roles" Association="Self.FK_Users_To_Roles">
-            <End Role="Roles" EntitySet="Roles" />
-            <End Role="Users" EntitySet="Users" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PlanTasks_To_Sections" Association="Self.FK_PlanTasks_To_Sections">
-            <End Role="Sections" EntitySet="Sections" />
-            <End Role="PlanTasks" EntitySet="PlanTasks" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PlanTasks_To_Tasks" Association="Self.FK_PlanTasks_To_Tasks">
-            <End Role="Tasks" EntitySet="Tasks" />
-            <End Role="PlanTasks" EntitySet="PlanTasks" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Tasks_To_UsersC" Association="Self.FK_Tasks_To_UsersC">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Tasks" EntitySet="Tasks" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Tasks_To_UsersM" Association="Self.FK_Tasks_To_UsersM">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Tasks" EntitySet="Tasks" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UserTasks_To_Activities" Association="Self.FK_UserTasks_To_Activities">
-            <End Role="Tasks" EntitySet="Tasks" />
-            <End Role="UserTasks" EntitySet="UserTasks" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PlanSuggestion_To_Users" Association="Self.FK_PlanSuggestion_To_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="PlanSuggestion" EntitySet="PlanSuggestion" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PlanSuggestion_To_Users1" Association="Self.FK_PlanSuggestion_To_Users1">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="PlanSuggestion" EntitySet="PlanSuggestion" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UserTasks_To_Users" Association="Self.FK_UserTasks_To_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="UserTasks" EntitySet="UserTasks" />
-          </AssociationSet>
-          <AssociationSet Name="GroupPlans" Association="Self.GroupPlans">
-            <End Role="Groups" EntitySet="Groups" />
-            <End Role="Plans" EntitySet="Plans" />
-          </AssociationSet>
-          <AssociationSet Name="UserGroups" Association="Self.UserGroups">
-            <End Role="Groups" EntitySet="Groups" />
-            <End Role="Users" EntitySet="Users" />
-          </AssociationSet>
-          <AssociationSet Name="UserTasksMessages" Association="Self.UserTasksMessages">
-            <End Role="Messages" EntitySet="Messages" />
-            <End Role="UserTasks" EntitySet="UserTasks" />
-          </AssociationSet>
-          <FunctionImport Name="sp_Total_Ammount_of_Users">
-          <Parameter Name="Total" Mode="InOut" Type="Int32" />
-          </FunctionImport>
-          <EntitySet Name="USERS_ROLES" EntityType="LearnWithMentor_DBModel.USER_ROLE" />
-        </EntityContainer>
         <EntityType Name="USER_ROLE">
           <Key>
             <PropertyRef Name="FirstName" />
@@ -1133,175 +908,368 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
           <Property Name="Roles_Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
-      </Schema>
+        <Association Name="FK_Comments_To_PlanTasks">
+          <End Type="LearnWithMentor_DBModel.PlanTask" Role="PlanTasks" Multiplicity="1" />
+          <End Type="LearnWithMentor_DBModel.Comment" Role="Comments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PlanTasks">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Comments">
+              <PropertyRef Name="PlanTask_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Comments_To_UsersC">
+          <End Type="LearnWithMentor_DBModel.User" Role="Users" Multiplicity="1" />
+          <End Type="LearnWithMentor_DBModel.Comment" Role="Comments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Comments">
+              <PropertyRef Name="Create_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Groups_To_Users">
+          <End Type="LearnWithMentor_DBModel.User" Role="Users" Multiplicity="0..1" />
+          <End Type="LearnWithMentor_DBModel.Group" Role="Groups" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Groups">
+              <PropertyRef Name="Mentor_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Masssage_To_Users">
+          <End Type="LearnWithMentor_DBModel.User" Role="Users" Multiplicity="1" />
+          <End Type="LearnWithMentor_DBModel.Message" Role="Messages" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Messages">
+              <PropertyRef Name="User_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Plans_To_UsersC">
+          <End Type="LearnWithMentor_DBModel.User" Role="Users" Multiplicity="1" />
+          <End Type="LearnWithMentor_DBModel.Plan" Role="Plans" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Plans">
+              <PropertyRef Name="Create_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Plans_To_UsersM">
+          <End Type="LearnWithMentor_DBModel.User" Role="Users" Multiplicity="0..1" />
+          <End Type="LearnWithMentor_DBModel.Plan" Role="Plans" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Plans">
+              <PropertyRef Name="Mod_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PlanSuggestion_To_Plans">
+          <End Type="LearnWithMentor_DBModel.Plan" Role="Plans" Multiplicity="1" />
+          <End Type="LearnWithMentor_DBModel.PlanSuggestion" Role="PlanSuggestion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plans">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PlanSuggestion">
+              <PropertyRef Name="Plan_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PlanTasks_To_Plans">
+          <End Type="LearnWithMentor_DBModel.Plan" Role="Plans" Multiplicity="1" />
+          <End Type="LearnWithMentor_DBModel.PlanTask" Role="PlanTasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plans">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PlanTasks">
+              <PropertyRef Name="Plan_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PlanTasks_To_Sections">
+          <End Type="LearnWithMentor_DBModel.Section" Role="Sections" Multiplicity="0..1" />
+          <End Type="LearnWithMentor_DBModel.PlanTask" Role="PlanTasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sections">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PlanTasks">
+              <PropertyRef Name="Section_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PlanTasks_To_Tasks">
+          <End Type="LearnWithMentor_DBModel.Task" Role="Tasks" Multiplicity="1" />
+          <End Type="LearnWithMentor_DBModel.PlanTask" Role="PlanTasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tasks">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PlanTasks">
+              <PropertyRef Name="Task_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Users_To_Roles">
+          <End Type="LearnWithMentor_DBModel.Role" Role="Roles" Multiplicity="1" />
+          <End Type="LearnWithMentor_DBModel.User" Role="Users" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Roles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Users">
+              <PropertyRef Name="Role_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tasks_To_UsersC">
+          <End Type="LearnWithMentor_DBModel.User" Role="Users" Multiplicity="1" />
+          <End Type="LearnWithMentor_DBModel.Task" Role="Tasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tasks">
+              <PropertyRef Name="Create_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tasks_To_UsersM">
+          <End Type="LearnWithMentor_DBModel.User" Role="Users" Multiplicity="0..1" />
+          <End Type="LearnWithMentor_DBModel.Task" Role="Tasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tasks">
+              <PropertyRef Name="Mod_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserTasks_To_Activities">
+          <End Type="LearnWithMentor_DBModel.Task" Role="Tasks" Multiplicity="1" />
+          <End Type="LearnWithMentor_DBModel.UserTask" Role="UserTasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tasks">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserTasks">
+              <PropertyRef Name="Task_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PlanSuggestion_To_Users">
+          <End Type="LearnWithMentor_DBModel.User" Role="Users" Multiplicity="1" />
+          <End Type="LearnWithMentor_DBModel.PlanSuggestion" Role="PlanSuggestion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PlanSuggestion">
+              <PropertyRef Name="User_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PlanSuggestion_To_Users1">
+          <End Type="LearnWithMentor_DBModel.User" Role="Users" Multiplicity="1" />
+          <End Type="LearnWithMentor_DBModel.PlanSuggestion" Role="PlanSuggestion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PlanSuggestion">
+              <PropertyRef Name="Mentor_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserTasks_To_Users">
+          <End Type="LearnWithMentor_DBModel.User" Role="Users" Multiplicity="1" />
+          <End Type="LearnWithMentor_DBModel.UserTask" Role="UserTasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserTasks">
+              <PropertyRef Name="User_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="GroupPlans">
+          <End Type="LearnWithMentor_DBModel.Group" Role="Groups" Multiplicity="*" />
+          <End Type="LearnWithMentor_DBModel.Plan" Role="Plans" Multiplicity="*" />
+        </Association>
+        <Association Name="UserGroups">
+          <End Type="LearnWithMentor_DBModel.Group" Role="Groups" Multiplicity="*" />
+          <End Type="LearnWithMentor_DBModel.User" Role="Users" Multiplicity="*" />
+        </Association>
+        <Association Name="UserTasksMessages">
+          <End Type="LearnWithMentor_DBModel.Message" Role="Messages" Multiplicity="*" />
+          <End Type="LearnWithMentor_DBModel.UserTask" Role="UserTasks" Multiplicity="*" />
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="LearnWithMentor_DBModelStoreContainer" CdmEntityContainer="LearnWithMentor_DBEntities">
+          <FunctionImportMapping FunctionImportName="sp_Total_Ammount_of_Users" FunctionName="LearnWithMentor_DBModel.Store.sp_Total_Ammount_of_Users" />
           <EntitySetMapping Name="Comments">
             <EntityTypeMapping TypeName="LearnWithMentor_DBModel.Comment">
               <MappingFragment StoreEntitySet="Comments">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Task_Id" ColumnName="Task_Id" />
-                <ScalarProperty Name="Text" ColumnName="Text" />
-                <ScalarProperty Name="Create_Id" ColumnName="Create_Id" />
-                <ScalarProperty Name="Create_Date" ColumnName="Create_Date" />
                 <ScalarProperty Name="Mod_Date" ColumnName="Mod_Date" />
+                <ScalarProperty Name="Create_Date" ColumnName="Create_Date" />
+                <ScalarProperty Name="Create_Id" ColumnName="Create_Id" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="PlanTask_Id" ColumnName="PlanTask_Id" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Groups">
             <EntityTypeMapping TypeName="LearnWithMentor_DBModel.Group">
               <MappingFragment StoreEntitySet="Groups">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Mentor_Id" ColumnName="Mentor_Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Messages">
             <EntityTypeMapping TypeName="LearnWithMentor_DBModel.Message">
               <MappingFragment StoreEntitySet="Messages">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="User_Id" ColumnName="User_Id" />
-                <ScalarProperty Name="Text" ColumnName="Text" />
                 <ScalarProperty Name="Send_Time" ColumnName="Send_Time" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="User_Id" ColumnName="User_Id" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Plans">
             <EntityTypeMapping TypeName="LearnWithMentor_DBModel.Plan">
               <MappingFragment StoreEntitySet="Plans">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Mod_Date" ColumnName="Mod_Date" />
+                <ScalarProperty Name="Create_Date" ColumnName="Create_Date" />
+                <ScalarProperty Name="Mod_Id" ColumnName="Mod_Id" />
+                <ScalarProperty Name="Create_Id" ColumnName="Create_Id" />
                 <ScalarProperty Name="Published" ColumnName="Published" />
-                <ScalarProperty Name="Create_Id" ColumnName="Create_Id" />
-                <ScalarProperty Name="Mod_Id" ColumnName="Mod_Id" />
-                <ScalarProperty Name="Create_Date" ColumnName="Create_Date" />
-                <ScalarProperty Name="Mod_Date" ColumnName="Mod_Date" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Roles">
-            <EntityTypeMapping TypeName="LearnWithMentor_DBModel.Role">
-              <MappingFragment StoreEntitySet="Roles">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Sections">
-            <EntityTypeMapping TypeName="LearnWithMentor_DBModel.Section">
-              <MappingFragment StoreEntitySet="Sections">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Tasks">
-            <EntityTypeMapping TypeName="LearnWithMentor_DBModel.Task">
-              <MappingFragment StoreEntitySet="Tasks">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="Private" ColumnName="Private" />
-                <ScalarProperty Name="Create_Id" ColumnName="Create_Id" />
-                <ScalarProperty Name="Mod_Id" ColumnName="Mod_Id" />
-                <ScalarProperty Name="Create_Date" ColumnName="Create_Date" />
-                <ScalarProperty Name="Mod_Date" ColumnName="Mod_Date" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Users">
-            <EntityTypeMapping TypeName="LearnWithMentor_DBModel.User">
-              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
-                <ScalarProperty Name="LastName" ColumnName="LastName" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="Role_Id" ColumnName="Role_Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="UserTasks">
-            <EntityTypeMapping TypeName="LearnWithMentor_DBModel.UserTask">
-              <MappingFragment StoreEntitySet="UserTasks">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="User_Id" ColumnName="User_Id" />
-                <ScalarProperty Name="Task_Id" ColumnName="Task_Id" />
-                <ScalarProperty Name="State" ColumnName="State" />
-                <ScalarProperty Name="End_Date" ColumnName="End_Date" />
-                <ScalarProperty Name="Result" ColumnName="Result" />
-                <ScalarProperty Name="Propose_End_Date" ColumnName="Propose_End_Date" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="PlanSuggestion">
-            <EntityTypeMapping TypeName="LearnWithMentor_DBModel.PlanSuggestion">
-              <MappingFragment StoreEntitySet="PlanSuggestion">
-                <ScalarProperty Name="Plan_Id" ColumnName="Plan_Id" />
-                <ScalarProperty Name="User_Id" ColumnName="User_Id" />
-                <ScalarProperty Name="Mentor_Id" ColumnName="Mentor_Id" />
-                <ScalarProperty Name="Text" ColumnName="Text" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="PlanTasks">
             <EntityTypeMapping TypeName="LearnWithMentor_DBModel.PlanTask">
               <MappingFragment StoreEntitySet="PlanTasks">
-                <ScalarProperty Name="Plan_Id" ColumnName="Plan_Id" />
-                <ScalarProperty Name="Task_Id" ColumnName="Task_Id" />
-                <ScalarProperty Name="Priority" ColumnName="Priority" />
                 <ScalarProperty Name="Section_Id" ColumnName="Section_Id" />
+                <ScalarProperty Name="Priority" ColumnName="Priority" />
+                <ScalarProperty Name="Task_Id" ColumnName="Task_Id" />
+                <ScalarProperty Name="Plan_Id" ColumnName="Plan_Id" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="LearnWithMentor_DBModel.Role">
+              <MappingFragment StoreEntitySet="Roles">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sections">
+            <EntityTypeMapping TypeName="LearnWithMentor_DBModel.Section">
+              <MappingFragment StoreEntitySet="Sections">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tasks">
+            <EntityTypeMapping TypeName="LearnWithMentor_DBModel.Task">
+              <MappingFragment StoreEntitySet="Tasks">
+                <ScalarProperty Name="Mod_Date" ColumnName="Mod_Date" />
+                <ScalarProperty Name="Create_Date" ColumnName="Create_Date" />
+                <ScalarProperty Name="Mod_Id" ColumnName="Mod_Id" />
+                <ScalarProperty Name="Create_Id" ColumnName="Create_Id" />
+                <ScalarProperty Name="Private" ColumnName="Private" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="LearnWithMentor_DBModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="Role_Id" ColumnName="Role_Id" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserTasks">
+            <EntityTypeMapping TypeName="LearnWithMentor_DBModel.UserTask">
+              <MappingFragment StoreEntitySet="UserTasks">
+                <ScalarProperty Name="Propose_End_Date" ColumnName="Propose_End_Date" />
+                <ScalarProperty Name="Result" ColumnName="Result" />
+                <ScalarProperty Name="End_Date" ColumnName="End_Date" />
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="Task_Id" ColumnName="Task_Id" />
+                <ScalarProperty Name="User_Id" ColumnName="User_Id" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PlanSuggestion">
+            <EntityTypeMapping TypeName="LearnWithMentor_DBModel.PlanSuggestion">
+              <MappingFragment StoreEntitySet="PlanSuggestion">
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="Mentor_Id" ColumnName="Mentor_Id" />
+                <ScalarProperty Name="User_Id" ColumnName="User_Id" />
+                <ScalarProperty Name="Plan_Id" ColumnName="Plan_Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="GROUPS_PLANS_TASKS">
             <EntityTypeMapping TypeName="LearnWithMentor_DBModel.GROUP_PLAN_TASK">
               <MappingFragment StoreEntitySet="GROUPS-PLANS-TASKS">
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="Create_Date" ColumnName="Create_Date" />
-                <ScalarProperty Name="Mod_Date" ColumnName="Mod_Date" />
-                <ScalarProperty Name="Published" ColumnName="Published" />
-                <ScalarProperty Name="Priority" ColumnName="Priority" />
-                <ScalarProperty Name="Section_Name" ColumnName="Section_Name" />
-                <ScalarProperty Name="Task_Name" ColumnName="Task_Name" />
-                <ScalarProperty Name="Task_Description" ColumnName="Task_Description" />
-                <ScalarProperty Name="Tasks_Create_Date" ColumnName="Tasks_Create_Date" />
-                <ScalarProperty Name="Task_Mod_Date" ColumnName="Task_Mod_Date" />
                 <ScalarProperty Name="Private" ColumnName="Private" />
+                <ScalarProperty Name="Task_Mod_Date" ColumnName="Task_Mod_Date" />
+                <ScalarProperty Name="Tasks_Create_Date" ColumnName="Tasks_Create_Date" />
+                <ScalarProperty Name="Task_Description" ColumnName="Task_Description" />
+                <ScalarProperty Name="Task_Name" ColumnName="Task_Name" />
+                <ScalarProperty Name="Section_Name" ColumnName="Section_Name" />
+                <ScalarProperty Name="Priority" ColumnName="Priority" />
+                <ScalarProperty Name="Published" ColumnName="Published" />
+                <ScalarProperty Name="Mod_Date" ColumnName="Mod_Date" />
+                <ScalarProperty Name="Create_Date" ColumnName="Create_Date" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="GroupPlans" TypeName="LearnWithMentor_DBModel.GroupPlans" StoreEntitySet="GroupPlans">
-            <EndProperty Name="Groups">
-              <ScalarProperty Name="Id" ColumnName="Group_Id" />
-            </EndProperty>
-            <EndProperty Name="Plans">
-              <ScalarProperty Name="Id" ColumnName="Plan_Id" />
-            </EndProperty>
-          </AssociationSetMapping>
-          <AssociationSetMapping Name="UserGroups" TypeName="LearnWithMentor_DBModel.UserGroups" StoreEntitySet="UserGroups">
-            <EndProperty Name="Groups">
-              <ScalarProperty Name="Id" ColumnName="Group_Id" />
-            </EndProperty>
-            <EndProperty Name="Users">
-              <ScalarProperty Name="Id" ColumnName="User_Id" />
-            </EndProperty>
-          </AssociationSetMapping>
-          <AssociationSetMapping Name="UserTasksMessages" TypeName="LearnWithMentor_DBModel.UserTasksMessages" StoreEntitySet="UserTasksMessages">
-            <EndProperty Name="Messages">
-              <ScalarProperty Name="Id" ColumnName="Message_Id" />
-            </EndProperty>
-            <EndProperty Name="UserTasks">
-              <ScalarProperty Name="Id" ColumnName="Usertask_Id" />
-            </EndProperty>
-          </AssociationSetMapping>
-          <FunctionImportMapping FunctionImportName="sp_Total_Ammount_of_Users" FunctionName="LearnWithMentor_DBModel.Store.sp_Total_Ammount_of_Users" />
           <EntitySetMapping Name="USERS_ROLES">
             <EntityTypeMapping TypeName="LearnWithMentor_DBModel.USER_ROLE">
               <MappingFragment StoreEntitySet="USERS_ROLES">
@@ -1312,6 +1280,30 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <AssociationSetMapping Name="GroupPlans" TypeName="LearnWithMentor_DBModel.GroupPlans" StoreEntitySet="GroupPlans">
+            <EndProperty Name="Plans">
+              <ScalarProperty Name="Id" ColumnName="Plan_Id" />
+            </EndProperty>
+            <EndProperty Name="Groups">
+              <ScalarProperty Name="Id" ColumnName="Group_Id" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="UserGroups" TypeName="LearnWithMentor_DBModel.UserGroups" StoreEntitySet="UserGroups">
+            <EndProperty Name="Users">
+              <ScalarProperty Name="Id" ColumnName="User_Id" />
+            </EndProperty>
+            <EndProperty Name="Groups">
+              <ScalarProperty Name="Id" ColumnName="Group_Id" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="UserTasksMessages" TypeName="LearnWithMentor_DBModel.UserTasksMessages" StoreEntitySet="UserTasksMessages">
+            <EndProperty Name="UserTasks">
+              <ScalarProperty Name="Id" ColumnName="Usertask_Id" />
+            </EndProperty>
+            <EndProperty Name="Messages">
+              <ScalarProperty Name="Id" ColumnName="Message_Id" />
+            </EndProperty>
+          </AssociationSetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

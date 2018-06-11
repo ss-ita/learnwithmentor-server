@@ -15,13 +15,13 @@ namespace LearnWithMentorDAL.Entities
     public partial class Comment
     {
         public int Id { get; set; }
-        public int Task_Id { get; set; }
+        public int PlanTask_Id { get; set; }
         public string Text { get; set; }
         public int Create_Id { get; set; }
         public Nullable<System.DateTime> Create_Date { get; set; }
         public Nullable<System.DateTime> Mod_Date { get; set; }
     
-        public virtual Task Tasks { get; set; }
+        public virtual PlanTask PlanTasks { get; set; }
         public virtual User Users { get; set; }
     }
 }
