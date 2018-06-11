@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿
+using System.Collections.Generic;
 using System.Web.Http;
 using LearnWithMentorDAL.Entities;
 using LearnWithMentorDAL.UnitOfWork;
@@ -33,17 +34,31 @@ namespace LearnWithMentor.Controllers
         // POST: api/User
         public IHttpActionResult Post([FromBody]UserDTO value)
         {
-            UoW.Users.Add(value, "123");
-            UoW.Save();
-            return Ok();
+            bool success = UoW.Users.Add(value, "123");
+            if (success)
+            {
+                UoW.Save();
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
         // PUT: api/User/5
         public IHttpActionResult Put(int id, [FromBody]UserDTO value)
         {
-            UoW.Users.UpdateById(id, value);
-            UoW.Save();
-            return Ok();
+            bool success = UoW.Users.UpdateById(id, value);
+            if (success)
+            {
+                UoW.Save();
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
         // DELETE: api/User/5
@@ -56,7 +71,7 @@ namespace LearnWithMentor.Controllers
 
         [HttpGet]
         [Route("api/user/search")]
-        public IEnumerable<UserDTO> Search(string q)
+        public IEnumerable<UserDTO> Search(string q, string role)
         {
             if (q == null)
             {
@@ -64,9 +79,11 @@ namespace LearnWithMentor.Controllers
             }
             else
             {
+                Role criteria;
+                bool existsRole = UoW.Roles.TryGetByName(role, out criteria);
                 string[] lines = q.Split(' ');
                 List<UserDTO> dto = new List<UserDTO>();
-                foreach (var u in UoW.Users.Search(lines))
+                foreach (var u in existsRole ? UoW.Users.Search(lines,criteria.Id) : UoW.Users.Search(lines, null))
                 {
                     dto.Add(new UserDTO(u.Id, u.FirstName, u.LastName, u.Email, u.Roles.Name));
                 }

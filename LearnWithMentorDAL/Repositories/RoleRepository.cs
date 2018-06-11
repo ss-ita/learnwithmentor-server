@@ -12,5 +12,18 @@ namespace LearnWithMentorDAL.Repositories
         {
             return context.Roles.FirstOrDefault(r => r.Id == id);
         }
+        public bool TryGetByName(string name, out Role role)
+        {
+            var ret = context.Roles.Where(r => r.Name == name);
+            if (ret.Any())
+            {
+                role = ret.FirstOrDefault();
+            }
+            else
+            {
+                role = null;
+            }
+            return ret.Any();
+        }
     }
 }

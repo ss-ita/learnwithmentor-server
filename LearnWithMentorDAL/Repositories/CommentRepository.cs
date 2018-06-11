@@ -28,9 +28,9 @@ namespace LearnWithMentorDAL.Repositories
             context.Comments.Add(newComment);
         }
 
-        public void UpdateById(CommentDTO comment, int id)
+        public void Update(CommentDTO comment)
         {
-            var item = context.Comments.Where(c => c.Id == id);
+            var item = context.Comments.Where(c => c.Id == comment.Id);
             if (item == null) return;
             Comment toUpdate = item.First();
             toUpdate.Text = comment.Text;
