@@ -1,6 +1,7 @@
 ﻿using System.Web.Http;
 using System.Net.Http.Headers;
 using System.Web.Http.Cors;
+using System.Configuration;
 
 namespace LearnWithMentor
 {
@@ -9,7 +10,8 @@ namespace LearnWithMentor
         public static void Register(HttpConfiguration config)
         {
             // Web API configuration and services
-            config.EnableCors(new EnableCorsAttribute("http://localhost:4200", headers: "*", methods: "*"));
+            string url = ConfigurationManager.AppSettings["ApiUrl"];
+            config.EnableCors(new EnableCorsAttribute(url, headers: "application/json", methods: "*"));
 
             // Web API routes
             config.MapHttpAttributeRoutes();
