@@ -16,10 +16,10 @@ namespace LearnWithMentorDAL.Repositories
         }
         public bool RemoveById(int id)
         {
-            var item = context.Users.Where(u => u.Id == id);
-            if (item.Any())
+            var item = Get(id);
+            if (item != null)
             {
-                context.Users.RemoveRange(item);
+                Remove(item);
                 return true;
             }
             return false;
@@ -27,27 +27,26 @@ namespace LearnWithMentorDAL.Repositories
         public bool UpdateById(int id, UserDTO user)
         {
             bool modified = false;
-            var item = context.Users.Where(u => u.Id == id);
-            if (item.Any())
+            var item = Get(id);
+            if (item != null)
             {
-                User toUpdate = item.First();
                 if (user.FirstName != null)
                 {
-                    toUpdate.FirstName = user.FirstName;
+                    item.FirstName = user.FirstName;
                     modified = true;
                 }
                 if (user.LastName != null)
                 {
-                    toUpdate.LastName = user.LastName;
+                    item.LastName = user.LastName;
                     modified = true;
                 }
-                var updatedRole = context.Roles.Where(r => r.Name == user.Role);
-                if (updatedRole.Any())
+                var updatedRole = context.Roles.FirstOrDefault(r => r.Name == user.Role);
+                if (updatedRole != null)
                 {
-                    toUpdate.Role_Id = updatedRole.First().Id;
+                    item.Role_Id = updatedRole.Id;
                     modified = true;
                 }
-                Update(toUpdate);
+                Update(item);
             }
             return modified;
         }
@@ -63,8 +62,8 @@ namespace LearnWithMentorDAL.Repositories
                 toAdd.Email = userDTO.Email;
                 //add hashing
                 toAdd.Password = password;
-                toAdd.Role_Id = context.Roles.Where(r => r.Name == userDTO.Role).Any() ?
-                    context.Roles.Where(r => r.Name == userDTO.Role).First().Id : context.Roles.Where(r => r.Name == "Student").First().Id;
+                toAdd.Role_Id = context.Roles.FirstOrDefault(r => r.Name == userDTO.Role) != null ?
+                    context.Roles.First(r => r.Name == userDTO.Role).Id : context.Roles.First(r => r.Name == "Student").Id;
                 toAdd.FirstName = userDTO.FirstName;
                 toAdd.LastName = userDTO.LastName;
                 context.Users.Add(toAdd);
