@@ -11,7 +11,7 @@ namespace LearnWithMentorDTO
         public TaskDTO(int id,
                         string name,
                         string description,
-                        bool _private,
+                        bool privateness,
                         int createId,
                         string creatorName,
                         int? modId,
@@ -24,7 +24,7 @@ namespace LearnWithMentorDTO
             Id = id;
             Name = name;
             Description = description;
-            Private = _private;
+            Private = privateness;
             CreateDate = createDate;
             ModDate = modDate;
             CreatorId = createId;

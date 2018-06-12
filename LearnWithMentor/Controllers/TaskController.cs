@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using System.Net;
+using System.Net.Http;
 using LearnWithMentorDAL.Entities;
 using LearnWithMentorDAL.UnitOfWork;
 using LearnWithMentorDTO;
@@ -18,10 +21,90 @@ namespace LearnWithMentor.Controllers
         // GET api/task      
         [HttpGet]
         [Route("api/task")]
-        public IEnumerable<TaskDTO> Get()
+        public HttpResponseMessage Get()
         {
             List<TaskDTO> dto = new List<TaskDTO>();
+            bool exists = false;
             foreach (var t in UoW.Tasks.GetAll())
+            {
+                exists = true;
+                dto.Add(new TaskDTO(t.Id,
+                                    t.Name,
+                                    t.Description,
+                                    t.Private,
+                                    t.Create_Id,
+                                    UoW.Users.ExtractFullName(t.Create_Id),
+                                    t.Mod_Id,
+                                    UoW.Users.ExtractFullName(t.Mod_Id),
+                                    t.Create_Date,
+                                    t.Mod_Date,
+                                    null,
+                                    null));
+            }
+            if (exists)
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, dto);
+            }
+            return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No tasks in database.");
+        }
+
+        // GET api/task/5
+        [HttpGet]
+        [Route("api/task/{id}")]
+        public HttpResponseMessage Get(int id)
+        {
+            Task t = UoW.Tasks.Get(id);
+            if (t != null)
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, new TaskDTO(t.Id,
+                                                                            t.Name,
+                                                                            t.Description,
+                                                                            t.Private,
+                                                                            t.Create_Id,
+                                                                            UoW.Users.ExtractFullName(t.Create_Id),
+                                                                            t.Mod_Id,
+                                                                            UoW.Users.ExtractFullName(t.Mod_Id),
+                                                                            t.Create_Date,
+                                                                            t.Mod_Date,
+                                                                            null,
+                                                                            null));
+            }
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Task does not exist in database.");
+        }
+
+        // GET api/task/search?id={id}&planid={planid}
+        [HttpGet]
+        [Route("api/task")]
+        public HttpResponseMessage Get(int id,int planid )
+        {
+            Task t = UoW.Tasks.Get(id);
+            if (t == null || !UoW.PlanTasks.ContainsTaskInPlan(id,planid))
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax or user does not exist.");
+            return Request.CreateResponse(HttpStatusCode.OK,new TaskDTO(t.Id,
+                                                                    t.Name,
+                                                                    t.Description,
+                                                                    t.Private,
+                                                                    t.Create_Id,
+                                                                    UoW.Users.ExtractFullName(t.Create_Id),
+                                                                    t.Mod_Id,
+                                                                    UoW.Users.ExtractFullName(t.Mod_Id),
+                                                                    t.Create_Date,
+                                                                    t.Mod_Date,
+                                                                    t.PlanTasks.Where(pt => pt.Task_Id == t.Id && pt.Plan_Id == planid).FirstOrDefault().Priority,
+                                                                    t.PlanTasks.Where(pt => pt.Task_Id == t.Id && pt.Plan_Id == planid).FirstOrDefault().Section_Id));
+        }
+        // GET api/task/search?key={key}
+        [HttpGet]
+        [Route("api/task/search")]
+        public HttpResponseMessage Search(string key)
+        {
+            if (key == null)
+            {
+                return Get();
+            }
+            string[] lines = key.Split(' ');
+            List<TaskDTO> dto = new List<TaskDTO>();
+            foreach (var t in UoW.Tasks.Search(lines))
             {
                 dto.Add(new TaskDTO(t.Id,
                                     t.Name,
@@ -36,63 +119,25 @@ namespace LearnWithMentor.Controllers
                                     null,
                                     null));
             }
-            if (dto == null) return null;
-            return dto;
+            return Request.CreateResponse(HttpStatusCode.OK, dto);
         }
-
-        // GET api/task/5
-        [HttpGet]
-        [Route("api/task/{id}")]
-        public TaskDTO Get(int id)
-        {
-            Task t = UoW.Tasks.Get(id);
-            if (t == null) return null;
-            return new TaskDTO(t.Id,
-                               t.Name,
-                               t.Description,
-                               t.Private,
-                               t.Create_Id,
-                               UoW.Users.ExtractFullName(t.Create_Id),
-                               t.Mod_Id,
-                               UoW.Users.ExtractFullName(t.Mod_Id),
-                               t.Create_Date,
-                               t.Mod_Date,
-                               null,
-                               null);
-        }
-
-        // GET api/task/search?id={id}&planid={planid}
-        [HttpGet]
-        [Route("api/task")]
-        public TaskDTO Get(int id,int planid )
-        {
-            Task t = UoW.Tasks.Get(id);
-            if (t == null || !UoW.PlanTasks.ContainsTaskInPlan(id,planid)) return null;
-            return new TaskDTO(t.Id,
-                               t.Name,
-                               t.Description,
-                               t.Private,
-                               t.Create_Id,
-                               UoW.Users.ExtractFullName(t.Create_Id),
-                               t.Mod_Id,
-                               UoW.Users.ExtractFullName(t.Mod_Id),
-                               t.Create_Date,
-                               t.Mod_Date,
-                               t.PlanTasks.Where(pt => pt.Task_Id == t.Id && pt.Plan_Id == planid).FirstOrDefault().Priority,
-                               t.PlanTasks.Where(pt => pt.Task_Id == t.Id && pt.Plan_Id == planid).FirstOrDefault().Section_Id);
-        }
+    
         // GET api/task/search?key={key}&planid={planid}
         [HttpGet]
-        [Route("api/task/search")]
-        public IEnumerable<TaskDTO> Search(string key, int? planId)
+        [Route("api/task/SearchInPlan")]
+        public HttpResponseMessage SearchInPlan(string key, int? planId)
         {
-            if (key == null)
+            if (key == null || planId == null)
             {
-                return Get();
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax.");
             }
             string[] lines = key.Split(' ');
             List<TaskDTO> dto = new List<TaskDTO>();
-            foreach (var t in UoW.Tasks.Search(lines, planId))
+            var loadedPlans = UoW.Tasks.Search(lines, (int)planId);
+            if(loadedPlans==null)
+                ///?Look here - is it right?
+                return Request.CreateResponse(HttpStatusCode.NoContent, dto);
+            foreach (var t in loadedPlans)
             {
                 dto.Add(new TaskDTO(t.Id,
                                     t.Name,
@@ -107,36 +152,69 @@ namespace LearnWithMentor.Controllers
                                     t.PlanTasks.Where(pt => pt.Task_Id == t.Id && pt.Plan_Id == planId).FirstOrDefault()?.Priority,
                                     t.PlanTasks.Where(pt => pt.Task_Id == t.Id && pt.Plan_Id == planId).FirstOrDefault()?.Section_Id));
             }
-            return dto;
+            return Request.CreateResponse(HttpStatusCode.OK, dto);
         }
         // POST api/task
         [HttpPost]
         [Route("api/task")]
-        public IHttpActionResult Post([FromBody]TaskDTO t)
+        public HttpResponseMessage Post([FromBody]TaskDTO t)
         {
-            UoW.Tasks.Add(t);
-            UoW.Save();
-            return Ok();
+            bool success= UoW.Tasks.Add(t);
+            if (success)
+            {
+                try
+                {
+                    UoW.Save();
+                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully created task: {t.Name}.");
+                }
+                catch (Exception exception)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, exception);
+                }
+            }
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax.");
         }
 
         // PUT api/task/5
         [HttpPut]
         [Route("api/task/{id}")]
-        public IHttpActionResult Put(int id, [FromBody]TaskDTO t)
+        public HttpResponseMessage Put(int id, [FromBody]TaskDTO t)
         {
-            UoW.Tasks.UpdateById(id,t);
-            UoW.Save();
-            return Ok();
+            bool success= UoW.Tasks.UpdateById(id,t);
+            if (success)
+            {
+                try
+                {
+                    UoW.Save();
+                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully updated task id: {id}.");
+                }
+                catch (Exception exception)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, exception);
+                }
+            }
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax or task does not exist.");
         }
 
         // DELETE api/task/5
         [HttpDelete]
         [Route("api/task/{id}")]
-        public IHttpActionResult Delete(int id)
+        public HttpResponseMessage Delete(int id)
         {
-            UoW.Tasks.RemoveById(id);
-            UoW.Save();
-            return Ok();
+            bool success = UoW.Tasks.RemoveById(id);
+            if (success)
+            {
+                try
+                {
+                    UoW.Save();
+                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully deleted user id: {id}.");
+                }
+                catch (Exception exception)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, exception);
+                }
+            }
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, $"Not existing user with id: {id}.");
         }
 
         [Route("api/task/{taskId}/comment")]
