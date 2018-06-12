@@ -71,20 +71,20 @@ namespace LearnWithMentorDAL.Repositories
         }
         public IEnumerable<User> Search(string[] str, int? roleId)
         {
-            List<User> ret = new List<User>();
+            List<User> result = new List<User>();
             foreach (var s in str)
             {
                 var found = roleId == null ? context.Users.Where(u => u.FirstName.Contains(s) || u.LastName.Contains(s)) :
                     context.Users.Where(u => u.Role_Id == roleId).Where(u => u.FirstName.Contains(s) || u.LastName.Contains(s));
                 foreach (var f in found)
                 {
-                    if (!ret.Contains(f))
+                    if (!result.Contains(f))
                     {
-                        ret.Add(f);
+                        result.Add(f);
                     }
                 }
             }
-            return ret;
+            return result;
         }
 
         public string ExtractFullName(int? id)
