@@ -52,6 +52,10 @@ namespace LearnWithMentor.Controllers
         // POST: api/User
         public HttpResponseMessage Post([FromBody]UserDTO value)
         {
+            if (!ModelState.IsValid)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+            }
             bool success = UoW.Users.Add(value, "123");
             if (success)
             {
