@@ -4,6 +4,8 @@ using System.Web.Http;
 using LearnWithMentorDAL.Entities;
 using LearnWithMentorDAL.UnitOfWork;
 using LearnWithMentorDTO;
+using System.Net.Http;
+using System.Net;
 
 namespace LearnWithMentor.Controllers
 {
@@ -15,24 +17,40 @@ namespace LearnWithMentor.Controllers
             UoW = new UnitOfWork(new LearnWithMentor_DBEntities());
         }
         // GET: api/User
-        public IEnumerable<UserDTO> Get()
+        public HttpResponseMessage Get()
         {
             List<UserDTO> dto = new List<UserDTO>();
+            bool exists = false;
             foreach (var u in UoW.Users.GetAll())
             {
+                exists = true;
                 dto.Add(new UserDTO(u.Id, u.FirstName, u.LastName, u.Email, u.Roles.Name));
             }
-            return dto;
+            if (exists)
+            {
+                return Request.CreateResponse<IEnumerable<UserDTO>>(HttpStatusCode.OK, dto);
+            }
+            var message = "No users in database.";
+            return Request.CreateErrorResponse(HttpStatusCode.NotFound, message);
         }
         // GET: api/User/5
-        public UserDTO Get(int id)
+        public HttpResponseMessage Get(int id)
         {
             User u = UoW.Users.Get(id);
-            return new UserDTO(u.Id, u.FirstName, u.LastName, u.Email, u.Roles.Name);
+            if (u != null)
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, new UserDTO(u.Id, 
+                                                                            u.FirstName, 
+                                                                            u.LastName, 
+                                                                            u.Email, 
+                                                                            u.Roles.Name));
+            }
+            var message = "User does not exist in database.";
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
         }
 
         // POST: api/User
-        public IHttpActionResult Post([FromBody]UserDTO value)
+        public HttpResponseMessage Post([FromBody]UserDTO value)
         {
             bool success = UoW.Users.Add(value, "123");
             if (success)
@@ -40,22 +58,20 @@ namespace LearnWithMentor.Controllers
                 try
                 {
                     UoW.Save();
-                    return Ok(String.Format("Succesfully created user: {0}.", value.Email));
+                    var okMessage = $"Succesfully created user: {value.Email}.";
+                    return Request.CreateResponse(HttpStatusCode.OK, okMessage);
                 }
                 catch (Exception exception)
                 {
-                    return InternalServerError(exception);
+                    return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, exception);
                 }
             }
-            else
-            {
-                var message = "Incorrect request syntax.";
-                return BadRequest(message);
-            }
+            var message = "Incorrect request syntax.";
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
         }
 
         // PUT: api/User/5
-        public IHttpActionResult Put(int id, [FromBody]UserDTO value)
+        public HttpResponseMessage Put(int id, [FromBody]UserDTO value)
         {
             bool success = UoW.Users.UpdateById(id, value);
             if (success)
@@ -63,22 +79,20 @@ namespace LearnWithMentor.Controllers
                 try
                 {
                     UoW.Save();
-                    return Ok(String.Format("Succesfully updated user id: {0}.", id));
+                    var okMessage = $"Succesfully updated user id: {id}.";
+                    return Request.CreateResponse(HttpStatusCode.OK, okMessage);
                 }
                 catch (Exception exception)
                 {
-                    return InternalServerError(exception);
+                    return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, exception);
                 }
             }
-            else
-            {
-                var message = "Incorrect request syntax or user does not exist.";
-                return BadRequest(message);
-            }
+            var message = "Incorrect request syntax or user does not exist.";
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
         }
 
-        // DELETE: api/User/5
-        public IHttpActionResult Delete(int id)
+        // DELETE: api/user/5
+        public HttpResponseMessage Delete(int id)
         {
             bool success = UoW.Users.RemoveById(id);
             if (success)
@@ -86,23 +100,21 @@ namespace LearnWithMentor.Controllers
                 try
                 {
                     UoW.Save();
-                    return Ok(String.Format("Succesfully deleted user id: {0}.", id));
+                    var okMessage = $"Succesfully deleted user id: {id}.";
+                    return Request.CreateResponse(HttpStatusCode.OK, okMessage);
                 }
                 catch (Exception exception)
                 {
-                    return InternalServerError(exception);
+                    return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, exception);
                 }
             }
-            else
-            {
-                var message = $"Not existing user with id: {id}.";
-                return BadRequest(message);
-            }
+            var message = $"Not existing user with id: {id}.";
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
         }
 
         [HttpGet]
         [Route("api/user/search")]
-        public IEnumerable<UserDTO> Search(string q, string role)
+        public HttpResponseMessage Search(string q, string role)
         {
             if (q == null)
             {
@@ -110,27 +122,41 @@ namespace LearnWithMentor.Controllers
             }
             else
             {
+                bool exists = false;
                 Role criteria;
                 bool existsRole = UoW.Roles.TryGetByName(role, out criteria);
                 string[] lines = q.Split(' ');
                 List<UserDTO> dto = new List<UserDTO>();
                 foreach (var u in existsRole ? UoW.Users.Search(lines,criteria.Id) : UoW.Users.Search(lines, null))
                 {
+                    exists = true;
                     dto.Add(new UserDTO(u.Id, u.FirstName, u.LastName, u.Email, u.Roles.Name));
                 }
-                return dto;
+                if (exists)
+                {
+                    return Request.CreateResponse<IEnumerable<UserDTO>>(HttpStatusCode.OK, dto);
+                }
+                var message = "No users found.";
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, message);
             }
         }
 
         [Route("api/user/roles")]
-        public IEnumerable<RoleDTO> GetRoles()
+        public HttpResponseMessage GetRoles()
         {
+            bool exists = false;
             var dtos = new List<RoleDTO>();
             foreach(var role in UoW.Roles.GetAll())
             {
+                exists = true;
                 dtos.Add(new RoleDTO(role.Id, role.Name));
             }
-            return dtos;
+            if (exists)
+            {
+                return Request.CreateResponse<IEnumerable<RoleDTO>>(HttpStatusCode.OK, dtos);
+            }
+            var message = "No roles in database.";
+            return Request.CreateErrorResponse(HttpStatusCode.NotFound, message);
         }
     }
 }

@@ -16,7 +16,7 @@ namespace LearnWithMentorDAL.Repositories
         }
         public bool RemoveById(int id)
         {
-            var item = context.Users.FirstOrDefault(u => u.Id == id);
+            var item = Get(id);
             if (item != null)
             {
                 Remove(item);
@@ -27,7 +27,7 @@ namespace LearnWithMentorDAL.Repositories
         public bool UpdateById(int id, UserDTO user)
         {
             bool modified = false;
-            var item = context.Users.FirstOrDefault(u => u.Id == id);
+            var item = Get(id);
             if (item != null)
             {
                 if (user.FirstName != null)
@@ -40,10 +40,10 @@ namespace LearnWithMentorDAL.Repositories
                     item.LastName = user.LastName;
                     modified = true;
                 }
-                var updatedRole = context.Roles.Where(r => r.Name == user.Role);
-                if (updatedRole.Any())
+                var updatedRole = context.Roles.FirstOrDefault(r => r.Name == user.Role);
+                if (updatedRole != null)
                 {
-                    item.Role_Id = updatedRole.First().Id;
+                    item.Role_Id = updatedRole.Id;
                     modified = true;
                 }
                 Update(item);
