@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace LearnWithMentorDTO
 {
@@ -34,12 +31,22 @@ namespace LearnWithMentorDTO
             Priority = priority;
             SectionId = sectionId;
         }
+
         public int Id { get; set; }
+        [Required]
+        [StringLength(ValidationRules.MAX_TASK_NAME_LENGTH,
+            ErrorMessage = "Task name too long")]
         public string Name { get; set; }
+        [Required]
+        [StringLength(ValidationRules.MAX_TASK_DESCRIPTION_LENGTH,
+            ErrorMessage = "Description too long")]
         public string Description { get; set; }
+        [Required]
         public bool Private { get; set; }
+        [Required]
         public int CreatorId { get; set; }
         public string CreatorName { get; set; }
+        [Required]
         public int? ModifierId { get; set; }
         public string ModifierName { get; set; }
         public DateTime? CreateDate { get; set; }

@@ -19,7 +19,7 @@ namespace LearnWithMentorDAL.Repositories
             var item = Get(id);
             if (item!=null)
             {
-                context.Tasks.Remove(item);
+                Remove(item);
                 return true;
             }
             return false;
@@ -30,8 +30,6 @@ namespace LearnWithMentorDAL.Repositories
             var item = Get(id);
             if (item!=null)
             {
-                //todo DTO validation here
-                //if (!ModelState.IsValid) return false;
                 Task toUpdate = item;
                 toUpdate.Name = task.Name;
                 toUpdate.Description = task.Description;
@@ -44,8 +42,6 @@ namespace LearnWithMentorDAL.Repositories
         }
         public bool Add(TaskDTO taskDTO)
         {
-            //todo DTO validation here
-            //if (!ModelState.IsValid) return false;
             Task toAdd = new Task()
             {
                 Id = taskDTO.Id,

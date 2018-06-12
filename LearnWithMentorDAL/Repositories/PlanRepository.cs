@@ -16,22 +16,24 @@ namespace LearnWithMentorDAL.Repositories
             return context.Plans.FirstOrDefault(p => p.Id == id);
         }
 
-        public void RemoveById(int id)
+        public bool RemoveById(int id)
         {
-            IEnumerable<Plan> item = context.Plans.Where(c => c.Id == id);
-            if (item.Any())
+            var item = Get(id);
+            if (item != null)
             {
-                context.Plans.RemoveRange(item);
+                Remove(item);
+                return true;
             }
+
+            return false;
         }
 
         public bool UpdateById(PlanDTO plan, int id)
         {
             var modified = false;
-            var item = context.Plans.Where(c => c.Id == id);
-            if (item.Any())
+            var toUpdate = Get(id);
+            if (toUpdate != null)
             {
-                var toUpdate = item.First();
                 if (!string.IsNullOrEmpty(plan.Name))
                 {
                     toUpdate.Name = plan.Name;
@@ -59,7 +61,7 @@ namespace LearnWithMentorDAL.Repositories
 
         public bool Add(PlanDTO dto )
         {
-            if (string.IsNullOrEmpty(dto.Name)|| dto.Description=="" || !context.Users.Any(u => u.Id == dto.Creatorid))
+            if (string.IsNullOrEmpty(dto.Name)|| dto.Description=="" || !ContainsId(dto.Creatorid))
                 return false;
             var plan = new Plan
             {
@@ -67,9 +69,26 @@ namespace LearnWithMentorDAL.Repositories
                 Description = dto.Description,
                 Create_Id = dto.Creatorid
             };
-            context.Plans.Add(plan);
+            Add(plan);
             return true;
         }
+        public IEnumerable<Plan> Search(string[] str)
+        {
+            var result = new List<Plan>();
+            foreach (var s in str)
+            {
+                var found =  context.Plans.Where(p => p.Name.Contains(s) ) ;
+                foreach (var f in found)
+                {
+                    if (!result.Contains(f))
+                    {
+                        result.Add(f);
+                    }
+                }
+            }
+            return result;
+        }
+
         public bool ContainsId(int id)
         {
             return context.Plans.Any(p => p.Id == id);
