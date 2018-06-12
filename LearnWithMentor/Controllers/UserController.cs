@@ -1,4 +1,4 @@
-﻿
+﻿using System;
 using System.Collections.Generic;
 using System.Web.Http;
 using LearnWithMentorDAL.Entities;
@@ -37,12 +37,20 @@ namespace LearnWithMentor.Controllers
             bool success = UoW.Users.Add(value, "123");
             if (success)
             {
-                UoW.Save();
-                return Ok();
+                try
+                {
+                    UoW.Save();
+                    return Ok(String.Format("Succesfully created user: {0}.", value.Email));
+                }
+                catch (Exception exception)
+                {
+                    return InternalServerError(exception);
+                }
             }
             else
             {
-                return BadRequest();
+                var message = "Incorrect request syntax.";
+                return BadRequest(message);
             }
         }
 
@@ -52,21 +60,44 @@ namespace LearnWithMentor.Controllers
             bool success = UoW.Users.UpdateById(id, value);
             if (success)
             {
-                UoW.Save();
-                return Ok();
+                try
+                {
+                    UoW.Save();
+                    return Ok(String.Format("Succesfully updated user id: {0}.", id));
+                }
+                catch (Exception exception)
+                {
+                    return InternalServerError(exception);
+                }
             }
             else
             {
-                return BadRequest();
+                var message = "Incorrect request syntax or user does not exist.";
+                return BadRequest(message);
             }
         }
 
         // DELETE: api/User/5
         public IHttpActionResult Delete(int id)
         {
-            UoW.Users.RemoveById(id);
-            UoW.Save();
-            return Ok();
+            bool success = UoW.Users.RemoveById(id);
+            if (success)
+            {
+                try
+                {
+                    UoW.Save();
+                    return Ok(String.Format("Succesfully deleted user id: {0}.", id));
+                }
+                catch (Exception exception)
+                {
+                    return InternalServerError(exception);
+                }
+            }
+            else
+            {
+                var message = $"Not existing user with id: {id}.";
+                return BadRequest(message);
+            }
         }
 
         [HttpGet]

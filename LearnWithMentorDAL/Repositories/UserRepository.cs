@@ -14,13 +14,15 @@ namespace LearnWithMentorDAL.Repositories
         {
             return context.Users.FirstOrDefault(u => u.Id == id);
         }
-        public void RemoveById(int id)
+        public bool RemoveById(int id)
         {
             var item = context.Users.Where(u => u.Id == id);
             if (item.Any())
             {
                 context.Users.RemoveRange(item);
+                return true;
             }
+            return false;
         }
         public bool UpdateById(int id, UserDTO user)
         {
