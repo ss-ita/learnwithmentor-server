@@ -4,13 +4,14 @@ namespace LearnWithMentorDTO
 {
     public class UserDTO
     {
-        public UserDTO(int id, string firstName, string lastName, string email, string role)
+        public UserDTO(int id, string firstName, string lastName, string email, string role, bool blocked)
         {
             LastName = lastName;
             FirstName = firstName;
             Id = id;
             Email = email;
             Role = role;
+            Blocked = blocked;
         }
         [Required]
         [StringLength(ValidationRules.MAX_LENGTH_NAME,
@@ -35,5 +36,6 @@ namespace LearnWithMentorDTO
 
         [Required]
         public string Role { set; get; }
+        public bool? Blocked { set; get; }
     }
 }
