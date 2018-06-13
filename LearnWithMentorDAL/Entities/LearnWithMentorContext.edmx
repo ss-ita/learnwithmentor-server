@@ -127,6 +127,7 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.UserGroups' does not have a
           <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Role_Id" Type="int" Nullable="false" />
+          <Property Name="Blocked" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="UserTasks">
           <Key>
@@ -844,6 +845,7 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
           <NavigationProperty Name="PlanSuggestion1" Relationship="LearnWithMentor_DBModel.FK_PlanSuggestion_To_Users1" FromRole="Users" ToRole="PlanSuggestion" />
           <NavigationProperty Name="UserTasks" Relationship="LearnWithMentor_DBModel.FK_UserTasks_To_Users" FromRole="Users" ToRole="UserTasks" />
           <NavigationProperty Name="Groups1" Relationship="LearnWithMentor_DBModel.UserGroups" FromRole="Users" ToRole="Groups" />
+          <Property Name="Blocked" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="UserTask">
           <Key>
@@ -1220,6 +1222,7 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="LearnWithMentor_DBModel.User">
               <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="Blocked" ColumnName="Blocked" />
                 <ScalarProperty Name="Role_Id" ColumnName="Role_Id" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="Email" ColumnName="Email" />

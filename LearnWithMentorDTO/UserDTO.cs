@@ -35,5 +35,6 @@ namespace LearnWithMentorDTO
 
         [Required]
         public string Role { set; get; }
+        public bool Blocked { set; get; }
     }
 }
