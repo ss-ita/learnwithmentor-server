@@ -75,8 +75,19 @@ namespace LearnWithMentorDAL.Repositories
             List<User> result = new List<User>();
             foreach (var s in str)
             {
-                var found = roleId == null ? context.Users.Where(u => u.FirstName.Contains(s) || u.LastName.Contains(s)) :
-                    context.Users.Where(u => u.Role_Id == roleId).Where(u => u.FirstName.Contains(s) || u.LastName.Contains(s));
+                IQueryable<User> found;
+                if (roleId == null)
+                {
+                    found = context.Users.Where(u => u.FirstName.Contains(s) || u.LastName.Contains(s));
+                }
+                else if (roleId == -1)
+                {
+                    found = context.Users.Where(u => (u.FirstName.Contains(s) || u.LastName.Contains(s)) && (u.Blocked));
+                }
+                else
+                {
+                    found = context.Users.Where(u => u.Role_Id == roleId).Where(u => u.FirstName.Contains(s) || u.LastName.Contains(s));
+                }
                 foreach (var f in found)
                 {
                     if (!result.Contains(f))

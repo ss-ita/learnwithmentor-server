@@ -129,9 +129,13 @@ namespace LearnWithMentor.Controllers
                 bool exists = false;
                 Role criteria;
                 bool existsRole = UoW.Roles.TryGetByName(role, out criteria);
-                string[] lines = q.Split(' ');
+                string[] lines = q.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 List<UserDTO> dto = new List<UserDTO>();
-                foreach (var u in existsRole ? UoW.Users.Search(lines,criteria.Id) : UoW.Users.Search(lines, null))
+                int? searchParametr = null;
+                if (role == "blocked")
+                    searchParametr = -1;
+                foreach (var u in existsRole ? UoW.Users.Search(lines,criteria.Id) : 
+                    UoW.Users.Search(lines, searchParametr))
                 {
                     exists = true;
                     dto.Add(new UserDTO(u.Id, u.FirstName, u.LastName, u.Email, u.Roles.Name));
