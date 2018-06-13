@@ -10,6 +10,9 @@ using LearnWithMentorDTO;
 
 namespace LearnWithMentor.Controllers
 {
+    /// <summary>
+    /// Controller for working with tasks
+    /// </summary>
     public class TaskController : ApiController
     {
         private IUnitOfWork UoW;
@@ -17,7 +20,9 @@ namespace LearnWithMentor.Controllers
         {
             UoW = new UnitOfWork(new LearnWithMentor_DBEntities());
         }
-
+        /// <summary>
+        /// Returns a list of all tasks.
+        /// </summary>
         // GET api/task      
         [HttpGet]
         [Route("api/task")]
@@ -48,7 +53,9 @@ namespace LearnWithMentor.Controllers
             }
             return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No tasks in database.");
         }
-
+        /// <summary>
+        /// Returns task by ID.
+        /// </summary>
         // GET api/task/5
         [HttpGet]
         [Route("api/task/{id}")]
@@ -73,6 +80,11 @@ namespace LearnWithMentor.Controllers
             return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Task with this ID does not exist in database.");
         }
 
+        /// <summary>
+        /// Returns tasks with priority and section for defined by ID plan.
+        /// </summary>
+        /// <param name="id">ID of the tast.</param>
+        /// <param name="planId">ID of the plan.</param>
         // GET api/task?id={id}&planid={planid}
         [HttpGet]
         [Route("api/task")]
@@ -98,6 +110,10 @@ namespace LearnWithMentor.Controllers
                                                                     t.PlanTasks.Where(pt => pt.Task_Id == t.Id && pt.Plan_Id == planid).FirstOrDefault()?.Priority,
                                                                     t.PlanTasks.Where(pt => pt.Task_Id == t.Id && pt.Plan_Id == planid).FirstOrDefault()?.Section_Id));
         }
+        /// <summary>
+        /// Returns tasks which name contains special string key.
+        /// </summary>
+        /// <param name="key">Key for search.</param>
         // GET api/task/search?key={key}
         [HttpGet]
         [Route("api/task/search")]
@@ -127,7 +143,11 @@ namespace LearnWithMentor.Controllers
             }
             return Request.CreateResponse(HttpStatusCode.OK, dto);
         }
-    
+        /// <summary>
+        /// Returns tasks in plan which names contain special string key.
+        /// </summary>
+        /// <param name="key">Key for search.</param>
+        /// <param name="planId">ID of the plan.</param>
         // GET api/task/search?key={key}&planid={planid}
         [HttpGet]
         [Route("api/task/SearchInPlan")]
@@ -159,6 +179,10 @@ namespace LearnWithMentor.Controllers
             }
             return Request.CreateResponse(HttpStatusCode.OK, dto);
         }
+        /// <summary>
+        /// Creates new task
+        /// </summary>
+        /// <param name="t">Task object for creation.</param>
         // POST api/task
         [HttpPost]
         [Route("api/task")]
@@ -182,7 +206,11 @@ namespace LearnWithMentor.Controllers
             }
 
         }
-
+        /// <summary>
+        /// Updates task by ID
+        /// </summary>
+        /// <param name="id">Task ID for update.</param>
+        /// <param name="t">Modified task object for update.</param>
         // PUT api/task/5
         [HttpPut]
         [Route("api/task/{id}")]
@@ -205,7 +233,10 @@ namespace LearnWithMentor.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, exception);
             }
         }
-
+        /// <summary>
+        /// Deletes task by ID
+        /// </summary>
+        /// <param name="id">Task ID for delete.</param>
         // DELETE api/task/5
         [HttpDelete]
         [Route("api/task/{id}")]
@@ -226,7 +257,10 @@ namespace LearnWithMentor.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, exception);
             }
         }
-
+        /// <summary>
+        /// Returns a list of comments for defined by ID task.
+        /// </summary>
+        /// <param name="taskId">Task ID.</param>
         [Route("api/task/{taskId}/comment")]
         public IEnumerable<CommentDTO> GetComments(int taskId)
         {
@@ -239,7 +273,11 @@ namespace LearnWithMentor.Controllers
             }
             return dto;
         }
-
+        /// <summary>
+        /// Creates comment for defined by ID task.
+        /// </summary>
+        /// <param name="value">Comment object for creation.</param>
+        /// <param name="taskId">Task ID.</param>
         [HttpPost]
         [Route("api/task/{taskId}/comment")]
         public IHttpActionResult AddComment([FromBody]CommentDTO value, int taskId)
