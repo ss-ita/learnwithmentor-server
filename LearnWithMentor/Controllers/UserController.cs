@@ -33,6 +33,31 @@ namespace LearnWithMentor.Controllers
             var message = "No users in database.";
             return Request.CreateErrorResponse(HttpStatusCode.NotFound, message);
         }
+
+        [HttpGet]
+        [Route("api/user/inrole/{role_id}")]
+        public HttpResponseMessage GetUsersbyRole(int role_id)
+        {
+            var role = UoW.Roles.Get(role_id);
+            bool exists = false;
+            var dto = new List<UserDTO>();
+            if (role != null)
+            {
+                foreach (var u in UoW.Users.GetUsersByRole(role_id))
+                {
+                    exists = true;
+                    dto.Add(new UserDTO(u.Id, u.FirstName, u.LastName, u.Email, u.Roles.Name, u.Blocked));
+                }
+
+            } 
+           
+            if (exists)
+            {
+                return Request.CreateResponse<IEnumerable<UserDTO>>(HttpStatusCode.OK, dto);
+            }
+            var message = "No user with this role_id  in database.";
+            return Request.CreateErrorResponse(HttpStatusCode.NotFound, message);
+        }
         // GET: api/User/5
         public HttpResponseMessage Get(int id)
         {
