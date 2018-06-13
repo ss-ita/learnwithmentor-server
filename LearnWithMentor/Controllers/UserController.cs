@@ -24,7 +24,7 @@ namespace LearnWithMentor.Controllers
             foreach (var u in UoW.Users.GetAll())
             {
                 exists = true;
-                dto.Add(new UserDTO(u.Id, u.FirstName, u.LastName, u.Email, u.Roles.Name));
+                dto.Add(new UserDTO(u.Id, u.FirstName, u.LastName, u.Email, u.Roles.Name, u.Blocked));
             }
             if (exists)
             {
@@ -43,7 +43,8 @@ namespace LearnWithMentor.Controllers
                                                                             u.FirstName, 
                                                                             u.LastName, 
                                                                             u.Email, 
-                                                                            u.Roles.Name));
+                                                                            u.Roles.Name,
+                                                                            u.Blocked));
             }
             var message = "User does not exist in database.";
             return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
@@ -98,13 +99,13 @@ namespace LearnWithMentor.Controllers
         // DELETE: api/user/5
         public HttpResponseMessage Delete(int id)
         {
-            bool success = UoW.Users.RemoveById(id);
+            bool success = UoW.Users.BlockById(id);
             if (success)
             {
                 try
                 {
                     UoW.Save();
-                    var okMessage = $"Succesfully deleted user id: {id}.";
+                    var okMessage = $"Succesfully blocked user id: {id}.";
                     return Request.CreateResponse(HttpStatusCode.OK, okMessage);
                 }
                 catch (Exception exception)
@@ -138,7 +139,7 @@ namespace LearnWithMentor.Controllers
                     UoW.Users.Search(lines, searchParametr))
                 {
                     exists = true;
-                    dto.Add(new UserDTO(u.Id, u.FirstName, u.LastName, u.Email, u.Roles.Name));
+                    dto.Add(new UserDTO(u.Id, u.FirstName, u.LastName, u.Email, u.Roles.Name, u.Blocked));
                 }
                 if (exists)
                 {
