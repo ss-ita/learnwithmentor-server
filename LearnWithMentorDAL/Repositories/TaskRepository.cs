@@ -10,31 +10,37 @@ namespace LearnWithMentorDAL.Repositories
         public TaskRepository(LearnWithMentor_DBEntities context) : base(context)
         {
         }
-        public Entities.Task Get(int id)
+        public Task Get(int id)
         {
             return context.Tasks.FirstOrDefault(t => t.Id == id);
         }
-        public void RemoveById(int id)
+        public bool RemoveById(int id)
         {
-            var item = context.Tasks.FirstOrDefault(t => t.Id == id);
+            var item = Get(id);
             if (item!=null)
             {
-                context.Tasks.Remove(item);
+                Remove(item);
+                return true;
             }
+            return false;
         }
-        public void UpdateById(int id, TaskDTO task)
+        public bool UpdateById(int id, TaskDTO task)
         {
-            var item = context.Tasks.FirstOrDefault(t => t.Id == id);
+            bool modified = false;
+            var item = Get(id);
             if (item!=null)
             {
                 Task toUpdate = item;
                 toUpdate.Name = task.Name;
                 toUpdate.Description = task.Description;
                 toUpdate.Private = task.Private;
+                toUpdate.Mod_Id = task.ModifierId;
                 Update(toUpdate);
+                modified = true;
             }
+            return modified;
         }
-        public void Add(TaskDTO taskDTO)
+        public bool Add(TaskDTO taskDTO)
         {
             Task toAdd = new Task()
             {
@@ -42,32 +48,50 @@ namespace LearnWithMentorDAL.Repositories
                 Name = taskDTO.Name,
                 Description = taskDTO.Description,
                 Private = taskDTO.Private,
+                Create_Id = taskDTO.CreatorId,
+                Mod_Id = taskDTO.ModifierId                
             };
             context.Tasks.Add(toAdd);
+            return true;
         }
-        public IEnumerable<Task> Search(string[] str, int? planId)
+        
+        public IEnumerable<Task> Search(string[] str, int planId)
         {
-            List<Task> ret = new List<Task>();
+            List<Task> result = new List<Task>();
             foreach (var s in str)
             {
                 IQueryable<Task> found;
-                if (planId == null)
-                    found = context.Tasks.Where(t => t.Name.Contains(s));
-                else if (!context.Plans.Any(p=>p.Id==planId))
+                if (!context.Plans.Any(p => p.Id == planId))
                     return null;
-                else
-                    found = context.PlanTasks.Where(p => p.Plan_Id == planId)
+                found = context.PlanTasks.Where(p => p.Plan_Id == planId)
                                              .Select(t => t.Tasks)
-                                             .Where(t=>t.Name.Contains(s));
+                                             .Where(t => t.Name.Contains(s));
                 foreach (var f in found)
                 {
-                    if (!ret.Contains(f))
+                    if (!result.Contains(f))
                     {
-                        ret.Add(f);
+                        result.Add(f);
                     }
                 }
             }
-            return ret;
+            return result;
+        }
+        public IEnumerable<Task> Search(string[] str)
+        {
+            List<Task> result = new List<Task>();
+            foreach (var s in str)
+            {
+                IQueryable<Task> found;
+                found = context.Tasks.Where(t => t.Name.Contains(s));
+                foreach (var f in found)
+                {
+                    if (!result.Contains(f))
+                    {
+                        result.Add(f);
+                    }
+                }
+            }
+            return result;
         }
     }
 }
