@@ -41,6 +41,11 @@ namespace LearnWithMentorDAL.Repositories
                     item.LastName = user.LastName;
                     modified = true;
                 }
+                if (user.Blocked != null)
+                {
+                    item.Blocked = user.Blocked.Value;
+                    modified = true;
+                }
                 var updatedRole = context.Roles.FirstOrDefault(r => r.Name == user.Role);
                 if (updatedRole != null)
                 {
