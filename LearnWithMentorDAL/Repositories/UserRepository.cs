@@ -14,12 +14,13 @@ namespace LearnWithMentorDAL.Repositories
         {
             return context.Users.FirstOrDefault(u => u.Id == id);
         }
-        public bool RemoveById(int id)
+        public bool BlockById(int id)
         {
             var item = Get(id);
             if (item != null)
             {
-                Remove(item);
+                item.Blocked = true;
+                Update(item);
                 return true;
             }
             return false;
@@ -38,6 +39,11 @@ namespace LearnWithMentorDAL.Repositories
                 if (user.LastName != null)
                 {
                     item.LastName = user.LastName;
+                    modified = true;
+                }
+                if (user.Blocked != null)
+                {
+                    item.Blocked = user.Blocked.Value;
                     modified = true;
                 }
                 var updatedRole = context.Roles.FirstOrDefault(r => r.Name == user.Role);
