@@ -9,7 +9,7 @@ namespace LearnWithMentorDAL.Repositories
         User Get(int id);
         bool BlockById(int id);
         bool UpdateById(int id, UserDTO user);
-        bool Add(UserDTO dto, string password);
+        bool Add(UserLoginDTO dto);
         IEnumerable<User> Search(string[] str, int? role_id);
         IEnumerable<User> GetUsersByRole(int role_id);
         string ExtractFullName(int? id);
