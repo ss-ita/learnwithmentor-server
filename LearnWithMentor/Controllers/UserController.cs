@@ -24,7 +24,7 @@ namespace LearnWithMentor.Controllers
             foreach (var u in UoW.Users.GetAll())
             {
                 exists = true;
-                dto.Add(new UserDTO(u.Id, u.FirstName, u.LastName, u.Email, u.Roles.Name, u.Blocked));
+                dto.Add(new UserDTO(u.Id, u.FirstName, u.LastName, u.Roles.Name, u.Blocked));
             }
             if (exists)
             {
@@ -66,8 +66,7 @@ namespace LearnWithMentor.Controllers
             {
                 return Request.CreateResponse(HttpStatusCode.OK, new UserDTO(u.Id, 
                                                                             u.FirstName, 
-                                                                            u.LastName, 
-                                                                            u.Email, 
+                                                                            u.LastName,  
                                                                             u.Roles.Name,
                                                                             u.Blocked));
             }
@@ -76,13 +75,13 @@ namespace LearnWithMentor.Controllers
         }
 
         // POST: api/User
-        public HttpResponseMessage Post([FromBody]UserDTO value)
+        public HttpResponseMessage Post([FromBody]UserLoginDTO value)
         {
             if (!ModelState.IsValid)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
             }
-            bool success = UoW.Users.Add(value, "123");
+            bool success = UoW.Users.Add(value);
             if (success)
             {
                 try
@@ -164,7 +163,7 @@ namespace LearnWithMentor.Controllers
                     UoW.Users.Search(lines, searchParametr))
                 {
                     exists = true;
-                    dto.Add(new UserDTO(u.Id, u.FirstName, u.LastName, u.Email, u.Roles.Name, u.Blocked));
+                    dto.Add(new UserDTO(u.Id, u.FirstName, u.LastName, u.Roles.Name, u.Blocked));
                 }
                 if (exists)
                 {

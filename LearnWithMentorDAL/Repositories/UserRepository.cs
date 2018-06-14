@@ -56,26 +56,20 @@ namespace LearnWithMentorDAL.Repositories
             }
             return modified;
         }
-        public bool Add(UserDTO userDTO, string password)
+
+        public bool Add(UserLoginDTO userLoginDTO)
         {
-            if (userDTO.Email == null || userDTO.FirstName == null || userDTO.LastName == null || password == null)
-            {
-                return false;
-            }
-            else
-            {
-                User toAdd = new User();
-                toAdd.Email = userDTO.Email;
-                //add hashing
-                toAdd.Password = password;
-                toAdd.Role_Id = context.Roles.FirstOrDefault(r => r.Name == userDTO.Role) != null ?
-                    context.Roles.First(r => r.Name == userDTO.Role).Id : context.Roles.First(r => r.Name == "Student").Id;
-                toAdd.FirstName = userDTO.FirstName;
-                toAdd.LastName = userDTO.LastName;
-                context.Users.Add(toAdd);
-                return true;
-            }
+            User toAdd = new User();
+            toAdd.Email = userLoginDTO.Email;
+            toAdd.Password = BCrypt.Net.BCrypt.HashPassword(userLoginDTO.Password);
+            toAdd.Role_Id = context.Roles.FirstOrDefault(r => r.Name == userLoginDTO.Role) != null ?
+                context.Roles.First(r => r.Name == userLoginDTO.Role).Id : context.Roles.First(r => r.Name == "Student").Id;
+            toAdd.FirstName = userLoginDTO.FirstName;
+            toAdd.LastName = userLoginDTO.LastName;
+            toAdd.Blocked = false;
+            return true;
         }
+
         public IEnumerable<User> Search(string[] str, int? roleId)
         {
             List<User> result = new List<User>();
