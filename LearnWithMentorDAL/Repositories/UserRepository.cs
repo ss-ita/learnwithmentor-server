@@ -115,5 +115,9 @@ namespace LearnWithMentorDAL.Repositories
                 fullName=string.Concat(currentUser.FirstName, " ", currentUser.LastName);
             return fullName;
         }
+        public IEnumerable<User> GetUsersByRole(int role_id)
+        {
+            return context.Users.Where(u => u.Role_Id == role_id);
+        }
     }
 }
