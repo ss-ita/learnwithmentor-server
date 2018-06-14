@@ -135,7 +135,7 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.UserGroups' does not have a
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="User_Id" Type="int" Nullable="false" />
-          <Property Name="Task_Id" Type="int" Nullable="false" />
+          <Property Name="PlanTask_Id" Type="int" Nullable="false" />
           <Property Name="State" Type="nchar" MaxLength="1" Nullable="false" />
           <Property Name="End_Date" Type="datetime" Nullable="false" />
           <Property Name="Result" Type="nvarchar(max)" Nullable="false" />
@@ -416,15 +416,15 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_UserTasks_To_Activities">
-          <End Role="Tasks" Type="Self.Tasks" Multiplicity="1" />
+        <Association Name="FK_UserTasks_To_PlanTasks">
+          <End Role="PlanTasks" Type="Self.PlanTasks" Multiplicity="1" />
           <End Role="UserTasks" Type="Self.UserTasks" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Tasks">
+            <Principal Role="PlanTasks">
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="UserTasks">
-              <PropertyRef Name="Task_Id" />
+              <PropertyRef Name="PlanTask_Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -604,8 +604,8 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
             <End Role="Roles" EntitySet="Roles" />
             <End Role="Users" EntitySet="Users" />
           </AssociationSet>
-          <AssociationSet Name="FK_UserTasks_To_Activities" Association="Self.FK_UserTasks_To_Activities">
-            <End Role="Tasks" EntitySet="Tasks" />
+          <AssociationSet Name="FK_UserTasks_To_PlanTasks" Association="Self.FK_UserTasks_To_PlanTasks">
+            <End Role="PlanTasks" EntitySet="PlanTasks" />
             <End Role="UserTasks" EntitySet="UserTasks" />
           </AssociationSet>
           <AssociationSet Name="FK_UserTasks_To_Users" Association="Self.FK_UserTasks_To_Users">
@@ -722,6 +722,10 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
             <End Role="Messages" EntitySet="Messages" />
             <End Role="UserTasks" EntitySet="UserTasks" />
           </AssociationSet>
+          <AssociationSet Name="FK_UserTasks_To_PlanTasks1" Association="LearnWithMentor_DBModel.FK_UserTasks_To_PlanTasks1">
+            <End Role="PlanTask" EntitySet="PlanTasks" />
+            <End Role="UserTask" EntitySet="UserTasks" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="Comment">
           <Key>
@@ -789,6 +793,7 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
           <NavigationProperty Name="Plans" Relationship="LearnWithMentor_DBModel.FK_PlanTasks_To_Plans" FromRole="PlanTasks" ToRole="Plans" />
           <NavigationProperty Name="Sections" Relationship="LearnWithMentor_DBModel.FK_PlanTasks_To_Sections" FromRole="PlanTasks" ToRole="Sections" />
           <NavigationProperty Name="Tasks" Relationship="LearnWithMentor_DBModel.FK_PlanTasks_To_Tasks" FromRole="PlanTasks" ToRole="Tasks" />
+          <NavigationProperty Name="UserTasks" Relationship="LearnWithMentor_DBModel.FK_UserTasks_To_PlanTasks1" FromRole="PlanTask" ToRole="UserTask" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
@@ -853,14 +858,14 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="User_Id" Type="Int32" Nullable="false" />
-          <Property Name="Task_Id" Type="Int32" Nullable="false" />
+          <Property Name="PlanTask_Id" Type="Int32" Nullable="false" />
           <Property Name="State" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="true" />
           <Property Name="End_Date" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Result" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Propose_End_Date" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Tasks" Relationship="LearnWithMentor_DBModel.FK_UserTasks_To_Activities" FromRole="UserTasks" ToRole="Tasks" />
           <NavigationProperty Name="Users" Relationship="LearnWithMentor_DBModel.FK_UserTasks_To_Users" FromRole="UserTasks" ToRole="Users" />
           <NavigationProperty Name="Messages" Relationship="LearnWithMentor_DBModel.UserTasksMessages" FromRole="UserTasks" ToRole="Messages" />
+          <NavigationProperty Name="PlanTasks" Relationship="LearnWithMentor_DBModel.FK_UserTasks_To_PlanTasks1" FromRole="UserTask" ToRole="PlanTask" />
         </EntityType>
         <EntityType Name="PlanSuggestion">
           <Key>
@@ -1074,7 +1079,7 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="UserTasks">
-              <PropertyRef Name="Task_Id" />
+              <PropertyRef Name="PlanTask_Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1125,6 +1130,18 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
         <Association Name="UserTasksMessages">
           <End Type="LearnWithMentor_DBModel.Message" Role="Messages" Multiplicity="*" />
           <End Type="LearnWithMentor_DBModel.UserTask" Role="UserTasks" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_UserTasks_To_PlanTasks1">
+          <End Type="LearnWithMentor_DBModel.PlanTask" Role="PlanTask" Multiplicity="1" />
+          <End Type="LearnWithMentor_DBModel.UserTask" Role="UserTask" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PlanTask">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserTask">
+              <PropertyRef Name="PlanTask_Id" />
+            </Dependent>
+          </ReferentialConstraint>
         </Association>
         </Schema>
     </edmx:ConceptualModels>
@@ -1235,11 +1252,11 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
           <EntitySetMapping Name="UserTasks">
             <EntityTypeMapping TypeName="LearnWithMentor_DBModel.UserTask">
               <MappingFragment StoreEntitySet="UserTasks">
+                <ScalarProperty Name="PlanTask_Id" ColumnName="PlanTask_Id" />
                 <ScalarProperty Name="Propose_End_Date" ColumnName="Propose_End_Date" />
                 <ScalarProperty Name="Result" ColumnName="Result" />
                 <ScalarProperty Name="End_Date" ColumnName="End_Date" />
                 <ScalarProperty Name="State" ColumnName="State" />
-                <ScalarProperty Name="Task_Id" ColumnName="Task_Id" />
                 <ScalarProperty Name="User_Id" ColumnName="User_Id" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>

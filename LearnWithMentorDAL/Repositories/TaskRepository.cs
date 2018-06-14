@@ -26,8 +26,7 @@ namespace LearnWithMentorDAL.Repositories
         }
         public bool IsRemovable(int id)
         {
-            return (!context.PlanTasks.Any(pt=>pt.Task_Id==id)
-                        || !context.UserTasks.Any(ut=>ut.Task_Id==id));
+            return (!context.PlanTasks.Any(pt=>pt.Task_Id==id));
         }
         public bool UpdateById(int id, TaskDTO task)
         {
