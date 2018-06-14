@@ -4,11 +4,13 @@ using LearnWithMentorDAL.Entities;
 
 namespace LearnWithMentorDAL.Repositories
 {
-    public interface ITaskRepository: IRepository<Entities.Task>
+    public interface ITaskRepository: IRepository<Task>
     {
-        Entities.Task Get(int id);
+        Task Get(int id);
         bool RemoveById(int id);
-        bool UpdateById(int id, TaskDTO user);
+        bool IsRemovable(int id);
+        bool UpdateById(int id, TaskDTO task);
+        bool UpdateForPlan(int taskId, int planId, TaskDTO task);
         bool Add(TaskDTO dto);
         IEnumerable<Task> Search(string[] str, int planId);
         IEnumerable<Task> Search(string[] str);
