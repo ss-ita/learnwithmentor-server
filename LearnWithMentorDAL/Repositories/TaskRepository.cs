@@ -5,7 +5,7 @@ using LearnWithMentorDTO;
 
 namespace LearnWithMentorDAL.Repositories
 {
-    public class TaskRepository: BaseRepository<Entities.Task>, ITaskRepository
+    public class TaskRepository: BaseRepository<Task>, ITaskRepository
     {
         public TaskRepository(LearnWithMentor_DBEntities context) : base(context)
         {
@@ -17,12 +17,16 @@ namespace LearnWithMentorDAL.Repositories
         public bool RemoveById(int id)
         {
             var item = Get(id);
-            if (item!=null)
+            if (item!=null && IsRemovable(id))
             {
                 Remove(item);
                 return true;
             }
             return false;
+        }
+        public bool IsRemovable(int id)
+        {
+            return (!context.PlanTasks.Any(pt=>pt.Task_Id==id));
         }
         public bool UpdateById(int id, TaskDTO task)
         {
@@ -39,6 +43,30 @@ namespace LearnWithMentorDAL.Repositories
                 modified = true;
             }
             return modified;
+        }
+        public bool UpdateForPlan(int taskId, int planId, TaskDTO task)
+        {
+            var updatableItem = Get(taskId);
+            if (updatableItem == null)
+                return false;
+            if (!context.PlanTasks.Any(pt => pt.Task_Id == taskId && pt.Plan_Id == planId))
+            {
+
+            }
+
+
+
+            if (updatableItem != null)
+            {
+                Task toUpdate = updatableItem;
+                toUpdate.Name = task.Name;
+                toUpdate.Description = task.Description;
+                toUpdate.Private = task.Private;
+                toUpdate.Mod_Id = task.ModifierId;
+                Update(toUpdate);
+                return true;
+            }
+            return false;
         }
         public bool Add(TaskDTO taskDTO)
         {
