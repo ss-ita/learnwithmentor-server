@@ -30,35 +30,10 @@ namespace LearnWithMentorDAL.Repositories
         }
         public bool UpdateById(int id, TaskDTO task)
         {
-            bool modified = false;
             var item = Get(id);
             if (item!=null)
             {
                 Task toUpdate = item;
-                toUpdate.Name = task.Name;
-                toUpdate.Description = task.Description;
-                toUpdate.Private = task.Private;
-                toUpdate.Mod_Id = task.ModifierId;
-                Update(toUpdate);
-                modified = true;
-            }
-            return modified;
-        }
-        public bool UpdateForPlan(int taskId, int planId, TaskDTO task)
-        {
-            var updatableItem = Get(taskId);
-            if (updatableItem == null)
-                return false;
-            if (!context.PlanTasks.Any(pt => pt.Task_Id == taskId && pt.Plan_Id == planId))
-            {
-
-            }
-
-
-
-            if (updatableItem != null)
-            {
-                Task toUpdate = updatableItem;
                 toUpdate.Name = task.Name;
                 toUpdate.Description = task.Description;
                 toUpdate.Private = task.Private;

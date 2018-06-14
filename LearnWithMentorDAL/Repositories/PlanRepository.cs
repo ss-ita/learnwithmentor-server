@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
 using System.Runtime.Serialization.Formatters;
 using LearnWithMentorDTO;
 using LearnWithMentorDAL.Entities;
@@ -14,6 +15,14 @@ namespace LearnWithMentorDAL.Repositories
         public Plan Get(int id)
         {
             return context.Plans.FirstOrDefault(p => p.Id == id);
+        }
+
+        public IEnumerable<Task> GetAllTasks(int planId)
+        {
+            var tasklIdList = context.PlanTasks.Where(pt => pt.Plan_Id == planId).Select(pt => pt.Task_Id).ToArray<int>();
+            var rr= context.Tasks.Where(t=>tasklIdList.Contains(t.Id))
+
+            return ;
         }
 
         public bool RemoveById(int id)
@@ -88,7 +97,7 @@ namespace LearnWithMentorDAL.Repositories
             }
             return result;
         }
-
+        
         public bool ContainsId(int id)
         {
             return context.Plans.Any(p => p.Id == id);
