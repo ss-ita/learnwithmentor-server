@@ -722,7 +722,7 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
             <End Role="Messages" EntitySet="Messages" />
             <End Role="UserTasks" EntitySet="UserTasks" />
           </AssociationSet>
-          <AssociationSet Name="FK_UserTasks_To_PlanTasks1" Association="LearnWithMentor_DBModel.FK_UserTasks_To_PlanTasks1">
+          <AssociationSet Name="FK_UserTasks_To_PlanTasks1" Association="LearnWithMentor_DBModel.FK_UserTasks_To_PlanTasks">
             <End Role="PlanTask" EntitySet="PlanTasks" />
             <End Role="UserTask" EntitySet="UserTasks" />
           </AssociationSet>
@@ -793,7 +793,7 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
           <NavigationProperty Name="Plans" Relationship="LearnWithMentor_DBModel.FK_PlanTasks_To_Plans" FromRole="PlanTasks" ToRole="Plans" />
           <NavigationProperty Name="Sections" Relationship="LearnWithMentor_DBModel.FK_PlanTasks_To_Sections" FromRole="PlanTasks" ToRole="Sections" />
           <NavigationProperty Name="Tasks" Relationship="LearnWithMentor_DBModel.FK_PlanTasks_To_Tasks" FromRole="PlanTasks" ToRole="Tasks" />
-          <NavigationProperty Name="UserTasks" Relationship="LearnWithMentor_DBModel.FK_UserTasks_To_PlanTasks1" FromRole="PlanTask" ToRole="UserTask" />
+          <NavigationProperty Name="UserTasks" Relationship="LearnWithMentor_DBModel.FK_UserTasks_To_PlanTasks" FromRole="PlanTask" ToRole="UserTask" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
@@ -865,7 +865,7 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
           <Property Name="Propose_End_Date" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Users" Relationship="LearnWithMentor_DBModel.FK_UserTasks_To_Users" FromRole="UserTasks" ToRole="Users" />
           <NavigationProperty Name="Messages" Relationship="LearnWithMentor_DBModel.UserTasksMessages" FromRole="UserTasks" ToRole="Messages" />
-          <NavigationProperty Name="PlanTasks" Relationship="LearnWithMentor_DBModel.FK_UserTasks_To_PlanTasks1" FromRole="UserTask" ToRole="PlanTask" />
+          <NavigationProperty Name="PlanTasks" Relationship="LearnWithMentor_DBModel.FK_UserTasks_To_PlanTasks" FromRole="UserTask" ToRole="PlanTask" />
         </EntityType>
         <EntityType Name="PlanSuggestion">
           <Key>
@@ -1131,7 +1131,7 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
           <End Type="LearnWithMentor_DBModel.Message" Role="Messages" Multiplicity="*" />
           <End Type="LearnWithMentor_DBModel.UserTask" Role="UserTasks" Multiplicity="*" />
         </Association>
-        <Association Name="FK_UserTasks_To_PlanTasks1">
+        <Association Name="FK_UserTasks_To_PlanTasks">
           <End Type="LearnWithMentor_DBModel.PlanTask" Role="PlanTask" Multiplicity="1" />
           <End Type="LearnWithMentor_DBModel.UserTask" Role="UserTask" Multiplicity="*" />
           <ReferentialConstraint>
