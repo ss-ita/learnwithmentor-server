@@ -125,7 +125,7 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.UserGroups' does not have a
           <Property Name="FirstName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="LastName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="Role_Id" Type="int" Nullable="false" />
           <Property Name="Blocked" Type="bit" Nullable="false" />
         </EntityType>
@@ -857,7 +857,7 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
           <Property Name="FirstName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="LastName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Password" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="Role_Id" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Comments" Relationship="LearnWithMentor_DBModel.FK_Comments_To_UsersC" FromRole="Users" ToRole="Comments" />
           <NavigationProperty Name="GroupMentor" Relationship="LearnWithMentor_DBModel.FK_Groups_To_Users" FromRole="Users" ToRole="Groups" />
