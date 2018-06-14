@@ -70,10 +70,10 @@ insert into PlanTasks(Plan_Id, Task_Id, Section_Id) SELECT Plans.Id, Tasks.Id, S
 insert into PlanTasks(Plan_Id, Task_Id) SELECT Plans.Id, Tasks.Id FROM Plans, Tasks WHERE Plans.Name = 'C#' AND Tasks.Name = 'Collections';
 insert into PlanTasks(Plan_Id, Task_Id) SELECT Plans.Id, Tasks.Id FROM Plans, Tasks WHERE Plans.Name = 'C#' AND Tasks.Name = 'Exceptions';
 
-insert into UserTasks(User_Id,Task_Id,State,End_Date,Result) SELECT Users.Id, Tasks.Id, 'p','2018-08-10','link msdn' FROM Users, Tasks WHERE Users.Email = 'roman.p@gmail.com' AND Tasks.Name = 'OOP';
-insert into UserTasks(User_Id,Task_Id,State,End_Date,Result) SELECT Users.Id, Tasks.Id, 'p','2018-09-08','link stackoverflow' FROM Users, Tasks WHERE Users.Email = 'riman@gmail.com' AND Tasks.Name = 'Collections';
-insert into UserTasks(User_Id,Task_Id,State,End_Date,Result) SELECT Users.Id, Tasks.Id, 'p','2018-10-09','link github' FROM Users, Tasks WHERE Users.Email = 'andrew.l@gmail.com' AND Tasks.Name = 'Exceptions';
-insert into UserTasks(User_Id,Task_Id,State,End_Date,Result, Propose_End_Date) SELECT Users.Id, Tasks.Id, 'p','2018-08-03','link google.com', '2018-08-13T14:25:10' FROM Users, Tasks WHERE Users.Email = 'andrew.l@gmail.com' AND Tasks.Name = 'Exceptions';
+insert into UserTasks(User_Id,PlanTask_Id,State,End_Date,Result) SELECT Users.Id, PlanTasks.Id, 'p','2018-08-10','link msdn' FROM Users, PlanTasks WHERE Users.Email = 'roman.p@gmail.com' AND PlanTasks.Task_Id = (SELECT Tasks.Id FROM Tasks WHERE Tasks.Name = 'OOP');
+insert into UserTasks(User_Id,PlanTask_Id,State,End_Date,Result) SELECT Users.Id, PlanTasks.Id, 'p','2018-09-08','link stackoverflow' FROM Users, PlanTasks WHERE Users.Email = 'riman@gmail.com' AND PlanTasks.Task_Id =(SELECT Tasks.Id FROM Tasks WHERE Tasks.Name = 'Collections');
+insert into UserTasks(User_Id,PlanTask_Id,State,End_Date,Result) SELECT Users.Id, PlanTasks.Id, 'p','2018-10-09','link github' FROM Users, PlanTasks WHERE Users.Email = 'andrew.l@gmail.com' AND PlanTasks.Task_Id = (SELECT Tasks.Id FROM Tasks WHERE Tasks.Name = 'Exceptions');
+insert into UserTasks(User_Id,PlanTask_Id,State,End_Date,Result, Propose_End_Date) SELECT Users.Id, PlanTasks.Id, 'p','2018-08-03','link google.com', '2018-08-13T14:25:10' FROM Users, PlanTasks WHERE Users.Email = 'andrew.l@gmail.com' AND PlanTasks.Task_Id = (SELECT Tasks.Id FROM Tasks WHERE Tasks.Name = 'Exceptions');
 
 insert into Comments(Create_Id, PlanTask_Id, Text) SELECT Users.Id, PlanTasks.Id, 'first comment' FROM Users, PlanTasks WHERE Users.Email = 'roman.p@gmail.com' AND PlanTasks.Id = 1;
 insert into Comments(Create_Id, PlanTask_Id, Text) SELECT Users.Id, PlanTasks.Id, 'second comment' FROM Users, PlanTasks WHERE Users.Email = 'andrew.l@gmail.com' AND PlanTasks.Id = 1;

@@ -88,13 +88,13 @@ namespace LearnWithMentor.Controllers
         // GET api/task?id={id}&planid={planid}
         [HttpGet]
         [Route("api/task")]
-        public HttpResponseMessage Get(int? id,int? planid )
+        public HttpResponseMessage Get(int? id,int? planId )
         {
-            if(id==null || planid== null)
+            if(id==null || planId == null)
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest,
                                     "Incorrect request syntax: Id and planId must be defined.");
             Task t = UoW.Tasks.Get((int)id);
-            if (t == null || !UoW.PlanTasks.ContainsTaskInPlan((int)id, (int)planid))
+            if (t == null || !UoW.PlanTasks.ContainsTaskInPlan((int)id, (int)planId))
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, 
                                     "Incorrect request syntax or task in this plan does not exist.");
             return Request.CreateResponse(HttpStatusCode.OK,new TaskDTO(t.Id,
@@ -107,8 +107,8 @@ namespace LearnWithMentor.Controllers
                                                                     UoW.Users.ExtractFullName(t.Mod_Id),
                                                                     t.Create_Date,
                                                                     t.Mod_Date,
-                                                                    t.PlanTasks.Where(pt => pt.Task_Id == t.Id && pt.Plan_Id == planid).FirstOrDefault()?.Priority,
-                                                                    t.PlanTasks.Where(pt => pt.Task_Id == t.Id && pt.Plan_Id == planid).FirstOrDefault()?.Section_Id));
+                                                                    t.PlanTasks.Where(pt => pt.Task_Id == t.Id && pt.Plan_Id == planId).FirstOrDefault()?.Priority,
+                                                                    t.PlanTasks.Where(pt => pt.Task_Id == t.Id && pt.Plan_Id == planId).FirstOrDefault()?.Section_Id));
         }
         /// <summary>
         /// Returns tasks which name contains special string key.
@@ -244,6 +244,9 @@ namespace LearnWithMentor.Controllers
         {
             try
             {
+                if (!UoW.Tasks.IsRemovable(id))
+                    return Request.CreateErrorResponse(HttpStatusCode.Conflict, 
+                                    $"Task with id: {id} cannot be deleted because of dependency conflict.");
                 bool success = UoW.Tasks.RemoveById(id);
                 if (success)
                 {
