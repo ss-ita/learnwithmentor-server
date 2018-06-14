@@ -24,8 +24,8 @@ namespace LearnWithMentor.Controllers
             foreach (var p in UoW.Plans.GetAll())
             {
                 exists = true;
-                var firstName = p.Users1?.FirstName;
-                var lastName = p.Users1?.LastName;
+                var firstName = p.Modifier?.FirstName;
+                var lastName = p.Modifier?.LastName;
                 dto.Add(
                     new PlanDTO(
                         p.Id, 
@@ -33,8 +33,8 @@ namespace LearnWithMentor.Controllers
                         p.Description, 
                         p.Published, 
                         p.Create_Id, 
-                        p.Users.FirstName, 
-                        p.Users.LastName, 
+                        p.Creator.FirstName, 
+                        p.Creator.LastName, 
                         p.Mod_Id,
                         firstName,
                         lastName, 
@@ -57,15 +57,15 @@ namespace LearnWithMentor.Controllers
             var p = UoW.Plans.Get(id);
             if (p != null)
             {
-                var firstName = p.Users1?.FirstName;
-                var lastName = p.Users1?.LastName;
+                var firstName = p.Modifier?.FirstName;
+                var lastName = p.Modifier?.LastName;
                 return Request.CreateResponse(HttpStatusCode.OK, new PlanDTO(p.Id,
                     p.Name,
                     p.Description,
                     p.Published,
                     p.Create_Id,
-                    p.Users.FirstName,
-                    p.Users.LastName,
+                    p.Creator.FirstName,
+                    p.Creator.LastName,
                     p.Mod_Id,
                     firstName,
                     lastName,
@@ -133,8 +133,8 @@ namespace LearnWithMentor.Controllers
             foreach (var p in  UoW.Plans.Search(lines))
             {
                 exists = true;
-                var firstName = p.Users1?.FirstName;
-                var lastName = p.Users1?.LastName;
+                var firstName = p.Modifier?.FirstName;
+                var lastName = p.Modifier?.LastName;
                 dto.Add(
                     new PlanDTO
                         (
@@ -143,8 +143,8 @@ namespace LearnWithMentor.Controllers
                             p.Description,
                             p.Published,
                             p.Create_Id,
-                            p.Users.FirstName,
-                            p.Users.LastName,
+                            p.Creator.FirstName,
+                            p.Creator.LastName,
                             p.Mod_Id,
                             firstName,
                             lastName,

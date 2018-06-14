@@ -21,7 +21,7 @@ namespace LearnWithMentorDAL.Entities
         public Nullable<System.DateTime> Create_Date { get; set; }
         public Nullable<System.DateTime> Mod_Date { get; set; }
     
-        public virtual PlanTask PlanTasks { get; set; }
-        public virtual User Users { get; set; }
+        public virtual PlanTask PlanTask { get; set; }
+        public virtual User Creator { get; set; }
     }
 }

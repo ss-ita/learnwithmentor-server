@@ -19,8 +19,8 @@ namespace LearnWithMentorDAL.Entities
         public int Mentor_Id { get; set; }
         public string Text { get; set; }
     
-        public virtual Plan Plans { get; set; }
-        public virtual User Users { get; set; }
-        public virtual User Users1 { get; set; }
+        public virtual Plan Plan { get; set; }
+        public virtual User User { get; set; }
+        public virtual User Mentor { get; set; }
     }
 }
