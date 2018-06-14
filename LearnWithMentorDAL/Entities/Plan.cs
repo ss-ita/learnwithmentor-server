@@ -31,8 +31,8 @@ namespace LearnWithMentorDAL.Entities
         public Nullable<System.DateTime> Create_Date { get; set; }
         public Nullable<System.DateTime> Mod_Date { get; set; }
     
-        public virtual User Users { get; set; }
-        public virtual User Users1 { get; set; }
+        public virtual User Creator { get; set; }
+        public virtual User Modifier { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PlanSuggestion> PlanSuggestion { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

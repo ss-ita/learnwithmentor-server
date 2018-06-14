@@ -18,16 +18,17 @@ namespace LearnWithMentorDAL.Entities
         public User()
         {
             this.Comments = new HashSet<Comment>();
-            this.Groups = new HashSet<Group>();
+            this.GroupMentor = new HashSet<Group>();
             this.Messages = new HashSet<Message>();
-            this.Plans = new HashSet<Plan>();
-            this.Plans1 = new HashSet<Plan>();
-            this.Tasks = new HashSet<Task>();
-            this.Tasks1 = new HashSet<Task>();
-            this.PlanSuggestion = new HashSet<PlanSuggestion>();
-            this.PlanSuggestion1 = new HashSet<PlanSuggestion>();
+            this.PlansCreated = new HashSet<Plan>();
+            this.PlansModified = new HashSet<Plan>();
+            this.TasksCreated = new HashSet<Task>();
+            this.TasksModified = new HashSet<Task>();
+            this.PlanSuggestionsStudent = new HashSet<PlanSuggestion>();
+            this.PlanSuggestionsMentor = new HashSet<PlanSuggestion>();
             this.UserTasks = new HashSet<UserTask>();
-            this.Groups1 = new HashSet<Group>();
+            this.Groups = new HashSet<Group>();
+            this.UserTaskMentor = new HashSet<UserTask>();
         }
     
         public int Id { get; set; }
@@ -41,25 +42,27 @@ namespace LearnWithMentorDAL.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Comment> Comments { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Group> Groups { get; set; }
+        public virtual ICollection<Group> GroupMentor { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Message> Messages { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Plan> Plans { get; set; }
+        public virtual ICollection<Plan> PlansCreated { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Plan> Plans1 { get; set; }
+        public virtual ICollection<Plan> PlansModified { get; set; }
         public virtual Role Roles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Task> Tasks { get; set; }
+        public virtual ICollection<Task> TasksCreated { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Task> Tasks1 { get; set; }
+        public virtual ICollection<Task> TasksModified { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PlanSuggestion> PlanSuggestion { get; set; }
+        public virtual ICollection<PlanSuggestion> PlanSuggestionsStudent { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PlanSuggestion> PlanSuggestion1 { get; set; }
+        public virtual ICollection<PlanSuggestion> PlanSuggestionsMentor { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserTask> UserTasks { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Group> Groups1 { get; set; }
+        public virtual ICollection<Group> Groups { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<UserTask> UserTaskMentor { get; set; }
     }
 }

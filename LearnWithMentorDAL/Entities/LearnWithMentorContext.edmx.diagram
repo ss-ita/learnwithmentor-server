@@ -13,7 +13,7 @@
         <EntityTypeShape EntityType="LearnWithMentor_DBModel.Role" Width="1.5" PointX="0.75" PointY="9.375" />
         <EntityTypeShape EntityType="LearnWithMentor_DBModel.Section" Width="1.5" PointX="7.5" PointY="4.75" />
         <EntityTypeShape EntityType="LearnWithMentor_DBModel.Task" Width="1.5" PointX="5.25" PointY="8.5" />
-        <EntityTypeShape EntityType="LearnWithMentor_DBModel.User" Width="1.5" PointX="3" PointY="7.875" />
+        <EntityTypeShape EntityType="LearnWithMentor_DBModel.User" Width="2.125" PointX="2.625" PointY="7.875" />
         <EntityTypeShape EntityType="LearnWithMentor_DBModel.UserTask" Width="1.5" PointX="10.5" PointY="11.5" IsExpanded="true" />
         <EntityTypeShape EntityType="LearnWithMentor_DBModel.PlanSuggestion" Width="1.5" PointX="12.75" PointY="8.625" />
         <EntityTypeShape EntityType="LearnWithMentor_DBModel.GROUP_PLAN_TASK" Width="1.5" PointX="0.75" PointY="0.75" />
@@ -38,6 +38,7 @@
         <AssociationConnector Association="LearnWithMentor_DBModel.UserGroups" />
         <AssociationConnector Association="LearnWithMentor_DBModel.UserTasksMessages" />
         <AssociationConnector Association="LearnWithMentor_DBModel.FK_UserTasks_To_PlanTasks" />
+        <AssociationConnector Association="LearnWithMentor_DBModel.FK_UserTasks_To_UsersMentor" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

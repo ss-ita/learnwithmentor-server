@@ -18,17 +18,17 @@ namespace LearnWithMentorDAL.Entities
         public Group()
         {
             this.Plans = new HashSet<Plan>();
-            this.Users1 = new HashSet<User>();
+            this.Users = new HashSet<User>();
         }
     
         public int Id { get; set; }
         public string Name { get; set; }
         public Nullable<int> Mentor_Id { get; set; }
     
-        public virtual User Users { get; set; }
+        public virtual User Mentor { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Plan> Plans { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<User> Users1 { get; set; }
+        public virtual ICollection<User> Users { get; set; }
     }
 }

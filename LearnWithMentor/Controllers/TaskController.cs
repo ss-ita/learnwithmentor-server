@@ -272,7 +272,7 @@ namespace LearnWithMentor.Controllers
             List<CommentDTO> dto = new List<CommentDTO>();
             foreach (var a in comments)
             {
-                dto.Add(new CommentDTO(a.Id, a.Text, a.Create_Id, a.Users.FirstName, a.Users.LastName, a.Create_Date, a.Mod_Date));
+                dto.Add(new CommentDTO(a.Id, a.Text, a.Create_Id, a.Creator.FirstName, a.Creator.LastName, a.Create_Date, a.Mod_Date));
             }
             return dto;
         }
