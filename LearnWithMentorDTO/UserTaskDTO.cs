@@ -1,44 +1,40 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace LearnWithMentorDTO.Models
+namespace LearnWithMentorDTO
 {
-    class UserTaskDTO
+    //todo
+    public class UserTaskDTO
     {
         public UserTaskDTO(int id,
-                string name,
-                string description,
-                bool privateness,
-                int createId,
-                string creatorName,
-                int? modId,
-                string modifierName,
-                DateTime? createDate,
-                DateTime? modDate,
-                int? priority,
-                int? sectionId)
+                int userId,
+                int planId,
+                int taskId,
+                string state,
+                DateTime? endDate,
+                string result,
+                DateTime? proposeEndDate,
+                int mentorId)
         {
             Id = id;
-            Name = name;
-            Description = description;
-            Private = privateness;
-            CreateDate = createDate;
-            ModDate = modDate;
-            CreatorId = createId;
-            CreatorName = creatorName;
-            ModifierId = modId;
-            ModifierName = modifierName;
-            Priority = priority;
-            SectionId = sectionId;
+            UserId = userId;
+            PlanId = planId;
+            TaskId = taskId;
+            State = state;
+            EndDate= endDate;
+            Result = result;
+            ProposeEndDate= proposeEndDate;
+            MentorId = mentorId;
         }
 
         public int Id { get; set; }
-        public int User_Id { get; set; }
-        public int PlanTask_Id { get; set; }
+        public int UserId { get; set; }
+        public int PlanId { get; set; }
+        public int TaskId { get; set; }
         public string State { get; set; }
-        public DateTime? End_Date { get; set; }
+        public DateTime? EndDate { get; set; }
         public string Result { get; set; }
-        public DateTime? Propose_End_Date { get; set; }
-        public int Mentor_Id { get; set; }
+        public DateTime? ProposeEndDate { get; set; }
+        public int MentorId { get; set; }
     }
 }

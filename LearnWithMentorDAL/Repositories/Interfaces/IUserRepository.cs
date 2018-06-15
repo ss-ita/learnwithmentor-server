@@ -9,5 +9,7 @@ namespace LearnWithMentorDAL.Repositories
         User Get(int id);
         IEnumerable<User> Search(string[] str, int? role_id);
         IEnumerable<User> GetUsersByRole(int role_id);
+        string ExtractFullName(int? id);
+
     }
 }

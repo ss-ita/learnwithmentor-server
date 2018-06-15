@@ -128,15 +128,6 @@ namespace LearnWithMentorBLL.Services
             }
             return dtos;
         }
-        public string ExtractFullName(int? id)
-        {
-            if (id == null)
-                return null;
-            User currentUser = db.Users.Get(id.Value);
-            string fullName = null;
-            if (currentUser != null)
-                fullName = string.Concat(currentUser.FirstName, " ", currentUser.LastName);
-            return fullName;
-        }
+
     }
 }

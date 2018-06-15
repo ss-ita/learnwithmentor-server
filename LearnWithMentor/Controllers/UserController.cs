@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.Http;
-using LearnWithMentorDAL.Entities;
-using LearnWithMentorDAL.UnitOfWork;
 using LearnWithMentorDTO;
 using System.Net.Http;
 using System.Net;

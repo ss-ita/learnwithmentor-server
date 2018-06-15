@@ -49,5 +49,15 @@ namespace LearnWithMentorDAL.Repositories
         {
             return context.Users.Where(u => u.Role_Id == role_id);
         }
+        public string ExtractFullName(int? id)
+        {
+            if (id == null)
+                return null;
+            User currentUser = context.Users.FirstOrDefault(u => u.Id == id.Value);
+            string fullName = null;
+            if (currentUser != null)
+                fullName = string.Concat(currentUser.FirstName, " ", currentUser.LastName);
+            return fullName;
+        }
     }
 }

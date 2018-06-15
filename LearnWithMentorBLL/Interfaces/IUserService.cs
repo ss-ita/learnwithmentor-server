@@ -12,6 +12,5 @@ namespace LearnWithMentorBLL.Interfaces
         bool Add(UserLoginDTO dto);
         List<UserDTO> Search(string[] str, int? role_id);
         List<UserDTO> GetUsersByRole(int roleId);
-        string ExtractFullName(int? id);
     }
 }
