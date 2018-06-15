@@ -16,6 +16,5 @@ namespace LearnWithMentorBLL.Interfaces
         void DeleteTaskById(int id);
         IEnumerable<TaskDTO> Search(string[] str, int planId);
         IEnumerable<TaskDTO> Search(string[] str);
-        void Dispose();
     }
 }

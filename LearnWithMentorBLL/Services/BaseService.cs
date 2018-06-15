@@ -18,6 +18,9 @@ namespace LearnWithMentorBLL.Services
         {
             db = new UnitOfWork(new LearnWithMentor_DBEntities());
         }
-        //todo Dispose() implement from interface
+        public void Dispose()
+        {
+            db.Dispose();
+        }
     }
 }
