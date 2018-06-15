@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using LearnWithMentorDAL.Entities;
-using LearnWithMentorDTO;
 
 namespace LearnWithMentorDAL.Repositories
 {
@@ -28,34 +27,28 @@ namespace LearnWithMentorDAL.Repositories
         {
             return (!context.PlanTasks.Any(pt=>pt.Task_Id==id));
         }
-        public bool UpdateById(int id, TaskDTO task)
+        public bool UpdateById(int id, Task task)
         {
+            //var item = Get(id);
+            //if (item!=null)
+            //{
+            //    Task toUpdate = item;
+            //    toUpdate.Name = task.Name;
+            //    toUpdate.Description = task.Description;
+            //    toUpdate.Private = task.Private;
+            //    toUpdate.Mod_Id = task.ModifierId;
+            //    Update(toUpdate);
+            //    return true;
+            //}
+            //return false;
+
             var item = Get(id);
-            if (item!=null)
+            if (item != null)
             {
-                Task toUpdate = item;
-                toUpdate.Name = task.Name;
-                toUpdate.Description = task.Description;
-                toUpdate.Private = task.Private;
-                toUpdate.Mod_Id = task.ModifierId;
-                Update(toUpdate);
+                Update(item);
                 return true;
             }
             return false;
-        }
-        public bool Add(TaskDTO taskDTO)
-        {
-            Task toAdd = new Task()
-            {
-                Id = taskDTO.Id,
-                Name = taskDTO.Name,
-                Description = taskDTO.Description,
-                Private = taskDTO.Private,
-                Create_Id = taskDTO.CreatorId,
-                Mod_Id = taskDTO.ModifierId                
-            };
-            context.Tasks.Add(toAdd);
-            return true;
         }
         
         public IEnumerable<Task> Search(string[] str, int planId)
