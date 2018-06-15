@@ -43,6 +43,7 @@
     <Compile Include="Infrastructure\ValidationException.cs" />
     <Compile Include="Interfaces\ITaskService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\BaseService.cs" />
     <Compile Include="Services\TaskService.cs" />
   </ItemGroup>
   <ItemGroup>

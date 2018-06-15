@@ -18,11 +18,6 @@ namespace LearnWithMentorBLL.Services
             
         }
 
-        public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
-
         public TaskDTO GetTasks(int id)
         {
             throw new NotImplementedException();
@@ -41,6 +36,10 @@ namespace LearnWithMentorBLL.Services
         public IEnumerable<TaskDTO> Search(string[] str)
         {
             throw new NotImplementedException();
+        }
+        public void Dispose()
+        {
+            db.Dispose();
         }
     }
 }
