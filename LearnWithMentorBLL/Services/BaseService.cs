@@ -10,7 +10,7 @@ using LearnWithMentorDAL.Entities;
 
 namespace LearnWithMentorBLL.Services
 {
-    class BaseService
+    public class BaseService
     {
         protected readonly IUnitOfWork db;
 
