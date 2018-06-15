@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDTO;
 using LearnWithMentorDAL.Entities;
@@ -25,6 +22,22 @@ namespace LearnWithMentorBLL.Services
                                user.Roles.Name,
                                user.Blocked);
         }
+        public List<UserDTO> GetAllUsers()
+        {
+            var users = db.Users.GetAll();
+            if (!users.Any())
+                return null;
+            List<UserDTO> dtos = new List<UserDTO>();
+            foreach (var user in users)
+            {
+                dtos.Add(new UserDTO(user.Id,
+                                     user.FirstName,
+                                     user.LastName,
+                                     user.Roles.Name,
+                                     user.Blocked));
+            }
+            return dtos;
+        }
         public bool BlockById(int id)
         {
             var item = db.Users.Get(id);
@@ -32,6 +45,7 @@ namespace LearnWithMentorBLL.Services
             {
                 item.Blocked = true;
                 db.Users.Update(item);
+                db.Save();
                 return true;
             }
             return false;
@@ -64,6 +78,7 @@ namespace LearnWithMentorBLL.Services
                     modified = true;
                 }
                 db.Users.Update(item);
+                db.Save();
             }
             return modified;
         }
@@ -79,9 +94,11 @@ namespace LearnWithMentorBLL.Services
                 toAddRole.Id : studentRole.Id;
             toAdd.FirstName = userLoginDTO.FirstName;
             toAdd.LastName = userLoginDTO.LastName;
+            db.Users.Add(toAdd);
+            db.Save();
             return true;
         }
-        public IEnumerable<UserDTO> Search(string[] str, int? roleId)
+        public List<UserDTO> Search(string[] str, int? roleId)
         {
             var users = db.Users.Search(str, roleId);
             List<UserDTO> dtos = new List<UserDTO>();
@@ -95,7 +112,7 @@ namespace LearnWithMentorBLL.Services
             }
             return dtos;
         }
-        public IEnumerable<UserDTO> GetUsersByRole(int role_id)
+        public List<UserDTO> GetUsersByRole(int role_id)
         {
             var users = db.Users.GetUsersByRole(role_id);
             if (users == null)

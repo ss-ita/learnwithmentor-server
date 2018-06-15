@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using LearnWithMentorDAL;
-using LearnWithMentorDAL.Entities;
+﻿using System.Collections.Generic;
 using LearnWithMentorDTO;
 
 namespace LearnWithMentorBLL.Interfaces
@@ -9,11 +6,12 @@ namespace LearnWithMentorBLL.Interfaces
     public interface IUserService
     {
         UserDTO Get(int id);
+        List<UserDTO> GetAllUsers();
         bool BlockById(int id);
         bool UpdateById(int id, UserDTO user);
         bool Add(UserLoginDTO dto);
-        IEnumerable<UserDTO> Search(string[] str, int? role_id);
-        IEnumerable<UserDTO> GetUsersByRole(int roleId);
+        List<UserDTO> Search(string[] str, int? role_id);
+        List<UserDTO> GetUsersByRole(int roleId);
         string ExtractFullName(int? id);
     }
 }
