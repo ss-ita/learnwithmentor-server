@@ -3,96 +3,58 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using LearnWithMentorDAL.Entities;
-using LearnWithMentorDAL.UnitOfWork;
 using LearnWithMentorDTO;
+using LearnWithMentorBLL.Interfaces;
+using LearnWithMentorBLL.Services;
 
 namespace LearnWithMentor.Controllers
 {
     public class PlanController : ApiController
     {
-        private IUnitOfWork UoW;
+        private readonly IPlanService planService;
         public PlanController()
         {
-            UoW = new UnitOfWork(new LearnWithMentor_DBEntities());
+            planService = new PlanService();
         }
+
         // GET: api/Plan
         public HttpResponseMessage Get()
         {
-            var dto = new List<PlanDTO>();
-            bool exists = false;
-            foreach (var p in UoW.Plans.GetAll())
+            List<PlanDTO> dtoList = planService.GetAll();
+            if (dtoList == null || dtoList.Count == 0)
             {
-                exists = true;
-                var firstName = p.Modifier?.FirstName;
-                var lastName = p.Modifier?.LastName;
-                dto.Add(
-                    new PlanDTO(
-                        p.Id, 
-                        p.Name, 
-                        p.Description, 
-                        p.Published, 
-                        p.Create_Id, 
-                        p.Creator.FirstName, 
-                        p.Creator.LastName, 
-                        p.Mod_Id,
-                        firstName,
-                        lastName, 
-                        p.Create_Date, 
-                        p.Mod_Date
-                        )
-                    );
+                var errorMessage = "No plans in database.";
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, errorMessage);
             }
-
-            if (exists)
-            {
-                return Request.CreateResponse<IEnumerable<PlanDTO>>(HttpStatusCode.OK, dto);
-            }
-            var message = "No plans in database.";
-            return Request.CreateErrorResponse(HttpStatusCode.NotFound, message);
+            return Request.CreateResponse<IEnumerable<PlanDTO>>(HttpStatusCode.OK, dtoList);
         }
 
         public HttpResponseMessage Get(int id)
         {
-            var p = UoW.Plans.Get(id);
-            if (p != null)
+            var plan = planService.Get(id);
+            if (plan == null)
             {
-                var firstName = p.Modifier?.FirstName;
-                var lastName = p.Modifier?.LastName;
-                return Request.CreateResponse(HttpStatusCode.OK, new PlanDTO(p.Id,
-                    p.Name,
-                    p.Description,
-                    p.Published,
-                    p.Create_Id,
-                    p.Creator.FirstName,
-                    p.Creator.LastName,
-                    p.Mod_Id,
-                    firstName,
-                    lastName,
-                    p.Create_Date,
-                    p.Mod_Date)
-                );
+                var message = "Plan does not exist in database.";
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
             }
-            var message = "Plan does not exist in database.";
-            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
+            return Request.CreateResponse<PlanDTO>(HttpStatusCode.OK, plan);
         }
 
         // POST: api/plan
         public HttpResponseMessage Post([FromBody]PlanDTO value)
         {
-            var success = UoW.Plans.Add(value);
-            if (success)
+            try
             {
-                try
+                var success = planService.Add(value);
+                if (success)
                 {
-                    UoW.Save();
                     var okMessage = $"Succesfully created plan: {value.Name}";
                     return Request.CreateResponse(HttpStatusCode.OK, okMessage);
                 }
-                catch (Exception e)
-                {
-                    return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
-                }
+            }
+            catch (Exception e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
             var message = "Incorrect request syntax.";
             return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
@@ -101,19 +63,18 @@ namespace LearnWithMentor.Controllers
         // PUT: api/plan/5
         public HttpResponseMessage Put(int id, [FromBody]PlanDTO value)
         {
-            var success = UoW.Plans.UpdateById(value, id);
-            if (success)
+            try
             {
-                try
+                var success = planService.UpdateById(value, id);
+                if (success)
                 {
-                    UoW.Save();
                     var okMessage = $"Succesfully updated plan: {value.Name}";
                     return Request.CreateResponse(HttpStatusCode.OK, okMessage);
                 }
-                catch (Exception e)
-                {
-                    return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
-                }
+            }
+            catch (Exception e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
             var message = "Incorrect request syntax or plan does not exist.";
             return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
@@ -127,61 +88,14 @@ namespace LearnWithMentor.Controllers
             {
                 return Get();
             }
-            bool exists = false;
-            string[] lines = q.Split(' ');
-            var dto = new List<PlanDTO>();
-            foreach (var p in  UoW.Plans.Search(lines))
+            string[] lines = q.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var dto = planService.Search(lines);
+            if (dto == null || dto.Count == 0)
             {
-                exists = true;
-                var firstName = p.Modifier?.FirstName;
-                var lastName = p.Modifier?.LastName;
-                dto.Add(
-                    new PlanDTO
-                        (
-                            p.Id,
-                            p.Name,
-                            p.Description,
-                            p.Published,
-                            p.Create_Id,
-                            p.Creator.FirstName,
-                            p.Creator.LastName,
-                            p.Mod_Id,
-                            firstName,
-                            lastName,
-                            p.Create_Date,
-                            p.Mod_Date
-                        )
-                    );
+                var message = "No plans found.";
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, message);
             }
-            if (exists)
-            {
-                return Request.CreateResponse<IEnumerable<PlanDTO>>(HttpStatusCode.OK, dto);
-            }
-            var message = "No plans found.";
-            return Request.CreateErrorResponse(HttpStatusCode.NotFound, message);
+            return Request.CreateResponse<IEnumerable<PlanDTO>>(HttpStatusCode.OK, dto);
         }
-
-        // DELETE: api/plan/5
-        public HttpResponseMessage Delete(int id)
-        {
-            var success = UoW.Plans.RemoveById(id);
-            UoW.Save();
-            if (success)
-            {
-                try
-                {
-                    UoW.Save();
-                    var okMessage = $"Succesfully deleted plan: {id}";
-                    return Request.CreateResponse(HttpStatusCode.OK, okMessage);
-                }
-                catch (Exception e)
-                {
-                    return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
-                }
-            }
-            var message = $"Not exist plan with id: {id}";
-            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
-        }
-
     }
 }
