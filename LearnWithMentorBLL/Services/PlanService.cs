@@ -67,7 +67,7 @@ namespace LearnWithMentorBLL.Services
             List<TaskDTO> dtosList = new List<TaskDTO>();
             foreach (var task in tasksForConcretePlan)
             {
-                dtosList.Add(new TaskDTO(task.Id,
+                TaskDTO toAdd = new TaskDTO(task.Id,
                                          task.Name,
                                          task.Description,
                                          task.Private,
@@ -78,10 +78,23 @@ namespace LearnWithMentorBLL.Services
                                          task.Create_Date,
                                          task.Mod_Date,
                                          task.PlanTasks.First(p => p.Plan_Id == planId).Priority,
-                                         task.PlanTasks.First(p => p.Plan_Id == planId).Section_Id));
+                                         task.PlanTasks.First(p => p.Plan_Id == planId).Section_Id)
+                {
+                    PlanTaskId = task.PlanTasks.First(p => p.Plan_Id == planId).Id
+                };
+                dtosList.Add(toAdd);
             }
             return dtosList;
         }
+
+        public string GetTaskStateForUser(int planTaskId, int userId)
+        {
+            UserTask userTask = db.UserTasks.GetByPlanTaskForUser(planTaskId, userId);
+            if (userTask == null)
+                return null;
+            return userTask.State;
+        }
+
         public bool UpdateById(PlanDTO plan, int id)
         {
             var toUpdate = db.Plans.Get(id);

@@ -15,5 +15,6 @@ namespace LearnWithMentorBLL.Interfaces
         bool Add(PlanDTO dto);
         List<PlanDTO> Search(string[] str);
         bool ContainsId(int id);
+        string GetTaskStateForUser(int planTaskId, int userId);
     }
 }
