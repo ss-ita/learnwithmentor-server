@@ -1,44 +1,43 @@
 ﻿using System.Web.Http;
-using LearnWithMentorDAL.Entities;
-using LearnWithMentorDAL.UnitOfWork;
+using LearnWithMentorBLL;
 using LearnWithMentorDTO;
 
 namespace LearnWithMentor.Controllers
 {
     public class CommentController : ApiController
     {
-        private IUnitOfWork UoW;
+        //private IUnitOfWork UoW;
 
-        public CommentController()
-        {
-            UoW = new UnitOfWork(new LearnWithMentor_DBEntities());
-        }
+        //public CommentController()
+        //{
+        //    UoW = new UnitOfWork(new LearnWithMentor_DBEntities());
+        //}
 
-        [HttpGet]
-        [Route("api/comment/{id}")]
-        public CommentDTO Get(int id)
-        {
-            Comment comment = UoW.Comments.Get(id);
-            if (comment == null) return null;
-            return new CommentDTO(comment.Id, comment.Text, comment.Create_Id, comment.Creator.FirstName, comment.Creator.LastName, comment.Create_Date, comment.Mod_Date);
-        }
+        //[HttpGet]
+        //[Route("api/comment/{id}")]
+        //public CommentDTO Get(int id)
+        //{
+        //    Comment comment = UoW.Comments.Get(id);
+        //    if (comment == null) return null;
+        //    return new CommentDTO(comment.Id, comment.Text, comment.Create_Id, comment.Creator.FirstName, comment.Creator.LastName, comment.Create_Date, comment.Mod_Date);
+        //}
 
-        [HttpDelete]
-        [Route("api/comment/{id}")]
-        public IHttpActionResult Delete(int id)
-        {
-            UoW.Comments.RemoveById(id);
-            UoW.Save();
-            return Ok();
-        }
+        //[HttpDelete]
+        //[Route("api/comment/{id}")]
+        //public IHttpActionResult Delete(int id)
+        //{
+        //    UoW.Comments.RemoveById(id);
+        //    UoW.Save();
+        //    return Ok();
+        //}
 
-        [HttpPut]
-        [Route("api/comment")]
-        public IHttpActionResult PutComment([FromBody]CommentDTO value)
-        {
-            UoW.Comments.Update(value);
-            UoW.Save();
-            return Ok();
-        }
+        //[HttpPut]
+        //[Route("api/comment")]
+        //public IHttpActionResult PutComment([FromBody]CommentDTO value)
+        //{
+        //    UoW.Comments.Update(value);
+        //    UoW.Save();
+        //    return Ok();
+        //}
     }
 }

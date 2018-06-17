@@ -79,24 +79,10 @@ namespace LearnWithMentorBLL.Services
             return dto;
         }
 
-        public IEnumerable<TaskDTO> GetAllTasksForPlan(int taskId, int planId)
+        public IEnumerable<CommentDTO> GetTaskCommentsForPlan(int taskId, int planId)
         {
             throw new NotImplementedException();
         }
-        public TaskDTO GetTaskCommentsForPlan(int taskId, int planId)
-        {
-            throw new NotImplementedException();
-        }
-        public void RemoveTaskById(int id)
-        {
-            throw new NotImplementedException();
-        }
-        public void DeleteTaskById(int id)
-        {
-
-        }
-
-
         public IEnumerable<TaskDTO> Search(string[] str, int planId)
         {
             throw new NotImplementedException();
@@ -107,9 +93,104 @@ namespace LearnWithMentorBLL.Services
             throw new NotImplementedException();
         }
 
-        IEnumerable<CommentDTO> ITaskService.GetTaskCommentsForPlan(int taskId, int planId)
+        public bool CreateTask(TaskDTO taskDTO)
         {
-            throw new NotImplementedException();
+            Task t = new Task()
+            {
+                Id = taskDTO.Id,
+                Name = taskDTO.Name,
+                Description = taskDTO.Description,
+                Private = taskDTO.Private,
+                Create_Id = taskDTO.CreatorId,
+                Mod_Id = taskDTO.ModifierId
+            };
+            db.Tasks.Add(t);
+            db.Save();
+            return true;
+        }
+
+        public bool CreateUserTask(UserTaskDTO utDTO)
+        {
+            if (!db.PlanTasks.ContainsTaskInPlan(utDTO.TaskId, utDTO.PlanId))
+                throw new ValidationException($"No task [ID:{utDTO.TaskId}] in plan [ID:{utDTO.PlanId}]", "");
+            if(db.Users.Get(utDTO.UserId) == null)
+                throw new ValidationException($"No user [ID:{utDTO.UserId}] in db", "");
+            UserTask t = new UserTask()
+            {
+                User_Id = utDTO.UserId,
+                PlanTask_Id = db.PlanTasks.GetIdByTaskAndPlan(utDTO.TaskId, utDTO.PlanId).Value,
+                State = utDTO.State,
+                End_Date = utDTO.EndDate,
+                Result = utDTO.Result,
+                Propose_End_Date = utDTO.ProposeEndDate,
+                //todo mentor auto-setting logic by planId
+                Mentor_Id = utDTO.MentorId
+            };
+            db.UserTasks.Add(t);
+            db.Save();
+            return true;
+        }
+
+        public bool UpdateTaskById(int taskId, TaskDTO taskDTO)
+        {
+            var item = db.Tasks.Get(taskId);
+            if (item != null)
+            {
+                item.Id = taskDTO.Id;
+                item.Name = taskDTO.Name;
+                item.Description = taskDTO.Description;
+                item.Private = taskDTO.Private;
+                item.Create_Id = taskDTO.CreatorId;
+                item.Mod_Id = taskDTO.ModifierId;
+                db.Tasks.Update(item);
+                return true;
+            }
+            return false;
+        }
+
+        public bool RemoveTaskById(int taskId)
+        {
+            var item = db.Tasks.Get(taskId);
+            if (item != null || db.Tasks.IsRemovable(taskId))
+            {
+                db.Tasks.Remove(item);
+                return true;
+            }
+            return false;
+        }
+
+        public UserTaskDTO GetUserTaskByUserTaskPlanIds(int userId, int taskId, int planId)
+        {
+            int? planTaskId = db.PlanTasks.GetIdByTaskAndPlan(taskId, planId);
+            if (planTaskId==null)
+                throw new ValidationException($"Task(ID:{taskId}) does not exist in plan(ID:{planId}).", "");
+            UserTask ut= db.UserTasks.Get(planTaskId.Value, userId);
+            if (ut == null)
+                throw new ValidationException($"Users task for this plan does not exist.", "");
+            var dto = new UserTaskDTO(ut.Id,
+                                      userId,
+                                      planId,
+                                      taskId,
+                                      ut.End_Date,
+                                      ut.Propose_End_Date,
+                                      ut.Mentor_Id,
+                                      ut.State,
+                                      ut.Result);
+            return dto;
+        }
+
+        public bool UpdateUserTaskStatus(int userId, int taskId, int planId, string newStatus)
+        {
+            var ptId= db.PlanTasks.GetIdByTaskAndPlan(taskId, planId);
+            if (ptId == null)
+                throw new ValidationException("No task in plan", "");
+            var ut= db.UserTasks.Get(ptId.Value, userId);
+            if(ut==null)
+                throw new ValidationException("No task in plan for this user", "");
+            ut.State = newStatus;
+            db.UserTasks.Update(ut);
+            db.Save();
+            return true;
         }
     }
 }

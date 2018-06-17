@@ -11,10 +11,13 @@ namespace LearnWithMentorBLL.Interfaces
         IEnumerable<TaskDTO> GetAllTasks();
         TaskDTO GetTaskById(int id);
         TaskDTO GetTaskForPlan(int taskId, int planId);
-        IEnumerable<TaskDTO> GetAllTasksForPlan(int taskId, int planId);
+        UserTaskDTO GetUserTaskByUserTaskPlanIds(int userId,int taskId, int planId);
         IEnumerable<CommentDTO> GetTaskCommentsForPlan(int taskId, int planId);
-        void RemoveTaskById(int id);
-        void DeleteTaskById(int id);
+        bool CreateTask(TaskDTO dto);
+        bool CreateUserTask(UserTaskDTO utDTO);
+        bool UpdateUserTaskStatus(int userId, int taskId, int planId, string newStatus);
+        bool UpdateTaskById(int taskId,TaskDTO dto);
+        bool RemoveTaskById(int id);
         IEnumerable<TaskDTO> Search(string[] str, int planId);
         IEnumerable<TaskDTO> Search(string[] str);
     }

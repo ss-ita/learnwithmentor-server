@@ -20,9 +20,9 @@ namespace LearnWithMentorDAL.Repositories
         public IEnumerable<Task> GetAllTasks(int planId)
         {
             var tasklIdList = context.PlanTasks.Where(pt => pt.Plan_Id == planId).Select(pt => pt.Task_Id).ToArray<int>();
-            var rr= context.Tasks.Where(t=>tasklIdList.Contains(t.Id))
+            var rr = context.Tasks.Where(t => tasklIdList.Contains(t.Id));
 
-            return ;
+            return null;
         }
 
         public bool RemoveById(int id)

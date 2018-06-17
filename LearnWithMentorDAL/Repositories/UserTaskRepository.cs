@@ -12,5 +12,10 @@ namespace LearnWithMentorDAL.Repositories
         {
             return context.UserTasks.FirstOrDefault(t => t.Id == id);
         }
+        public UserTask Get(int planTaskId, int userId)
+        {
+            return context.UserTasks.FirstOrDefault(ut => ut.PlanTask_Id == planTaskId && ut.User_Id == userId);
+        }
+
     }
 }

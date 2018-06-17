@@ -80,11 +80,21 @@ namespace LearnWithMentor.Controllers
         /// <param name="planId">ID of the plan.</param>
         /// <param name="userId">ID of the user.</param>
         [HttpGet]
-        [Route("api/task")]
+        [Route("api/task/usertask")]
         public HttpResponseMessage Get(int taskId, int planId, int userId)
         {
-            return new UserTaskDTO;
+            try
+            {
+                var ut = taskService.GetUserTaskByUserTaskPlanIds(userId, taskId, planId);
+                return Request.CreateResponse(HttpStatusCode.OK, ut);
+            }
+            catch (ValidationException ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message);
+            }
         }
+
+
 
         /// <summary>
         /// Returns messages for UserTask for task in plan for user.
@@ -92,9 +102,10 @@ namespace LearnWithMentor.Controllers
         /// <param name="userTaskId">ID of the userTask.</param>
         [HttpGet]
         [Route("api/task/userTask/{userTaskId}/messages")]
-        public HttpResponseMessage Get(int userTaskId)
+        public HttpResponseMessage GetMessages(int userTaskId)
         {
-            return new MessageDTO;
+            //todo
+            return  Request.CreateResponse(HttpStatusCode.OK);
         }
 
         /// <summary>
@@ -103,10 +114,11 @@ namespace LearnWithMentor.Controllers
         /// <param name="taskId">ID of the tast.</param>
         /// <param name="planId">ID of the plan.</param>
         [HttpGet]
-        [Route("api/task/planTask")]
-        public HttpResponseMessage Get(int taskId, int planId)
+        [Route("api/task/plancomments")]
+        public HttpResponseMessage GetCommentsForPlan(int taskId, int planId)
         {
-
+            //todo
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
 
         /// <summary>
@@ -114,10 +126,24 @@ namespace LearnWithMentor.Controllers
         /// </summary>
         /// <param name="newUT">New object userTask.</param>
         [HttpPost]
-        [Route("api/task/userTask")]
-        public HttpResponseMessage Post(UserTaskDTO newUT)
+        [Route("api/task/usertask")]
+        public HttpResponseMessage Post([FromBody]UserTaskDTO ut)
         {
-            return new OK();
+            try
+            {
+                if (!ModelState.IsValid)
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                bool success = taskService.CreateUserTask(ut);
+                if (success)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully created task for user.");
+                }
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Creation error.");
+            }
+            catch (Exception exception)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, exception);
+            }
         }
 
         /// <summary>
@@ -126,10 +152,24 @@ namespace LearnWithMentor.Controllers
         /// <param name="userTaskId">ID of the userTask to be changed.</param>
         /// /// <param name="newStatus">New userTask.</param>
         [HttpPut]
-        [Route("api/task/userTask/{UserTaskId}")]
-        public HttpResponseMessage Put(int userTaskId ,string newStatus)
+        [Route("api/task/usertask")]
+        public HttpResponseMessage Put(int userId, int taskId, int planId, string newStatus)
         {
-            return new OK();
+            try
+            {
+                if (!ModelState.IsValid)
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                bool success = taskService.UpdateUserTaskStatus(userId, taskId, planId, newStatus);
+                if (success)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully updated user task status.");
+                }
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax or task does not exist.");
+            }
+            catch (Exception exception)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, exception);
+            }
         }
 
         /// <summary>
@@ -142,28 +182,28 @@ namespace LearnWithMentor.Controllers
         public HttpResponseMessage Search(string key)
         {
             
-            if (key == null)
-            {
-                return Get();
-            }
-            string[] lines = key.Split(' ');
-            List<TaskDTO> dto = new List<TaskDTO>();
-            foreach (var t in UoW.Tasks.Search(lines))
-            {
-                dto.Add(new TaskDTO(t.Id,
-                                    t.Name,
-                                    t.Description,
-                                    t.Private,
-                                    t.Create_Id,
-                                    UoW.Users.ExtractFullName(t.Create_Id),
-                                    t.Mod_Id,
-                                    UoW.Users.ExtractFullName(t.Mod_Id),
-                                    t.Create_Date,
-                                    t.Mod_Date,
-                                    null,
-                                    null));
-            }
-            return Request.CreateResponse(HttpStatusCode.OK, dto);
+            //if (key == null)
+            //{
+            //    return Get();
+            //}
+            //string[] lines = key.Split(' ');
+            //List<TaskDTO> dto = new List<TaskDTO>();
+            //foreach (var t in UoW.Tasks.Search(lines))
+            //{
+            //    dto.Add(new TaskDTO(t.Id,
+            //                        t.Name,
+            //                        t.Description,
+            //                        t.Private,
+            //                        t.Create_Id,
+            //                        UoW.Users.ExtractFullName(t.Create_Id),
+            //                        t.Mod_Id,
+            //                        UoW.Users.ExtractFullName(t.Mod_Id),
+            //                        t.Create_Date,
+            //                        t.Mod_Date,
+            //                        null,
+            //                        null));
+            //}
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
 
         /// <summary>
@@ -176,31 +216,31 @@ namespace LearnWithMentor.Controllers
         [Route("api/task/SearchInPlan")]
         public HttpResponseMessage SearchInPlan(string key, int? planId)
         {
-            if (key == null || planId == null)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax.");
-            }
-            string[] lines = key.Split(' ');
-            List<TaskDTO> dto = new List<TaskDTO>();
-            var loadedPlans = UoW.Tasks.Search(lines, (int)planId);
-            if (loadedPlans == null)
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, $"Incorrect request syntax, plan with ID:{planId} does not exist.");
-            foreach (var t in loadedPlans)
-            {
-                dto.Add(new TaskDTO(t.Id,
-                                    t.Name,
-                                    t.Description,
-                                    t.Private,
-                                    t.Create_Id,
-                                    UoW.Users.ExtractFullName(t.Create_Id),
-                                    t.Mod_Id,
-                                    UoW.Users.ExtractFullName(t.Mod_Id),
-                                    t.Create_Date,
-                                    t.Mod_Date,
-                                    t.PlanTasks.Where(pt => pt.Task_Id == t.Id && pt.Plan_Id == planId).FirstOrDefault()?.Priority,
-                                    t.PlanTasks.Where(pt => pt.Task_Id == t.Id && pt.Plan_Id == planId).FirstOrDefault()?.Section_Id));
-            }
-            return Request.CreateResponse(HttpStatusCode.OK, dto);
+            //if (key == null || planId == null)
+            //{
+            //    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax.");
+            //}
+            //string[] lines = key.Split(' ');
+            //List<TaskDTO> dto = new List<TaskDTO>();
+            //var loadedPlans = UoW.Tasks.Search(lines, (int)planId);
+            //if (loadedPlans == null)
+            //    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, $"Incorrect request syntax, plan with ID:{planId} does not exist.");
+            //foreach (var t in loadedPlans)
+            //{
+            //    dto.Add(new TaskDTO(t.Id,
+            //                        t.Name,
+            //                        t.Description,
+            //                        t.Private,
+            //                        t.Create_Id,
+            //                        UoW.Users.ExtractFullName(t.Create_Id),
+            //                        t.Mod_Id,
+            //                        UoW.Users.ExtractFullName(t.Mod_Id),
+            //                        t.Create_Date,
+            //                        t.Mod_Date,
+            //                        t.PlanTasks.Where(pt => pt.Task_Id == t.Id && pt.Plan_Id == planId).FirstOrDefault()?.Priority,
+            //                        t.PlanTasks.Where(pt => pt.Task_Id == t.Id && pt.Plan_Id == planId).FirstOrDefault()?.Section_Id));
+            //}
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
 
         /// <summary>
@@ -216,13 +256,12 @@ namespace LearnWithMentor.Controllers
             {
                 if (!ModelState.IsValid)
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
-                bool success = UoW.Tasks.Add(t);
+                bool success = taskService.CreateTask(t);
                 if (success)
                 {
-                    UoW.Save();
                     return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully created task: {t.Name}.");
                 }
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax.");
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Creation error.");
             }
             catch (Exception exception)
             {
@@ -245,10 +284,9 @@ namespace LearnWithMentor.Controllers
             {
                 if (!ModelState.IsValid)
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
-                bool success = UoW.Tasks.UpdateById(id, t);
+                bool success = taskService.UpdateTaskById(id, t);
                 if (success)
                 {
-                    UoW.Save();
                     return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully updated task id: {id}.");
                 }
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax or task does not exist.");
@@ -270,16 +308,12 @@ namespace LearnWithMentor.Controllers
         {
             try
             {
-                if (!UoW.Tasks.IsRemovable(id))
-                    return Request.CreateErrorResponse(HttpStatusCode.Conflict, 
-                                    $"Task with id: {id} cannot be deleted because of dependency conflict.");
-                bool success = UoW.Tasks.RemoveById(id);
+                bool success = taskService.RemoveTaskById(id);
                 if (success)
                 {
-                    UoW.Save();
                     return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully deleted task id: {id}.");
                 }
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, $"No task with id: {id}.");
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, $"No task with id: {id} or cannot be deleted because of dependency conflict.");
             }
             catch (Exception exception)
             {
@@ -292,16 +326,18 @@ namespace LearnWithMentor.Controllers
         /// </summary>
         /// <param name="taskId">Task ID.</param>
         [Route("api/task/{taskId}/comment")]
-        public IEnumerable<CommentDTO> GetComments(int taskId)
+        public HttpResponseMessage GetComments(int taskId)
         {
-            var comments = UoW.Comments.GetAll().Where(c => c.PlanTask_Id == taskId);
-            if (comments == null) return null;
-            List<CommentDTO> dto = new List<CommentDTO>();
-            foreach (var a in comments)
-            {
-                dto.Add(new CommentDTO(a.Id, a.Text, a.Create_Id, a.Creator.FirstName, a.Creator.LastName, a.Create_Date, a.Mod_Date));
-            }
-            return dto;
+            //var comments = UoW.Comments.GetAll().Where(c => c.PlanTask_Id == taskId);
+            //if (comments == null) return null;
+            //List<CommentDTO> dto = new List<CommentDTO>();
+            //foreach (var a in comments)
+            //{
+            //    dto.Add(new CommentDTO(a.Id, a.Text, a.Create_Id, a.Creator.FirstName, a.Creator.LastName, a.Create_Date, a.Mod_Date));
+            //}
+            //return dto;
+            //todo
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
 
         /// <summary>
@@ -313,8 +349,8 @@ namespace LearnWithMentor.Controllers
         [Route("api/task/{taskId}/comment")]
         public IHttpActionResult AddComment([FromBody]CommentDTO value, int taskId)
         {
-            UoW.Comments.Add(value, taskId);
-            UoW.Save();
+            //UoW.Comments.Add(value, taskId);
+            //UoW.Save();
             return Ok();
         }
     }

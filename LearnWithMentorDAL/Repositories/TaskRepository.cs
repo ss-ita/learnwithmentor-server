@@ -13,44 +13,10 @@ namespace LearnWithMentorDAL.Repositories
         {
             return context.Tasks.FirstOrDefault(t => t.Id == id);
         }
-        public bool RemoveById(int id)
-        {
-            var item = Get(id);
-            if (item!=null && IsRemovable(id))
-            {
-                Remove(item);
-                return true;
-            }
-            return false;
-        }
         public bool IsRemovable(int id)
         {
             return (!context.PlanTasks.Any(pt=>pt.Task_Id==id));
         }
-        public bool UpdateById(int id, Task task)
-        {
-            //var item = Get(id);
-            //if (item!=null)
-            //{
-            //    Task toUpdate = item;
-            //    toUpdate.Name = task.Name;
-            //    toUpdate.Description = task.Description;
-            //    toUpdate.Private = task.Private;
-            //    toUpdate.Mod_Id = task.ModifierId;
-            //    Update(toUpdate);
-            //    return true;
-            //}
-            //return false;
-
-            var item = Get(id);
-            if (item != null)
-            {
-                Update(item);
-                return true;
-            }
-            return false;
-        }
-        
         public IEnumerable<Task> Search(string[] str, int planId)
         {
             List<Task> result = new List<Task>();
