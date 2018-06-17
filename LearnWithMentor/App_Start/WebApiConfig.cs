@@ -11,7 +11,7 @@ namespace LearnWithMentor
         {
             // Web API configuration and services
             string url = ConfigurationManager.AppSettings["ApiUrl"];
-            config.EnableCors(new EnableCorsAttribute(url, headers: "application/json", methods: "*"));
+            config.EnableCors(new EnableCorsAttribute(url, headers: "*", methods: "*"));
 
             // Web API routes
             config.MapHttpAttributeRoutes();
