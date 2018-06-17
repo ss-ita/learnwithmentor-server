@@ -82,12 +82,44 @@ namespace LearnWithMentorBLL.Services
         
         public IEnumerable<TaskDTO> Search(string[] str, int planId)
         {
-            
+            List<TaskDTO> dto = new List<TaskDTO>();
+            foreach (var t in db.Tasks.Search(str,planId))
+            {
+                dto.Add(new TaskDTO(t.Id,
+                                    t.Name,
+                                    t.Description,
+                                    t.Private,
+                                    t.Create_Id,
+                                    db.Users.ExtractFullName(t.Create_Id),
+                                    t.Mod_Id,
+                                    db.Users.ExtractFullName(t.Mod_Id),
+                                    t.Create_Date,
+                                    t.Mod_Date,
+                                    t.PlanTasks.Where(pt => pt.Task_Id == t.Id && pt.Plan_Id == planId).FirstOrDefault()?.Priority,
+                                    t.PlanTasks.Where(pt => pt.Task_Id == t.Id && pt.Plan_Id == planId).FirstOrDefault()?.Section_Id));
+            }
+            return dto;
         }
 
         public IEnumerable<TaskDTO> Search(string[] str)
         {
-            
+            List<TaskDTO> dto = new List<TaskDTO>();
+            foreach ( var t in db.Tasks.Search(str))
+            {
+                dto.Add(new TaskDTO(t.Id,
+                                    t.Name,
+                                    t.Description,
+                                    t.Private,
+                                    t.Create_Id,
+                                    db.Users.ExtractFullName(t.Create_Id),
+                                    t.Mod_Id,
+                                    db.Users.ExtractFullName(t.Mod_Id),
+                                    t.Create_Date,
+                                    t.Mod_Date,
+                                    null,
+                                    null));
+            }
+            return dto;
         }
 
         public bool CreateTask(TaskDTO taskDTO)

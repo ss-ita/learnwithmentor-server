@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace LearnWithMentorDTO
 {
-    class MessageDTO
+    public class MessageDTO
     {
         public MessageDTO(int id,
                         int senderId,

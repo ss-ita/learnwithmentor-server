@@ -17,9 +17,11 @@ namespace LearnWithMentor.Controllers
     public class TaskController : ApiController
     {
         private readonly ITaskService taskService;
+        private readonly IMessageService messageService;
         public TaskController()
         {
             taskService = new TaskService();
+            messageService = new MessageService();
         }
 
         /// <summary>
@@ -94,18 +96,23 @@ namespace LearnWithMentor.Controllers
             }
         }
 
-
-
-        /// <summary>
-        /// Returns messages for UserTask for task in plan for user.
-        /// </summary>
-        /// <param name="userTaskId">ID of the userTask.</param>
+        /// <summary>Returns messages for UserTask for task in plan for user./// </summary>
+        /// <param name="userId">ID of the user.</param>
+        /// /// <param name="taskId">ID of the task.</param>
+        /// /// <param name="planId">ID of the plan.</param>
         [HttpGet]
         [Route("api/task/userTask/{userTaskId}/messages")]
-        public HttpResponseMessage GetMessages(int userTaskId)//or(userId,taskId,planId)
+        public HttpResponseMessage GetMessages(int userId, int taskId, int planId)//or(userId,taskId,planId)
         {
-            //todo
-            return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            try
+            {
+                var dto= messageService.GetMessages(userId, taskId, planId);
+                return Request.CreateResponse(HttpStatusCode.OK, dto);
+            }
+            catch (ValidationException ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message);
+            }
         }
 
         /// <summary>
@@ -187,12 +194,8 @@ namespace LearnWithMentor.Controllers
             {
                 return Get();
             }
-            string[] lines = key.Split(' ');
-            List<TaskDTO> dto = new List<TaskDTO>();
-            foreach (var t in taskService.Search(lines))
-            {
-                dto.Add(t);
-            }
+            string[] lines = key.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var dto = taskService.Search(lines);
             return Request.CreateResponse(HttpStatusCode.OK,dto);
         }
 
@@ -206,31 +209,15 @@ namespace LearnWithMentor.Controllers
         [Route("api/task/SearchInPlan")]
         public HttpResponseMessage SearchInPlan(string key, int? planId)
         {
-            //if (key == null || planId == null)
-            //{
-            //    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax.");
-            //}
-            //string[] lines = key.Split(' ');
-            //List<TaskDTO> dto = new List<TaskDTO>();
-            //var loadedPlans = UoW.Tasks.Search(lines, (int)planId);
-            //if (loadedPlans == null)
-            //    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, $"Incorrect request syntax, plan with ID:{planId} does not exist.");
-            //foreach (var t in loadedPlans)
-            //{
-            //    dto.Add(new TaskDTO(t.Id,
-            //                        t.Name,
-            //                        t.Description,
-            //                        t.Private,
-            //                        t.Create_Id,
-            //                        UoW.Users.ExtractFullName(t.Create_Id),
-            //                        t.Mod_Id,
-            //                        UoW.Users.ExtractFullName(t.Mod_Id),
-            //                        t.Create_Date,
-            //                        t.Mod_Date,
-            //                        t.PlanTasks.Where(pt => pt.Task_Id == t.Id && pt.Plan_Id == planId).FirstOrDefault()?.Priority,
-            //                        t.PlanTasks.Where(pt => pt.Task_Id == t.Id && pt.Plan_Id == planId).FirstOrDefault()?.Section_Id));
-            //}
-            return Request.CreateResponse(HttpStatusCode.OK);
+            if (key == null || planId == null)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax.");
+            }
+            string[] lines = key.Split(new char[] { ' ' },StringSplitOptions.RemoveEmptyEntries);
+            var dto = taskService.Search(lines, (int)planId);
+            if (dto == null)
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, $"Incorrect request syntax, plan with ID:{planId} does not exist.");
+            return Request.CreateResponse(HttpStatusCode.OK, dto);
         }
 
         /// <summary>
