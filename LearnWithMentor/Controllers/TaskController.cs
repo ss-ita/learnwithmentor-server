@@ -102,23 +102,10 @@ namespace LearnWithMentor.Controllers
         /// <param name="userTaskId">ID of the userTask.</param>
         [HttpGet]
         [Route("api/task/userTask/{userTaskId}/messages")]
-        public HttpResponseMessage GetMessages(int userTaskId)
+        public HttpResponseMessage GetMessages(int userTaskId)//or(userId,taskId,planId)
         {
             //todo
-            return  Request.CreateResponse(HttpStatusCode.OK);
-        }
-
-        /// <summary>
-        /// Returns comments for task in plan.
-        /// </summary>
-        /// <param name="taskId">ID of the tast.</param>
-        /// <param name="planId">ID of the plan.</param>
-        [HttpGet]
-        [Route("api/task/plancomments")]
-        public HttpResponseMessage GetCommentsForPlan(int taskId, int planId)
-        {
-            //todo
-            return Request.CreateResponse(HttpStatusCode.OK);
+            return Request.CreateResponse(HttpStatusCode.InternalServerError);
         }
 
         /// <summary>
@@ -172,6 +159,20 @@ namespace LearnWithMentor.Controllers
             }
         }
 
+        /// <summary>Returns all tasks states for if array./// </summary>
+        [HttpGet]
+        [Route("api/tasks/state")] // or get user info from token only for authorized user
+        public HttpResponseMessage GetAllTasksState(int user_id, int[] task_ids)
+        {
+            List<UserTaskStateDTO> dtosList = taskService.GetTaskStatesForUser(task_ids, user_id);
+            if (dtosList == null || dtosList.Count == 0)
+            {
+                var message = "Not created any usertasks.";
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
+            }
+            return Request.CreateResponse<IEnumerable<UserTaskStateDTO>>(HttpStatusCode.OK, dtosList);
+        }
+
         /// <summary>
         /// Returns tasks which name contains special string key.
         /// </summary>
@@ -181,29 +182,18 @@ namespace LearnWithMentor.Controllers
         [Route("api/task/search")]
         public HttpResponseMessage Search(string key)
         {
-            
-            //if (key == null)
-            //{
-            //    return Get();
-            //}
-            //string[] lines = key.Split(' ');
-            //List<TaskDTO> dto = new List<TaskDTO>();
-            //foreach (var t in UoW.Tasks.Search(lines))
-            //{
-            //    dto.Add(new TaskDTO(t.Id,
-            //                        t.Name,
-            //                        t.Description,
-            //                        t.Private,
-            //                        t.Create_Id,
-            //                        UoW.Users.ExtractFullName(t.Create_Id),
-            //                        t.Mod_Id,
-            //                        UoW.Users.ExtractFullName(t.Mod_Id),
-            //                        t.Create_Date,
-            //                        t.Mod_Date,
-            //                        null,
-            //                        null));
-            //}
-            return Request.CreateResponse(HttpStatusCode.OK);
+
+            if (key == null)
+            {
+                return Get();
+            }
+            string[] lines = key.Split(' ');
+            List<TaskDTO> dto = new List<TaskDTO>();
+            foreach (var t in taskService.Search(lines))
+            {
+                dto.Add(t);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK,dto);
         }
 
         /// <summary>
@@ -321,24 +311,6 @@ namespace LearnWithMentor.Controllers
             }
         }
 
-        /// <summary>
-        /// Returns a list of comments for defined by ID task.
-        /// </summary>
-        /// <param name="taskId">Task ID.</param>
-        [Route("api/task/{taskId}/comment")]
-        public HttpResponseMessage GetComments(int taskId)
-        {
-            //var comments = UoW.Comments.GetAll().Where(c => c.PlanTask_Id == taskId);
-            //if (comments == null) return null;
-            //List<CommentDTO> dto = new List<CommentDTO>();
-            //foreach (var a in comments)
-            //{
-            //    dto.Add(new CommentDTO(a.Id, a.Text, a.Create_Id, a.Creator.FirstName, a.Creator.LastName, a.Create_Date, a.Mod_Date));
-            //}
-            //return dto;
-            //todo
-            return Request.CreateResponse(HttpStatusCode.OK);
-        }
 
         /// <summary>
         /// Creates comment for defined by ID task.

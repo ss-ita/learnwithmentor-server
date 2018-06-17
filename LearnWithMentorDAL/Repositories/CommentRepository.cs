@@ -15,6 +15,11 @@ namespace LearnWithMentorDAL.Repositories
             return context.Comments.FirstOrDefault(t => t.Id == id);
         }
 
+        public IQueryable<Comment> GetByPlanTaskId(int ptId)
+        {
+            return context.Comments.Where(c =>c.PlanTask_Id==ptId );
+        }
+
         //task id here is actually PlanTask id
         public void Add(CommentDTO comment, int taskId)
         {

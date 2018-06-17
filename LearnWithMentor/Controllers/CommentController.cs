@@ -1,17 +1,45 @@
-﻿using System.Web.Http;
-using LearnWithMentorBLL;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.Http;
+using System.Net;
+using System.Net.Http;
 using LearnWithMentorDTO;
+using LearnWithMentorBLL.Interfaces;
+using LearnWithMentorBLL.Infrastructure;
+using LearnWithMentorBLL.Services;
 
 namespace LearnWithMentor.Controllers
 {
     public class CommentController : ApiController
     {
-        //private IUnitOfWork UoW;
 
-        //public CommentController()
-        //{
-        //    UoW = new UnitOfWork(new LearnWithMentor_DBEntities());
-        //}
+        private readonly ICommentService commentService;
+        
+        public CommentController()
+        {
+            commentService = new CommentService();
+        }
+
+        /// <summary>
+        /// Returns comments for task in plan.
+        /// </summary>
+        /// <param name="taskId">ID of the tast.</param>
+        /// <param name="planId">ID of the plan.</param>
+        [HttpGet]
+        [Route("api/comment/plantaskcomments")]
+        public HttpResponseMessage GetCommentsForPlanTask(int taskId, int planId)
+        {
+            try
+            {
+                var t = commentService.GetTaskCommentsForPlan(taskId, planId);
+                return Request.CreateResponse(HttpStatusCode.OK, t);
+            }
+            catch (ValidationException ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message);
+            }
+        }
 
         //[HttpGet]
         //[Route("api/comment/{id}")]

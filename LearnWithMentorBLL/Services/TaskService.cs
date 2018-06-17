@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Data.Entity;
 using System.Collections.Generic;
 using LearnWithMentorDTO;
@@ -78,19 +79,15 @@ namespace LearnWithMentorBLL.Services
                                     db.PlanTasks.GetTaskSectionIdInPlan(taskId, planId));
             return dto;
         }
-
-        public IEnumerable<CommentDTO> GetTaskCommentsForPlan(int taskId, int planId)
-        {
-            throw new NotImplementedException();
-        }
+        
         public IEnumerable<TaskDTO> Search(string[] str, int planId)
         {
-            throw new NotImplementedException();
+            
         }
 
         public IEnumerable<TaskDTO> Search(string[] str)
         {
-            throw new NotImplementedException();
+            
         }
 
         public bool CreateTask(TaskDTO taskDTO)
@@ -157,6 +154,17 @@ namespace LearnWithMentorBLL.Services
                 return true;
             }
             return false;
+        }
+        public List<UserTaskStateDTO> GetTaskStatesForUser(int[] planTaskIds, int userId)
+        {
+            List<UserTaskStateDTO> dtosList = new List<UserTaskStateDTO>();
+            foreach (int planTaskId in planTaskIds)
+            {
+                UserTask userTask = db.UserTasks.Get(planTaskId, userId);
+                if (userTask != null)
+                    dtosList.Add(new UserTaskStateDTO(planTaskId, userTask.State));
+            }
+            return dtosList;
         }
 
         public UserTaskDTO GetUserTaskByUserTaskPlanIds(int userId, int taskId, int planId)

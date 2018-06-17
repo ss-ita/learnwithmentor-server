@@ -1,5 +1,6 @@
 ﻿using LearnWithMentorDAL.Entities;
 using LearnWithMentorDTO;
+using System.Linq;
 
 namespace LearnWithMentorDAL.Repositories
 {
@@ -9,5 +10,6 @@ namespace LearnWithMentorDAL.Repositories
         void RemoveById(int id);
         void Update(CommentDTO comment);
         void Add(CommentDTO dto, int taskId);
+        IQueryable<Comment> GetByPlanTaskId(int ptId);
     }
 }
