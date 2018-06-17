@@ -53,6 +53,7 @@
     <Compile Include="Infrastructure\ValidationException.cs" />
     <Compile Include="Interfaces\ICommentService.cs" />
     <Compile Include="Interfaces\IMessageService.cs" />
+    <Compile Include="Interfaces\IPlanService.cs" />
     <Compile Include="Interfaces\IRoleService.cs" />
     <Compile Include="Interfaces\ITaskService.cs" />
     <Compile Include="Interfaces\IUserService.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Services\BaseService.cs" />
     <Compile Include="Services\CommentService.cs" />
     <Compile Include="Services\MessageService.cs" />
+    <Compile Include="Services\PlanService.cs" />
     <Compile Include="Services\RoleService.cs" />
     <Compile Include="Services\TaskService.cs" />
     <Compile Include="Services\UserService.cs" />

@@ -79,7 +79,7 @@ namespace LearnWithMentorBLL.Services
                                     db.PlanTasks.GetTaskSectionIdInPlan(taskId, planId));
             return dto;
         }
-        
+
         public IEnumerable<TaskDTO> Search(string[] str, int planId)
         {
             List<TaskDTO> dto = new List<TaskDTO>();
@@ -231,6 +231,12 @@ namespace LearnWithMentorBLL.Services
             db.UserTasks.Update(ut);
             db.Save();
             return true;
+        }
+
+        public IEnumerable<TaskDTO> GetAllTasksForPlan(int taskId, int planId)
+        {
+            //todo if needed
+            throw new NotImplementedException();
         }
     }
 }

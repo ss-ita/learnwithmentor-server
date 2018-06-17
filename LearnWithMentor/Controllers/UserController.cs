@@ -132,22 +132,19 @@ namespace LearnWithMentor.Controllers
             {
                 return Get();
             }
-            else
+            RoleDTO criteria = roleService.GetByName(role);
+            string[] lines = q.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            int? searchParametr = null;
+            if (role == "blocked")
+                searchParametr = -1;
+            List<UserDTO> users = criteria != null ? userService.Search(lines, criteria.Id) :
+                userService.Search(lines, searchParametr);
+            if (users.Count != 0)
             {
-                RoleDTO criteria = roleService.GetByName(role);
-                string[] lines = q.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                int? searchParametr = null;
-                if (role == "blocked")
-                    searchParametr = -1;
-                List<UserDTO> users = criteria != null ? userService.Search(lines, criteria.Id) :
-                    userService.Search(lines, searchParametr);
-                if (users.Count != 0)
-                {
-                    return Request.CreateResponse<IEnumerable<UserDTO>>(HttpStatusCode.OK, users);
-                }
-                var message = "No users found.";
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, message);
+                return Request.CreateResponse<IEnumerable<UserDTO>>(HttpStatusCode.OK, users);
             }
+            var message = "No users found.";
+            return Request.CreateErrorResponse(HttpStatusCode.NotFound, message);
         }
 
         [Route("api/user/roles")]

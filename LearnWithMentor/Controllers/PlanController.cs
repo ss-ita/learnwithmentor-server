@@ -4,182 +4,129 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using LearnWithMentorDTO;
+using LearnWithMentorBLL.Interfaces;
+using LearnWithMentorBLL.Services;
 
 namespace LearnWithMentor.Controllers
 {
-    //public class PlanController : ApiController
-    //{
-    //    private IUnitOfWork UoW;
-    //    public PlanController()
-    //    {
-    //        UoW = new UnitOfWork(new LearnWithMentor_DBEntities());
-    //    }
-    //    // GET: api/Plan
-    //    public HttpResponseMessage Get()
-    //    {
-    //        var dto = new List<PlanDTO>();
-    //        bool exists = false;
-    //        foreach (var p in UoW.Plans.GetAll())
-    //        {
-    //            exists = true;
-    //            var firstName = p.Modifier?.FirstName;
-    //            var lastName = p.Modifier?.LastName;
-    //            dto.Add(
-    //                new PlanDTO(
-    //                    p.Id, 
-    //                    p.Name, 
-    //                    p.Description, 
-    //                    p.Published, 
-    //                    p.Create_Id, 
-    //                    p.Creator.FirstName, 
-    //                    p.Creator.LastName, 
-    //                    p.Mod_Id,
-    //                    firstName,
-    //                    lastName, 
-    //                    p.Create_Date, 
-    //                    p.Mod_Date
-    //                    )
-    //                );
-    //        }
+    public class PlanController : ApiController
+    {
+        private readonly IPlanService planService;
+        private readonly ITaskService taskService;
+        public PlanController()
+        {
+            planService = new PlanService();
+            taskService = new TaskService();
+        }
 
-    //        if (exists)
-    //        {
-    //            return Request.CreateResponse<IEnumerable<PlanDTO>>(HttpStatusCode.OK, dto);
-    //        }
-    //        var message = "No plans in database.";
-    //        return Request.CreateErrorResponse(HttpStatusCode.NotFound, message);
-    //    }
+        // GET: api/Plan
+        public HttpResponseMessage Get()
+        {
+            List<PlanDTO> dtoList = planService.GetAll();
+            if (dtoList == null || dtoList.Count == 0)
+            {
+                var errorMessage = "No plans in database.";
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, errorMessage);
+            }
+            return Request.CreateResponse<IEnumerable<PlanDTO>>(HttpStatusCode.OK, dtoList);
+        }
 
-    //    public HttpResponseMessage Get(int id)
-    //    {
-    //        var p = UoW.Plans.Get(id);
-    //        if (p != null)
-    //        {
-    //            var firstName = p.Modifier?.FirstName;
-    //            var lastName = p.Modifier?.LastName;
-    //            return Request.CreateResponse(HttpStatusCode.OK, new PlanDTO(p.Id,
-    //                p.Name,
-    //                p.Description,
-    //                p.Published,
-    //                p.Create_Id,
-    //                p.Creator.FirstName,
-    //                p.Creator.LastName,
-    //                p.Mod_Id,
-    //                firstName,
-    //                lastName,
-    //                p.Create_Date,
-    //                p.Mod_Date)
-    //            );
-    //        }
-    //        var message = "Plan does not exist in database.";
-    //        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
-    //    }
+        public HttpResponseMessage Get(int id)
+        {
+            var plan = planService.Get(id);
+            if (plan == null)
+            {
+                var message = "Plan does not exist in database.";
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
+            }
+            return Request.CreateResponse<PlanDTO>(HttpStatusCode.OK, plan);
+        }
 
-    //    // POST: api/plan
-    //    public HttpResponseMessage Post([FromBody]PlanDTO value)
-    //    {
-    //        var success = UoW.Plans.Add(value);
-    //        if (success)
-    //        {
-    //            try
-    //            {
-    //                UoW.Save();
-    //                var okMessage = $"Succesfully created plan: {value.Name}";
-    //                return Request.CreateResponse(HttpStatusCode.OK, okMessage);
-    //            }
-    //            catch (Exception e)
-    //            {
-    //                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
-    //            }
-    //        }
-    //        var message = "Incorrect request syntax.";
-    //        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
-    //    }
+        [HttpGet]
+        [Route("api/plan/{plan_id}/tasks")]
+        public HttpResponseMessage GetAllTasks(int plan_id)
+        {
+            List<TaskDTO> dtosList = planService.GetAllTasks(plan_id);
+            if (dtosList == null || dtosList.Count == 0)
+            {
+                var message = "Plan does not contain any task.";
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
+            }
+            return Request.CreateResponse<IEnumerable<TaskDTO>>(HttpStatusCode.OK, dtosList);
+        }
 
-    //    // PUT: api/plan/5
-    //    public HttpResponseMessage Put(int id, [FromBody]PlanDTO value)
-    //    {
-    //        var success = UoW.Plans.UpdateById(value, id);
-    //        if (success)
-    //        {
-    //            try
-    //            {
-    //                UoW.Save();
-    //                var okMessage = $"Succesfully updated plan: {value.Name}";
-    //                return Request.CreateResponse(HttpStatusCode.OK, okMessage);
-    //            }
-    //            catch (Exception e)
-    //            {
-    //                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
-    //            }
-    //        }
-    //        var message = "Incorrect request syntax or plan does not exist.";
-    //        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
-    //    }
 
-    //    [HttpGet]
-    //    [Route("api/plan/search")]
-    //    public HttpResponseMessage Search(string q)
-    //    {
-    //        if (string.IsNullOrEmpty(q))
-    //        {
-    //            return Get();
-    //        }
-    //        bool exists = false;
-    //        string[] lines = q.Split(' ');
-    //        var dto = new List<PlanDTO>();
-    //        foreach (var p in  UoW.Plans.Search(lines))
-    //        {
-    //            exists = true;
-    //            var firstName = p.Modifier?.FirstName;
-    //            var lastName = p.Modifier?.LastName;
-    //            dto.Add(
-    //                new PlanDTO
-    //                    (
-    //                        p.Id,
-    //                        p.Name,
-    //                        p.Description,
-    //                        p.Published,
-    //                        p.Create_Id,
-    //                        p.Creator.FirstName,
-    //                        p.Creator.LastName,
-    //                        p.Mod_Id,
-    //                        firstName,
-    //                        lastName,
-    //                        p.Create_Date,
-    //                        p.Mod_Date
-    //                    )
-    //                );
-    //        }
-    //        if (exists)
-    //        {
-    //            return Request.CreateResponse<IEnumerable<PlanDTO>>(HttpStatusCode.OK, dto);
-    //        }
-    //        var message = "No plans found.";
-    //        return Request.CreateErrorResponse(HttpStatusCode.NotFound, message);
-    //    }
+        // move to taskcontroller!!!
+        [HttpGet]
+        // make  correct route in task controller, just example
+        [Route("api/tasks/state")] // or get user info from token only for authorized user
+        public HttpResponseMessage GetAllTasksState(int plan_id, int user_id, int[] task_ids)
+        {
+            List<UserTaskStateDTO> dtosList = taskService.GetTaskStatesForUser(task_ids, user_id);
+            if (dtosList == null || dtosList.Count == 0)
+            {
+                var message = "Not created any usertasks.";
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
+            }
+            return Request.CreateResponse<IEnumerable<UserTaskStateDTO>>(HttpStatusCode.OK, dtosList);
+        }
 
-    //    // DELETE: api/plan/5
-    //    public HttpResponseMessage Delete(int id)
-    //    {
-    //        var success = UoW.Plans.RemoveById(id);
-    //        UoW.Save();
-    //        if (success)
-    //        {
-    //            try
-    //            {
-    //                UoW.Save();
-    //                var okMessage = $"Succesfully deleted plan: {id}";
-    //                return Request.CreateResponse(HttpStatusCode.OK, okMessage);
-    //            }
-    //            catch (Exception e)
-    //            {
-    //                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
-    //            }
-    //        }
-    //        var message = $"Not exist plan with id: {id}";
-    //        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
-    //    }
+        // POST: api/plan
+        public HttpResponseMessage Post([FromBody]PlanDTO value)
+        {
+            try
+            {
+                var success = planService.Add(value);
+                if (success)
+                {
+                    var okMessage = $"Succesfully created plan: {value.Name}";
+                    return Request.CreateResponse(HttpStatusCode.OK, okMessage);
+                }
+            }
+            catch (Exception e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
+            var message = "Incorrect request syntax.";
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
+        }
 
-    //}
+        // PUT: api/plan/5
+        public HttpResponseMessage Put(int id, [FromBody]PlanDTO value)
+        {
+            try
+            {
+                var success = planService.UpdateById(value, id);
+                if (success)
+                {
+                    var okMessage = $"Succesfully updated plan: {value.Name}";
+                    return Request.CreateResponse(HttpStatusCode.OK, okMessage);
+                }
+            }
+            catch (Exception e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
+            var message = "Incorrect request syntax or plan does not exist.";
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
+        }
+
+        [HttpGet]
+        [Route("api/plan/search")]
+        public HttpResponseMessage Search(string q)
+        {
+            if (string.IsNullOrEmpty(q))
+            {
+                return Get();
+            }
+            string[] lines = q.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var dto = planService.Search(lines);
+            if (dto == null || dto.Count == 0)
+            {
+                var message = "No plans found.";
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, message);
+            }
+            return Request.CreateResponse<IEnumerable<PlanDTO>>(HttpStatusCode.OK, dto);
+        }
+    }
 }

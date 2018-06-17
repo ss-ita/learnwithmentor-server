@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using LearnWithMentorDAL.Entities;
-using LearnWithMentorDTO;
 
 namespace LearnWithMentorDAL.Repositories
 {
