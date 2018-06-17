@@ -15,32 +15,14 @@ namespace LearnWithMentorDAL.Repositories
             return context.Comments.FirstOrDefault(t => t.Id == id);
         }
 
+        public bool ContainsId(int id)
+        {
+            return context.Comments.FirstOrDefault(t => t.Id == id)!=null;
+        }
+
         public IQueryable<Comment> GetByPlanTaskId(int ptId)
         {
             return context.Comments.Where(c =>c.PlanTask_Id==ptId );
-        }
-
-        //task id here is actually PlanTask id
-        public void Add(CommentDTO comment, int taskId)
-        {
-            var newComment = new Comment()
-            {
-                Id = comment.Id,
-                PlanTask_Id = taskId,
-                Create_Id = comment.Id,
-                Create_Date = null,
-                Mod_Date = null
-            };
-            context.Comments.Add(newComment);
-        }
-
-        public void Update(CommentDTO comment)
-        {
-            var item = context.Comments.Where(c => c.Id == comment.Id);
-            if (item == null) return;
-            Comment toUpdate = item.First();
-            toUpdate.Text = comment.Text;
-            Update(toUpdate);
         }
 
         public void RemoveById(int id)
@@ -51,5 +33,11 @@ namespace LearnWithMentorDAL.Repositories
                 context.Comments.RemoveRange(item);
             }
         }
+        public void RemoveByPlanTaskId(int planTaskid)
+        {
+            var item = context.Comments.FirstOrDefault(c => c.PlanTask_Id == planTaskid);
+            Remove(item);
+        }
+
     }
 }

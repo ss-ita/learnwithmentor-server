@@ -41,31 +41,41 @@ namespace LearnWithMentor.Controllers
             }
         }
 
-        //[HttpGet]
-        //[Route("api/comment/{id}")]
-        //public CommentDTO Get(int id)
-        //{
-        //    Comment comment = UoW.Comments.Get(id);
-        //    if (comment == null) return null;
-        //    return new CommentDTO(comment.Id, comment.Text, comment.Create_Id, comment.Creator.FirstName, comment.Creator.LastName, comment.Create_Date, comment.Mod_Date);
-        //}
+        [HttpGet]
+        [Route("api/comment/{id}")]
+        public HttpResponseMessage Get(int id)
+        {
+            CommentDTO comment = commentService.GetComment(id);
+            if(comment==null)
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Comment with this ID does not exist in database.");
+            return Request.CreateResponse(HttpStatusCode.OK, comment);
+        }
 
-        //[HttpDelete]
-        //[Route("api/comment/{id}")]
-        //public IHttpActionResult Delete(int id)
-        //{
-        //    UoW.Comments.RemoveById(id);
-        //    UoW.Save();
-        //    return Ok();
-        //}
+        [HttpPost]
+        [Route("api/comment")]
+        public HttpResponseMessage Post(int taskId, int planId,CommentDTO c)
+        {
+            if (commentService.AddCommentToPlanTask(planId, taskId, c))
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Creation error");
+            return Request.CreateResponse(HttpStatusCode.OK, "Comment succesfully created");
+        }
 
-        //[HttpPut]
-        //[Route("api/comment")]
-        //public IHttpActionResult PutComment([FromBody]CommentDTO value)
-        //{
-        //    UoW.Comments.Update(value);
-        //    UoW.Save();
-        //    return Ok();
-        //}
+        [HttpDelete]
+        [Route("api/comment/{id}")]
+        public HttpResponseMessage Delete(int id)
+        {
+            if(commentService.RemoveById(id))
+                return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully deleted comment id: {id}.");
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, $"No task with id: {id} or cannot be deleted.");
+        }
+
+        [HttpPut]
+        [Route("api/comment")]
+        public HttpResponseMessage PutComment(int id, [FromBody]CommentDTO value)
+        {
+            if (commentService.UpdateComment(id, value))
+                return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully updated comment id: {id}.");
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, $"No task with id: {id} or cannot be updated.");
+        }
     }
 }
