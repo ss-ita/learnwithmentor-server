@@ -78,7 +78,17 @@ namespace LearnWithMentorBLL.Services
                                     db.PlanTasks.GetTaskSectionIdInPlan(taskId, planId));
             return dto;
         }
-
+        public List<UserTaskStateDTO> GetTaskStatesForUser(int[] planTaskIds, int userId)
+        {
+            List<UserTaskStateDTO> dtosList = new List<UserTaskStateDTO>();
+            foreach (int planTaskId in planTaskIds)
+            {
+                UserTask userTask = db.UserTasks.GetByPlanTaskForUser(planTaskId, userId);
+                if (userTask != null)
+                    dtosList.Add(new UserTaskStateDTO(planTaskId, userTask.State));
+            }
+            return dtosList;
+        }
         public IEnumerable<TaskDTO> GetAllTasksForPlan(int taskId, int planId)
         {
             throw new NotImplementedException();

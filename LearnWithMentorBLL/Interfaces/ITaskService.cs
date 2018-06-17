@@ -11,6 +11,7 @@ namespace LearnWithMentorBLL.Interfaces
         IEnumerable<TaskDTO> GetAllTasks();
         TaskDTO GetTaskById(int id);
         TaskDTO GetTaskForPlan(int taskId, int planId);
+        List<UserTaskStateDTO> GetTaskStatesForUser(int[] planTaskIds, int userId);
         IEnumerable<TaskDTO> GetAllTasksForPlan(int taskId, int planId);
         IEnumerable<CommentDTO> GetTaskCommentsForPlan(int taskId, int planId);
         void RemoveTaskById(int id);

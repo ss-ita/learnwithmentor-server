@@ -12,9 +12,11 @@ namespace LearnWithMentor.Controllers
     public class PlanController : ApiController
     {
         private readonly IPlanService planService;
+        private readonly ITaskService taskService;
         public PlanController()
         {
             planService = new PlanService();
+            taskService = new TaskService();
         }
 
         // GET: api/Plan
@@ -38,6 +40,35 @@ namespace LearnWithMentor.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
             }
             return Request.CreateResponse<PlanDTO>(HttpStatusCode.OK, plan);
+        }
+
+        [HttpGet]
+        [Route("api/plan/{plan_id}/tasks")]
+        public HttpResponseMessage GetAllTasks(int plan_id)
+        {
+            List<TaskDTO> dtosList = planService.GetAllTasks(plan_id);
+            if (dtosList == null || dtosList.Count == 0)
+            {
+                var message = "Plan does not contain any task.";
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
+            }
+            return Request.CreateResponse<IEnumerable<TaskDTO>>(HttpStatusCode.OK, dtosList);
+        }
+
+
+        // move to taskcontroller!!!
+        [HttpGet]
+        // make  correct route in task controller, just example
+        [Route("api/tasks/state")] // or get user info from token only for authorized user
+        public HttpResponseMessage GetAllTasksState(int plan_id, int user_id, int[] task_ids)
+        {
+            List<UserTaskStateDTO> dtosList = taskService.GetTaskStatesForUser(task_ids, user_id);
+            if (dtosList == null || dtosList.Count == 0)
+            {
+                var message = "Not created any usertasks.";
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
+            }
+            return Request.CreateResponse<IEnumerable<UserTaskStateDTO>>(HttpStatusCode.OK, dtosList);
         }
 
         // POST: api/plan

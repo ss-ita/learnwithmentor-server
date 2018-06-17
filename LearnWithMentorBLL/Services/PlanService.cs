@@ -87,14 +87,6 @@ namespace LearnWithMentorBLL.Services
             return dtosList;
         }
 
-        public string GetTaskStateForUser(int planTaskId, int userId)
-        {
-            UserTask userTask = db.UserTasks.GetByPlanTaskForUser(planTaskId, userId);
-            if (userTask == null)
-                return null;
-            return userTask.State;
-        }
-
         public bool UpdateById(PlanDTO plan, int id)
         {
             var toUpdate = db.Plans.Get(id);
