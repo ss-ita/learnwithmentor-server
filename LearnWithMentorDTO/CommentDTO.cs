@@ -4,13 +4,12 @@ namespace LearnWithMentorDTO
 {
     public class CommentDTO
     {
-        public CommentDTO(int id, string text, int creatorId, string creatorFirstName, string creatorLastName, DateTime? createDate, DateTime? modDate)
+        public CommentDTO(int id, string text, int creatorId, string creatorFullName, DateTime? createDate, DateTime? modDate)
         {
             Id = id;
             Text = text;
             CreatorId = creatorId;
-            CreatorFirstName = creatorFirstName;
-            CreatorLastName = creatorLastName;
+            CreatorFullName = creatorFullName;
             CreateDate = createDate;
             ModDate = modDate;
         }
@@ -18,8 +17,7 @@ namespace LearnWithMentorDTO
         public int Id { get; set; }
         public string Text { get; set; }
         public int CreatorId { get; set; }
-        public string CreatorFirstName { get; set; }
-        public string CreatorLastName { get; set; }
+        public string CreatorFullName { get; set; }
         public DateTime? CreateDate { get; set; }
         public DateTime? ModDate { get; set; }
     }

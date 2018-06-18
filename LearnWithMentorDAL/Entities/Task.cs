@@ -18,7 +18,6 @@ namespace LearnWithMentorDAL.Entities
         public Task()
         {
             this.PlanTasks = new HashSet<PlanTask>();
-            this.UserTasks = new HashSet<UserTask>();
         }
     
         public int Id { get; set; }
@@ -34,7 +33,5 @@ namespace LearnWithMentorDAL.Entities
         public virtual ICollection<PlanTask> PlanTasks { get; set; }
         public virtual User Creator { get; set; }
         public virtual User Modifier { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<UserTask> UserTasks { get; set; }
     }
 }

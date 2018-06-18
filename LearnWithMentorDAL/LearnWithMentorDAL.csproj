@@ -42,6 +42,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
@@ -139,7 +140,10 @@
     <Compile Include="UnitOfWork\UnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="EF\" />
+    <ProjectReference Include="..\LearnWithMentorDTO\LearnWithMentorDTO.csproj">
+      <Project>{2fc0c932-6883-4d97-b516-3623bde9222b}</Project>
+      <Name>LearnWithMentorDTO</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -167,12 +171,6 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\LearnWithMentorDTO\LearnWithMentorDTO.csproj">
-      <Project>{2fc0c932-6883-4d97-b516-3623bde9222b}</Project>
-      <Name>LearnWithMentorDTO</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
