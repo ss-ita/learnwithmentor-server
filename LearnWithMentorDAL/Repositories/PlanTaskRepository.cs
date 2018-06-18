@@ -16,5 +16,10 @@ namespace LearnWithMentorDAL.Repositories
         {
             return context.PlanTasks.Any(pt => pt.Task_Id == taskId && pt.Plan_Id == planId);
         }
+        public System.Collections.Generic.IEnumerable<Task> TasksInPlan(int planId)
+        {
+            int[] consistence = context.PlanTasks.Where(p => p.Plan_Id == planId).Select(o => o.Task_Id).ToArray<int>();
+            return context.Tasks.Where(t => consistence.Contains(t.Id));
+        }
     }
 }
