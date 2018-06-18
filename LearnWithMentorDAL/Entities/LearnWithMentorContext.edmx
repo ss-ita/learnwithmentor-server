@@ -847,7 +847,6 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
           <NavigationProperty Name="PlanTasks" Relationship="LearnWithMentor_DBModel.FK_PlanTasks_To_Tasks" FromRole="Tasks" ToRole="PlanTasks" />
           <NavigationProperty Name="Creator" Relationship="LearnWithMentor_DBModel.FK_Tasks_To_UsersC" FromRole="Tasks" ToRole="Users" />
           <NavigationProperty Name="Modifier" Relationship="LearnWithMentor_DBModel.FK_Tasks_To_UsersM" FromRole="Tasks" ToRole="Users" />
-          <NavigationProperty Name="UserTasks" Relationship="LearnWithMentor_DBModel.FK_UserTasks_To_Activities" FromRole="Tasks" ToRole="UserTasks" />
         </EntityType>
         <EntityType Name="User">
           <Key>

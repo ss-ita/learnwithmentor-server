@@ -1,44 +1,81 @@
-﻿using System.Web.Http;
-using LearnWithMentorDAL.Entities;
-using LearnWithMentorDAL.UnitOfWork;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.Http;
+using System.Net;
+using System.Net.Http;
 using LearnWithMentorDTO;
+using LearnWithMentorBLL.Interfaces;
+using LearnWithMentorBLL.Infrastructure;
+using LearnWithMentorBLL.Services;
 
 namespace LearnWithMentor.Controllers
 {
     public class CommentController : ApiController
     {
-        private IUnitOfWork UoW;
 
+        private readonly ICommentService commentService;
+        
         public CommentController()
         {
-            UoW = new UnitOfWork(new LearnWithMentor_DBEntities());
+            commentService = new CommentService();
+        }
+
+        /// <summary>
+        /// Returns comments for task in plan.
+        /// </summary>
+        /// <param name="taskId">ID of the tast.</param>
+        /// <param name="planId">ID of the plan.</param>
+        [HttpGet]
+        [Route("api/comment/plantaskcomments")]
+        public HttpResponseMessage GetCommentsForPlanTask(int taskId, int planId)
+        {
+            try
+            {
+                var t = commentService.GetTaskCommentsForPlan(taskId, planId);
+                return Request.CreateResponse(HttpStatusCode.OK, t);
+            }
+            catch (ValidationException ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message);
+            }
         }
 
         [HttpGet]
         [Route("api/comment/{id}")]
-        public CommentDTO Get(int id)
+        public HttpResponseMessage Get(int id)
         {
-            Comment comment = UoW.Comments.Get(id);
-            if (comment == null) return null;
-            return new CommentDTO(comment.Id, comment.Text, comment.Create_Id, comment.Creator.FirstName, comment.Creator.LastName, comment.Create_Date, comment.Mod_Date);
+            CommentDTO comment = commentService.GetComment(id);
+            if(comment==null)
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Comment with this ID does not exist in database.");
+            return Request.CreateResponse(HttpStatusCode.OK, comment);
+        }
+
+        [HttpPost]
+        [Route("api/comment")]
+        public HttpResponseMessage Post(int taskId, int planId,CommentDTO c)
+        {
+            if (commentService.AddCommentToPlanTask(planId, taskId, c))
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Creation error");
+            return Request.CreateResponse(HttpStatusCode.OK, "Comment succesfully created");
         }
 
         [HttpDelete]
         [Route("api/comment/{id}")]
-        public IHttpActionResult Delete(int id)
+        public HttpResponseMessage Delete(int id)
         {
-            UoW.Comments.RemoveById(id);
-            UoW.Save();
-            return Ok();
+            if(commentService.RemoveById(id))
+                return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully deleted comment id: {id}.");
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, $"No task with id: {id} or cannot be deleted.");
         }
 
         [HttpPut]
         [Route("api/comment")]
-        public IHttpActionResult PutComment([FromBody]CommentDTO value)
+        public HttpResponseMessage PutComment(int id, [FromBody]CommentDTO value)
         {
-            UoW.Comments.Update(value);
-            UoW.Save();
-            return Ok();
+            if (commentService.UpdateComment(id, value))
+                return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully updated comment id: {id}.");
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, $"No task with id: {id} or cannot be updated.");
         }
     }
 }

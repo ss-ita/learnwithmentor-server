@@ -4,10 +4,10 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="3a6c983f26e2421ca8ce871612c2e3e9" Name="Diagram1" ZoomLevel="81">
+      <Diagram DiagramId="3a6c983f26e2421ca8ce871612c2e3e9" Name="Diagram1" ZoomLevel="78">
         <EntityTypeShape EntityType="LearnWithMentor_DBModel.Comment" Width="1.5" PointX="8.25" PointY="11.875" />
         <EntityTypeShape EntityType="LearnWithMentor_DBModel.Group" Width="1.5" PointX="5.25" PointY="5.5" />
-        <EntityTypeShape EntityType="LearnWithMentor_DBModel.Message" Width="1.5" PointX="5.25" PointY="15.875" />
+        <EntityTypeShape EntityType="LearnWithMentor_DBModel.Message" Width="1.5" PointX="5.625" PointY="15" />
         <EntityTypeShape EntityType="LearnWithMentor_DBModel.Plan" Width="1.5" PointX="7.5" PointY="7.25" />
         <EntityTypeShape EntityType="LearnWithMentor_DBModel.PlanTask" Width="1.5" PointX="9.75" PointY="7.125" />
         <EntityTypeShape EntityType="LearnWithMentor_DBModel.Role" Width="1.5" PointX="0.75" PointY="9.375" />

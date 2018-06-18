@@ -13,8 +13,18 @@ namespace LearnWithMentorDTO
             Blocked = blocked;
         }
 
+        [Required]
+        [StringLength(ValidationRules.MAX_LENGTH_NAME,
+            ErrorMessage = "LastName too long")]
+        [RegularExpression(ValidationRules.ONLY_LETTERS_AND_NUMBERS,
+            ErrorMessage = "LastName not valid")]
         public string LastName { set; get; }
 
+        [Required]
+        [StringLength(ValidationRules.MAX_LENGTH_NAME,
+            ErrorMessage = "FirstName too long")]
+        [RegularExpression(ValidationRules.ONLY_LETTERS_AND_NUMBERS,
+            ErrorMessage = "FirstName not valid")]
         public string FirstName { set; get; }
 
         public int Id { set; get; }

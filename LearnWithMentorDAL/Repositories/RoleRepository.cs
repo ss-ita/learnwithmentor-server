@@ -14,16 +14,8 @@ namespace LearnWithMentorDAL.Repositories
         }
         public bool TryGetByName(string name, out Role role)
         {
-            var ret = context.Roles.Where(r => r.Name == name);
-            if (ret.Any())
-            {
-                role = ret.FirstOrDefault();
-            }
-            else
-            {
-                role = null;
-            }
-            return ret.Any();
+            role = context.Roles.FirstOrDefault(r => r.Name == name);
+            return role != null;
         }
     }
 }
