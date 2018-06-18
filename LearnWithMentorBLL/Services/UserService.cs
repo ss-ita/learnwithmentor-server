@@ -22,6 +22,18 @@ namespace LearnWithMentorBLL.Services
                                user.Roles.Name,
                                user.Blocked);
         }
+        public UserIdentityDTO GetByEmail(string email)
+        {
+            User user = db.Users.GetByEmail(email);
+            if (user == null)
+                return null;
+            return new UserIdentityDTO(user.Email,user.Password, user.Id,
+                user.FirstName,
+                user.LastName,
+                user.Roles.Name,
+                user.Blocked);
+        }
+
         public List<UserDTO> GetAllUsers()
         {
             var users = db.Users.GetAll();
@@ -82,7 +94,7 @@ namespace LearnWithMentorBLL.Services
             }
             return modified;
         }
-        public bool Add(UserLoginDTO userLoginDTO)
+        public bool Add(UserRegistrationDTO userLoginDTO)
         {
             User toAdd = new User();
             toAdd.Email = userLoginDTO.Email;
