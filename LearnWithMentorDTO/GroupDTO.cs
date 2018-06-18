@@ -11,7 +11,7 @@ namespace LearnWithMentorDTO
     {
         public int ID { get; set; }
         [Required]
-        [StringLength(50, ErrorMessage = "Task name too long")]
+        [StringLength(50, ErrorMessage = "Group name too long")]
         public string Name { get; set; }
         public int MentorID { get; set; }
 
