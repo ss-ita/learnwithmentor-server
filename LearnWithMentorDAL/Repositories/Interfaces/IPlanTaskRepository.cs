@@ -6,5 +6,6 @@ namespace LearnWithMentorDAL.Repositories
     {
         bool ContainsTaskInPlan(int taskId, int planId);
         PlanTask Get(int id);
+        System.Collections.Generic.IEnumerable<Task> TasksInPlan(int planId);
     }
 }

@@ -182,6 +182,29 @@ namespace LearnWithMentor.Controllers
             var message = $"Not exist plan with id: {id}";
             return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
         }
-
+        // GET api/plan/{id}/tasks    
+        [HttpGet]
+        [Route("api/plan/{id}/tasks")]
+        public IEnumerable<TaskDTO> GetTasks(int id)
+        {
+            List<TaskDTO> dto = new List<TaskDTO>();
+            foreach (var t in UoW.PlanTasks.TasksInPlan(id))
+            {
+                dto.Add(new TaskDTO(t.Id,
+                                    t.Name,
+                                    t.Description,
+                                    t.Private,
+                                    t.Create_Id,
+                                    UoW.Users.ExtractFullName(t.Create_Id),
+                                    t.Mod_Id,
+                                    UoW.Users.ExtractFullName(t.Mod_Id),
+                                    t.Create_Date,
+                                    t.Mod_Date,
+                                    null,
+                                    null));
+            }
+            if (dto == null) return null;
+            return dto;
+        }
     }
 }
