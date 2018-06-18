@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Data.Entity;
+﻿using System.Linq;
 using System.Collections.Generic;
 using LearnWithMentorDTO;
 using LearnWithMentorDAL.Entities;
@@ -60,21 +58,21 @@ namespace LearnWithMentorBLL.Services
 
         public TaskDTO GetTaskForPlan(int taskId, int planId)
         {
-            Task t = db.Tasks.Get(taskId);
-            if (t == null)
+            Task task = db.Tasks.Get(taskId);
+            if (task == null)
                 throw new ValidationException($"Task with ID:{taskId} does not exist.", "");
             if(!db.PlanTasks.ContainsTaskInPlan(taskId, planId))
                 throw new ValidationException($"Task(ID:{taskId}) does not exist in plan(ID:{planId}).", "");
-            var dto = new TaskDTO(t.Id,
-                                    t.Name,
-                                    t.Description,
-                                    t.Private,
-                                    t.Create_Id,
-                                    db.Users.ExtractFullName(t.Create_Id),
-                                    t.Mod_Id,
-                                    db.Users.ExtractFullName(t.Mod_Id),
-                                    t.Create_Date,
-                                    t.Mod_Date,
+            var dto = new TaskDTO(task.Id,
+                                    task.Name,
+                                    task.Description,
+                                    task.Private,
+                                    task.Create_Id,
+                                    db.Users.ExtractFullName(task.Create_Id),
+                                    task.Mod_Id,
+                                    db.Users.ExtractFullName(task.Mod_Id),
+                                    task.Create_Date,
+                                    task.Mod_Date,
                                     db.PlanTasks.GetTaskPriorityInPlan(taskId,planId),
                                     db.PlanTasks.GetTaskSectionIdInPlan(taskId, planId));
             return dto;
@@ -124,7 +122,7 @@ namespace LearnWithMentorBLL.Services
 
         public bool CreateTask(TaskDTO taskDTO)
         {
-            Task t = new Task()
+            Task task = new Task()
             {
                 Id = taskDTO.Id,
                 Name = taskDTO.Name,
@@ -133,7 +131,7 @@ namespace LearnWithMentorBLL.Services
                 Create_Id = taskDTO.CreatorId,
                 Mod_Id = taskDTO.ModifierId
             };
-            db.Tasks.Add(t);
+            db.Tasks.Add(task);
             db.Save();
             return true;
         }
@@ -231,12 +229,6 @@ namespace LearnWithMentorBLL.Services
             db.UserTasks.Update(ut);
             db.Save();
             return true;
-        }
-
-        public IEnumerable<TaskDTO> GetAllTasksForPlan(int taskId, int planId)
-        {
-            //todo if needed
-            throw new NotImplementedException();
         }
     }
 }

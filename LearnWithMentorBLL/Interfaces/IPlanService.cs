@@ -1,8 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDTO;
-using LearnWithMentorDAL.Entities;
 
 namespace LearnWithMentorBLL.Interfaces
 {

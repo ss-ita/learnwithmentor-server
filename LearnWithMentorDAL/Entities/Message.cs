@@ -14,19 +14,13 @@ namespace LearnWithMentorDAL.Entities
     
     public partial class Message
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Message()
-        {
-            this.UserTasks = new HashSet<UserTask>();
-        }
-    
         public int Id { get; set; }
+        public int UserTask_Id { get; set; }
         public int User_Id { get; set; }
         public string Text { get; set; }
         public System.DateTime Send_Time { get; set; }
     
         public virtual User Creator { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<UserTask> UserTasks { get; set; }
+        public virtual UserTask UserTask { get; set; }
     }
 }
