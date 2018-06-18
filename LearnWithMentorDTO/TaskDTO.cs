@@ -53,5 +53,6 @@ namespace LearnWithMentorDTO
         public DateTime? ModDate { get; set; }
         public int? Priority { get; set; }
         public int? SectionId { get; set; }
+        public int? PlanTaskId { get; set; }
     }
 }
