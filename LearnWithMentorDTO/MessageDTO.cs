@@ -7,28 +7,24 @@ namespace LearnWithMentorDTO
     {
         public MessageDTO(int id,
                         int senderId,
-                        int taskId,
-                        int planId,
-                        int receiverId,
+                        int userTaskId,
+                        string senderName,
                         string text,
                         DateTime sendTime)
         {
             Id = id;
             SenderId = senderId;
-            TaskId = taskId;
-            PlanId = planId;
-            ReceiverId = receiverId;
+            UserTaskId = userTaskId;
             Text = text;
             SendTime = sendTime;
+            SenderName = senderName;
         }
 
         public int Id { get; set; }
         public int SenderId { get; set; }
-        public int ReceiverId { get; set; }
-        public int TaskId { get; set; }
-        public int PlanId { get; set; }
+        public int UserTaskId { get; set; }
+        public string SenderName { get; set; }
         public string Text { get; set; }
         public DateTime SendTime { get; set; }
-
     }
 }
