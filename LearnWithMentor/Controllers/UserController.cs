@@ -78,7 +78,7 @@ namespace LearnWithMentor.Controllers
         }
 
         // POST: api/User
-        public HttpResponseMessage Post([FromBody]UserLoginDTO value)
+        public HttpResponseMessage Post([FromBody]UserRegistrationDTO value)
         {
             if (!ModelState.IsValid)
             {

@@ -3,6 +3,7 @@ using System.Net;
 using System.Web.Http;
 using LearnWithMentorDAL.Entities;
 using LearnWithMentorDAL.UnitOfWork;
+using LearnWithMentorDTO;
 
 
 namespace LearnWithMentor.Controllers
@@ -15,12 +16,17 @@ namespace LearnWithMentor.Controllers
             UoW = new UnitOfWork(new LearnWithMentor_DBEntities());
         }
         [AllowAnonymous]
-        public string Get(string email, string password)
+
+        public string Post([FromBody]UserLoginDTO value)
         {
-            int id;
-            if (CheckUser(email, password,out id))
+            if (ModelState.IsValid)
             {
-                return JwtManager.GenerateToken(email, id);
+
+                int id;
+                if (CheckUser(value.Email, value.Password, out id))
+                {
+                    return JwtManager.GenerateToken(value.Email, id);
+                }
             }
 
             throw new HttpResponseException(HttpStatusCode.Unauthorized);

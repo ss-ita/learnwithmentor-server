@@ -59,7 +59,7 @@ namespace LearnWithMentor.Filters
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(userroleClaim.Value))
                 return false;
 
-            // More validate to check whether username exists in system
+            //todo More validate to check whether username exists in system
 
             return true;
         }
@@ -74,7 +74,7 @@ namespace LearnWithMentor.Filters
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, username)
-                    // Add more claims if needed: Roles, ...
+                    // todo: Add more claims if needed: Roles, ...
                 };
 
                 var identity = new ClaimsIdentity(claims, "Jwt");

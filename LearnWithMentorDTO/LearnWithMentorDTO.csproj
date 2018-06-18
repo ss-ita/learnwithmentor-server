@@ -48,6 +48,7 @@
     <Compile Include="TaskDTO.cs" />
     <Compile Include="UserDTO.cs" />
     <Compile Include="UserLoginDTO.cs" />
+    <Compile Include="UserRegistrationDTO.cs" />
     <Compile Include="ValidationRules.cs" />
   </ItemGroup>
   <ItemGroup>

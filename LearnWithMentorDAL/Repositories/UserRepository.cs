@@ -57,7 +57,7 @@ namespace LearnWithMentorDAL.Repositories
             return modified;
         }
 
-        public bool Add(UserLoginDTO userLoginDTO)
+        public bool Add(UserRegistrationDTO userLoginDTO)
         {
             User toAdd = new User();
             toAdd.Email = userLoginDTO.Email;
