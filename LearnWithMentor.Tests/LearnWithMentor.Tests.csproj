@@ -110,7 +110,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LearnWithMentor\LearnWithMentor.csproj">
-      <Project>{B3457BCC-EDFD-45BF-B335-F18456250502}</Project>
+      <Project>{b3457bcc-edfd-45bf-b335-f18456250502}</Project>
       <Name>LearnWithMentor</Name>
     </ProjectReference>
   </ItemGroup>
