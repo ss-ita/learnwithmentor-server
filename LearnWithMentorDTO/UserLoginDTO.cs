@@ -4,13 +4,12 @@ namespace LearnWithMentorDTO
 {
     public class UserLoginDTO
     {
-        public UserLoginDTO(string email, string lastName, string firstName, string password, string role)
+        public UserLoginDTO(string email, string lastName, string firstName, string password)
         {
             Email = email;
             LastName = lastName;
             FirstName = firstName;
             Password = password;
-            Role = role;
         }
 
         [Required]
@@ -34,8 +33,5 @@ namespace LearnWithMentorDTO
 
         [Required]
         public string Password { get; set; }
-
-        [Required]
-        public string Role { set; get; }
     }
 }

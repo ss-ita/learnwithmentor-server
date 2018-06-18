@@ -87,11 +87,9 @@ namespace LearnWithMentorBLL.Services
             User toAdd = new User();
             toAdd.Email = userLoginDTO.Email;
             toAdd.Password = BCrypt.Net.BCrypt.HashPassword(userLoginDTO.Password);
-            Role toAddRole;
             Role studentRole;
             db.Roles.TryGetByName("Student", out studentRole);
-            toAdd.Role_Id = db.Roles.TryGetByName(userLoginDTO.Role, out toAddRole) ?
-                toAddRole.Id : studentRole.Id;
+            toAdd.Role_Id = studentRole.Id;
             toAdd.FirstName = userLoginDTO.FirstName;
             toAdd.LastName = userLoginDTO.LastName;
             db.Users.Add(toAdd);
