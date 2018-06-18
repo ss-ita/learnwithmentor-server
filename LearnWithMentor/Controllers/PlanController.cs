@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using LearnWithMentor.Filters;
 using LearnWithMentorDAL.Entities;
 using LearnWithMentorDAL.UnitOfWork;
 using LearnWithMentorDTO;
@@ -16,7 +17,9 @@ namespace LearnWithMentor.Controllers
         {
             UoW = new UnitOfWork(new LearnWithMentor_DBEntities());
         }
-        // GET: api/Plan
+        // GET: api/Plan.
+        [Authorize]
+        [JwtAuthentication]
         public HttpResponseMessage Get()
         {
             var dto = new List<PlanDTO>();

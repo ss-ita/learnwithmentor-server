@@ -6,6 +6,7 @@ using LearnWithMentorDAL.UnitOfWork;
 using LearnWithMentorDTO;
 using System.Net.Http;
 using System.Net;
+using LearnWithMentor.Filters;
 
 namespace LearnWithMentor.Controllers
 {
@@ -17,6 +18,8 @@ namespace LearnWithMentor.Controllers
             UoW = new UnitOfWork(new LearnWithMentor_DBEntities());
         }
         // GET: api/User
+        [JwtAuthentication]
+        [Authorize]
         public HttpResponseMessage Get()
         {
             List<UserDTO> dto = new List<UserDTO>();
