@@ -29,7 +29,6 @@ namespace LearnWithMentorDAL.Entities
     
         public virtual DbSet<Comment> Comments { get; set; }
         public virtual DbSet<Group> Groups { get; set; }
-        public virtual DbSet<Message> Messages { get; set; }
         public virtual DbSet<Plan> Plans { get; set; }
         public virtual DbSet<PlanTask> PlanTasks { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
@@ -40,6 +39,7 @@ namespace LearnWithMentorDAL.Entities
         public virtual DbSet<PlanSuggestion> PlanSuggestion { get; set; }
         public virtual DbSet<GROUP_PLAN_TASK> GROUPS_PLANS_TASKS { get; set; }
         public virtual DbSet<USER_ROLE> USERS_ROLES { get; set; }
+        public virtual DbSet<Message> Messages { get; set; }
     
         public virtual int sp_Total_Ammount_of_Users(ObjectParameter total)
         {

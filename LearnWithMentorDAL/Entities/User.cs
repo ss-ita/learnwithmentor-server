@@ -19,7 +19,6 @@ namespace LearnWithMentorDAL.Entities
         {
             this.Comments = new HashSet<Comment>();
             this.GroupMentor = new HashSet<Group>();
-            this.Messages = new HashSet<Message>();
             this.PlansCreated = new HashSet<Plan>();
             this.PlansModified = new HashSet<Plan>();
             this.TasksCreated = new HashSet<Task>();
@@ -29,6 +28,7 @@ namespace LearnWithMentorDAL.Entities
             this.UserTasks = new HashSet<UserTask>();
             this.Groups = new HashSet<Group>();
             this.UserTaskMentor = new HashSet<UserTask>();
+            this.Messages = new HashSet<Message>();
         }
     
         public int Id { get; set; }
@@ -43,8 +43,6 @@ namespace LearnWithMentorDAL.Entities
         public virtual ICollection<Comment> Comments { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Group> GroupMentor { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Message> Messages { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Plan> PlansCreated { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -64,5 +62,7 @@ namespace LearnWithMentorDAL.Entities
         public virtual ICollection<Group> Groups { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserTask> UserTaskMentor { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Message> Messages { get; set; }
     }
 }
