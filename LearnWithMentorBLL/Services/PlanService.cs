@@ -27,8 +27,8 @@ namespace LearnWithMentorBLL.Services
                                plan.Creator.FirstName,
                                plan.Creator.LastName,
                                plan.Mod_Id,
-                               plan.Modifier.FirstName,
-                               plan.Modifier.LastName,
+                               plan.Modifier?.FirstName,
+                               plan.Modifier?.LastName,
                                plan.Create_Date,
                                plan.Mod_Date);
         }
@@ -48,8 +48,8 @@ namespace LearnWithMentorBLL.Services
                                plan.Creator.FirstName,
                                plan.Creator.LastName,
                                plan.Mod_Id,
-                               plan.Modifier.FirstName,
-                               plan.Modifier.LastName,
+                               plan.Modifier?.FirstName,
+                               plan.Modifier?.LastName,
                                plan.Create_Date,
                                plan.Mod_Date));
             }
@@ -60,7 +60,7 @@ namespace LearnWithMentorBLL.Services
             var plan = db.Plans.Get(planId);
             if (plan == null)
                 return null;
-            var planTaskIds = db.PlanTasks.GetAll().Where(pt => pt.Plan_Id == plan.Id).Select(pt => pt.Id).ToList();
+            var planTaskIds = db.PlanTasks.GetAll().Where(pt => pt.Plan_Id == plan.Id).Select(pt => pt.Task_Id).ToList();
             var tasksForConcretePlan = db.Tasks.GetAll().Where(t => planTaskIds.Contains(t.Id));
             if (!tasksForConcretePlan.Any())
                 return null;
@@ -77,10 +77,10 @@ namespace LearnWithMentorBLL.Services
                                          db.Users.ExtractFullName(task.Mod_Id),
                                          task.Create_Date,
                                          task.Mod_Date,
-                                         task.PlanTasks.First(p => p.Plan_Id == planId).Priority,
-                                         task.PlanTasks.First(p => p.Plan_Id == planId).Section_Id)
+                                         db.PlanTasks.GetTaskPriorityInPlan(task.Id, planId),
+                                         db.PlanTasks.GetTaskSectionIdInPlan(task.Id, planId))
                 {
-                    PlanTaskId = task.PlanTasks.First(p => p.Plan_Id == planId).Id
+                    PlanTaskId = db.PlanTasks.GetIdByTaskAndPlan(task.Id, plan.Id)
                 };
                 dtosList.Add(toAdd);
             }
@@ -108,6 +108,7 @@ namespace LearnWithMentorBLL.Services
                 toUpdate.Mod_Id = plan.Modid;
                 modified = true;
             }
+            modified = !modified && toUpdate.Published != plan.Published;
             toUpdate.Published = plan.Published;
             db.Plans.Update(toUpdate);
             db.Save();
@@ -125,6 +126,7 @@ namespace LearnWithMentorBLL.Services
                 Published = dto.Published
             };
             db.Plans.Add(plan);
+            db.Save();
             return true;
         }
         public List<PlanDTO> Search(string[] str)
@@ -143,8 +145,8 @@ namespace LearnWithMentorBLL.Services
                                          plan.Creator.FirstName,
                                          plan.Creator.LastName,
                                          plan.Mod_Id,
-                                         plan.Modifier.FirstName,
-                                         plan.Modifier.LastName,
+                                         plan.Modifier?.FirstName,
+                                         plan.Modifier?.LastName,
                                          plan.Create_Date,
                                          plan.Mod_Date));
             }

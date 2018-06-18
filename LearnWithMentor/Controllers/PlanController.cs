@@ -99,7 +99,7 @@ namespace LearnWithMentor.Controllers
                 var success = planService.UpdateById(value, id);
                 if (success)
                 {
-                    var okMessage = $"Succesfully updated plan: {value.Name}";
+                    var okMessage = $"Succesfully updated plan.";
                     return Request.CreateResponse(HttpStatusCode.OK, okMessage);
                 }
             }
