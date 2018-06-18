@@ -48,6 +48,8 @@
     <Compile Include="RoleDTO.cs" />
     <Compile Include="TaskDTO.cs" />
     <Compile Include="UserDTO.cs" />
+    <Compile Include="UserIdentityDTO.cs" />
+    <Compile Include="UserRegistrationDTO.cs" />
     <Compile Include="UserLoginDTO.cs" />
     <Compile Include="UserTaskDTO.cs" />
     <Compile Include="UserTaskStateDTO.cs" />
