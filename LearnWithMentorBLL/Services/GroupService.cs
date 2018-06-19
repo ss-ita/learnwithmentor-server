@@ -85,8 +85,8 @@ namespace LearnWithMentorBLL.Services
                                      plan.Creator.FirstName,
                                      plan.Creator.LastName,
                                      plan.Mod_Id,
-                                     plan.Modifier.FirstName,
-                                     plan.Modifier.LastName,
+                                     plan.Modifier?.FirstName,
+                                     plan.Modifier?.LastName,
                                      plan.Create_Date,
                                      plan.Mod_Date
                                     ));
