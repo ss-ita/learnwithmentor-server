@@ -22,6 +22,7 @@ namespace LearnWithMentorDAL.Repositories
         {
             return context.Groups.FirstOrDefault(g => g.Id == groupId)?.Users;
         }
+
             public IEnumerable<User> Search(string[] str, int? roleId)
         {
             List<User> result = new List<User>();

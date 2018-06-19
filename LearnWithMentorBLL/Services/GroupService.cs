@@ -29,12 +29,31 @@ namespace LearnWithMentorBLL.Services
 
         public bool AddPlanToGroup(int planId, int groupId)
         {
-            throw new NotImplementedException();
+           
+            var plan = db.Plans.Get(planId);
+            var group = db.Groups.Get(groupId);
+            if (plan == null)
+                return false;
+            if (group == null)
+                return false;
+
+            AddPlanToGroup(planId, groupId);        
+            db.Save();
+            return true;
         }
 
         public bool AddUserToGroup(int userId, int groupId)
         {
-            throw new NotImplementedException();
+            var user = db.Plans.Get(userId);
+            var group = db.Groups.Get(groupId);
+            if (user == null)
+                return false;
+            if (group == null)
+                return false;
+
+            AddUserToGroup(userId, groupId);
+            db.Save();
+            return true;
         }
 
         public GroupDTO GetGroupById(int id)
@@ -47,23 +66,52 @@ namespace LearnWithMentorBLL.Services
                                group.Mentor_Id
                                );
         }
-        public IEnumerable<UserDTO> GetUsers(int groupId)
+        public IEnumerable<PlanDTO> GetPlans(int groupId)
         {
             var group = db.Groups.GetGroupsByMentor(groupId);
-            var users = db.Users.GetAll();
+            var plans = db.Plans.GetPlansForGroup(groupId);
             if (group == null)
                 return null;
-            List<UserDTO> dtos = new List<UserDTO>();
+            if (plans == null)
+                return null;
+            List<PlanDTO> planList = new List<PlanDTO>();
+            foreach (var plan in plans)
+            {
+                planList.Add(new PlanDTO(plan.Id,
+                                     plan.Name,
+                                     plan.Description,
+                                     plan.Published,
+                                     plan.Create_Id,
+                                     plan.Creator.FirstName,
+                                     plan.Creator.LastName,
+                                     plan.Mod_Id,
+                                     plan.Modifier?.FirstName,
+                                     plan.Modifier?.LastName,
+                                     plan.Create_Date,
+                                     plan.Mod_Date
+                                    ));
+            }
+            return planList;
+        }
+            public IEnumerable<UserDTO> GetUsers(int groupId)
+        {
+            var group = db.Groups.GetGroupsByMentor(groupId);
+            var users = db.Users.GetUsersByGroup(groupId);
+            if (group == null)
+                return null;
+            if (users == null)
+                return null;
+            List<UserDTO> userList = new List<UserDTO>();
             foreach (var user in users)
             {
-                dtos.Add(new UserDTO(user.Id,
+                userList.Add(new UserDTO(user.Id,
                                      user.FirstName,
                                      user.LastName,
                                      user.Roles.Name,
                                      user.Blocked
                                     ));
             }
-            return dtos;
+            return userList;
 
         }
 
@@ -73,15 +121,15 @@ namespace LearnWithMentorBLL.Services
            var groups = db.Groups.GetGroupsByMentor(mentorId);
             if (groups == null)
                 return null;
-            List<GroupDTO> dtos = new List<GroupDTO>();
+            List<GroupDTO> groupList = new List<GroupDTO>();
             foreach (var group in groups)
             {
-                dtos.Add(new GroupDTO(group.Id,
+                groupList.Add(new GroupDTO(group.Id,
                                      group.Name,
                                      group.Mentor_Id
                                     ));
             }
-            return dtos;
+            return groupList;
         }
     }
 }

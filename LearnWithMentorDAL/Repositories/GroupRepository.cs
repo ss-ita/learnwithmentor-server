@@ -19,5 +19,17 @@ namespace LearnWithMentorDAL.Repositories
             return context.Groups.Where(group => group.Mentor_Id == mentor_id);
         }
 
+        public bool AddPlanToGroup(int planId, int groupId)
+        {
+            var planAdd = context.Plans.FirstOrDefault(plan => plan.Id == planId);
+            context.Groups.FirstOrDefault(group => group.Id == groupId).Plans.Add(planAdd);
+            return true;
+        }
+        public bool AddUserToGroup(int userId, int groupId)
+        {
+            var userAdd = context.Plans.FirstOrDefault(user => user.Id == userId);
+            context.Groups.FirstOrDefault(group => group.Id == groupId).Plans.Add(userAdd);
+            return true;
+        }
     }
 }
