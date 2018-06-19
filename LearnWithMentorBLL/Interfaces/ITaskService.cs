@@ -14,6 +14,7 @@ namespace LearnWithMentorBLL.Interfaces
         bool CreateTask(TaskDTO dto);
         bool CreateUserTask(UserTaskDTO utDTO);
         bool UpdateUserTaskStatus(int userTaskId, string newStatus);
+        bool UpdateUserTaskResult(int userTaskId, string newResult);
         bool UpdateTaskById(int taskId,TaskDTO dto);
         bool RemoveTaskById(int id);
         List<UserTaskStateDTO> GetTaskStatesForUser(int[] planTaskIds, int userId);

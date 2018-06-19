@@ -274,5 +274,15 @@ namespace LearnWithMentorBLL.Services
             db.Save();
             return true;
         }
+        public bool UpdateUserTaskResult(int userTaskId, string newResult)
+        {
+            var userTask = db.UserTasks.Get(userTaskId);
+            if (userTask == null)
+                throw new ValidationException("No task in plan for this user", "");
+            userTask.Result = newResult;
+            db.UserTasks.Update(userTask);
+            db.Save();
+            return true;
+        }
     }
 }
