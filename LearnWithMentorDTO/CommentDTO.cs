@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace LearnWithMentorDTO
 {
@@ -15,6 +16,9 @@ namespace LearnWithMentorDTO
         }
 
         public int Id { get; set; }
+        [Required]
+        [StringLength(ValidationRules.MAX_COMMENT_TEXT_LENGTH,
+            ErrorMessage = "Comment text too long")]
         public string Text { get; set; }
         public int CreatorId { get; set; }
         public string CreatorFullName { get; set; }

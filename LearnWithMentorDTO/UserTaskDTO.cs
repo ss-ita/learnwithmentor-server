@@ -7,8 +7,7 @@ namespace LearnWithMentorDTO
     {
         public UserTaskDTO(int id,
                 int userId,
-                int planId,
-                int taskId,
+                int planTaskId,
                 DateTime? endDate,
                 DateTime? proposeEndDate,
                 int mentorId,
@@ -17,8 +16,7 @@ namespace LearnWithMentorDTO
         {
             Id = id;
             UserId = userId;
-            PlanId = planId;
-            TaskId = taskId;
+            PlanTaskId = planTaskId;
             State = state;
             EndDate = endDate;
             Result = result;
@@ -30,9 +28,7 @@ namespace LearnWithMentorDTO
         [Required]
         public int UserId { get; set; }
         [Required]
-        public int PlanId { get; set; }
-        [Required]
-        public int TaskId { get; set; }
+        public int PlanTaskId { get; set; }
         [Required]
         [RegularExpression(ValidationRules.USERTASK_STATE,
             ErrorMessage = "State could be only ['P', 'D', 'A', 'R'] letters")]
