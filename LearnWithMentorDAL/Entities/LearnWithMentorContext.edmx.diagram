@@ -7,7 +7,6 @@
       <Diagram DiagramId="3a6c983f26e2421ca8ce871612c2e3e9" Name="Diagram1" ZoomLevel="78">
         <EntityTypeShape EntityType="LearnWithMentor_DBModel.Comment" Width="1.5" PointX="8.25" PointY="11.875" />
         <EntityTypeShape EntityType="LearnWithMentor_DBModel.Group" Width="1.5" PointX="5.25" PointY="5.5" />
-        <EntityTypeShape EntityType="LearnWithMentor_DBModel.Message" Width="1.5" PointX="5.625" PointY="15" />
         <EntityTypeShape EntityType="LearnWithMentor_DBModel.Plan" Width="1.5" PointX="7.5" PointY="7.25" />
         <EntityTypeShape EntityType="LearnWithMentor_DBModel.PlanTask" Width="1.5" PointX="9.75" PointY="7.125" />
         <EntityTypeShape EntityType="LearnWithMentor_DBModel.Role" Width="1.5" PointX="0.75" PointY="9.375" />
@@ -21,7 +20,6 @@
         <AssociationConnector Association="LearnWithMentor_DBModel.FK_Comments_To_PlanTasks" />
         <AssociationConnector Association="LearnWithMentor_DBModel.FK_Comments_To_UsersC" />
         <AssociationConnector Association="LearnWithMentor_DBModel.FK_Groups_To_Users" />
-        <AssociationConnector Association="LearnWithMentor_DBModel.FK_Masssage_To_Users" />
         <AssociationConnector Association="LearnWithMentor_DBModel.FK_Plans_To_UsersC" />
         <AssociationConnector Association="LearnWithMentor_DBModel.FK_Plans_To_UsersM" />
         <AssociationConnector Association="LearnWithMentor_DBModel.FK_PlanSuggestion_To_Plans" />
@@ -36,9 +34,11 @@
         <AssociationConnector Association="LearnWithMentor_DBModel.FK_UserTasks_To_Users" />
         <AssociationConnector Association="LearnWithMentor_DBModel.GroupPlans" />
         <AssociationConnector Association="LearnWithMentor_DBModel.UserGroups" />
-        <AssociationConnector Association="LearnWithMentor_DBModel.UserTasksMessages" />
         <AssociationConnector Association="LearnWithMentor_DBModel.FK_UserTasks_To_PlanTasks" />
         <AssociationConnector Association="LearnWithMentor_DBModel.FK_UserTasks_To_UsersMentor" />
+        <EntityTypeShape EntityType="LearnWithMentor_DBModel.Message" Width="1.5" PointX="5.75" PointY="14.75" />
+        <AssociationConnector Association="LearnWithMentor_DBModel.FK_Masssage_To_Users" />
+        <AssociationConnector Association="LearnWithMentor_DBModel.FK_Masssage_To_UserTasks" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Data.Entity;
+﻿using System.Linq;
 using System.Collections.Generic;
 using LearnWithMentorDTO;
 using LearnWithMentorDAL.Entities;

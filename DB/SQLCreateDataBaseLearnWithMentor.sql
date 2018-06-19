@@ -134,21 +134,14 @@ CREATE TABLE UserTasks
 CREATE TABLE Messages
 (
     Id INT IDENTITY,
+	UserTask_Id INT NOT NULL,
     User_Id INT NOT NULL,
     Text NVARCHAR(1000) NOT NULL,
     Send_Time DATETIME NOT NULL,
 
 CONSTRAINT PK_Masssage_Id PRIMARY KEY (Id),
 CONSTRAINT FK_Masssage_To_Users FOREIGN KEY (User_Id)  REFERENCES Users (Id),
-)
-
-CREATE TABLE UserTasksMessages
-(
-    Message_Id INT NOT NULL,
-    Usertask_Id INT NOT NULL,    
-    
- CONSTRAINT FK_UserTasksMessages_To_Messsages FOREIGN KEY (Message_Id)  REFERENCES Messages (Id),
- CONSTRAINT FK_UserTasksMessages_To_UserTasks FOREIGN KEY (Usertask_Id)  REFERENCES UserTasks (Id)
+CONSTRAINT FK_Masssage_To_UserTasks FOREIGN KEY (UserTask_Id)  REFERENCES UserTasks (Id)
 )
 
 CREATE TABLE PlanSuggestion

@@ -98,15 +98,14 @@ namespace LearnWithMentor.Controllers
 
         /// <summary>Returns messages for UserTask for task in plan for user./// </summary>
         /// <param name="userId">ID of the user.</param>
-        /// /// <param name="taskId">ID of the task.</param>
-        /// /// <param name="planId">ID of the plan.</param>
+        /// /// <param name="userTaskId">ID of the userTask.</param>
         [HttpGet]
         [Route("api/task/userTask/{userTaskId}/messages")]
-        public HttpResponseMessage GetMessages(int userId, int taskId, int planId)//or(userId,taskId,planId)
+        public HttpResponseMessage GetMessages(int userId, int userTaskId)//or(userId,taskId,planId)
         {
             try
             {
-                var dto= messageService.GetMessages(userId, taskId, planId);
+                var dto= messageService.GetMessages(userId, userTaskId);
                 return Request.CreateResponse(HttpStatusCode.OK, dto);
             }
             catch (ValidationException ex)

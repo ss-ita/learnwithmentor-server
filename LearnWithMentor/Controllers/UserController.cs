@@ -4,11 +4,14 @@ using System.Web.Http;
 using LearnWithMentorDTO;
 using System.Net.Http;
 using System.Net;
+using LearnWithMentor.Filters;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorBLL.Services;
 
 namespace LearnWithMentor.Controllers
 {
+    //[Authorize]
+    //[JwtAuthentication]
     public class UserController : ApiController
     {
         private readonly IUserService userService;
@@ -19,6 +22,8 @@ namespace LearnWithMentor.Controllers
             roleService = new RoleService();
         }
         // GET: api/User
+        
+        
         public HttpResponseMessage Get()
         {
             var users = userService.GetAllUsers();
@@ -61,7 +66,7 @@ namespace LearnWithMentor.Controllers
         }
 
         // POST: api/User
-        public HttpResponseMessage Post([FromBody]UserLoginDTO value)
+        public HttpResponseMessage Post([FromBody]UserRegistrationDTO value)
         {
             if (!ModelState.IsValid)
             {
