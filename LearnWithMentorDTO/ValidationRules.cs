@@ -8,7 +8,8 @@ namespace LearnWithMentorDTO
         public const string EMAIL_REGEX = @"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$";
         public const int MAX_TASK_NAME_LENGTH = 50;
         public const int MAX_TASK_DESCRIPTION_LENGTH = 1000;
-        public const string USERTASK_STATE = @"[P,D,A,R]$";
+        public const string USERTASK_STATE = @"^[P,D,A,R]$";
         public const int MAX_USERTASK_RESULT_LENGTH = 10000;
+        public const int MAX_COMMENT_TEXT_LENGTH = 2000;
     }
 }

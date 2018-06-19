@@ -75,10 +75,9 @@ namespace LearnWithMentorBLL.Services
                                          task.Create_Date,
                                          task.Mod_Date,
                                          db.PlanTasks.GetTaskPriorityInPlan(task.Id, planId),
-                                         db.PlanTasks.GetTaskSectionIdInPlan(task.Id, planId))
-                {
-                    PlanTaskId = db.PlanTasks.GetIdByTaskAndPlan(task.Id, plan.Id)
-                };
+                                         db.PlanTasks.GetTaskSectionIdInPlan(task.Id, planId),
+                                         db.PlanTasks.GetIdByTaskAndPlan(task.Id, planId));
+
                 dtosList.Add(toAdd);
             }
             return dtosList;
