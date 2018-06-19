@@ -4,21 +4,45 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using LearnWithMentorDTO;
+using LearnWithMentorBLL.Interfaces;
+using LearnWithMentorBLL.Infrastructure;
+using LearnWithMentorBLL.Services;
 
 namespace LearnWithMentor.Controllers
 {
     public class GroupController : ApiController
     {
-        // GET api/<controller>
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
+        private readonly IGroupService groupService;
 
-        // GET api/<controller>/5
-        public string Get(int id)
+        public GroupController()
         {
-            return "value";
+            groupService = new GroupService();
+        }
+        // GET api/<controller>
+        /// <summary>
+        /// Returns group by mentor Id
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/group/mentor/{id}")]
+        public HttpResponseMessage Get(int mentorId)
+        {
+            var allGroups = groupService.GetGroupsByMentor(mentorId);
+            if (allGroups != null)
+                return Request.CreateResponse(HttpStatusCode.OK, allGroups);
+            else
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No groups for the mentor in database. (mentorId = ${mentorId})");
+        }
+        [HttpGet]
+        [Route("api/group/{id}")]
+        public HttpResponseMessage GetById(int id)
+        {
+            var group = groupService.GetGroupById(id);
+            if (group != null)
+                return Request.CreateResponse(HttpStatusCode.OK, group);
+            else
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "There isn't group with id = ${id}");
         }
 
         // POST api/<controller>

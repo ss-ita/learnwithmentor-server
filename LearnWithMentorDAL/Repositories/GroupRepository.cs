@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using LearnWithMentorDAL.Entities;
+using System.Collections.Generic;
 
 namespace LearnWithMentorDAL.Repositories
 {
@@ -10,7 +11,13 @@ namespace LearnWithMentorDAL.Repositories
         }
         public Group Get(int id)
         {
-            return context.Groups.FirstOrDefault(g => g.Id == id);
+            return context.Groups.FirstOrDefault(group => group.Id == id);
         }
+
+        public IEnumerable<Group> GetGroupsByMentor(int mentor_id)
+        {
+            return context.Groups.Where(group => group.Mentor_Id == mentor_id);
+        }
+
     }
 }
