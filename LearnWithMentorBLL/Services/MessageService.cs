@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using LearnWithMentorDAL.Entities;
 using LearnWithMentorDTO;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorBLL.Infrastructure;
@@ -10,26 +12,40 @@ namespace LearnWithMentorBLL.Services
         public MessageService() : base()
         {
         }
-        public IEnumerable<MessageDTO> GetMessages(int userId, int userTaskId)
+        public IEnumerable<MessageDTO> GetMessages(int userTaskId)
         {
-            int? utId = db.UserTasks.Get(userTaskId)?.Id;
-            if (utId == null)
-                throw new ValidationException("No task in this plan for this user", "");
-            var messages = db.Messages.GetByUserTaskId(utId.Value);
-
-            List<MessageDTO> dto = new List<MessageDTO>();
+            var userTask = db.UserTasks.Get(userTaskId);
+            if (userTask == null)
+                throw new ValidationException("Comment in this plan for this user does not exist", "");
+            var messages = userTask.Messages;
+            List<MessageDTO> messageDTOs = new List<MessageDTO>();
             foreach (var m in messages)
             {
-                dto.Add(new MessageDTO(m.Id,
+                messageDTOs.Add(new MessageDTO(m.Id,
                                        m.User_Id,
-                                       userTaskId,
+                                       m.UserTask_Id,
                                        db.Users.ExtractFullName(m.User_Id),
                                        m.Text,
                                        m.Send_Time));
             }
-            return dto;
+            return messageDTOs;
         }
 
+        public bool SendMessages(MessageDTO newMessage)
+        {
+
+            Message message = new Message()
+            {
+                Id = newMessage.Id,
+                UserTask_Id = newMessage.UserTaskId,
+                User_Id = newMessage.SenderId,
+                Text = newMessage.Text,
+                Send_Time = DateTime.Now
+            };
+            db.Messages.Add(message);
+            db.Save();
+            return true;
+        }
     }
     
 }

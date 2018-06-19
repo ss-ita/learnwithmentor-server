@@ -16,7 +16,8 @@ namespace LearnWithMentorDTO
                         DateTime? createDate,
                         DateTime? modDate,
                         int? priority,
-                        int? sectionId)
+                        int? sectionId,
+                        int? planTaskId)
         {
             Id = id;
             Name = name;
@@ -30,6 +31,33 @@ namespace LearnWithMentorDTO
             ModifierName = modifierName;
             Priority = priority;
             SectionId = sectionId;
+            PlanTaskId = planTaskId;
+        }
+
+        public TaskDTO(int id,
+                string name,
+                string description,
+                bool privateness,
+                int createId,
+                string creatorName,
+                int? modId,
+                string modifierName,
+                DateTime? createDate,
+                DateTime? modDate)
+        {
+            Id = id;
+            Name = name;
+            Description = description;
+            Private = privateness;
+            CreateDate = createDate;
+            ModDate = modDate;
+            CreatorId = createId;
+            CreatorName = creatorName;
+            ModifierId = modId;
+            ModifierName = modifierName;
+            Priority = null;
+            SectionId = null;
+            PlanTaskId = null;
         }
 
         public int Id { get; set; }

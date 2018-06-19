@@ -9,30 +9,27 @@ namespace LearnWithMentorBLL.Services
 {
     public class CommentService : BaseService, ICommentService
     {
-        public CommentDTO GetComment(int id)
+        public CommentDTO GetComment(int id)//done
         {
-            var comm = db.Comments.Get(id);
-            if (comm == null)
+            var comment = db.Comments.Get(id);
+            if (comment == null)
                 throw new ValidationException("No comment with this id", "id");
-            var dto = new CommentDTO(comm.Id,
-                                   comm.Text,
-                                   comm.Create_Id,
-                                   db.Users.ExtractFullName(comm.Create_Id),
-                                   comm.Create_Date,
-                                   comm.Mod_Date);
-            return dto;
+            var commentDTO = new CommentDTO(comment.Id,
+                                   comment.Text,
+                                   comment.Create_Id,
+                                   db.Users.ExtractFullName(comment.Create_Id),
+                                   comment.Create_Date,
+                                   comment.Mod_Date);
+            return commentDTO;
         }
 
         public bool AddCommentToPlanTask(int planTaskId, CommentDTO c)
         {
             var newComment = new Comment()
             {
-                Id = c.Id,
                 Text = c.Text,
                 PlanTask_Id = planTaskId,
                 Create_Id = c.CreatorId,
-                Create_Date = null,
-                Mod_Date = null
             };
             db.Comments.Add(newComment);
             db.Save();
@@ -48,9 +45,7 @@ namespace LearnWithMentorBLL.Services
                 Id = c.Id,
                 Text = c.Text,
                 PlanTask_Id = iden.Value,
-                Create_Id = c.CreatorId,
-                Create_Date = null,
-                Mod_Date = null
+                Create_Id = c.CreatorId
             };
             db.Comments.Add(newComment);
             db.Save();
@@ -79,25 +74,46 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public IEnumerable<CommentDTO> GetTaskCommentsForPlan(int taskId, int planId)
+        public IEnumerable<CommentDTO> GetCommentsForPlanTask(int taskId, int planId)
         {
-            List<CommentDTO> dto = new List<CommentDTO>();
-            var ptId = db.PlanTasks.GetIdByTaskAndPlan(taskId, planId);
-            if (ptId == null)
+            List<CommentDTO> commentsList = new List<CommentDTO>();
+            var planTask = db.PlanTasks.Get(taskId, planId);
+            if (planTask == null)
                 throw new ValidationException("Task in this plan does not exists", "");
-            var comments = db.Comments.GetByPlanTaskId(ptId.Value);
-            if (comments == null || comments.Count() < 1)
+            var comments = planTask.Comments;
+            if (comments == null)
                 throw new ValidationException("Task in this plan has no comments", "");
             foreach (var c in comments)
             {
-                dto.Add(new CommentDTO(c.Id,
+                commentsList.Add(new CommentDTO(c.Id,
                                        c.Text,
                                        c.Create_Id,
                                        db.Users.ExtractFullName(c.Create_Id),
                                        c.Create_Date,
                                        c.Mod_Date));
             }
-            return dto;
+            return commentsList;
+        }
+
+        public IEnumerable<CommentDTO> GetCommentsForPlanTask(int planTaskId)
+        {
+            List<CommentDTO> commentsList = new List<CommentDTO>();
+            var planTask = db.PlanTasks.Get(planTaskId);
+            if (planTask == null)
+                throw new ValidationException("Task in this plan does not exists", "");
+            var comments = planTask.Comments;
+            if (comments == null)
+                throw new ValidationException("Task in this plan has no comments", "");
+            foreach (var c in comments)
+            {
+                commentsList.Add(new CommentDTO(c.Id,
+                                       c.Text,
+                                       c.Create_Id,
+                                       db.Users.ExtractFullName(c.Create_Id),
+                                       c.Create_Date,
+                                       c.Mod_Date));
+            }
+            return commentsList;
         }
 
         public bool RemoveById(int id)

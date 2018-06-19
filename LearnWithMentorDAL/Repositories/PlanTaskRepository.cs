@@ -16,6 +16,12 @@ namespace LearnWithMentorDAL.Repositories
         {
             return context.PlanTasks.FirstOrDefault(pt => pt.Plan_Id == planId && pt.Task_Id==taskId)?.Id;
         }
+
+        public PlanTask Get(int taskId, int planId)
+        {
+            return context.PlanTasks.FirstOrDefault(pt => pt.Plan_Id == planId && pt.Task_Id == taskId);
+        }
+
         public bool ContainsTaskInPlan(int taskId, int planId)
         {
             return context.PlanTasks.Any(pt => pt.Task_Id == taskId && pt.Plan_Id == planId);
