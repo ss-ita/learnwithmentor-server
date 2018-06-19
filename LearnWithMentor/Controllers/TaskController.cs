@@ -216,6 +216,31 @@ namespace LearnWithMentor.Controllers
             }
         }
 
+        /// <summary> Changes UserTask result by usertask id. </summary>
+        /// <param name="userTaskId">ID of the userTask status to be changed</param>
+        /// <param name="newResult">>New userTask result</param>
+        /// <returns></returns>
+        [HttpPut]
+        [Route("api/task/usertask")]
+        public HttpResponseMessage PutNewUserTaskResult(int userTaskId, string newResult)
+        {
+            try
+            {
+                if (newResult.Length >= ValidationRules.MAX_USERTASK_RESULT_LENGTH)
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "New Result is too long");
+                bool success = taskService.UpdateUserTaskResult(userTaskId, newResult);
+                if (success)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully updated user task result.");
+                }
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax or usertask does not exist.");
+            }
+            catch (Exception exception)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, exception);
+            }
+        }
+
         /// <summary>Returns all tasks states for if array./// </summary>
         [HttpGet]
         [Route("api/tasks/state")] // or get user info from token only for authorized user
