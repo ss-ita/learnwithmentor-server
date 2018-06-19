@@ -29,12 +29,31 @@ namespace LearnWithMentorBLL.Services
 
         public bool AddPlanToGroup(int planId, int groupId)
         {
-            throw new NotImplementedException();
+           
+            var plan = db.Plans.Get(planId);
+            var group = db.Groups.Get(groupId);
+            if (plan == null)
+                return false;
+            if (group == null)
+                return false;
+
+            AddPlanToGroup(planId, groupId);        
+            db.Save();
+            return true;
         }
 
         public bool AddUserToGroup(int userId, int groupId)
         {
-            throw new NotImplementedException();
+            var user = db.Plans.Get(userId);
+            var group = db.Groups.Get(groupId);
+            if (user == null)
+                return false;
+            if (group == null)
+                return false;
+
+            AddUserToGroup(userId, groupId);
+            db.Save();
+            return true;
         }
 
         public GroupDTO GetGroupById(int id)
