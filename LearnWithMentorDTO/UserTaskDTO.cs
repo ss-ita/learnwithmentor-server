@@ -25,7 +25,6 @@ namespace LearnWithMentorDTO
         }
 
         public int Id { get; set; }
-        [Required]
         public int UserId { get; set; }
         [Required]
         public int PlanTaskId { get; set; }
@@ -39,7 +38,6 @@ namespace LearnWithMentorDTO
             ErrorMessage = "Result too long")]
         public string Result { get; set; }
         public DateTime? ProposeEndDate { get; set; }
-        [Required]
         public int MentorId { get; set; }
     }
 }
