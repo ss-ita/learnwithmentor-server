@@ -14,6 +14,10 @@ namespace LearnWithMentorDAL.Repositories
         {
             return context.Plans.FirstOrDefault(p => p.Id == id);
         }
+        public IEnumerable<Plan> GetPlansForGroup(int groupId)
+        {
+            return context.Groups.FirstOrDefault(g => g.Id == groupId)?.Plans;
+        }
 
         public IEnumerable<Plan> Search(string[] str)
         {

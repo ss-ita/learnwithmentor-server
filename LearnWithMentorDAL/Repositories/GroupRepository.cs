@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using LearnWithMentorDAL.Entities;
+using System.Collections.Generic;
 
 namespace LearnWithMentorDAL.Repositories
 {
@@ -10,7 +11,25 @@ namespace LearnWithMentorDAL.Repositories
         }
         public Group Get(int id)
         {
-            return context.Groups.FirstOrDefault(g => g.Id == id);
+            return context.Groups.FirstOrDefault(group => group.Id == id);
+        }
+
+        public IEnumerable<Group> GetGroupsByMentor(int mentor_id)
+        {
+            return context.Groups.Where(group => group.Mentor_Id == mentor_id);
+        }
+
+        public bool AddPlanToGroup(int planId, int groupId)
+        {
+            var planAdd = context.Plans.FirstOrDefault(plan => plan.Id == planId);
+            context.Groups.FirstOrDefault(group => group.Id == groupId).Plans.Add(planAdd);
+            return true;
+        }
+        public bool AddUserToGroup(int userId, int groupId)
+        {
+            var userAdd = context.Plans.FirstOrDefault(user => user.Id == userId);
+            context.Groups.FirstOrDefault(group => group.Id == groupId).Plans.Add(userAdd);
+            return true;
         }
     }
 }

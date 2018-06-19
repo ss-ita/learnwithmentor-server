@@ -14,12 +14,16 @@ namespace LearnWithMentorDAL.Repositories
         {
             return context.Users.FirstOrDefault(u => u.Id == id);
         }
-
         public User GetByEmail(string email)
         {
             return context.Users.FirstOrDefault(u => u.Email == email);
         }
-        public IEnumerable<User> Search(string[] str, int? roleId)
+        public IEnumerable<User> GetUsersByGroup(int groupId)
+        {
+            return context.Groups.FirstOrDefault(g => g.Id == groupId)?.Users;
+        }
+
+            public IEnumerable<User> Search(string[] str, int? roleId)
         {
             List<User> result = new List<User>();
             foreach (var s in str)
