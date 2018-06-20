@@ -5,6 +5,7 @@ using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Results;
 
 namespace LearnWithMentor.Filters
 {
@@ -32,7 +33,7 @@ namespace LearnWithMentor.Filters
                     response.Headers.WwwAuthenticate.Add(Challenge);
                 }
             }
-
+            //return Request.CreateErrorResponse(HttpStatusCode.NotFound, message);
             return response;
         }
     }

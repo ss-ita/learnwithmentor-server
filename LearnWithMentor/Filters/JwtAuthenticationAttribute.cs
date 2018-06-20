@@ -6,6 +6,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http.Filters;
 using LearnWithMentor.Models;
+using LearnWithMentorBLL.Interfaces;
+using LearnWithMentorBLL.Services;
+using LearnWithMentorDTO;
 
 namespace LearnWithMentor.Filters
 {
@@ -13,7 +16,7 @@ namespace LearnWithMentor.Filters
     {
         public string Realm { get; set; }
         public bool AllowMultiple => false;
-
+        private readonly IUserService userService = new UserService();
         public async Task AuthenticateAsync(HttpAuthenticationContext context, CancellationToken cancellationToken)
         {
             var request = context.Request;
@@ -40,10 +43,10 @@ namespace LearnWithMentor.Filters
 
 
 
-        private static bool ValidateToken(string token, out string username)
+        private static bool ValidateToken(string token, out string email,out string userrole)
         {
-            username = null;
-
+            email = null;
+            userrole = null;
             var simplePrinciple = JwtManager.GetPrincipal(token);
             var identity = simplePrinciple?.Identity as ClaimsIdentity;
 
@@ -53,11 +56,11 @@ namespace LearnWithMentor.Filters
             if (!identity.IsAuthenticated)
                 return false;
 
-            var usernameClaim = identity.FindFirst(ClaimTypes.Name);
-            username = usernameClaim?.Value;
+            var useremailClaim = identity.FindFirst(ClaimTypes.Email);
+            email = useremailClaim?.Value;
             var userroleClaim = identity.FindFirst(ClaimTypes.Role);
-
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(userroleClaim.Value))
+            userrole = userroleClaim?.Value;
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(userroleClaim.Value))
                 return false;
 
             //todo More validate to check whether username exists in system
@@ -67,14 +70,21 @@ namespace LearnWithMentor.Filters
 
         protected Task<IPrincipal> AuthenticateJwtToken(string token)
         {
-            string username;
+            string email;
+            string userrole;
 
-            if (ValidateToken(token, out username))
+            if (ValidateToken(token, out email, out userrole))
             {
+                UserIdentityDTO userDTO = userService.GetByEmail(email);
                 // based on username to get more information from database in order to build local identity
                 var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name, username)
+                   
+                    new Claim(ClaimTypes.Role, userrole),
+                    new Claim("Id", userDTO.Id.ToString()),
+                    new Claim(ClaimTypes.Name, userDTO.FirstName)
+
+
                     // todo: Add more claims if needed: Roles, ...
                 };
 
