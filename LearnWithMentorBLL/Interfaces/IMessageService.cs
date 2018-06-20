@@ -9,6 +9,6 @@ namespace LearnWithMentorBLL.Interfaces
     public interface IMessageService
     {
         IEnumerable<MessageDTO> GetMessages(int planTaskId);
-        bool SendMessages(MessageDTO newMessage);
+        bool SendMessage(MessageDTO newMessage);
     }
 }

@@ -181,7 +181,7 @@ namespace LearnWithMentor.Controllers
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
                 newMessage.UserTaskId = userTaskId;
                 //logic for sender id if needed
-                bool success = taskService.CreateMessage(newMessage);
+                bool success = messageService.SendMessage(newMessage);
                 if (success)
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully created message.");
