@@ -167,6 +167,19 @@ namespace LearnWithMentor.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("api/task/userTask/{userTaskId}/messages")]
+        public HttpResponseMessage PostUserTaskMessage(int userTaskId, [FromBody]MessageDTO newMessage)
+        {
+            try
+            {
+            }
+            catch (Exception exception)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, exception);
+            }
+        }
+
         /// <summary>
         /// Creates new UserTask.
         /// </summary>
