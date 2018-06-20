@@ -10,8 +10,10 @@ using LearnWithMentorBLL.Services;
 
 namespace LearnWithMentor.Controllers
 {
-    //[Authorize]
-    //[JwtAuthentication]
+
+   // [Authorize]
+   // [JwtAuthentication]
+
     public class UserController : ApiController
     {
         private readonly IUserService userService;
@@ -22,8 +24,9 @@ namespace LearnWithMentor.Controllers
             roleService = new RoleService();
         }
         // GET: api/User
-        
-        
+
+      //  [Authorize(Roles = "Admin")]
+
         public HttpResponseMessage Get()
         {
             var users = userService.GetAllUsers();
@@ -32,6 +35,7 @@ namespace LearnWithMentor.Controllers
                 return Request.CreateResponse<IEnumerable<UserDTO>>(HttpStatusCode.OK, users);
             }
             var message = "No users in database.";
+            
             return Request.CreateErrorResponse(HttpStatusCode.NotFound, message);
         }
 
@@ -54,6 +58,8 @@ namespace LearnWithMentor.Controllers
             return Request.CreateResponse<IEnumerable<UserDTO>>(HttpStatusCode.OK, users);
         }
         // GET: api/User/5
+      //  [Authorize (Roles="Student")]
+
         public HttpResponseMessage Get(int id)
         {
             UserDTO user = userService.Get(id);

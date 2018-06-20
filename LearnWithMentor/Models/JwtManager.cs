@@ -20,7 +20,6 @@ namespace LearnWithMentor.Models
         public static string GenerateToken(UserIdentityDTO user, int expireMinutes = 20)
         {
 
-           // UoW = new UnitOfWork(new LearnWithMentor_DBEntities());
 
             var symmetricKey = Convert.FromBase64String(Secret);
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -30,6 +29,7 @@ namespace LearnWithMentor.Models
             {
                 Subject = new ClaimsIdentity(new[]
                         {
+                            new Claim("Id",user.Id.ToString()  ),
                             new Claim(ClaimTypes.Email, user.Email),
                             new Claim(ClaimTypes.Name, user.FirstName +" "+user.LastName ),
                             new Claim(ClaimTypes.Role, user.Role)
@@ -45,7 +45,14 @@ namespace LearnWithMentor.Models
 
             return token;
         }
-
+        public static bool LifetimeValidator(DateTime? notBefore, DateTime? expires, SecurityToken securityToken, TokenValidationParameters validationParameters)
+        {
+            if (expires != null)
+            {
+                if (DateTime.UtcNow < expires) return true;
+            }
+            return false;
+        }
         public static ClaimsPrincipal GetPrincipal(string token)
         {
             try
@@ -61,8 +68,10 @@ namespace LearnWithMentor.Models
                 var validationParameters = new TokenValidationParameters()
                 {
                     RequireExpirationTime = true,
+                    ValidateLifetime = true,
                     ValidateIssuer = false,
                     ValidateAudience = false,
+                    LifetimeValidator = LifetimeValidator,
                     IssuerSigningKey = new SymmetricSecurityKey(symmetricKey)
                 };
 

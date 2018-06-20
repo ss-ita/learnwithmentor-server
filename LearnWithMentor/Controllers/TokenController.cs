@@ -26,11 +26,11 @@ namespace LearnWithMentor.Controllers
             {
                 if (CheckUser(value.Email, value.Password, out user))
                 {
-                    return Request.CreateErrorResponse(HttpStatusCode.OK, JwtManager.GenerateToken(user)) ;
+                    return Request.CreateErrorResponse(HttpStatusCode.OK, JwtManager.GenerateToken(user));
                 }
             }
 
-            var message = " Not valid logination data.";
+            string message = " Not valid logination data.";
             if (user != null && user.Blocked == true) message = "This user is blocked!";
             return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, message);
         }
