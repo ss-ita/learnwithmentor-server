@@ -167,6 +167,33 @@ namespace LearnWithMentor.Controllers
             }
         }
 
+        /// <summary> Creates message for UserTask. </summary>
+        /// <param name="userTaskId">ID of the usertask.</param>
+        /// <param name="newMessage">New message to be created.</param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("api/task/userTask/{userTaskId}/messages")]
+        public HttpResponseMessage PostUserTaskMessage(int userTaskId, [FromBody]MessageDTO newMessage)
+        {
+            try
+            {
+                if(!ModelState.IsValid)
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                newMessage.UserTaskId = userTaskId;
+                //logic for sender id if needed
+                bool success = taskService.CreateMessage(newMessage);
+                if (success)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully created message.");
+                }
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Creation error.");
+            }
+            catch (Exception exception)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, exception);
+            }
+        }
+
         /// <summary>
         /// Creates new UserTask.
         /// </summary>
@@ -207,6 +234,31 @@ namespace LearnWithMentor.Controllers
                 if (success)
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully updated user task status.");
+                }
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax or usertask does not exist.");
+            }
+            catch (Exception exception)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, exception);
+            }
+        }
+
+        /// <summary> Changes UserTask result by usertask id. </summary>
+        /// <param name="userTaskId">ID of the userTask status to be changed</param>
+        /// <param name="newResult">>New userTask result</param>
+        /// <returns></returns>
+        [HttpPut]
+        [Route("api/task/usertask")]
+        public HttpResponseMessage PutNewUserTaskResult(int userTaskId, string newResult)
+        {
+            try
+            {
+                if (newResult.Length >= ValidationRules.MAX_USERTASK_RESULT_LENGTH)
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "New Result is too long");
+                bool success = taskService.UpdateUserTaskResult(userTaskId, newResult);
+                if (success)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully updated user task result.");
                 }
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax or usertask does not exist.");
             }

@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="Infrastructure\ValidationException.cs" />
     <Compile Include="Interfaces\ICommentService.cs" />
+    <Compile Include="Interfaces\IGroupService.cs" />
     <Compile Include="Interfaces\IMessageService.cs" />
     <Compile Include="Interfaces\IPlanService.cs" />
     <Compile Include="Interfaces\IRoleService.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\BaseService.cs" />
     <Compile Include="Services\CommentService.cs" />
+    <Compile Include="Services\GroupService.cs" />
     <Compile Include="Services\MessageService.cs" />
     <Compile Include="Services\PlanService.cs" />
     <Compile Include="Services\RoleService.cs" />

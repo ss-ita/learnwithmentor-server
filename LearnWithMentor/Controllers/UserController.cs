@@ -10,8 +10,10 @@ using LearnWithMentorBLL.Services;
 
 namespace LearnWithMentor.Controllers
 {
+
    // [Authorize]
    // [JwtAuthentication]
+
     public class UserController : ApiController
     {
         private readonly IUserService userService;

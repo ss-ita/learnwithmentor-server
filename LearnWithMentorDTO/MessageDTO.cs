@@ -10,7 +10,7 @@ namespace LearnWithMentorDTO
                         int userTaskId,
                         string senderName,
                         string text,
-                        DateTime sendTime)
+                        DateTime? sendTime)
         {
             Id = id;
             SenderId = senderId;
@@ -24,7 +24,10 @@ namespace LearnWithMentorDTO
         public int SenderId { get; set; }
         public int UserTaskId { get; set; }
         public string SenderName { get; set; }
+        [Required]
+        [StringLength(ValidationRules.MAX_USERTASK_RESULT_LENGTH,
+            ErrorMessage = "Result too long")]
         public string Text { get; set; }
-        public DateTime SendTime { get; set; }
+        public DateTime? SendTime { get; set; }
     }
 }

@@ -7,6 +7,7 @@ namespace LearnWithMentorDAL.Repositories
     {
         Plan Get(int id);
         IEnumerable<Plan> Search(string[] str);
+        IEnumerable<Plan> GetPlansForGroup(int groupId);
         bool ContainsId(int id);
     }
 }

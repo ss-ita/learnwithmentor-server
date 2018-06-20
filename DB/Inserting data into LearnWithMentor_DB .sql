@@ -79,8 +79,8 @@ insert into Comments(Create_Id, PlanTask_Id, Text) SELECT Users.Id, PlanTasks.Id
 insert into Comments(Create_Id, PlanTask_Id, Text) SELECT Users.Id, PlanTasks.Id, 'third comment' FROM Users, PlanTasks WHERE Users.Email = 'riman@gmail.com' AND PlanTasks.Id = 2;
 insert into Comments(Create_Id, PlanTask_Id, Text) SELECT Users.Id, PlanTasks.Id, 'another comment' FROM Users, PlanTasks WHERE Users.Email = 'riman@gmail.com' AND PlanTasks.Id = 2;
 
-insert into Messages(User_Id, UserTask_Id, Text, Send_Time) SELECT Users.Id, UserTasks.Id, 'Hello', '2018-08-13T14:25:15' FROM Users, UserTasks WHERE Email = 'vyacheslav@gmail.com' AND UserTasks.Id = 1;
-insert into Messages(User_Id, UserTask_Id, Text, Send_Time) SELECT Users.Id, UserTasks.Id, 'Hello guys', '2018-08-13T14:15:10' FROM Users, UserTasks WHERE Email = 'vyacheslav@gmail.com' AND UserTasks.Id = 2;
-insert into Messages(User_Id, UserTask_Id, Text, Send_Time) SELECT Users.Id, UserTasks.Id, 'Hello world', '2018-08-13T14:15:10' FROM Users, UserTasks WHERE Email = 'riman@gmail.com' AND UserTasks.Id = 0;
+insert into Messages(User_Id, UserTask_Id, Text) SELECT Users.Id, UserTasks.Id, 'Hello' FROM Users, UserTasks WHERE Email = 'vyacheslav@gmail.com' AND UserTasks.Id = 1;
+insert into Messages(User_Id, UserTask_Id, Text) SELECT Users.Id, UserTasks.Id, 'Hello guys' FROM Users, UserTasks WHERE Email = 'vyacheslav@gmail.com' AND UserTasks.Id = 2;
+insert into Messages(User_Id, UserTask_Id, Text) SELECT Users.Id, UserTasks.Id, 'Hello world' FROM Users, UserTasks WHERE Email = 'riman@gmail.com' AND UserTasks.Id = 0;
 
 insert into PlanSuggestion( Plan_Id, User_Id, Mentor_Id,Text) SELECT Plans.Id, U1.Id, U2.Id, 'first new task' FROM Plans, Users AS U1, Users AS U2 WHERE Plans.Name = 'C#' AND U1.Email = 'roman.p@gmail.com' AND U2.Email = 'vyacheslav@gmail.com';
