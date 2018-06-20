@@ -27,8 +27,9 @@ namespace LearnWithMentorDAL.Repositories
         }
         public bool AddUserToGroup(int userId, int groupId)
         {
-            var userAdd = context.Plans.FirstOrDefault(user => user.Id == userId);
-            context.Groups.FirstOrDefault(group => group.Id == groupId).Plans.Add(userAdd);
+            var userAdd = context.Users.FirstOrDefault(user => user.Id == userId);
+           
+            context.Groups.FirstOrDefault(group => group.Id == groupId).Users.Add(userAdd);
             return true;
         }
     }

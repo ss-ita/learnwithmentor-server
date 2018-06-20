@@ -85,13 +85,11 @@ namespace LearnWithMentor.Controllers
             }
         }
         [HttpPut]
-        [Route("api/group/{id}")]
-        public HttpResponseMessage PutUsersToGroup(int id, int[] userId)
+        [Route("api/group/{id}/user")]
+        public HttpResponseMessage PutUsersToGroup(int id, [FromBody] int[] userId)
         {
             try
             {
-                if (!ModelState.IsValid)
-                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
                 bool success = groupService.AddUsersToGroup(userId, id);
                 if (success)
                 {
@@ -105,17 +103,15 @@ namespace LearnWithMentor.Controllers
             }
         }
         [HttpPut]
-        [Route("api/group/{id}")]
-        public HttpResponseMessage PutPlansToGroup(int id, int[] planId)
+        [Route("api/group/{id}/plan")]
+        public HttpResponseMessage PutPlansToGroup(int id, [FromBody] int[] planId)
         {
             try
             {
-                if (!ModelState.IsValid)
-                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
                 bool success = groupService.AddPlansToGroup(planId, id);
                 if (success)
                 {
-                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully added plan ({planId}) to group ({id}).");
+                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully added plans to group ({id}).");
                 }
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax or plan or group does not exist.");
             }

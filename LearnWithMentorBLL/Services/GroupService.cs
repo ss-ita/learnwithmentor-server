@@ -116,6 +116,7 @@ namespace LearnWithMentorBLL.Services
                 if(addUser != null)
                 {
                     added = db.Groups.AddUserToGroup(userId, groupId);
+                    db.Save();
                 }
             }
             return added;
