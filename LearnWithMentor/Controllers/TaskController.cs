@@ -167,12 +167,26 @@ namespace LearnWithMentor.Controllers
             }
         }
 
+        /// <summary> Creates message for UserTask. </summary>
+        /// <param name="userTaskId">ID of the usertask.</param>
+        /// <param name="newMessage">New message to be created.</param>
+        /// <returns></returns>
         [HttpPost]
         [Route("api/task/userTask/{userTaskId}/messages")]
         public HttpResponseMessage PostUserTaskMessage(int userTaskId, [FromBody]MessageDTO newMessage)
         {
             try
             {
+                if(!ModelState.IsValid)
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                newMessage.UserTaskId = userTaskId;
+                //logic for sender id if needed
+                bool success = taskService.CreateMessage(newMessage);
+                if (success)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully created message.");
+                }
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Creation error.");
             }
             catch (Exception exception)
             {

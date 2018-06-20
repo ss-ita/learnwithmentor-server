@@ -153,7 +153,6 @@ namespace LearnWithMentorBLL.Services
         {
             Task task = new Task()
             {
-                Id = taskDTO.Id,
                 Name = taskDTO.Name,
                 Description = taskDTO.Description,
                 Private = taskDTO.Private,
@@ -161,6 +160,19 @@ namespace LearnWithMentorBLL.Services
                 Mod_Id = taskDTO.ModifierId
             };
             db.Tasks.Add(task);
+            db.Save();
+            return true;
+        }
+
+        public bool CreateMessage(MessageDTO messageDTO)
+        {
+            Message message = new Message()
+            {
+                User_Id = messageDTO.SenderId,
+                Text = messageDTO.Text,
+                UserTask_Id = messageDTO.UserTaskId
+            };
+            db.Messages.Add(message);
             db.Save();
             return true;
         }
