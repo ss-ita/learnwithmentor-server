@@ -11,5 +11,6 @@ namespace LearnWithMentorDTO
         public const string USERTASK_STATE = @"^[P,D,A,R]$";
         public const int MAX_USERTASK_RESULT_LENGTH = 10000;
         public const int MAX_COMMENT_TEXT_LENGTH = 2000;
+        public const int MAX_MESSAGE_LENGTH = 1000;
     }
 }

@@ -42,7 +42,7 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.GroupPlans' does not have a
           <Property Name="UserTask_Id" Type="int" Nullable="false" />
           <Property Name="User_Id" Type="int" Nullable="false" />
           <Property Name="Text" Type="nvarchar" MaxLength="1000" Nullable="false" />
-          <Property Name="Send_Time" Type="datetime" Nullable="false" />
+          <Property Name="Send_Time" Type="datetime" />
         </EntityType>
         <EntityType Name="Plans">
           <Key>
@@ -1128,7 +1128,7 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
           <Property Name="UserTask_Id" Type="Int32" Nullable="false" />
           <Property Name="User_Id" Type="Int32" Nullable="false" />
           <Property Name="Text" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="true" />
-          <Property Name="Send_Time" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Send_Time" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Creator" Relationship="LearnWithMentor_DBModel.FK_Masssage_To_Users" FromRole="Messages" ToRole="User" />
           <NavigationProperty Name="UserTask" Relationship="LearnWithMentor_DBModel.FK_Masssage_To_UserTasks" FromRole="Messages" ToRole="UserTask" />
         </EntityType>

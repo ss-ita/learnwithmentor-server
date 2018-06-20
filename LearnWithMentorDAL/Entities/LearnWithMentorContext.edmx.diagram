@@ -36,7 +36,7 @@
         <AssociationConnector Association="LearnWithMentor_DBModel.UserGroups" />
         <AssociationConnector Association="LearnWithMentor_DBModel.FK_UserTasks_To_PlanTasks" />
         <AssociationConnector Association="LearnWithMentor_DBModel.FK_UserTasks_To_UsersMentor" />
-        <EntityTypeShape EntityType="LearnWithMentor_DBModel.Message" Width="1.5" PointX="5.75" PointY="14.75" />
+        <EntityTypeShape EntityType="LearnWithMentor_DBModel.Message" Width="1.5" PointX="5.875" PointY="14.25" />
         <AssociationConnector Association="LearnWithMentor_DBModel.FK_Masssage_To_Users" />
         <AssociationConnector Association="LearnWithMentor_DBModel.FK_Masssage_To_UserTasks" />
       </Diagram>
