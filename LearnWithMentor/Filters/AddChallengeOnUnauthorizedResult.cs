@@ -33,7 +33,7 @@ namespace LearnWithMentor.Filters
                     response.Headers.WwwAuthenticate.Add(Challenge);
                 }
             }
-            //return Request.CreateErrorResponse(HttpStatusCode.NotFound, message);
+            
             return response;
         }
     }
