@@ -66,16 +66,16 @@ namespace LearnWithMentor.Controllers
         }
         [HttpPost]
         [Route("api/group")]
-        public HttpResponseMessage Post([FromBody]GroupDTO t)
+        public HttpResponseMessage Post([FromBody]GroupDTO group)
         {
             try
             {
                 if (!ModelState.IsValid)
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
-                bool success = groupService.AddGroup(t);
+                bool success = groupService.AddGroup(group);
                 if (success)
                 {
-                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully created group: {t.Name}.");
+                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully created group: {group.Name}.");
                 }
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Creation error.");
             }
@@ -86,13 +86,13 @@ namespace LearnWithMentor.Controllers
         }
         [HttpPut]
         [Route("api/group/{id}")]
-        public HttpResponseMessage PutUserToGroup(int id, int userId)
+        public HttpResponseMessage PutUsersToGroup(int id, int[] userId)
         {
             try
             {
                 if (!ModelState.IsValid)
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
-                bool success = groupService.AddUserToGroup(userId, id);
+                bool success = groupService.AddUsersToGroup(userId, id);
                 if (success)
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully added user ({userId}) to group ({id}).");
@@ -106,13 +106,13 @@ namespace LearnWithMentor.Controllers
         }
         [HttpPut]
         [Route("api/group/{id}")]
-        public HttpResponseMessage PutPlanToGroup(int id, int planId)
+        public HttpResponseMessage PutPlansToGroup(int id, int[] planId)
         {
             try
             {
                 if (!ModelState.IsValid)
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
-                bool success = groupService.AddPlanToGroup(planId, id);
+                bool success = groupService.AddPlansToGroup(planId, id);
                 if (success)
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully added plan ({planId}) to group ({id}).");
