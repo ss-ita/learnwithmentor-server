@@ -10,8 +10,8 @@ using LearnWithMentorBLL.Services;
 
 namespace LearnWithMentor.Controllers
 {
-    [Authorize]
-    [JwtAuthentication]
+   // [Authorize]
+   // [JwtAuthentication]
     public class UserController : ApiController
     {
         private readonly IUserService userService;
@@ -23,7 +23,7 @@ namespace LearnWithMentor.Controllers
         }
         // GET: api/User
 
-        [Authorize(Roles = "Admin")]
+      //  [Authorize(Roles = "Admin")]
 
         public HttpResponseMessage Get()
         {
@@ -56,7 +56,7 @@ namespace LearnWithMentor.Controllers
             return Request.CreateResponse<IEnumerable<UserDTO>>(HttpStatusCode.OK, users);
         }
         // GET: api/User/5
-        [Authorize (Roles="Student")]
+      //  [Authorize (Roles="Student")]
 
         public HttpResponseMessage Get(int id)
         {
