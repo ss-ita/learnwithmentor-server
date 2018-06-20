@@ -31,21 +31,19 @@ namespace LearnWithMentorBLL.Services
             return messageDTOs;
         }
 
-        public bool SendMessages(MessageDTO newMessage)
+        public bool SendMessage(MessageDTO messageDTO)
         {
-
             Message message = new Message()
             {
-                Id = newMessage.Id,
-                UserTask_Id = newMessage.UserTaskId,
-                User_Id = newMessage.SenderId,
-                Text = newMessage.Text,
-                Send_Time = DateTime.Now
+                User_Id = messageDTO.SenderId,
+                Text = messageDTO.Text,
+                UserTask_Id = messageDTO.UserTaskId
             };
             db.Messages.Add(message);
             db.Save();
             return true;
         }
+
     }
-    
+
 }

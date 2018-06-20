@@ -164,19 +164,6 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public bool CreateMessage(MessageDTO messageDTO)
-        {
-            Message message = new Message()
-            {
-                User_Id = messageDTO.SenderId,
-                Text = messageDTO.Text,
-                UserTask_Id = messageDTO.UserTaskId
-            };
-            db.Messages.Add(message);
-            db.Save();
-            return true;
-        }
-
         public bool CreateUserTask(UserTaskDTO userTaskDTO)
         {
             var planTask = db.PlanTasks.Get(userTaskDTO.PlanTaskId);
