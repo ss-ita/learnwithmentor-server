@@ -482,7 +482,7 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
     [PlanSuggestion].[Text] AS [Text]
     FROM [dbo].[PlanSuggestion] AS [PlanSuggestion]</DefiningQuery>
           </EntitySet>
-          <EntitySet Name="UserGroups" EntityType="Self.UserGroups" store:Type="Tables" Schema="dbo">
+          <EntitySet Name="UserGroups" EntityType="Self.UserGroups" store:Type="Tables"  Schema="dbo">
     
           </EntitySet>
           <EntitySet Name="GROUPS-PLANS-TASKS" EntityType="Self.GROUPS-PLANS-TASKS" store:Type="Views" store:Schema="dbo">
