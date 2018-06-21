@@ -470,11 +470,9 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
           <EntitySet Name="Tasks" EntityType="Self.Tasks" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserTasks" EntityType="Self.UserTasks" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="GroupPlans" EntityType="Self.GroupPlans" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [GroupPlans].[Group_Id] AS [Group_Id], 
-    [GroupPlans].[Plan_Id] AS [Plan_Id]
-    FROM [dbo].[GroupPlans] AS [GroupPlans]</DefiningQuery>
+    
+          <EntitySet Name="GroupPlans" EntityType="Self.GroupPlans" store:Type="Tables" Schema="dbo">
+    
           </EntitySet>
           <EntitySet Name="PlanSuggestion" EntityType="Self.PlanSuggestion" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -484,11 +482,8 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
     [PlanSuggestion].[Text] AS [Text]
     FROM [dbo].[PlanSuggestion] AS [PlanSuggestion]</DefiningQuery>
           </EntitySet>
-          <EntitySet Name="UserGroups" EntityType="Self.UserGroups" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [UserGroups].[Group_Id] AS [Group_Id], 
-    [UserGroups].[User_Id] AS [User_Id]
-    FROM [dbo].[UserGroups] AS [UserGroups]</DefiningQuery>
+          <EntitySet Name="UserGroups" EntityType="Self.UserGroups" store:Type="Tables" Schema="dbo">
+    
           </EntitySet>
           <EntitySet Name="GROUPS-PLANS-TASKS" EntityType="Self.GROUPS-PLANS-TASKS" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
