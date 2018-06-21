@@ -43,13 +43,16 @@ namespace LearnWithMentor.Controllers
         [Route("api/user/inrole/{role_id}")]
         public HttpResponseMessage GetUsersbyRole(int role_id)
         {
-            var role = roleService.Get(role_id);
-            if (role == null)
+            if (role_id != -1)
             {
-                var roleErorMessage = "No roles with this id  in database.";
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, roleErorMessage);
+                var role = roleService.Get(role_id);
+                if (role == null)
+                {
+                    var roleErorMessage = "No roles with this id  in database.";
+                    return Request.CreateErrorResponse(HttpStatusCode.NotFound, roleErorMessage);
+                }
             }
-            List<UserDTO> users = userService.GetUsersByRole(role.Id);
+            List<UserDTO> users = userService.GetUsersByRole(role_id);
             if (users.Count == 0)
             {
                 var usersErorMessage = "No users with this role_id  in database.";
