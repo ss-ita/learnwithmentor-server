@@ -21,7 +21,7 @@ namespace LearnWithMentor.Controllers
         }
         // GET api/<controller>
         /// <summary>
-        /// Returns group by mentor Id
+        /// Returns group by mentor Id "api/group/mentor/{id}"
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -34,6 +34,11 @@ namespace LearnWithMentor.Controllers
             else
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"No groups for the mentor in database. (mentorId = {id})");
         }
+        /// <summary>
+        /// Returns group by Id "api/group/{id}"
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("api/group/{id}")]
         public HttpResponseMessage GetById(int id)
@@ -44,6 +49,11 @@ namespace LearnWithMentor.Controllers
             else
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"There isn't group with id = {id}");
         }
+        /// <summary>
+        /// Returns plans for specific group by group Id "api/group/{id}/plans"
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("api/group/{id}/plans")]
         public HttpResponseMessage GetPlans(int id)
@@ -54,6 +64,11 @@ namespace LearnWithMentor.Controllers
             else
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"There isn't plans for the group id = {id}");
         }
+        /// <summary>
+        /// Returns users that belong to group by group Id "api/group/{id}/users"
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("api/group/{id}/users")]
         public HttpResponseMessage GetUsers(int id)
@@ -64,6 +79,11 @@ namespace LearnWithMentor.Controllers
             else
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"There isn't users in the group id = {id}");
         }
+        /// <summary>
+        /// Create new group
+        /// </summary>
+        /// <param name="group"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("api/group")]
         public HttpResponseMessage Post([FromBody]GroupDTO group)
@@ -84,6 +104,12 @@ namespace LearnWithMentor.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, exception);
             }
         }
+        /// <summary>
+        /// Add users array to group by group id. You have to pass users Id as int[] in body "api/group/{id}/user"
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         [HttpPut]
         [Route("api/group/{id}/user")]
         public HttpResponseMessage PutUsersToGroup(int id, [FromBody] int[] userId)
@@ -93,7 +119,7 @@ namespace LearnWithMentor.Controllers
                 bool success = groupService.AddUsersToGroup(userId, id);
                 if (success)
                 {
-                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully added user ({userId}) to group ({id}).");
+                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully added users to group ({id}).");
                 }
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax or user or group does not exist.");
             }
@@ -102,6 +128,12 @@ namespace LearnWithMentor.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, exception);
             }
         }
+        /// <summary>
+        /// Add plans array to group by groupId. You have to pass plans Id as int[] in body "api/group/{id}/plan"
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="planId"></param>
+        /// <returns></returns>
         [HttpPut]
         [Route("api/group/{id}/plan")]
         public HttpResponseMessage PutPlansToGroup(int id, [FromBody] int[] planId)

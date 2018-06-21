@@ -23,8 +23,7 @@ namespace LearnWithMentorBLL.Services
                 };
                 db.Groups.Add(groupNew);
                 db.Save();
-                return true;
-            
+                return true;            
         }
         
         
@@ -134,6 +133,7 @@ namespace LearnWithMentorBLL.Services
                 if (addPlan != null)
                 {
                     added = db.Groups.AddPlanToGroup(planId, groupId);
+                    db.Save();
                 }
             }
             return added;
