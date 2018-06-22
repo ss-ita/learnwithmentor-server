@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Web.Http;
+using LearnWithMentor.Filters;
 
 namespace LearnWithMentor.Controllers
 {
+    [Authorize]
+    [JwtAuthentication]
     public class ValuesController : ApiController
     {
         // GET api/values

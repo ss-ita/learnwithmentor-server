@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using LearnWithMentor.Filters;
 using LearnWithMentorDTO;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorBLL.Services;
 
 namespace LearnWithMentor.Controllers
 {
+    [Authorize]
+    [JwtAuthentication]
     public class PlanController : ApiController
     {
         private readonly IPlanService planService;

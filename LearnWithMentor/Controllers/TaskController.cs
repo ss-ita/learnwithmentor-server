@@ -8,9 +8,12 @@ using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorBLL.Infrastructure;
 using LearnWithMentorBLL.Services;
 using System.Text.RegularExpressions;
+using LearnWithMentor.Filters;
 
 namespace LearnWithMentor.Controllers
 {
+    [Authorize]
+    [JwtAuthentication]
     /// <summary>
     /// Controller for working with tasks
     /// </summary>
