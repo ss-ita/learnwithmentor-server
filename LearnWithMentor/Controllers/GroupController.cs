@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using LearnWithMentor.Filters;
 using LearnWithMentorDTO;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorBLL.Infrastructure;
@@ -11,6 +12,8 @@ using LearnWithMentorBLL.Services;
 
 namespace LearnWithMentor.Controllers
 {
+    [Authorize]
+    [JwtAuthentication]
     public class GroupController : ApiController
     {
         private readonly IGroupService groupService;

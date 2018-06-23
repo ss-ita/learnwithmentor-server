@@ -11,8 +11,8 @@ using LearnWithMentorBLL.Services;
 namespace LearnWithMentor.Controllers
 {
 
-   // [Authorize]
-   // [JwtAuthentication]
+    [Authorize]
+    [JwtAuthentication]
 
     public class UserController : ApiController
     {
