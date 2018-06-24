@@ -131,5 +131,14 @@ namespace LearnWithMentor.Controllers
             }
             return Request.CreateResponse<IEnumerable<PlanDTO>>(HttpStatusCode.OK, dto);
         }
+        /// <summary>
+        /// Releases memory
+        /// </summary>
+        protected override void Dispose(bool disposing)
+        {
+            planService.Dispose();
+            taskService.Dispose();
+            base.Dispose(disposing);
+        }
     }
 }

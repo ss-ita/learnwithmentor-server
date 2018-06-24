@@ -402,5 +402,16 @@ namespace LearnWithMentor.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, exception);
             }
         }
+
+        /// <summary>
+        /// Releases memory
+        /// </summary>
+        protected override void Dispose(bool disposing)
+        {
+            taskService.Dispose();
+            messageService.Dispose();
+            base.Dispose(disposing);
+        }
     }
+}
 }

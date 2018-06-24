@@ -6,7 +6,7 @@ using LearnWithMentorDTO;
 
 namespace LearnWithMentorBLL.Interfaces
 {
-    public interface ICommentService
+    public interface ICommentService: IDisposableService
     {
         CommentDTO GetComment(int id);
         IEnumerable<CommentDTO> GetCommentsForPlanTask(int taskId, int planId);

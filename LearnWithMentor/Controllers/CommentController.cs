@@ -12,13 +12,21 @@ using LearnWithMentorBLL.Services;
 
 namespace LearnWithMentor.Controllers
 {
+    /// <summary>
+    /// Controller, that provides API for work with comments
+    /// </summary>
     [Authorize]
     [JwtAuthentication]
     public class CommentController : ApiController
     {
-
+        /// <summary>
+        /// Services for work with different DB parts
+        /// </summary>
         private readonly ICommentService commentService;
-        
+
+        /// <summary>
+        /// Services initiation
+        /// </summary>
         public CommentController()
         {
             commentService = new CommentService();
@@ -44,24 +52,6 @@ namespace LearnWithMentor.Controllers
             }
         }
 
-        /// <summary>Returns comments for task in plan.</summary>
-        /// <param name="taskId">ID of the tast.</param>
-        /// <param name="planId">ID of the plan.</param>
-        [HttpGet]
-        [Route("api/comment")]
-        public HttpResponseMessage GetCommentsForPlanAndTaskId(int taskId, int planId)
-        {
-            try
-            {
-                var t = commentService.GetCommentsForPlanTask(taskId, planId);
-                return Request.CreateResponse(HttpStatusCode.OK, t);
-            }
-            catch (ValidationException ex)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message);
-            }
-        }
-
         /// <summary>Returns comments for plantask.</summary>
         /// <param name="planTaskId">ID of the plantask.</param>
         [HttpGet]
@@ -79,26 +69,6 @@ namespace LearnWithMentor.Controllers
             }
         }
         #endregion
-
-        /// <summary>Adds comment for task in plan.</summary>
-        /// <param name="taskId">ID of the tast.</param>
-        /// <param name="planId">ID of the plan.</param>
-        /// <param name="comment">New comment.</param>
-        [HttpPost]
-        [Route("api/comment")]
-        public HttpResponseMessage Post(int taskId, int planId,CommentDTO comment)
-        {
-            try
-            {
-                if (commentService.AddCommentToPlanTask(planId, taskId, comment))
-                    return Request.CreateResponse(HttpStatusCode.OK, "Comment succesfully created");
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Creation error");
-            }
-            catch (Exception)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Creation error");
-            }
-        }
 
         /// <summary>Adds comment for task in plan.</summary>
         /// <param name="planTaskId">ID of the plantask.</param>
@@ -154,6 +124,15 @@ namespace LearnWithMentor.Controllers
             {
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, $"Deletion error.");
             }
+        }
+
+        /// <summary>
+        /// Releases memory
+        /// </summary>
+        protected override void Dispose(bool disposing)
+        {
+            commentService.Dispose();
+            base.Dispose(disposing);
         }
     }
 }

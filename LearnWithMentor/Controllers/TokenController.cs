@@ -43,5 +43,14 @@ namespace LearnWithMentor.Controllers
             var result = BCrypt.Net.BCrypt.Verify(password, user.Password);
             return result;
         }
+
+        /// <summary>
+        /// Releases memory
+        /// </summary>
+        protected override void Dispose(bool disposing)
+        {
+            userService.Dispose();
+            base.Dispose(disposing);
+        }
     }
 }
