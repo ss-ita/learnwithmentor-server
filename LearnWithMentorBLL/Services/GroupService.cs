@@ -23,39 +23,10 @@ namespace LearnWithMentorBLL.Services
                 };
                 db.Groups.Add(groupNew);
                 db.Save();
-                return true;
-            
+                return true;            
         }
-
-        public bool AddPlanToGroup(int planId, int groupId)
-        {
-           
-            var plan = db.Plans.Get(planId);
-            var group = db.Groups.Get(groupId);
-            if (plan == null)
-                return false;
-            if (group == null)
-                return false;
-
-            AddPlanToGroup(planId, groupId);        
-            db.Save();
-            return true;
-        }
-
-        public bool AddUserToGroup(int userId, int groupId)
-        {
-            var user = db.Plans.Get(userId);
-            var group = db.Groups.Get(groupId);
-            if (user == null)
-                return false;
-            if (group == null)
-                return false;
-
-            AddUserToGroup(userId, groupId);
-            db.Save();
-            return true;
-        }
-
+        
+        
         public GroupDTO GetGroupById(int id)
         {
             Group group = db.Groups.Get(id);
@@ -125,11 +96,48 @@ namespace LearnWithMentorBLL.Services
             foreach (var group in groups)
             {
                 groupList.Add(new GroupDTO(group.Id,
-                                     group.Name,
-                                     group.Mentor_Id
-                                    ));
+                                         group.Name,
+                                         group.Mentor_Id
+                                        ));
             }
             return groupList;
         }
+
+        public bool AddUsersToGroup(int[] allUsersId, int groupId)
+        {
+            var groups = db.Groups.Get(groupId);
+            if (groups == null)
+                return false;
+            bool added = false;
+            foreach (int userId in allUsersId)
+            {
+                var addUser = db.Users.Get(userId);
+                if(addUser != null)
+                {
+                    added = db.Groups.AddUserToGroup(userId, groupId);
+                    db.Save();
+                }
+            }
+            return added;
+        }
+
+        public bool AddPlansToGroup(int[] allPlansId, int groupId)
+        {
+            var groups = db.Groups.Get(groupId);
+            if (groups == null)
+                return false;
+            bool added = false;
+            foreach (int planId in allPlansId)
+            {
+                var addPlan = db.Plans.Get(planId);
+                if (addPlan != null)
+                {
+                    added = db.Groups.AddPlanToGroup(planId, groupId);
+                    db.Save();
+                }
+            }
+            return added;
+        }
+
     }
 }

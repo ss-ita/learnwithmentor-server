@@ -11,8 +11,8 @@ using LearnWithMentorBLL.Services;
 namespace LearnWithMentor.Controllers
 {
 
-   // [Authorize]
-   // [JwtAuthentication]
+    [Authorize]
+
 
     public class UserController : ApiController
     {
@@ -25,8 +25,8 @@ namespace LearnWithMentor.Controllers
         }
         // GET: api/User
 
-      //  [Authorize(Roles = "Admin")]
-
+        //  [Authorize(Roles = "Admin")]
+        [JwtAuthentication]
         public HttpResponseMessage Get()
         {
             var users = userService.GetAllUsers();
@@ -38,7 +38,7 @@ namespace LearnWithMentor.Controllers
             
             return Request.CreateErrorResponse(HttpStatusCode.NotFound, message);
         }
-
+        [JwtAuthentication]
         [HttpGet]
         [Route("api/user/inrole/{role_id}")]
         public HttpResponseMessage GetUsersbyRole(int role_id)
@@ -78,6 +78,8 @@ namespace LearnWithMentor.Controllers
         // GET: api/User/5
         //  [Authorize (Roles="Student")]
 
+        [JwtAuthentication]
+
         public HttpResponseMessage Get(int id)
         {
             UserDTO user = userService.Get(id);
@@ -90,6 +92,8 @@ namespace LearnWithMentor.Controllers
         }
 
         // POST: api/User
+        
+        [AllowAnonymous]
         public HttpResponseMessage Post([FromBody]UserRegistrationDTO value)
         {
             if (!ModelState.IsValid)
@@ -114,6 +118,7 @@ namespace LearnWithMentor.Controllers
         }
 
         // PUT: api/User/5
+        [JwtAuthentication]
         public HttpResponseMessage Put(int id, [FromBody]UserDTO value)
         {
             try
@@ -134,6 +139,7 @@ namespace LearnWithMentor.Controllers
         }
 
         // DELETE: api/user/5
+        [JwtAuthentication]
         public HttpResponseMessage Delete(int id)
         {
             try
@@ -155,6 +161,7 @@ namespace LearnWithMentor.Controllers
 
         [HttpGet]
         [Route("api/user/search")]
+        [JwtAuthentication]
         public HttpResponseMessage Search(string q, string role)
         {
             if (q == null)
@@ -177,6 +184,7 @@ namespace LearnWithMentor.Controllers
         }
 
         [Route("api/user/roles")]
+        [JwtAuthentication]
         public HttpResponseMessage GetRoles()
         {
             var roles = roleService.GetAllRoles();

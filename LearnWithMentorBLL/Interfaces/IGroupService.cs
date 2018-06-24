@@ -12,8 +12,8 @@ namespace LearnWithMentorBLL.Interfaces
         IEnumerable<GroupDTO> GetGroupsByMentor(int mentorId);
         IEnumerable<UserDTO> GetUsers(int groupId);
         IEnumerable<PlanDTO> GetPlans(int groupId);
-        bool AddGroup(GroupDTO group);
-        bool AddUserToGroup(int userId, int groupId);
-        bool AddPlanToGroup(int planId, int groupId);
+        bool AddGroup(GroupDTO group);        
+        bool AddUsersToGroup(int []usersId , int groupId);
+        bool AddPlansToGroup(int[] usersId, int groupId);
     }
 }

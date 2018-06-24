@@ -37,12 +37,10 @@ namespace LearnWithMentor.Controllers
 
         public bool CheckUser(string email, string password, out UserIdentityDTO user)
         {
-            // should check in the database
-            //need add more specific method for email search
 
             user = userService.GetByEmail(email);
             if (user == null || user.Blocked== true) return false;
-            var result = BCrypt.Net.BCrypt.Verify(password, BCrypt.Net.BCrypt.HashPassword(user.Password));
+            var result = BCrypt.Net.BCrypt.Verify(password, user.Password);
             return result;
         }
     }
