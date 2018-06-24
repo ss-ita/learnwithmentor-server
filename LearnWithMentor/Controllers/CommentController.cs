@@ -45,7 +45,7 @@ namespace LearnWithMentor.Controllers
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Comment with this ID does not exist in database.");
                 return Request.CreateResponse(HttpStatusCode.OK, comment);
             }
-            catch (ValidationException ex)
+            catch (InternalServiceException ex)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message);
             }
@@ -66,7 +66,7 @@ namespace LearnWithMentor.Controllers
                 var comments = commentService.GetCommentsForPlanTask(planTaskId);
                 return Request.CreateResponse(HttpStatusCode.OK, comments);
             }
-            catch (ValidationException ex)
+            catch (InternalServiceException ex)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message);
             }

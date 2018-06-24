@@ -16,7 +16,7 @@ namespace LearnWithMentorBLL.Services
         {
             var userTask = db.UserTasks.Get(userTaskId);
             if (userTask == null)
-                throw new ValidationException("Comment in this plan for this user does not exist", "");
+                throw new InternalServiceException("Comment in this plan for this user does not exist", "");
             var messages = userTask.Messages;
             List<MessageDTO> messageDTOs = new List<MessageDTO>();
             foreach (var m in messages)

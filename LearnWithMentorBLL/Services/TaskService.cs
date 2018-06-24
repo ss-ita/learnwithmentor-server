@@ -64,9 +64,9 @@ namespace LearnWithMentorBLL.Services
         {
             Task task = db.Tasks.Get(taskId);
             if (task == null)
-                throw new ValidationException($"Task with ID:{taskId} does not exist.", "");
+                throw new InternalServiceException($"Task with ID:{taskId} does not exist.", "");
             if(!db.PlanTasks.ContainsTaskInPlan(taskId, planId))
-                throw new ValidationException($"Task(ID:{taskId}) does not exist in plan(ID:{planId}).", "");
+                throw new InternalServiceException($"Task(ID:{taskId}) does not exist in plan(ID:{planId}).", "");
             var dto = new TaskDTO(task.Id,
                                     task.Name,
                                     task.Description,
@@ -87,7 +87,7 @@ namespace LearnWithMentorBLL.Services
         {
             PlanTask planTask = db.PlanTasks.Get(planTaskId);
             if (planTask == null)
-                throw new ValidationException($"PlanTask with ID:{planTask.Id} does not exist.", "");
+                throw new InternalServiceException($"PlanTask with ID:{planTask.Id} does not exist.", "");
             Task task = planTask.Tasks;
             var taskDTO = new TaskDTO(task.Id,
                                     task.Name,
@@ -168,9 +168,9 @@ namespace LearnWithMentorBLL.Services
         {
             var planTask = db.PlanTasks.Get(userTaskDTO.PlanTaskId);
             if (planTask==null)
-                throw new ValidationException($"No task [ID:{planTask.Task_Id}] in plan [ID:{planTask.Plan_Id}]", "");
+                throw new InternalServiceException($"No task [ID:{planTask.Task_Id}] in plan [ID:{planTask.Plan_Id}]", "");
             if(db.Users.Get(userTaskDTO.UserId) == null)
-                throw new ValidationException($"No user [ID:{userTaskDTO.UserId}] in db", "");
+                throw new InternalServiceException($"No user [ID:{userTaskDTO.UserId}] in db", "");
             UserTask userTask = new UserTask()
             {
                 User_Id = userTaskDTO.UserId,
@@ -230,10 +230,10 @@ namespace LearnWithMentorBLL.Services
         {
             int? planTaskId = db.PlanTasks.GetIdByTaskAndPlan(taskId, planId);
             if (planTaskId==null)
-                throw new ValidationException($"Task(ID:{taskId}) does not exist in plan(ID:{planId}).", "");
+                throw new InternalServiceException($"Task(ID:{taskId}) does not exist in plan(ID:{planId}).", "");
             UserTask ut= db.UserTasks.GetByPlanTaskForUser(planTaskId.Value, userId);
             if (ut == null)
-                throw new ValidationException($"Users task for this plan does not exist.", "");
+                throw new InternalServiceException($"Users task for this plan does not exist.", "");
             var dto = new UserTaskDTO(ut.Id,
                                       userId,
                                       ut.PlanTask_Id,
@@ -249,7 +249,7 @@ namespace LearnWithMentorBLL.Services
         {
             UserTask userTask = db.UserTasks.GetByPlanTaskForUser(planTaskId, userId);
             if (userTask == null)
-                throw new ValidationException($"Users task for this plan does not exist.", "");
+                throw new InternalServiceException($"Users task for this plan does not exist.", "");
             var userTaskdto = new UserTaskDTO(userTask.Id,
                                       userTask.User_Id,
                                       userTask.PlanTask_Id,
@@ -264,10 +264,10 @@ namespace LearnWithMentorBLL.Services
         public bool UpdateUserTaskStatus(int userTaskId, string newStatus)
         {
             if (!Regex.IsMatch(newStatus, ValidationRules.USERTASK_STATE))
-                throw new ValidationException("New Status not valid","");
+                throw new InternalServiceException("New Status not valid","");
             var userTask= db.UserTasks.Get(userTaskId);
             if(userTask == null)
-                throw new ValidationException("No task in plan for this user", "");
+                throw new InternalServiceException("No task in plan for this user", "");
             userTask.State = newStatus;
             db.UserTasks.Update(userTask);
             db.Save();
@@ -277,7 +277,7 @@ namespace LearnWithMentorBLL.Services
         {
             var userTask = db.UserTasks.Get(userTaskId);
             if (userTask == null)
-                throw new ValidationException("No task in plan for this user", "");
+                throw new InternalServiceException("No task in plan for this user", "");
             userTask.Result = newResult;
             db.UserTasks.Update(userTask);
             db.Save();

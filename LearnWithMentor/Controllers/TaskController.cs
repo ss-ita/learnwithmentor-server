@@ -86,7 +86,7 @@ namespace LearnWithMentor.Controllers
                 var task = taskService.GetTaskForPlan(taskId, planId);
                 return Request.CreateResponse(HttpStatusCode.OK, task);
             }
-            catch (ValidationException ex)
+            catch (InternalServiceException ex)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest,ex.Message);
             }
@@ -106,7 +106,7 @@ namespace LearnWithMentor.Controllers
                 var task = taskService.GetTaskForPlan(planTaskId);
                 return Request.CreateResponse(HttpStatusCode.OK, task);
             }
-            catch (ValidationException ex)
+            catch (InternalServiceException ex)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message);
             }
@@ -127,7 +127,7 @@ namespace LearnWithMentor.Controllers
                 var userTask = taskService.GetUserTaskByUserTaskPlanIds(userId, taskId, planId);
                 return Request.CreateResponse(HttpStatusCode.OK, userTask);
             }
-            catch (ValidationException ex)
+            catch (InternalServiceException ex)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message);
             }
@@ -147,7 +147,7 @@ namespace LearnWithMentor.Controllers
                 var userTask = taskService.GetUserTaskByUserTaskPlanId(userId, planTaskId);
                 return Request.CreateResponse(HttpStatusCode.OK, userTask);
             }
-            catch (ValidationException ex)
+            catch (InternalServiceException ex)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message);
             }
@@ -164,7 +164,7 @@ namespace LearnWithMentor.Controllers
                 var messaList= messageService.GetMessages(userTaskId);
                 return Request.CreateResponse(HttpStatusCode.OK, messaList);
             }
-            catch (ValidationException ex)
+            catch (InternalServiceException ex)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message);
             }
