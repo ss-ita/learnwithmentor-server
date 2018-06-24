@@ -54,10 +54,6 @@ namespace LearnWithMentorDAL.Repositories
 
         public IEnumerable<User> GetUsersByRole(int role_id)
         {
-            //if (role_id == -1)
-            //{
-            //    return context.Users.Where(u => u.Blocked == true);
-            //}
             return context.Users.Where(u => u.Role_Id == role_id);
         }
 
