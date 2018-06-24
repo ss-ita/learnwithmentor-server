@@ -60,8 +60,23 @@ namespace LearnWithMentor.Controllers
             }
             return Request.CreateResponse<IEnumerable<UserDTO>>(HttpStatusCode.OK, users);
         }
+
+
+        [HttpGet]
+        [Route("api/user/instate/{state}")]
+        public HttpResponseMessage GetUsersbyState(bool state)
+        {
+            List<UserDTO> users = userService.GetUsersByState(state);
+            if (users.Count == 0)
+            {
+                var usersErorMessage = "No users with this role_id  in database.";
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, usersErorMessage);
+            }
+            return Request.CreateResponse<IEnumerable<UserDTO>>(HttpStatusCode.OK, users);
+        }
+
         // GET: api/User/5
-      //  [Authorize (Roles="Student")]
+        //  [Authorize (Roles="Student")]
 
         public HttpResponseMessage Get(int id)
         {

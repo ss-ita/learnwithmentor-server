@@ -13,5 +13,6 @@ namespace LearnWithMentorBLL.Interfaces
         bool Add(UserRegistrationDTO dto);
         List<UserDTO> Search(string[] str, int? role_id);
         List<UserDTO> GetUsersByRole(int roleId);
+        List<UserDTO> GetUsersByState(bool state);
     }
 }

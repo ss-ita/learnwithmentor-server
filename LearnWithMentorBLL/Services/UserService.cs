@@ -6,7 +6,7 @@ using LearnWithMentorDAL.Entities;
 
 namespace LearnWithMentorBLL.Services
 {
-    public class UserService: BaseService, IUserService
+    public class UserService : BaseService, IUserService
     {
         public UserService() : base()
         {
@@ -27,7 +27,7 @@ namespace LearnWithMentorBLL.Services
             User user = db.Users.GetByEmail(email);
             if (user == null)
                 return null;
-            return new UserIdentityDTO(user.Email,user.Password, user.Id,
+            return new UserIdentityDTO(user.Email, user.Password, user.Id,
                 user.FirstName,
                 user.LastName,
                 user.Roles.Name,
@@ -138,6 +138,21 @@ namespace LearnWithMentorBLL.Services
             }
             return dtos;
         }
-
+        public List<UserDTO> GetUsersByState(bool state)
+        {
+            var users = db.Users.GetUsersByState(state);
+            if (users == null)
+                return null;
+            List<UserDTO> dtos = new List<UserDTO>();
+            foreach (var user in users)
+            {
+                dtos.Add(new UserDTO(user.Id,
+                                     user.FirstName,
+                                     user.LastName,
+                                     user.Roles.Name,
+                                     user.Blocked));
+            }
+            return dtos;
+        }
     }
 }
