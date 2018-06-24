@@ -28,13 +28,13 @@ go
 
 insert into Roles (Name) values ('Mentor'),('Student'),('Admin');
 
-insert into Users ( FirstName, LastName, Email, Password, Role_Id) SELECT 'Volodymyr', 'Savchuk', 'v.v@gmail.com','123', Id FROM Roles WHERE Name = 'Mentor';
-insert into Users ( FirstName, LastName, Email, Password, Role_Id) SELECT 'Vyacheslav', 'Koldovsky', 'vyacheslav@gmail.com','123',  Id FROM Roles WHERE Name = 'Mentor';
-insert into Users ( FirstName, LastName, Email, Password, Role_Id) SELECT 'Andrew', 'Lysyi', 'andrew.l@gmail.com','123',  Id FROM Roles WHERE Name = 'Student';
-insert into Users ( FirstName, LastName, Email, Password, Role_Id) SELECT 'Roman', 'Parobiy', 'roman.p@gmail.com','123', Id FROM Roles WHERE Name = 'Student';
-insert into Users ( FirstName, LastName, Email, Password, Role_Id) SELECT 'Andriy', 'Panchyshyn', 'andr@gmail.com','123',  Id FROM Roles WHERE Name = 'Student';
-insert into Users ( FirstName, LastName, Email, Password, Role_Id) SELECT 'Roman', 'Maksymyshyn', 'riman@gmail.com','123',  Id FROM Roles WHERE Name = 'Student';
-insert into Users ( FirstName, LastName, Email, Password, Role_Id) SELECT 'admin', 'admin', 'admin@gmail.com','123',  Id FROM Roles WHERE Name = 'Admin';
+insert into Users ( FirstName, LastName, Email, Password, Role_Id) SELECT 'Volodymyr', 'Savchuk', 'v.v@gmail.com','$2a$10$moX0C/KhFxJmqLWut5TMgOZUhzIg5ClWXyYNIxFZmXQaWM.JQuxVi', Id FROM Roles WHERE Name = 'Mentor';
+insert into Users ( FirstName, LastName, Email, Password, Role_Id) SELECT 'Vyacheslav', 'Koldovsky', 'vyacheslav@gmail.com','$2a$10$0ihRdQTYu4INTnqkMolHe.ojX6S6VvEy.rrl2WPYsZPibK0aMOKWC',  Id FROM Roles WHERE Name = 'Mentor';
+insert into Users ( FirstName, LastName, Email, Password, Role_Id) SELECT 'Andrew', 'Lysyi', 'andrew.l@gmail.com','$2a$10$jv7BGvoO6/ElJ1/uvQdsfuCcMoln4YSbnqT5CbOZtogC6t.SMcO3y',  Id FROM Roles WHERE Name = 'Student';
+insert into Users ( FirstName, LastName, Email, Password, Role_Id) SELECT 'Roman', 'Parobiy', 'roman.p@gmail.com','$2a$10$mnELDFRFHEvUfKI102FR2OQTMIUw6j6iR5IZ7n9Pu.h03/Oylot.i', Id FROM Roles WHERE Name = 'Student';
+insert into Users ( FirstName, LastName, Email, Password, Role_Id) SELECT 'Andriy', 'Panchyshyn', 'andr@gmail.com','$2a$10$vSnSmWSaVpxvUKffDJB7meuYxQFF9t4PgLoASwIEdQB3mvNBz/lBS',  Id FROM Roles WHERE Name = 'Student';
+insert into Users ( FirstName, LastName, Email, Password, Role_Id) SELECT 'Roman', 'Maksymyshyn', 'riman@gmail.com','$2a$10$eo9yp6BBzj/zt.nOroe8Iu5hO843ljcHG6xFqx8flEofJDvfbFzMK',  Id FROM Roles WHERE Name = 'Student';
+insert into Users ( FirstName, LastName, Email, Password, Role_Id) SELECT 'admin', 'admin', 'admin@gmail.com','$2a$10$mTJzuP0fjy4elrx4rwJ4eezmk70QGN9F4.gJp32ImX69caOSEwVlW',  Id FROM Roles WHERE Name = 'Admin';
 
 
 insert into Groups(Name, Mentor_Id) SELECT 'lv.net319', Id FROM Users WHERE Email = 'vyacheslav@gmail.com';
