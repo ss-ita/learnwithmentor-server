@@ -9,11 +9,11 @@ namespace LearnWithMentorBLL.Services
 {
     public class CommentService : BaseService, ICommentService
     {
-        public CommentDTO GetComment(int id)//done
+        public CommentDTO GetComment(int id)
         {
             var comment = db.Comments.Get(id);
             if (comment == null)
-                throw new ValidationException("No comment with this id", "id");
+                throw new ValidationException("There is no comment with this id", "id");
             var commentDTO = new CommentDTO(comment.Id,
                                    comment.Text,
                                    comment.Create_Id,
@@ -39,7 +39,7 @@ namespace LearnWithMentorBLL.Services
         {
             var iden = db.PlanTasks.GetIdByTaskAndPlan(taskId, planId);
             if (iden == null)
-                throw new ValidationException("No task with this id in this plan","");
+                throw new ValidationException("There in no task with this id in this plan","");
             var newComment = new Comment()
             {
                 Id = c.Id,
@@ -120,7 +120,7 @@ namespace LearnWithMentorBLL.Services
         {
             if (!db.Comments.ContainsId(id))
                 return false;
-            RemoveById(id);
+            db.Comments.RemoveById(id);
             db.Save();
             return true;
         }

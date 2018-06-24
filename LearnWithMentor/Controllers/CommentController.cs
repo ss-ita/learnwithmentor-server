@@ -32,9 +32,8 @@ namespace LearnWithMentor.Controllers
             commentService = new CommentService();
         }
 
-        #region Get
-        /// <summary>Returns comments for task in plan.</summary>
-        /// <param name="id">ID of the comment.</param>
+        /// <summary>Returns comment by id.</summary>
+        /// <param name="id">Id of the comment.</param>
         [HttpGet]
         [Route("api/comment")]
         public HttpResponseMessage GetComment(int id)
@@ -46,32 +45,39 @@ namespace LearnWithMentor.Controllers
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Comment with this ID does not exist in database.");
                 return Request.CreateResponse(HttpStatusCode.OK, comment);
             }
-            catch (ValidationException)
+            catch (ValidationException ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message);
+            }
+            catch (Exception ex)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Internal server error");
             }
         }
 
-        /// <summary>Returns comments for plantask.</summary>
-        /// <param name="planTaskId">ID of the plantask.</param>
+        /// <summary>Returns comments by plantask id.</summary>
+        /// <param name="planTaskId">Id of the plantask.</param>
         [HttpGet]
-        [Route("api/comment")]
+        [Route("api/comment/plantask/{planTaskId}")]
         public HttpResponseMessage GetCommentsForPlanTask(int planTaskId)
         {
             try
             {
-                var t = commentService.GetCommentsForPlanTask(planTaskId);
-                return Request.CreateResponse(HttpStatusCode.OK, t);
+                var comments = commentService.GetCommentsForPlanTask(planTaskId);
+                return Request.CreateResponse(HttpStatusCode.OK, comments);
             }
             catch (ValidationException ex)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message);
             }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Internal server error");
+            }
         }
-        #endregion
 
-        /// <summary>Adds comment for task in plan.</summary>
-        /// <param name="planTaskId">ID of the plantask.</param>
+        /// <summary>Adds comment for planTask.</summary>
+        /// <param name="planTaskId">Id of the plantask.</param>
         /// <param name="comment">New comment.</param>
         [HttpPost]
         [Route("api/comment")]
@@ -85,12 +91,12 @@ namespace LearnWithMentor.Controllers
             }
             catch (Exception)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Creation error");
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Internal creation error");
             }
         }
 
-        /// <summary>Updates comment for task in plan.</summary>
-        /// <param name="commentId">ID of the comment.</param>
+        /// <summary>Updates comment by id.</summary>
+        /// <param name="commentId">Id of the comment.</param>
         /// <param name="comment">New comment.</param>
         [HttpPut]
         [Route("api/comment")]
@@ -104,14 +110,14 @@ namespace LearnWithMentor.Controllers
             }
             catch (Exception)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Updation error");
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Internal updation error");
             }
         }
 
-        /// <summary>Deletes comment for task in plan.</summary>
-        /// <param name="commentId">ID of the comment.</param>
+        /// <summary>Deletes comment by id.</summary>
+        /// <param name="commentId">Id of the comment.</param>
         [HttpDelete]
-        [Route("api/comment/{id}")]
+        [Route("api/comment/{commentId}")]
         public HttpResponseMessage Delete(int commentId)
         {
             try
@@ -122,7 +128,7 @@ namespace LearnWithMentor.Controllers
             }
             catch(Exception)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, $"Deletion error.");
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Internal deletion error.");
             }
         }
 
