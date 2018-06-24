@@ -54,13 +54,15 @@ namespace LearnWithMentorDAL.Repositories
 
         public IEnumerable<User> GetUsersByRole(int role_id)
         {
-            if (role_id == -1)
-            {
-                return context.Users.Where(u => u.Blocked == true);
-            }
             return context.Users.Where(u => u.Role_Id == role_id);
         }
-        public string ExtractFullName(int? id)
+
+        public IEnumerable<User> GetUsersByState(bool state)
+        {
+            return context.Users.Where(u => u.Blocked == state);
+        }
+
+            public string ExtractFullName(int? id)
         {
             if (id == null)
                 return null;
