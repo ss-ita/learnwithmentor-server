@@ -19,12 +19,12 @@ namespace LearnWithMentorDAL.Repositories
         }
         public IEnumerable<Task> Search(string[] str, int planId)
         {
+            if (!context.Plans.Any(p => p.Id == planId))
+                return null;
             List<Task> result = new List<Task>();
             foreach (var s in str)
             {
                 IQueryable<Task> found;
-                if (!context.Plans.Any(p => p.Id == planId))
-                    return null;
                 found = context.PlanTasks.Where(p => p.Plan_Id == planId)
                                              .Select(t => t.Tasks)
                                              .Where(t => t.Name.Contains(s));
