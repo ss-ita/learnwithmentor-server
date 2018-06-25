@@ -20,7 +20,7 @@ namespace LearnWithMentorBLL.Services
             List<TaskDTO> taskDTO = new List<TaskDTO>();
             var tasks = db.Tasks.GetAll();
             if (tasks == null)
-                return taskDTO;
+                return null;
             foreach (var t in tasks)
             {
                 taskDTO.Add(new TaskDTO(t.Id,
@@ -157,10 +157,10 @@ namespace LearnWithMentorBLL.Services
         public bool CreateUserTask(UserTaskDTO userTaskDTO)
         {
             var planTask = db.PlanTasks.Get(userTaskDTO.PlanTaskId);
-            if (planTask==null)
-                throw new InternalServiceException($"No task [ID:{planTask.Task_Id}] in plan [ID:{planTask.Plan_Id}]", "");
-            if(db.Users.Get(userTaskDTO.UserId) == null)
-                throw new InternalServiceException($"No user [ID:{userTaskDTO.UserId}] in db", "");
+            if (planTask == null)
+                return false;
+            if (db.Users.Get(userTaskDTO.UserId) == null)
+                return false;
             UserTask userTask = new UserTask()
             {
                 User_Id = userTaskDTO.UserId,
@@ -169,7 +169,6 @@ namespace LearnWithMentorBLL.Services
                 End_Date = userTaskDTO.EndDate,
                 Result = userTaskDTO.Result,
                 Propose_End_Date = userTaskDTO.ProposeEndDate,
-                //todo mentor auto-setting logic by planId
                 Mentor_Id = userTaskDTO.MentorId
             };
             db.UserTasks.Add(userTask);
@@ -189,6 +188,7 @@ namespace LearnWithMentorBLL.Services
                 item.Create_Id = taskDTO.CreatorId;
                 item.Mod_Id = taskDTO.ModifierId;
                 db.Tasks.Update(item);
+                db.Save();
                 return true;
             }
             return false;
@@ -200,47 +200,29 @@ namespace LearnWithMentorBLL.Services
             if (item != null || db.Tasks.IsRemovable(taskId))
             {
                 db.Tasks.Remove(item);
+                db.Save();
                 return true;
             }
             return false;
         }
         public List<UserTaskStateDTO> GetTaskStatesForUser(int[] planTaskIds, int userId)
         {
-            List<UserTaskStateDTO> dtosList = new List<UserTaskStateDTO>();
+            List<UserTaskStateDTO> dtoList = new List<UserTaskStateDTO>();
             foreach (int planTaskId in planTaskIds)
             {
                 UserTask userTask = db.UserTasks.GetByPlanTaskForUser(planTaskId, userId);
                 if (userTask != null)
-                    dtosList.Add(new UserTaskStateDTO(planTaskId, userTask.State));
+                    dtoList.Add(new UserTaskStateDTO(planTaskId, userTask.State));
             }
-            return dtosList;
+            return dtoList;
         }
-
-        public UserTaskDTO GetUserTaskByUserTaskPlanIds(int userId, int taskId, int planId)
-        {
-            int? planTaskId = db.PlanTasks.GetIdByTaskAndPlan(taskId, planId);
-            if (planTaskId==null)
-                throw new InternalServiceException($"Task(ID:{taskId}) does not exist in plan(ID:{planId}).", "");
-            UserTask ut= db.UserTasks.GetByPlanTaskForUser(planTaskId.Value, userId);
-            if (ut == null)
-                throw new InternalServiceException($"Users task for this plan does not exist.", "");
-            var dto = new UserTaskDTO(ut.Id,
-                                      userId,
-                                      ut.PlanTask_Id,
-                                      ut.End_Date,
-                                      ut.Propose_End_Date,
-                                      ut.Mentor_Id,
-                                      ut.State,
-                                      ut.Result);
-            return dto;
-        }
-
-        public UserTaskDTO GetUserTaskByUserTaskPlanId(int userId, int planTaskId)
+        
+        public UserTaskDTO GetUserTaskByUserPlanTaskId(int userId, int planTaskId)
         {
             UserTask userTask = db.UserTasks.GetByPlanTaskForUser(planTaskId, userId);
             if (userTask == null)
-                throw new InternalServiceException($"Users task for this plan does not exist.", "");
-            var userTaskdto = new UserTaskDTO(userTask.Id,
+                return null;
+            var userTaskDto = new UserTaskDTO(userTask.Id,
                                       userTask.User_Id,
                                       userTask.PlanTask_Id,
                                       userTask.End_Date,
@@ -248,16 +230,16 @@ namespace LearnWithMentorBLL.Services
                                       userTask.Mentor_Id,
                                       userTask.State,
                                       userTask.Result);
-            return userTaskdto;
+            return userTaskDto;
         }
 
         public bool UpdateUserTaskStatus(int userTaskId, string newStatus)
         {
             if (!Regex.IsMatch(newStatus, ValidationRules.USERTASK_STATE))
-                throw new InternalServiceException("New Status not valid","");
+                return false;
             var userTask= db.UserTasks.Get(userTaskId);
-            if(userTask == null)
-                throw new InternalServiceException("No task in plan for this user", "");
+            if (userTask == null)
+                return false;
             userTask.State = newStatus;
             db.UserTasks.Update(userTask);
             db.Save();
@@ -265,9 +247,11 @@ namespace LearnWithMentorBLL.Services
         }
         public bool UpdateUserTaskResult(int userTaskId, string newResult)
         {
+            if (newResult == null)
+                return false;
             var userTask = db.UserTasks.Get(userTaskId);
             if (userTask == null)
-                throw new InternalServiceException("No task in plan for this user", "");
+                return false;
             userTask.Result = newResult;
             db.UserTasks.Update(userTask);
             db.Save();
