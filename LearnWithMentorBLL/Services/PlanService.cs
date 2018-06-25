@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using LearnWithMentorBLL.Infrastructure;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDTO;
 using LearnWithMentorDAL.Entities;
@@ -151,6 +153,49 @@ namespace LearnWithMentorBLL.Services
         public bool ContainsId(int id)
         {
             return db.Plans.ContainsId(id);
+        }
+
+        public IEnumerable<Plan> GetPlansNotUsedInGroup(int groupId)
+        {
+            var group = db.Groups.Get(groupId);
+            if (group == null)
+                throw new InternalServiceException("Group not found", "");
+            var plansNotUsedInGroup = db.Plans.GetPlansNotUsedInGroup(groupId);
+            if (plansNotUsedInGroup == null)
+                throw new InternalServiceException("Plan not found", "");
+            return plansNotUsedInGroup;
+        }
+
+        public IEnumerable<PlanDTO> SearchPlansNotUsedInGroup(string[] str, int groupId)
+        {
+            var plansNotInGroup = GetPlansNotUsedInGroup(groupId);
+            List<PlanDTO> plansNotInGroupdto = new List<PlanDTO>();
+            foreach (var s in str)
+            {
+                foreach (var plan in plansNotInGroup)
+                {
+                    if (plan.Name.Contains(s))
+                    {
+                        PlanDTO pdDto = new PlanDTO
+                        (plan.Id,
+                            plan.Name,
+                            plan.Description,
+                            plan.Published,
+                            plan.Create_Id,
+                            plan.Creator.FirstName,
+                            plan.Creator.LastName,
+                            plan.Mod_Id,
+                            plan.Modifier.FirstName,
+                            plan.Modifier.LastName,
+                            plan.Create_Date,
+                            plan.Mod_Date);
+
+                        if (!plansNotInGroupdto.Contains((pdDto)))
+                            plansNotInGroupdto.Add(pdDto);
+                    }
+                }
+            }
+            return plansNotInGroupdto;
         }
     }
 }

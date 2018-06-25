@@ -72,5 +72,9 @@ namespace LearnWithMentorDAL.Repositories
                 fullName = string.Concat(currentUser.FirstName, " ", currentUser.LastName);
             return fullName;
         }
-    }
+        public IEnumerable<User> GetUsersNotInGroup(int groupId)
+                    {
+                        return context.Groups.FirstOrDefault(g => g.Id != groupId)?.Users;
+                   }
+}
 }
