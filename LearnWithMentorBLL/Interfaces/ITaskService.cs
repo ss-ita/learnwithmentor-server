@@ -3,7 +3,7 @@ using LearnWithMentorDTO;
 
 namespace LearnWithMentorBLL.Interfaces
 {
-    public interface ITaskService
+    public interface ITaskService : IDisposableService
     {
         IEnumerable<TaskDTO> GetAllTasks();
         TaskDTO GetTaskById(int id);

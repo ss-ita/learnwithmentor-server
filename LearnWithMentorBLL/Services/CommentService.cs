@@ -9,11 +9,11 @@ namespace LearnWithMentorBLL.Services
 {
     public class CommentService : BaseService, ICommentService
     {
-        public CommentDTO GetComment(int id)//done
+        public CommentDTO GetComment(int id)
         {
             var comment = db.Comments.Get(id);
             if (comment == null)
-                throw new ValidationException("No comment with this id", "id");
+                throw new InternalServiceException("There is no comment with this id", "id");
             var commentDTO = new CommentDTO(comment.Id,
                                    comment.Text,
                                    comment.Create_Id,
@@ -39,7 +39,7 @@ namespace LearnWithMentorBLL.Services
         {
             var iden = db.PlanTasks.GetIdByTaskAndPlan(taskId, planId);
             if (iden == null)
-                throw new ValidationException("No task with this id in this plan","");
+                throw new InternalServiceException("There in no task with this id in this plan","");
             var newComment = new Comment()
             {
                 Id = c.Id,
@@ -55,7 +55,7 @@ namespace LearnWithMentorBLL.Services
         public bool UpdateCommentIdText(int Id, string text)
         {
             if (text == null || text.Equals(string.Empty))
-                throw new ValidationException("Can not set empty text as comment","text");
+                throw new InternalServiceException("Can not set empty text as comment","text");
             var comm = db.Comments.Get(Id);
             comm.Text = text;
             db.Comments.Update(comm);
@@ -66,7 +66,7 @@ namespace LearnWithMentorBLL.Services
         public bool UpdateComment(int Id, CommentDTO c)
         {
             if (c == null || c.Text.Equals(string.Empty))
-                throw new ValidationException("Can not set empty text as comment", "text");
+                throw new InternalServiceException("Can not set empty text as comment", "text");
             var comm = db.Comments.Get(Id);
             comm.Text = c.Text;
             db.Comments.Update(comm);
@@ -79,10 +79,10 @@ namespace LearnWithMentorBLL.Services
             List<CommentDTO> commentsList = new List<CommentDTO>();
             var planTask = db.PlanTasks.Get(taskId, planId);
             if (planTask == null)
-                throw new ValidationException("Task in this plan does not exists", "");
+                throw new InternalServiceException("Task in this plan does not exists", "");
             var comments = planTask.Comments;
             if (comments == null)
-                throw new ValidationException("Task in this plan has no comments", "");
+                throw new InternalServiceException("Task in this plan has no comments", "");
             foreach (var c in comments)
             {
                 commentsList.Add(new CommentDTO(c.Id,
@@ -100,10 +100,10 @@ namespace LearnWithMentorBLL.Services
             List<CommentDTO> commentsList = new List<CommentDTO>();
             var planTask = db.PlanTasks.Get(planTaskId);
             if (planTask == null)
-                throw new ValidationException("Task in this plan does not exists", "");
+                throw new InternalServiceException("Task in this plan does not exists", "");
             var comments = planTask.Comments;
             if (comments == null)
-                throw new ValidationException("Task in this plan has no comments", "");
+                throw new InternalServiceException("Task in this plan has no comments", "");
             foreach (var c in comments)
             {
                 commentsList.Add(new CommentDTO(c.Id,
@@ -120,7 +120,7 @@ namespace LearnWithMentorBLL.Services
         {
             if (!db.Comments.ContainsId(id))
                 return false;
-            RemoveById(id);
+            db.Comments.RemoveById(id);
             db.Save();
             return true;
         }

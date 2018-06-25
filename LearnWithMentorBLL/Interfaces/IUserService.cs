@@ -3,7 +3,7 @@ using LearnWithMentorDTO;
 
 namespace LearnWithMentorBLL.Interfaces
 {
-    public interface IUserService
+    public interface IUserService : IDisposableService
     {
         UserDTO Get(int id);
         UserIdentityDTO GetByEmail(string email);

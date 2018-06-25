@@ -3,7 +3,7 @@ using LearnWithMentorDTO;
 
 namespace LearnWithMentorBLL.Interfaces
 {
-    public interface IRoleService
+    public interface IRoleService : IDisposableService
     {
         RoleDTO Get(int id);
         List<RoleDTO> GetAllRoles();

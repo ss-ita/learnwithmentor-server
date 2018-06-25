@@ -6,7 +6,7 @@ using LearnWithMentorDTO;
 
 namespace LearnWithMentorBLL.Interfaces
 {
-    public interface IGroupService
+    public interface IGroupService: IDisposableService
     {
         GroupDTO GetGroupById(int id);
         IEnumerable<GroupDTO> GetGroupsByMentor(int mentorId);

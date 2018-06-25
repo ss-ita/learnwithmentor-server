@@ -195,5 +195,14 @@ namespace LearnWithMentor.Controllers
             var message = "No roles in database.";
             return Request.CreateErrorResponse(HttpStatusCode.NotFound, message);
         }
+        /// <summary>
+        /// Releases memory
+        /// </summary>
+        protected override void Dispose(bool disposing)
+        {
+            userService.Dispose();
+            roleService.Dispose();
+            base.Dispose(disposing);
+        }
     }
 }

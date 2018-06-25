@@ -3,7 +3,7 @@ using LearnWithMentorDTO;
 
 namespace LearnWithMentorBLL.Interfaces
 {
-    public interface IPlanService
+    public interface IPlanService : IDisposableService
     {
         PlanDTO Get(int id);
         List<PlanDTO> GetAll();

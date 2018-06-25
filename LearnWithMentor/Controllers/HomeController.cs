@@ -7,6 +7,7 @@ namespace LearnWithMentor.Controllers
     [JwtAuthentication]
     public class HomeController : Controller
     {
+        [AllowAnonymous]
         public ActionResult Index()
         {
             ViewBag.Title = "Home Page";
