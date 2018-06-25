@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using LearnWithMentorDAL.Entities;
 using LearnWithMentorDTO;
 using LearnWithMentorBLL.Interfaces;
-using LearnWithMentorBLL.Infrastructure;
 
 namespace LearnWithMentorBLL.Services
 {
@@ -12,21 +10,22 @@ namespace LearnWithMentorBLL.Services
         public MessageService() : base()
         {
         }
+
         public IEnumerable<MessageDTO> GetMessages(int userTaskId)
         {
             var userTask = db.UserTasks.Get(userTaskId);
             if (userTask == null)
-                throw new InternalServiceException("Comment in this plan for this user does not exist", "");
+                return null;
             var messages = userTask.Messages;
             List<MessageDTO> messageDTOs = new List<MessageDTO>();
-            foreach (var m in messages)
+            foreach (var message in messages)
             {
-                messageDTOs.Add(new MessageDTO(m.Id,
-                                       m.User_Id,
-                                       m.UserTask_Id,
-                                       db.Users.ExtractFullName(m.User_Id),
-                                       m.Text,
-                                       m.Send_Time));
+                messageDTOs.Add(new MessageDTO(message.Id,
+                                       message.User_Id,
+                                       message.UserTask_Id,
+                                       db.Users.ExtractFullName(message.User_Id),
+                                       message.Text,
+                                       message.Send_Time));
             }
             return messageDTOs;
         }
@@ -43,7 +42,5 @@ namespace LearnWithMentorBLL.Services
             db.Save();
             return true;
         }
-
     }
-
 }

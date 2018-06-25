@@ -183,7 +183,7 @@ namespace LearnWithMentor.Controllers
                 if(!ModelState.IsValid)
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
                 newMessage.UserTaskId = userTaskId;
-                //logic for sender id if needed
+                // todo: logic for sender id if needed
                 bool success = messageService.SendMessage(newMessage);
                 if (success)
                 {
