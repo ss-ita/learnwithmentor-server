@@ -10,23 +10,30 @@ using LearnWithMentorBLL.Services;
 
 namespace LearnWithMentor.Controllers
 {
-
+    /// <summary>
+    /// Controller for system users.
+    /// </summary>
     [Authorize]
-
-
     public class UserController : ApiController
     {
         private readonly IUserService userService;
         private readonly IRoleService roleService;
+
+        /// <summary>
+        /// Creates an instance of UserController.
+        /// </summary>
         public UserController()
         {
             userService = new UserService();
             roleService = new RoleService();
         }
-        // GET: api/User
 
-        //  [Authorize(Roles = "Admin")]
+        /// <summary>
+        /// Returns all users of the system.
+        /// </summary>
         [JwtAuthentication]
+        [HttpGet]
+        [Route("api/user")]
         public HttpResponseMessage Get()
         {
             var users = userService.GetAllUsers();
@@ -35,10 +42,13 @@ namespace LearnWithMentor.Controllers
                 return Request.CreateResponse<IEnumerable<UserDTO>>(HttpStatusCode.OK, users);
             }
             var message = "No users in database.";
-            
-            return Request.CreateErrorResponse(HttpStatusCode.NotFound, message);
+            return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
         }
 
+        /// <summary>
+        /// Returns all users with specified role.
+        /// </summary>
+        /// <param name="role_id"> Id of the role. </param>
         [JwtAuthentication]
         [HttpGet]
         [Route("api/user/inrole/{role_id}")]
@@ -50,18 +60,22 @@ namespace LearnWithMentor.Controllers
                 if (role == null)
                 {
                     var roleErorMessage = "No roles with this id  in database.";
-                    return Request.CreateErrorResponse(HttpStatusCode.NotFound, roleErorMessage);
+                    return Request.CreateErrorResponse(HttpStatusCode.NoContent, roleErorMessage);
                 }
             }
             List<UserDTO> users = userService.GetUsersByRole(role_id);
             if (users.Count == 0)
             {
                 var usersErorMessage = "No users with this role_id  in database.";
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, usersErorMessage);
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, usersErorMessage);
             }
             return Request.CreateResponse<IEnumerable<UserDTO>>(HttpStatusCode.OK, users);
         }
 
+        /// <summary>
+        /// Returns all blocked/unblocked users.
+        /// </summary>
+        /// <param name="state"> Specifies value of Blocked property of user. </param>
         [JwtAuthentication]
         [HttpGet]
         [Route("api/user/instate/{state}")]
@@ -71,16 +85,18 @@ namespace LearnWithMentor.Controllers
             if (users.Count == 0)
             {
                 var usersErorMessage = "No users with this state in database.";
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, usersErorMessage);
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, usersErorMessage);
             }
             return Request.CreateResponse<IEnumerable<UserDTO>>(HttpStatusCode.OK, users);
         }
 
-        // GET: api/User/5
-        //  [Authorize (Roles="Student")]
-
+        /// <summary>
+        /// Returns specific user by id.
+        /// </summary>
+        /// <param name="id"> Id of the user. </param>
         [JwtAuthentication]
-
+        [HttpGet]
+        [Route("api/user/{id}")]
         public HttpResponseMessage Get(int id)
         {
             UserDTO user = userService.Get(id);
@@ -89,12 +105,16 @@ namespace LearnWithMentor.Controllers
                 return Request.CreateResponse(HttpStatusCode.OK, user);
             }
             var message = "User does not exist in database.";
-            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
+            return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
         }
 
-        // POST: api/User
-        
+        /// <summary>
+        /// Creates new user.
+        /// </summary>
+        /// <param name="value"> New user. </param>
         [AllowAnonymous]
+        [HttpPost]
+        [Route("api/user")]
         public HttpResponseMessage Post([FromBody]UserRegistrationDTO value)
         {
             if (!ModelState.IsValid)
@@ -118,8 +138,14 @@ namespace LearnWithMentor.Controllers
             return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
         }
 
-        // PUT: api/User/5
+        /// <summary>
+        /// Updates user by id.
+        /// </summary>
+        /// <param name="id"> Id of the user. </param>
+        /// <param name="value"> New values. </param>
         [JwtAuthentication]
+        [HttpPut]
+        [Route("api/user/{id}")]
         public HttpResponseMessage Put(int id, [FromBody]UserDTO value)
         {
             try
@@ -139,8 +165,13 @@ namespace LearnWithMentor.Controllers
             return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
         }
 
-        // DELETE: api/user/5
+        /// <summary>
+        /// Blocks user by Id.
+        /// </summary>
+        /// <param name="id"> Id of the user. </param>
         [JwtAuthentication]
+        [HttpDelete]
+        [Route("api/user/{id}")]
         public HttpResponseMessage Delete(int id)
         {
             try
@@ -157,12 +188,17 @@ namespace LearnWithMentor.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, exception);
             }
             var message = $"Not existing user with id: {id}.";
-            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
+            return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
         }
 
+        /// <summary>
+        /// Search for user with match in first or lastname with role criteria.
+        /// </summary>
+        /// <param name="q"> String to match. </param>
+        /// <param name="role"> Role criteria. </param>
+        [JwtAuthentication]
         [HttpGet]
         [Route("api/user/search")]
-        [JwtAuthentication]
         public HttpResponseMessage Search(string q, string role)
         {
             if (q == null)
@@ -181,11 +217,15 @@ namespace LearnWithMentor.Controllers
                 return Request.CreateResponse<IEnumerable<UserDTO>>(HttpStatusCode.OK, users);
             }
             var message = "No users found.";
-            return Request.CreateErrorResponse(HttpStatusCode.NotFound, message);
+            return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
         }
 
-        [Route("api/user/roles")]
+        /// <summary>
+        /// Returns all roles of the users.
+        /// </summary>
         [JwtAuthentication]
+        [HttpGet]
+        [Route("api/user/roles")]
         public HttpResponseMessage GetRoles()
         {
             var roles = roleService.GetAllRoles();
@@ -194,8 +234,9 @@ namespace LearnWithMentor.Controllers
                 return Request.CreateResponse<IEnumerable<RoleDTO>>(HttpStatusCode.OK, roles);
             }
             var message = "No roles in database.";
-            return Request.CreateErrorResponse(HttpStatusCode.NotFound, message);
+            return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
         }
+
         /// <summary>
         /// Releases memory
         /// </summary>
