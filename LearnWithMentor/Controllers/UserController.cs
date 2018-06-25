@@ -38,6 +38,7 @@ namespace LearnWithMentor.Controllers
             
             return Request.CreateErrorResponse(HttpStatusCode.NotFound, message);
         }
+
         [JwtAuthentication]
         [HttpGet]
         [Route("api/user/inrole/{role_id}")]
@@ -61,7 +62,7 @@ namespace LearnWithMentor.Controllers
             return Request.CreateResponse<IEnumerable<UserDTO>>(HttpStatusCode.OK, users);
         }
 
-
+        [JwtAuthentication]
         [HttpGet]
         [Route("api/user/instate/{state}")]
         public HttpResponseMessage GetUsersbyState(bool state)
@@ -69,7 +70,7 @@ namespace LearnWithMentor.Controllers
             List<UserDTO> users = userService.GetUsersByState(state);
             if (users.Count == 0)
             {
-                var usersErorMessage = "No users with this role_id  in database.";
+                var usersErorMessage = "No users with this state in database.";
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, usersErorMessage);
             }
             return Request.CreateResponse<IEnumerable<UserDTO>>(HttpStatusCode.OK, users);
