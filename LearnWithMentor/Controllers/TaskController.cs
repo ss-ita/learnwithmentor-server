@@ -28,7 +28,7 @@ namespace LearnWithMentor.Controllers
         }
 
         /// <summary>
-        /// Returns a list of all tasks.
+        /// Returns a list of all tasks in database.
         /// </summary>
         [HttpGet]
         [Route("api/task")]
@@ -70,11 +70,11 @@ namespace LearnWithMentor.Controllers
         }
 
         /// <summary>
-        /// Returns tasks with priority and section for defined by PlanTask Id.
+        /// Returns tasks with priority and section for by PlanTask Id.
         /// </summary>
         /// <param name="planTaskId">Id of the planTask.</param>
         [HttpGet]
-        [Route("api/task")]
+        [Route("api/task/plantask/{planTaskId}")] 
         public HttpResponseMessage GetTaskForPlan(int planTaskId)
         {
             try
@@ -91,12 +91,12 @@ namespace LearnWithMentor.Controllers
         }
 
         /// <summary>
-        /// Returns UserTasksDTO for task in plan for user.
+        /// Returns UserTask for task in plan for user.
         /// </summary>
         /// <param name="planTaskId">Id of the planTask.</param>
         /// <param name="userId">Id of the user.</param>
         [HttpGet]
-        [Route("api/task/usertask")]
+        [Route("api/task/usertask")] 
         public HttpResponseMessage GetUserTask(int planTaskId, int userId)
         {
             try
@@ -112,10 +112,10 @@ namespace LearnWithMentor.Controllers
             }
         }
 
-        /// <summary>Returns messages for UserTask by id./// </summary>
+        /// <summary>Returns messages for UserTask by its id.</summary>
         /// <param name="userTaskId">Id of the usertask.</param>
         [HttpGet]
-        [Route("api/task/userTask/{userTaskId}/messages")]
+        [Route("api/task/userTask/{userTaskId}/messages")] 
         public HttpResponseMessage GetUserTaskMessages(int userTaskId)
         {
             try
@@ -132,11 +132,11 @@ namespace LearnWithMentor.Controllers
         }
 
         /// <summary> Creates message for UserTask. </summary>
-        /// <param name="userTaskId">ID of the usertask.</param>
+        /// <param name="userTaskId">Id of the usertask.</param>
         /// <param name="newMessage">New message to be created.</param>
         /// <returns></returns>
         [HttpPost]
-        [Route("api/task/userTask/{userTaskId}/messages")]
+        [Route("api/task/userTask/{userTaskId}/messages")] 
         public HttpResponseMessage PostUserTaskMessage(int userTaskId, [FromBody]MessageDTO newMessage)
         {
             try
@@ -183,11 +183,11 @@ namespace LearnWithMentor.Controllers
             }
         }
         
-        /// <summary>Changes UserTask status by usertask id./// </summary>
+        /// <summary>Changes UserTask status by usertask id.</summary>
         /// <param name="userTaskId">Id of the userTask status to be changed.</param>
         /// /// <param name="newStatus">New userTask.</param>
         [HttpPut]
-        [Route("api/task/usertask")]
+        [Route("api/task/usertask/status")] 
         public HttpResponseMessage PutNewUserTaskStatus(int userTaskId, string newStatus)
         {
             try
@@ -197,7 +197,7 @@ namespace LearnWithMentor.Controllers
                 bool success = taskService.UpdateUserTaskStatus(userTaskId, newStatus);
                 if (success)
                 {
-                    return Request.CreateResponse(HttpStatusCode.OK, "Succesfully updated user task status.");
+                    return Request.CreateResponse(HttpStatusCode.OK, "User task status succesfully updated.");
                 }
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect new starus or usertask does not exist.");
             }
@@ -208,11 +208,11 @@ namespace LearnWithMentor.Controllers
         }
 
         /// <summary> Changes UserTask result by usertask id. </summary>
-        /// <param name="userTaskId">ID of the userTask status to be changed</param>
+        /// <param name="userTaskId">Id of the userTask status to be changed</param>
         /// <param name="newResult">>New userTask result</param>
         /// <returns></returns>
         [HttpPut]
-        [Route("api/task/usertask")]
+        [Route("api/task/usertask/result")] 
         public HttpResponseMessage PutNewUserTaskResult(int userTaskId, string newResult)
         {
             try
@@ -222,7 +222,7 @@ namespace LearnWithMentor.Controllers
                 bool success = taskService.UpdateUserTaskResult(userTaskId, newResult);
                 if (success)
                 {
-                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully updated user task result.");
+                    return Request.CreateResponse(HttpStatusCode.OK, "User task result succesfully updated.");
                 }
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax or usertask does not exist.");
             }
@@ -232,11 +232,11 @@ namespace LearnWithMentor.Controllers
             }
         }
 
-        /// <summary>Returns tasks states for array of id./// </summary>
+        /// <summary>Returns tasks states for array of id.</summary>
         /// <param name="user_id">Id of the user.</param>
         /// <param name="task_ids">Array of tasks id.</param>
         [HttpGet]
-        [Route("api/tasks/state")] 
+        [Route("api/task/state")] 
         public HttpResponseMessage GetAllTasksState(int user_id, int[] task_ids)
         {
             try
@@ -254,7 +254,7 @@ namespace LearnWithMentor.Controllers
             }
         }
 
-        /// <summary>Returns tasks which name contains special string key.</summary>
+        /// <summary>Returns tasks which name contains string key.</summary>
         /// <param name="key">Key for search.</param>
         [HttpGet]
         [Route("api/task/search")]
@@ -277,12 +277,12 @@ namespace LearnWithMentor.Controllers
         }
 
         /// <summary>
-        /// Returns tasks in plan which names contain special string key.
+        /// Returns tasks in plan which names contain string key.
         /// </summary>
         /// <param name="key">Key for search.</param>
-        /// <param name="planId">ID of the plan.</param>
+        /// <param name="planId">Id of the plan.</param>
         [HttpGet]
-        [Route("api/task/SearchInPlan")]
+        [Route("api/task/searchinplan")]
         public HttpResponseMessage SearchInPlan(string key, int planId)
         {
             try
