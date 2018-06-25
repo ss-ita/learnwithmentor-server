@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace LearnWithMentorDTO
 {
@@ -26,7 +27,7 @@ namespace LearnWithMentorDTO
             CreateDate = createdate;
             ModDate = moddate;
             Modid = modid;
-            Creatorid = creatorid;
+            CreatorId = creatorid;
             CreatorFirstName = creatorfirstname;
             CreatorLastName = creatorlastname;
             ModFirstName= modfirstname;
@@ -34,10 +35,17 @@ namespace LearnWithMentorDTO
 
         }
         public int Id { get; set; }
+        [Required]
+        [StringLength(ValidationRules.MAX_PLAN_NAME_LENGTH,
+            ErrorMessage = "Plan name too long")]
         public string Name { get; set; }
+        [Required]
+        [StringLength(ValidationRules.MAX_PLAN_DESCRIPTION_LENGTH,
+            ErrorMessage = "Plan description too long")]
         public string Description { get; set; }
+        [Required]
         public bool Published { get; set; }
-        public int Creatorid { get; set; }
+        public int CreatorId { get; set; }
         public string CreatorFirstName { get; set; }
         public string CreatorLastName { get; set; }
         public int? Modid { get; set; }
