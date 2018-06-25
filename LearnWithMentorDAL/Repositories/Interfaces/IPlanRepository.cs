@@ -9,5 +9,6 @@ namespace LearnWithMentorDAL.Repositories
         IEnumerable<Plan> Search(string[] str);
         IEnumerable<Plan> GetPlansForGroup(int groupId);
         bool ContainsId(int id);
+        IEnumerable<Plan> GetPlansNotUsedInGroup(int planId);
     }
 }

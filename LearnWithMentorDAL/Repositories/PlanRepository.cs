@@ -40,5 +40,9 @@ namespace LearnWithMentorDAL.Repositories
         {
             return context.Plans.Any(p => p.Id == id);
         }
-    }
+        public IEnumerable<Plan> GetPlansNotUsedInGroup(int planId)
+        {
+            return context.Groups.FirstOrDefault(p => p.Id != planId)?.Plans;
+        }
+}
 }
