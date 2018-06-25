@@ -28,6 +28,8 @@ namespace LearnWithMentorBLL.Services
             var plantask = db.PlanTasks.Get(planTaskId);
             if (plantask == null)
                 return false;
+            if (db.Users.Get(comment.CreatorId) == null)
+                return false;
             var newComment = new Comment()
             {
                 Text = comment.Text,
@@ -51,6 +53,8 @@ namespace LearnWithMentorBLL.Services
             if (text == null || text.Equals(string.Empty))
                 return false;
             var comment = db.Comments.Get(commentId);
+            if (comment == null)
+                return false;
             comment.Text = text;
             db.Comments.Update(comment);
             db.Save();
@@ -61,9 +65,11 @@ namespace LearnWithMentorBLL.Services
         {
             if (commentDTO == null)
                 return false;
-            return UpdateCommentIdText(commentId,commentDTO.Text);
+            if (!db.Comments.ContainsId(commentId))
+                return false;
+            return UpdateCommentIdText(commentId, commentDTO.Text);
         }
-        
+
         public IEnumerable<CommentDTO> GetCommentsForPlanTask(int taskId, int planId)
         {
             var planTaskId = db.PlanTasks.GetIdByTaskAndPlan(taskId, planId);

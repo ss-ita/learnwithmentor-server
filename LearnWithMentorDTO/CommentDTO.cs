@@ -20,6 +20,7 @@ namespace LearnWithMentorDTO
         [StringLength(ValidationRules.MAX_COMMENT_TEXT_LENGTH,
             ErrorMessage = "Comment text too long")]
         public string Text { get; set; }
+        [Required]
         public int CreatorId { get; set; }
         public string CreatorFullName { get; set; }
         public DateTime? CreateDate { get; set; }
