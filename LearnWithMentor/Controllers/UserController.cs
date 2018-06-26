@@ -20,7 +20,7 @@ namespace LearnWithMentor.Controllers
     {
         private readonly IUserService userService;
         private readonly IRoleService roleService;
-        private static ITraceWriter _tracer;
+        private readonly ITraceWriter _tracer;
 
         /// <summary>
         /// Creates an instance of UserController.

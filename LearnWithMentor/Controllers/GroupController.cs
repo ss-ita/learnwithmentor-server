@@ -9,6 +9,8 @@ using LearnWithMentorDTO;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorBLL.Infrastructure;
 using LearnWithMentorBLL.Services;
+using System.Web.Http.Tracing;
+using LearnWithMentor.Log;
 
 namespace LearnWithMentor.Controllers
 {
@@ -17,10 +19,12 @@ namespace LearnWithMentor.Controllers
     public class GroupController : ApiController
     {
         private readonly IGroupService groupService;
+        private readonly ITraceWriter _tracer;
 
         public GroupController()
         {
             groupService = new GroupService();
+            _tracer = new NLogger();
         }
         // GET api/<controller>
         /// <summary>
@@ -98,12 +102,16 @@ namespace LearnWithMentor.Controllers
                 bool success = groupService.AddGroup(group);
                 if (success)
                 {
+                    var log = $"Succesfully created group {group.Name} with id = {group.ID} with mentor id = {group.MentorID}";
+                    _tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
                     return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully created group: {group.Name}.");
                 }
+                _tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on creating group");
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Creation error.");
             }
             catch (Exception exception)
             {
+                _tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, exception);
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, exception);
             }
         }
@@ -122,12 +130,16 @@ namespace LearnWithMentor.Controllers
                 bool success = groupService.AddUsersToGroup(userId, id);
                 if (success)
                 {
+                    var log = $"Succesfully add user with id {userId} to group with id = {id}";
+                    _tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
                     return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully added users to group ({id}).");
                 }
+                _tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on adding user to group");
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax or user or group does not exist.");
             }
             catch (Exception exception)
             {
+                _tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, exception);
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, exception);
             }
         }
@@ -146,12 +158,16 @@ namespace LearnWithMentor.Controllers
                 bool success = groupService.AddPlansToGroup(planId, id);
                 if (success)
                 {
+                    var log = $"Succesfully add plan with id = {planId} to group with id = {id}";
+                    _tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
                     return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully added plans to group ({id}).");
                 }
+                _tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on adding plan to group");
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax or plan or group does not exist.");
             }
             catch (Exception exception)
             {
+                _tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, exception);
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, exception);
             }
         }

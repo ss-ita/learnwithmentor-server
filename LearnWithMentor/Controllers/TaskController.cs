@@ -23,7 +23,7 @@ namespace LearnWithMentor.Controllers
     {
         private readonly ITaskService taskService;
         private readonly IMessageService messageService;
-        private static ITraceWriter _tracer;
+        private readonly ITraceWriter _tracer;
 
         public TaskController()
         {
