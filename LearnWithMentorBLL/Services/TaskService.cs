@@ -181,12 +181,19 @@ namespace LearnWithMentorBLL.Services
             var item = db.Tasks.Get(taskId);
             if (item != null)
             {
-                item.Id = taskDTO.Id;
-                item.Name = taskDTO.Name;
-                item.Description = taskDTO.Description;
+                if (!string.IsNullOrEmpty(taskDTO.Name))
+                {
+                    item.Name = taskDTO.Name;
+                }
+                if (!string.IsNullOrEmpty(taskDTO.Description))
+                {
+                    item.Description = taskDTO.Description;
+                }
                 item.Private = taskDTO.Private;
-                item.Create_Id = taskDTO.CreatorId;
-                item.Mod_Id = taskDTO.ModifierId;
+                if (taskDTO.ModifierId != null)
+                {
+                    item.Mod_Id = taskDTO.ModifierId;
+                }
                 db.Tasks.Update(item);
                 db.Save();
                 return true;

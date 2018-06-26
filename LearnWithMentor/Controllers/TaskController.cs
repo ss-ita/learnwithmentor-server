@@ -370,7 +370,7 @@ namespace LearnWithMentor.Controllers
         /// <param name="taskId">Task Id for update.</param>
         /// <param name="task">Modified task object for update.</param>
         [HttpPut]
-        [Route("api/task/{id}")]
+        [Route("api/task/{taskId}")]
         public HttpResponseMessage Put(int taskId, [FromBody]TaskDTO task)
         {
             try
