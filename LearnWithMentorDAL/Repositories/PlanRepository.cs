@@ -19,17 +19,17 @@ namespace LearnWithMentorDAL.Repositories
             return context.Groups.FirstOrDefault(g => g.Id == groupId)?.Plans;
         }
 
-        public IEnumerable<Plan> Search(string[] str)
+        public IEnumerable<Plan> Search(string[] searchString)
         {
             var result = new List<Plan>();
-            foreach (var s in str)
+            foreach (var word in searchString)
             {
-                IQueryable<Plan> found = context.Plans.Where(p => p.Name.Contains(s));
-                foreach (var f in found)
+                IQueryable<Plan> found = context.Plans.Where(p => p.Name.Contains(word));
+                foreach (var match in found)
                 {
-                    if (!result.Contains(f))
+                    if (!result.Contains(match))
                     {
-                        result.Add(f);
+                        result.Add(match);
                     }
                 }
             }
@@ -40,9 +40,10 @@ namespace LearnWithMentorDAL.Repositories
         {
             return context.Plans.Any(p => p.Id == id);
         }
+
         public IEnumerable<Plan> GetPlansNotUsedInGroup(int planId)
         {
-            return context.Groups.FirstOrDefault(p => p.Id != planId)?.Plans;
+            return context.Groups.FirstOrDefault(g => !g.Plans.Select(p => p.Id).Contains(planId))?.Plans;
         }
-}
+    }
 }

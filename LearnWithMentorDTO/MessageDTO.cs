@@ -25,8 +25,8 @@ namespace LearnWithMentorDTO
         public int UserTaskId { get; set; }
         public string SenderName { get; set; }
         [Required]
-        [StringLength(ValidationRules.MAX_USERTASK_RESULT_LENGTH,
-            ErrorMessage = "Result too long")]
+        [StringLength(ValidationRules.MAX_MESSAGE_LENGTH,
+            ErrorMessage = "Message is too long")]
         public string Text { get; set; }
         public DateTime? SendTime { get; set; }
     }

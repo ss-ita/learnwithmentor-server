@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using LearnWithMentorBLL.Infrastructure;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDTO;
 using LearnWithMentorDAL.Entities;
@@ -79,7 +77,6 @@ namespace LearnWithMentorBLL.Services
                                          db.PlanTasks.GetTaskPriorityInPlan(task.Id, planId),
                                          db.PlanTasks.GetTaskSectionIdInPlan(task.Id, planId),
                                          db.PlanTasks.GetIdByTaskAndPlan(task.Id, planId));
-
                 dtosList.Add(toAdd);
             }
             return dtosList;
@@ -114,22 +111,22 @@ namespace LearnWithMentorBLL.Services
         }
         public bool Add(PlanDTO dto)
         {
-            if (string.IsNullOrEmpty(dto.Name) || string.IsNullOrEmpty(dto.Description) || !ContainsId(dto.Creatorid))
+            if (!ContainsId(dto.CreatorId))
                 return false;
             var plan = new Plan
             {
                 Name = dto.Name,
                 Description = dto.Description,
-                Create_Id = dto.Creatorid,
+                Create_Id = dto.CreatorId,
                 Published = dto.Published
             };
             db.Plans.Add(plan);
             db.Save();
             return true;
         }
-        public List<PlanDTO> Search(string[] str)
+        public List<PlanDTO> Search(string[] searchString)
         {
-            var result = db.Plans.Search(str);
+            var result = db.Plans.Search(searchString);
             if (result == null)
                 return null;
             List<PlanDTO> dtosList = new List<PlanDTO>();
@@ -159,22 +156,22 @@ namespace LearnWithMentorBLL.Services
         {
             var group = db.Groups.Get(groupId);
             if (group == null)
-                throw new InternalServiceException("Group not found", "");
+                return null;
             var plansNotUsedInGroup = db.Plans.GetPlansNotUsedInGroup(groupId);
             if (plansNotUsedInGroup == null)
-                throw new InternalServiceException("Plan not found", "");
+                return null;
             return plansNotUsedInGroup;
         }
 
-        public IEnumerable<PlanDTO> SearchPlansNotUsedInGroup(string[] str, int groupId)
+        public IEnumerable<PlanDTO> SearchPlansNotUsedInGroup(string[] searchString, int groupId)
         {
             var plansNotInGroup = GetPlansNotUsedInGroup(groupId);
             List<PlanDTO> plansNotInGroupdto = new List<PlanDTO>();
-            foreach (var s in str)
+            foreach (var word in searchString)
             {
                 foreach (var plan in plansNotInGroup)
                 {
-                    if (plan.Name.Contains(s))
+                    if (plan.Name.Contains(word))
                     {
                         PlanDTO pdDto = new PlanDTO
                         (plan.Id,
