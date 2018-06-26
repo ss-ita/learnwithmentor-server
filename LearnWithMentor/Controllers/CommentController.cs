@@ -9,6 +9,8 @@ using LearnWithMentorDTO;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorBLL.Infrastructure;
 using LearnWithMentorBLL.Services;
+using System.Web.Http.Tracing;
+using LearnWithMentor.Log;
 
 namespace LearnWithMentor.Controllers
 {
@@ -23,6 +25,7 @@ namespace LearnWithMentor.Controllers
         /// Services for work with different DB parts
         /// </summary>
         private readonly ICommentService commentService;
+        private readonly ITraceWriter _tracer;
 
         /// <summary>
         /// Services initiation
@@ -30,6 +33,7 @@ namespace LearnWithMentor.Controllers
         public CommentController()
         {
             commentService = new CommentService();
+            _tracer = new NLogger();
         }
 
         /// <summary>Returns comment by id.</summary>
@@ -45,9 +49,10 @@ namespace LearnWithMentor.Controllers
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, "Comment with this Id does not exist in database.");
                 return Request.CreateResponse(HttpStatusCode.OK, comment);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message);
+                _tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, exception);
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Internal server error");
             }
         }
 
@@ -64,9 +69,10 @@ namespace LearnWithMentor.Controllers
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, "There are no comments for this task in that plan");
                 return Request.CreateResponse(HttpStatusCode.OK, comments);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message);
+                _tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, exception);
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Internal server error");
             }
         }
 
@@ -84,12 +90,18 @@ namespace LearnWithMentor.Controllers
             try
             {
                 if (commentService.AddCommentToPlanTask(planTaskId, comment))
+                {
+                    var log = $"Succesfully created comment with id = {comment.Id} by user id = {comment.CreatorId}";
+                    _tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
                     return Request.CreateResponse(HttpStatusCode.OK, "Comment succesfully created");
+                }
+                _tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on creating comment");
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, "Not possibly to add comment: task in this plan does not exist");
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message);
+                _tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, exception);
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Internal creation error");
             }
         }
 
@@ -103,12 +115,18 @@ namespace LearnWithMentor.Controllers
             try
             {
                 if (commentService.UpdateComment(commentId, comment))
-                    return Request.CreateResponse(HttpStatusCode.OK, ("Сomment succesfully updated."));
+                {
+                    var log = $"Succesfully updated comment with id = {commentId}";
+                    _tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
+                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully updated comment id: {commentId}.");
+                }
+                _tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on updating comment");
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, ("Not possibly to update comment: comment does not exist."));
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message);
+                _tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, exception);
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Internal updation error");
             }
         }
 
@@ -121,12 +139,18 @@ namespace LearnWithMentor.Controllers
             try
             {
                 if (commentService.RemoveById(commentId))
-                    return Request.CreateResponse(HttpStatusCode.OK, ("Comment succesfully deleted."));
+                {
+                    var log = $"Succesfully deleted comment with id = {commentId}";
+                    _tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
+                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully deleted comment id: {commentId}.");
+                }
+                _tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on deleting comment");
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, ("Not possibly to delete comment: comment does not exist."));
             }
-            catch (Exception ex)
+            catch(Exception exception)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message);
+                _tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, exception);
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Internal deletion error.");
             }
         }
 
