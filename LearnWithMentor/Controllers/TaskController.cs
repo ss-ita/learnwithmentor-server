@@ -84,7 +84,7 @@ namespace LearnWithMentor.Controllers
                     return Request.CreateResponse(HttpStatusCode.OK, task);
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, "This task does not exist in database.");
             }
-            catch (InternalServiceException ex)
+            catch (Exception ex)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
             }
@@ -106,7 +106,7 @@ namespace LearnWithMentor.Controllers
                     return Request.CreateResponse(HttpStatusCode.OK, userTask);
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, "Task for this user does not exist in database.");
             }
-            catch (InternalServiceException ex)
+            catch (Exception ex)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
             }
@@ -125,7 +125,7 @@ namespace LearnWithMentor.Controllers
                     return Request.CreateResponse(HttpStatusCode.OK, messageList);
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, "Messages for this user does not exist in database.");
             }
-            catch (InternalServiceException ex)
+            catch (Exception ex)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
             }
