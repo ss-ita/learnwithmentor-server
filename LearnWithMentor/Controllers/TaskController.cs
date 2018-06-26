@@ -52,7 +52,7 @@ namespace LearnWithMentor.Controllers
             catch (Exception ex)
             {
                 _tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, ex);
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message+"Internal server error");
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
             }
 }
 
@@ -74,7 +74,7 @@ namespace LearnWithMentor.Controllers
             catch (Exception ex)
             {
                 _tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, ex);
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Internal server error");
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
             }
         }
 
@@ -96,7 +96,7 @@ namespace LearnWithMentor.Controllers
             catch (InternalServiceException ex)
             {
                 _tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, ex);
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest,ex.Message);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
             }
         }
 
@@ -117,7 +117,7 @@ namespace LearnWithMentor.Controllers
             catch (InternalServiceException ex)
             {
                 _tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, ex);
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
             }
         }
 
@@ -139,7 +139,7 @@ namespace LearnWithMentor.Controllers
             catch (InternalServiceException ex)
             {
                 _tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, ex);
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
             }
         }
 
@@ -233,7 +233,7 @@ namespace LearnWithMentor.Controllers
                     return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully created task for user.");
                 }
                 _tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on user task creating");
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Creation error.");
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, "There is no user or task in database");
             }
             catch (Exception exception)
             {
@@ -406,7 +406,7 @@ namespace LearnWithMentor.Controllers
                     return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully updated task id: {taskId}.");
                 }
                 _tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on updating task");
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax or task does not exist.");
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, "Task doesn't exist.");
             }
             catch (Exception exception)
             {
