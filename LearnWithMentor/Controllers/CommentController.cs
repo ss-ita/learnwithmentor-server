@@ -46,13 +46,8 @@ namespace LearnWithMentor.Controllers
             {
                 CommentDTO comment = commentService.GetComment(id);
                 if (comment == null)
-                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Comment with this ID does not exist in database.");
+                    return Request.CreateErrorResponse(HttpStatusCode.NoContent, "Comment with this Id does not exist in database.");
                 return Request.CreateResponse(HttpStatusCode.OK, comment);
-            }
-            catch (InternalServiceException exception)
-            {
-                _tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, exception);
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, exception.Message);
             }
             catch (Exception exception)
             {
@@ -70,13 +65,11 @@ namespace LearnWithMentor.Controllers
             try
             {
                 var comments = commentService.GetCommentsForPlanTask(planTaskId);
+                if (comments == null)
+                    return Request.CreateErrorResponse(HttpStatusCode.NoContent, "There are no comments for this task in that plan");
                 return Request.CreateResponse(HttpStatusCode.OK, comments);
             }
-            catch (InternalServiceException exception)
-            {
-                _tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, exception);
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, exception.Message);
-            }
+
             catch (Exception exception)
             {
                 _tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, exception);
@@ -91,6 +84,10 @@ namespace LearnWithMentor.Controllers
         [Route("api/comment")]
         public HttpResponseMessage Post(int planTaskId, CommentDTO comment)
         {
+            if (!ModelState.IsValid)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+            }
             try
             {
                 if (commentService.AddCommentToPlanTask(planTaskId, comment))
@@ -105,7 +102,7 @@ namespace LearnWithMentor.Controllers
             catch (Exception exception)
             {
                 _tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, exception);
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Internal creation error");
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, "Not possibly to add comment: task in this plan does not exist");
             }
         }
 
