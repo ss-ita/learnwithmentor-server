@@ -1,31 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using LearnWithMentor.Filters;
 using LearnWithMentorDTO;
 using LearnWithMentorBLL.Interfaces;
-using LearnWithMentorBLL.Infrastructure;
 using LearnWithMentorBLL.Services;
 using System.Web.Http.Tracing;
 using LearnWithMentor.Log;
+using System.Data.Entity.Core;
 
 namespace LearnWithMentor.Controllers
 {
+    /// <summary>
+    /// Controller for groups.
+    /// </summary>
     [Authorize]
     [JwtAuthentication]
     public class GroupController : ApiController
     {
         private readonly IGroupService groupService;
-        private readonly ITraceWriter _tracer;
+        private readonly ITraceWriter tracer;
 
+        /// <summary>
+        /// Creates new instance of controller.
+        /// </summary>
         public GroupController()
         {
             groupService = new GroupService();
-            _tracer = new NLogger();
+            tracer = new LWMLogger();
         }
+
         // GET api/<controller>
         /// <summary>
         /// Returns group by mentor Id "api/group/mentor/{id}"
@@ -41,6 +46,7 @@ namespace LearnWithMentor.Controllers
             else
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"No groups for the mentor in database. (mentorId = {id})");
         }
+
         /// <summary>
         /// Returns group by Id "api/group/{id}"
         /// </summary>
@@ -56,6 +62,7 @@ namespace LearnWithMentor.Controllers
             else
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"There isn't group with id = {id}");
         }
+
         /// <summary>
         /// Returns plans for specific group by group Id "api/group/{id}/plans"
         /// </summary>
@@ -71,6 +78,7 @@ namespace LearnWithMentor.Controllers
             else
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"There isn't plans for the group id = {id}");
         }
+
         /// <summary>
         /// Returns users that belong to group by group Id "api/group/{id}/users"
         /// </summary>
@@ -86,6 +94,7 @@ namespace LearnWithMentor.Controllers
             else
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"There isn't users in the group id = {id}");
         }
+
         /// <summary>
         /// Create new group
         /// </summary>
@@ -103,18 +112,19 @@ namespace LearnWithMentor.Controllers
                 if (success)
                 {
                     var log = $"Succesfully created group {group.Name} with id = {group.ID} with mentor id = {group.MentorID}";
-                    _tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
+                    tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
                     return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully created group: {group.Name}.");
                 }
-                _tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on creating group");
+                tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on creating group");
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Creation error.");
             }
-            catch (Exception exception)
+            catch (EntityException e)
             {
-                _tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, exception);
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, exception);
+                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
         }
+
         /// <summary>
         /// Add users array to group by group id. You have to pass users Id as int[] in body "api/group/{id}/user"
         /// </summary>
@@ -131,18 +141,19 @@ namespace LearnWithMentor.Controllers
                 if (success)
                 {
                     var log = $"Succesfully add user with id {userId} to group with id = {id}";
-                    _tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
+                    tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
                     return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully added users to group ({id}).");
                 }
-                _tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on adding user to group");
+                tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on adding user to group");
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax or user or group does not exist.");
             }
-            catch (Exception exception)
+            catch (EntityException e)
             {
-                _tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, exception);
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, exception);
+                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
         }
+
         /// <summary>
         /// Add plans array to group by groupId. You have to pass plans Id as int[] in body "api/group/{id}/plan"
         /// </summary>
@@ -159,16 +170,16 @@ namespace LearnWithMentor.Controllers
                 if (success)
                 {
                     var log = $"Succesfully add plan with id = {planId} to group with id = {id}";
-                    _tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
+                    tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
                     return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully added plans to group ({id}).");
                 }
-                _tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on adding plan to group");
+                tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on adding plan to group");
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax or plan or group does not exist.");
             }
-            catch (Exception exception)
+            catch (EntityException e)
             {
-                _tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, exception);
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, exception);
+                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
         }
 

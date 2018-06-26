@@ -9,6 +9,7 @@ using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorBLL.Services;
 using System.Web.Http.Tracing;
 using LearnWithMentor.Log;
+using System.Data.Entity.Core;
 
 namespace LearnWithMentor.Controllers
 {
@@ -21,7 +22,7 @@ namespace LearnWithMentor.Controllers
     {
         private readonly IPlanService planService;
         private readonly ITaskService taskService;
-        private readonly ITraceWriter _tracer;
+        private readonly ITraceWriter tracer;
 
         /// <summary>
         /// Creates new instance of controller.
@@ -30,7 +31,7 @@ namespace LearnWithMentor.Controllers
         {
             planService = new PlanService();
             taskService = new TaskService();
-            _tracer = new NLogger();
+            tracer = new LWMLogger();
         }
 
         /// <summary>
@@ -97,17 +98,17 @@ namespace LearnWithMentor.Controllers
                 if (success)
                 {
                     var log = $"Succesfully created plan {value.Name} with id = {value.Id} by user with id = {value.CreatorId}";
-                    _tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
+                    tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
                     var okMessage = $"Succesfully created plan: {value.Name}";
                     return Request.CreateResponse(HttpStatusCode.OK, okMessage);
                 }
             }
-            catch (Exception e)
+            catch (EntityException e)
             {
-                _tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
+                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
-            _tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on creating plan");
+            tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on creating plan");
             var message = "Incorrect request syntax.";
             return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
         }
@@ -127,17 +128,17 @@ namespace LearnWithMentor.Controllers
                 if (success)
                 {
                     var log = $"Succesfully updated plan {value.Name} with id = {value.Id} by user with id = {value.Modid}";
-                    _tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
+                    tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
                     var okMessage = $"Succesfully updated plan.";
                     return Request.CreateResponse(HttpStatusCode.OK, okMessage);
                 }
             }
-            catch (Exception e)
+            catch (EntityException e)
             {
-                _tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
+                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
-            _tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on updating plan");
+            tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on updating plan");
             var message = "Incorrect request syntax or plan does not exist.";
             return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
         }
