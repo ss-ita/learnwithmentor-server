@@ -9,6 +9,7 @@ using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorBLL.Services;
 using System.Web.Http.Tracing;
 using LearnWithMentor.Log;
+using System.Data.Entity.Core;
 
 namespace LearnWithMentor.Controllers
 {
@@ -135,10 +136,10 @@ namespace LearnWithMentor.Controllers
                     return Request.CreateResponse(HttpStatusCode.OK, okMessage);
                 }
             }
-            catch (Exception exception)
+            catch (EntityException e)
             {
-                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, exception);
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, exception);
+                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
             var message = "Incorrect request syntax.";
             tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, message);
@@ -165,10 +166,10 @@ namespace LearnWithMentor.Controllers
                     return Request.CreateResponse(HttpStatusCode.OK, okMessage);
                 }
             }
-            catch (Exception exception)
+            catch (EntityException e)
             {
-                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, exception);
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, exception);
+                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
             var message = "Incorrect request syntax or user does not exist.";
             tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, message);
@@ -194,10 +195,10 @@ namespace LearnWithMentor.Controllers
                     return Request.CreateResponse(HttpStatusCode.OK, okMessage);
                 }
             }
-            catch (Exception exception)
+            catch (EntityException e)
             {
-                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, exception);
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, exception);
+                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
             var message = $"Not existing user with id: {id}.";
             tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, message);

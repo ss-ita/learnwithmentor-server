@@ -9,6 +9,7 @@ using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorBLL.Services;
 using System.Web.Http.Tracing;
 using LearnWithMentor.Log;
+using System.Data.Entity.Core;
 
 namespace LearnWithMentor.Controllers
 {
@@ -102,7 +103,7 @@ namespace LearnWithMentor.Controllers
                     return Request.CreateResponse(HttpStatusCode.OK, okMessage);
                 }
             }
-            catch (Exception e)
+            catch (EntityException e)
             {
                 tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
@@ -132,7 +133,7 @@ namespace LearnWithMentor.Controllers
                     return Request.CreateResponse(HttpStatusCode.OK, okMessage);
                 }
             }
-            catch (Exception e)
+            catch (EntityException e)
             {
                 tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
