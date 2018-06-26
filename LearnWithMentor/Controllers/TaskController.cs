@@ -12,15 +12,15 @@ using LearnWithMentor.Filters;
 
 namespace LearnWithMentor.Controllers
 {
+    /// <summary> Controller for working with tasks </summary>
     [Authorize]
     [JwtAuthentication]
-    /// <summary>
-    /// Controller for working with tasks
-    /// </summary>
     public class TaskController : ApiController
     {
+        /// <summary> Services for work with different DB parts </summary>
         private readonly ITaskService taskService;
         private readonly IMessageService messageService;
+        /// <summary> Services initiation </summary>
         public TaskController()
         {
             taskService = new TaskService();
@@ -28,9 +28,8 @@ namespace LearnWithMentor.Controllers
         }
 
         /// <summary>
-        /// Returns a list of all tasks.
+        /// Returns a list of all tasks in database.
         /// </summary>
-        // GET api/task      
         [HttpGet]
         [Route("api/task")]
         public HttpResponseMessage GetAllTasks()
@@ -42,18 +41,17 @@ namespace LearnWithMentor.Controllers
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, allTasks);
                 }
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "No tasks in database.");
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, "There are no tasks in database.");
         }
             catch (Exception ex)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message+"Internal server error");
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
             }
 }
 
         /// <summary>
-        /// Returns task by ID.
+        /// Returns task by Id.
         /// </summary>
-        // GET api/task/5
         [HttpGet]
         [Route("api/task/{taskId}")]
         public HttpResponseMessage GetTaskById(int taskId)
@@ -62,120 +60,83 @@ namespace LearnWithMentor.Controllers
             {
                 TaskDTO task = taskService.GetTaskById(taskId);
                 if (task == null)
-                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Task with this ID does not exist in database.");
+                    return Request.CreateErrorResponse(HttpStatusCode.NoContent, "This task does not exist in database.");
                 return Request.CreateResponse(HttpStatusCode.OK, task);
             }
             catch (Exception ex)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Internal server error");
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
             }
         }
 
         /// <summary>
-        /// Returns task with priority and section for defined by ID plan.
+        /// Returns tasks with priority and section for by PlanTask Id.
         /// </summary>
-        /// <param name="taskId">ID of the tast.</param>
-        /// <param name="planId">ID of the plan.</param>
-        // GET api/task?id={id}&planid={planid}
+        /// <param name="planTaskId">Id of the planTask.</param>
         [HttpGet]
-        [Route("api/task")]
-        public HttpResponseMessage GetTaskForPlan(int taskId,int planId ) 
-        {
-            try
-            {
-                var task = taskService.GetTaskForPlan(taskId, planId);
-                return Request.CreateResponse(HttpStatusCode.OK, task);
-            }
-            catch (InternalServiceException ex)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest,ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// Returns tasks with priority and section for defined by PlanTask ID.
-        /// </summary>
-        /// <param name="planTaskId">ID of the tast.</param>
-        // GET api/task?id={id}&planid={planid}
-        [HttpGet]
-        [Route("api/task")]
+        [Route("api/task/plantask/{planTaskId}")] 
         public HttpResponseMessage GetTaskForPlan(int planTaskId)
         {
             try
             {
                 var task = taskService.GetTaskForPlan(planTaskId);
-                return Request.CreateResponse(HttpStatusCode.OK, task);
+                if(task!=null)
+                    return Request.CreateResponse(HttpStatusCode.OK, task);
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, "This task does not exist in database.");
             }
             catch (InternalServiceException ex)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
             }
         }
 
         /// <summary>
-        /// Returns UserTasksDTO for task in plan for user.
+        /// Returns UserTask for task in plan for user.
         /// </summary>
-        /// <param name="taskId">ID of the task.</param>
-        /// <param name="planId">ID of the plan.</param>
-        /// <param name="userId">ID of the user.</param>
+        /// <param name="planTaskId">Id of the planTask.</param>
+        /// <param name="userId">Id of the user.</param>
         [HttpGet]
-        [Route("api/task/usertask")]
-        public HttpResponseMessage GetUserTask(int taskId, int planId, int userId)
-        {
-            try
-            {
-                var userTask = taskService.GetUserTaskByUserTaskPlanIds(userId, taskId, planId);
-                return Request.CreateResponse(HttpStatusCode.OK, userTask);
-            }
-            catch (InternalServiceException ex)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// Returns UserTasksDTO for task in plan for user.
-        /// </summary>
-        /// <param name="planTaskId">ID of the planTask.</param>
-        /// <param name="userId">ID of the user.</param>
-        [HttpGet]
-        [Route("api/task/usertask")]
+        [Route("api/task/usertask")] 
         public HttpResponseMessage GetUserTask(int planTaskId, int userId)
         {
             try
             {
-                var userTask = taskService.GetUserTaskByUserTaskPlanId(userId, planTaskId);
-                return Request.CreateResponse(HttpStatusCode.OK, userTask);
+                var userTask = taskService.GetUserTaskByUserPlanTaskId(userId, planTaskId);
+                if(userTask!=null)
+                    return Request.CreateResponse(HttpStatusCode.OK, userTask);
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, "Task for this user does not exist in database.");
             }
             catch (InternalServiceException ex)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
             }
         }
 
-        /// <summary>Returns messages for UserTask by id./// </summary>
-        /// <param name="userTaskId">ID of the usertask.</param>
+        /// <summary>Returns messages for UserTask by its id.</summary>
+        /// <param name="userTaskId">Id of the usertask.</param>
         [HttpGet]
-        [Route("api/task/userTask/{userTaskId}/messages")]
+        [Route("api/task/userTask/{userTaskId}/messages")] 
         public HttpResponseMessage GetUserTaskMessages(int userTaskId)
         {
             try
             {
-                var messaList= messageService.GetMessages(userTaskId);
-                return Request.CreateResponse(HttpStatusCode.OK, messaList);
+                var messageList= messageService.GetMessages(userTaskId);
+                if(messageList!=null)
+                    return Request.CreateResponse(HttpStatusCode.OK, messageList);
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, "Messages for this user does not exist in database.");
             }
             catch (InternalServiceException ex)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
             }
         }
 
         /// <summary> Creates message for UserTask. </summary>
-        /// <param name="userTaskId">ID of the usertask.</param>
+        /// <param name="userTaskId">Id of the usertask.</param>
         /// <param name="newMessage">New message to be created.</param>
         /// <returns></returns>
         [HttpPost]
-        [Route("api/task/userTask/{userTaskId}/messages")]
+        [Route("api/task/userTask/{userTaskId}/messages")] 
         public HttpResponseMessage PostUserTaskMessage(int userTaskId, [FromBody]MessageDTO newMessage)
         {
             try
@@ -196,7 +157,7 @@ namespace LearnWithMentor.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, exception);
             }
         }
-
+        
         /// <summary>
         /// Creates new UserTask.
         /// </summary>
@@ -212,9 +173,9 @@ namespace LearnWithMentor.Controllers
                 bool success = taskService.CreateUserTask(newUserTask);
                 if (success)
                 {
-                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully created task for user.");
+                    return Request.CreateResponse(HttpStatusCode.OK, "Succesfully created task for user.");
                 }
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Creation error.");
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, "There is no user or task in database.");
             }
             catch (Exception exception)
             {
@@ -222,11 +183,11 @@ namespace LearnWithMentor.Controllers
             }
         }
         
-        /// <summary>Changes UserTask status by usertask id./// </summary>
-        /// <param name="userTaskId">ID of the userTask status to be changed.</param>
+        /// <summary>Changes UserTask status by usertask id.</summary>
+        /// <param name="userTaskId">Id of the userTask status to be changed.</param>
         /// /// <param name="newStatus">New userTask.</param>
         [HttpPut]
-        [Route("api/task/usertask")]
+        [Route("api/task/usertask/status")] 
         public HttpResponseMessage PutNewUserTaskStatus(int userTaskId, string newStatus)
         {
             try
@@ -236,9 +197,9 @@ namespace LearnWithMentor.Controllers
                 bool success = taskService.UpdateUserTaskStatus(userTaskId, newStatus);
                 if (success)
                 {
-                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully updated user task status.");
+                    return Request.CreateResponse(HttpStatusCode.OK, "User task status succesfully updated.");
                 }
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax or usertask does not exist.");
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect new starus or usertask does not exist.");
             }
             catch (Exception exception)
             {
@@ -247,11 +208,11 @@ namespace LearnWithMentor.Controllers
         }
 
         /// <summary> Changes UserTask result by usertask id. </summary>
-        /// <param name="userTaskId">ID of the userTask status to be changed</param>
+        /// <param name="userTaskId">Id of the userTask status to be changed</param>
         /// <param name="newResult">>New userTask result</param>
         /// <returns></returns>
         [HttpPut]
-        [Route("api/task/usertask")]
+        [Route("api/task/usertask/result")] 
         public HttpResponseMessage PutNewUserTaskResult(int userTaskId, string newResult)
         {
             try
@@ -261,7 +222,7 @@ namespace LearnWithMentor.Controllers
                 bool success = taskService.UpdateUserTaskResult(userTaskId, newResult);
                 if (success)
                 {
-                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully updated user task result.");
+                    return Request.CreateResponse(HttpStatusCode.OK, "User task result succesfully updated.");
                 }
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax or usertask does not exist.");
             }
@@ -271,65 +232,81 @@ namespace LearnWithMentor.Controllers
             }
         }
 
-        /// <summary>Returns all tasks states for if array./// </summary>
+        /// <summary>Returns tasks states for array of id.</summary>
+        /// <param name="user_id">Id of the user.</param>
+        /// <param name="task_ids">Array of tasks id.</param>
         [HttpGet]
-        [Route("api/tasks/state")] // or get user info from token only for authorized user
+        [Route("api/task/state")] 
         public HttpResponseMessage GetAllTasksState(int user_id, int[] task_ids)
         {
-            List<UserTaskStateDTO> userTaskStateList = taskService.GetTaskStatesForUser(task_ids, user_id);
-            if (userTaskStateList == null || userTaskStateList.Count == 0)
+            try
             {
-                var message = "Not created any usertasks.";
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
+                List<UserTaskStateDTO> userTaskStateList = taskService.GetTaskStatesForUser(task_ids, user_id);
+                if (userTaskStateList == null || userTaskStateList.Count == 0)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.NoContent, "There are no created usertasks.");
+                }
+                return Request.CreateResponse(HttpStatusCode.OK, userTaskStateList);
             }
-            return Request.CreateResponse<IEnumerable<UserTaskStateDTO>>(HttpStatusCode.OK, userTaskStateList);
+            catch (Exception exception)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, exception);
+            }
         }
 
-        /// <summary>
-        /// Returns tasks which name contains special string key.
-        /// </summary>
+        /// <summary>Returns tasks which name contains string key.</summary>
         /// <param name="key">Key for search.</param>
-        // GET api/task/search?key={key}
         [HttpGet]
         [Route("api/task/search")]
         public HttpResponseMessage Search(string key)
         {
-
-            if (key == null)
+            try
             {
-                return GetAllTasks();
+                if (key == null)
+                {
+                    return GetAllTasks();
+                }
+                string[] lines = key.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                var taskList = taskService.Search(lines);
+                return Request.CreateResponse(HttpStatusCode.OK, taskList);
             }
-            string[] lines = key.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            var taskList = taskService.Search(lines);
-            return Request.CreateResponse(HttpStatusCode.OK, taskList);
+            catch (Exception exception)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, exception);
+            }
         }
 
         /// <summary>
-        /// Returns tasks in plan which names contain special string key.
+        /// Returns tasks in plan which names contain string key.
         /// </summary>
         /// <param name="key">Key for search.</param>
-        /// <param name="planId">ID of the plan.</param>
-        // GET api/task/search?key={key}&planid={planid}
+        /// <param name="planId">Id of the plan.</param>
         [HttpGet]
-        [Route("api/task/SearchInPlan")]
-        public HttpResponseMessage SearchInPlan(string key, int? planId)
+        [Route("api/task/searchinplan")]
+        public HttpResponseMessage SearchInPlan(string key, int planId)
         {
-            if (key == null || planId == null)
+            try
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax.");
+                if (key == null)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax.");
+                }
+                string[] lines = key.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                var taskList = taskService.Search(lines, planId);
+                if (taskList == null)
+                    return Request.CreateErrorResponse(HttpStatusCode.NoContent, "This plan does not exist.");
+                return Request.CreateResponse(HttpStatusCode.OK, taskList);
             }
-            string[] lines = key.Split(new char[] { ' ' },StringSplitOptions.RemoveEmptyEntries);
-            var taskList = taskService.Search(lines, (int)planId);
-            if (taskList == null)
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, $"Incorrect request syntax, plan with ID:{planId} does not exist.");
-            return Request.CreateResponse(HttpStatusCode.OK, taskList);
+            catch (Exception exception)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, exception);
+            }
         }
 
         /// <summary>
         /// Creates new task
         /// </summary>
         /// <param name="newTask">Task object for creation.</param>
-        // POST api/task
         [HttpPost]
         [Route("api/task")]
         public HttpResponseMessage Post([FromBody]TaskDTO newTask)
@@ -341,7 +318,7 @@ namespace LearnWithMentor.Controllers
                 bool success = taskService.CreateTask(newTask);
                 if (success)
                 {
-                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully created task: {newTask.Name}.");
+                    return Request.CreateResponse(HttpStatusCode.OK, "Task succesfully created");
                 }
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Creation error.");
             }
@@ -353,11 +330,10 @@ namespace LearnWithMentor.Controllers
         }
 
         /// <summary>
-        /// Updates task by ID
+        /// Updates task by Id
         /// </summary>
-        /// <param name="taskId">Task ID for update.</param>
+        /// <param name="taskId">Task Id for update.</param>
         /// <param name="task">Modified task object for update.</param>
-        // PUT api/task/5
         [HttpPut]
         [Route("api/task/{id}")]
         public HttpResponseMessage Put(int taskId, [FromBody]TaskDTO task)
@@ -369,9 +345,9 @@ namespace LearnWithMentor.Controllers
                 bool success = taskService.UpdateTaskById(taskId, task);
                 if (success)
                 {
-                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully updated task id: {taskId}.");
+                    return Request.CreateResponse(HttpStatusCode.OK, "Task succesfully updated.");
                 }
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax or task does not exist.");
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, "Task does not exist.");
             }
             catch (Exception exception)
             {
@@ -380,10 +356,9 @@ namespace LearnWithMentor.Controllers
         }
 
         /// <summary>
-        /// Deletes task by ID
+        /// Deletes task by Id
         /// </summary>
-        /// <param name="taskId">Task ID for delete.</param>
-        // DELETE api/task/5
+        /// <param name="taskId">Task Id for delete.</param>
         [HttpDelete]
         [Route("api/task/{id}")]
         public HttpResponseMessage Delete(int taskId)
@@ -393,9 +368,9 @@ namespace LearnWithMentor.Controllers
                 bool success = taskService.RemoveTaskById(taskId);
                 if (success)
                 {
-                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully deleted task id: {taskId}.");
+                    return Request.CreateResponse(HttpStatusCode.OK, "Task succesfully deleted.");
                 }
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, $"No task with id: {taskId} or cannot be deleted because of dependency conflict.");
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Task not exist or cannot be deleted because of dependency conflict.");
             }
             catch (Exception exception)
             {
