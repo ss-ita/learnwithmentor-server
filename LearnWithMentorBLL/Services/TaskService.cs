@@ -98,21 +98,21 @@ namespace LearnWithMentorBLL.Services
             if (!db.Plans.ContainsId(planId))
                 return null;
             List<TaskDTO> taskList = new List<TaskDTO>();
-            foreach (var taks in db.Tasks.Search(keys, planId))
+            foreach (var task in db.Tasks.Search(keys, planId))
             {
-                taskList.Add(new TaskDTO(taks.Id,
-                                    taks.Name,
-                                    taks.Description,
-                                    taks.Private,
-                                    taks.Create_Id,
-                                    db.Users.ExtractFullName(taks.Create_Id),
-                                    taks.Mod_Id,
-                                    db.Users.ExtractFullName(taks.Mod_Id),
-                                    taks.Create_Date,
-                                    taks.Mod_Date,
-                                    taks.PlanTasks.Where(pt => pt.Task_Id == taks.Id && pt.Plan_Id == planId).FirstOrDefault()?.Priority,
-                                    taks.PlanTasks.Where(pt => pt.Task_Id == taks.Id && pt.Plan_Id == planId).FirstOrDefault()?.Section_Id,
-                                    taks.PlanTasks.Where(pt => pt.Task_Id == taks.Id && pt.Plan_Id == planId).FirstOrDefault()?.Id));
+                taskList.Add(new TaskDTO(task.Id,
+                                    task.Name,
+                                    task.Description,
+                                    task.Private,
+                                    task.Create_Id,
+                                    db.Users.ExtractFullName(task.Create_Id),
+                                    task.Mod_Id,
+                                    db.Users.ExtractFullName(task.Mod_Id),
+                                    task.Create_Date,
+                                    task.Mod_Date,
+                                    task.PlanTasks.Where(pt => pt.Task_Id == task.Id && pt.Plan_Id == planId).FirstOrDefault()?.Priority,
+                                    task.PlanTasks.Where(pt => pt.Task_Id == task.Id && pt.Plan_Id == planId).FirstOrDefault()?.Section_Id,
+                                    task.PlanTasks.Where(pt => pt.Task_Id == task.Id && pt.Plan_Id == planId).FirstOrDefault()?.Id));
             }
             return taskList;
         }
