@@ -7,6 +7,8 @@ using System.Net;
 using LearnWithMentor.Filters;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorBLL.Services;
+using System.Web.Http.Tracing;
+using LearnWithMentor.Log;
 
 namespace LearnWithMentor.Controllers
 {
@@ -18,6 +20,7 @@ namespace LearnWithMentor.Controllers
     {
         private readonly IUserService userService;
         private readonly IRoleService roleService;
+        private static ITraceWriter _tracer;
 
         /// <summary>
         /// Creates an instance of UserController.
@@ -26,6 +29,7 @@ namespace LearnWithMentor.Controllers
         {
             userService = new UserService();
             roleService = new RoleService();
+            _tracer = new NLogger();
         }
 
         /// <summary>
@@ -127,14 +131,17 @@ namespace LearnWithMentor.Controllers
                 if (success)
                 {
                     var okMessage = $"Succesfully created user: {value.Email}.";
+                    _tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, okMessage);
                     return Request.CreateResponse(HttpStatusCode.OK, okMessage);
                 }
             }
             catch (Exception exception)
             {
+                _tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, exception);
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, exception);
             }
             var message = "Incorrect request syntax.";
+            _tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, message);
             return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
         }
 
@@ -154,14 +161,17 @@ namespace LearnWithMentor.Controllers
                 if (success)
                 {
                     var okMessage = $"Succesfully updated user id: {id}.";
+                    _tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, okMessage);
                     return Request.CreateResponse(HttpStatusCode.OK, okMessage);
                 }
             }
             catch (Exception exception)
             {
+                _tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, exception);
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, exception);
             }
             var message = "Incorrect request syntax or user does not exist.";
+            _tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, message);
             return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
         }
 
@@ -180,14 +190,17 @@ namespace LearnWithMentor.Controllers
                 if (success)
                 {
                     var okMessage = $"Succesfully blocked user id: {id}.";
+                    _tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, okMessage);
                     return Request.CreateResponse(HttpStatusCode.OK, okMessage);
                 }
             }
             catch (Exception exception)
             {
+                _tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, exception);
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, exception);
             }
             var message = $"Not existing user with id: {id}.";
+            _tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, message);
             return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
         }
 
