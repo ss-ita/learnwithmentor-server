@@ -26,7 +26,7 @@ namespace LearnWithMentor.Controllers
             {
                 if (CheckUser(value.Email, value.Password, out user))
                 {
-                    return Request.CreateErrorResponse(HttpStatusCode.OK, JwtManager.GenerateToken(user));
+                    return Request.CreateResponse(HttpStatusCode.OK, JwtManager.GenerateToken(user));
                 }
             }
 

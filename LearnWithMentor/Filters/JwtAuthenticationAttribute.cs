@@ -76,7 +76,7 @@ namespace LearnWithMentor.Filters
             if (ValidateToken(token, out email, out userrole))
             {
                 UserIdentityDTO userDTO = userService.GetByEmail(email);
-                // based on username to get more information from database in order to build local identity
+                
                 var claims = new List<Claim>
                 {
                    
