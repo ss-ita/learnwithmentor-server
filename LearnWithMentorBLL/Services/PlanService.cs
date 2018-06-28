@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDTO;
@@ -109,6 +110,18 @@ namespace LearnWithMentorBLL.Services
             db.Save();
             return modified;
         }
+
+        public bool SetImage(int id, byte[] image)
+        {
+            Plan toUpdate = db.Plans.Get(id);
+            if (toUpdate == null)
+                return false;
+            string converted = Convert.ToBase64String(image);
+            toUpdate.Image = converted;
+            db.Save();
+            return true;
+        }
+
         public bool Add(PlanDTO dto)
         {
             if (!ContainsId(dto.CreatorId))

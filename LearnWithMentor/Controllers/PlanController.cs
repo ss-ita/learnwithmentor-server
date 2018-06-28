@@ -11,6 +11,8 @@ using System.Web.Http.Tracing;
 using LearnWithMentor.Log;
 using System.Data.Entity.Core;
 using System.Threading.Tasks;
+using System.Web;
+using System.IO;
 
 namespace LearnWithMentor.Controllers
 {
@@ -146,10 +148,60 @@ namespace LearnWithMentor.Controllers
 
         [HttpPost]
         [Route("api/plan/{id}/image")]
-        public Task<HttpResponseMessage> Put(int id)
+        public async Task<HttpResponseMessage> Put(int id)
         {
+            if (!planService.ContainsId(id))
+            {
+                var errorMessage = "No plan with this id in database.";
+                return Request.CreateResponse(HttpStatusCode.BadRequest, errorMessage);
+            }
+            var h = Request.Headers;
+            if (HttpContext.Current.Request.Files.Count != 1 /*|| HttpContext.Current.Request.Files == null*/)
+            {
+                var errorMessage = "Only one image can be sent.";
+                return Request.CreateResponse(HttpStatusCode.BadRequest, errorMessage);
+            }
 
+            try
+            {
+                var postedFile = HttpContext.Current.Request.Files[0];
+                if (postedFile != null && postedFile.ContentLength > 0)
+                {
+                    List<string> allowedFileExtensions = new List<string> { ".jpeg", ".jpg", ".png" };
+
+                    var extension = postedFile.FileName.Substring(postedFile.FileName.LastIndexOf('.')).ToLower();
+                    if (!allowedFileExtensions.Contains(extension))
+                    {
+                        string errorMessage = "Types allowed only .jpeg .jpg .png";
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, errorMessage);
+                    }
+
+                    int maxContentLength = 1024 * 1024 * 1; //Size = 1 MB  
+                    if (postedFile.ContentLength > maxContentLength)
+                    {
+                        string errorMessage = "Please Upload a file upto 1 mb.";
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, errorMessage);
+                    }
+
+                    byte[] imageData = null;
+                    using (var binaryReader = new BinaryReader(postedFile.InputStream))
+                    {
+                        imageData = binaryReader.ReadBytes(postedFile.ContentLength);
+                    }
+
+                    planService.SetImage(id, imageData);
+                    var okMessage = "Successfully created image.";
+                    return Request.CreateResponse(HttpStatusCode.OK, okMessage);
+                }
+                string emptyImageMessage = "Empty image.";
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, emptyImageMessage);
+            }
+            catch (Exception e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, e);
+            }
         }
+
         /// <summary>
         /// Searches plans that match q string
         /// </summary>
