@@ -1,9 +1,7 @@
-﻿using System.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using LearnWithMentorDTO;
 using LearnWithMentorDAL.Entities;
 using LearnWithMentorBLL.Interfaces;
-using LearnWithMentorBLL.Infrastructure;
 
 namespace LearnWithMentorBLL.Services
 {
