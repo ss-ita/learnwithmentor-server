@@ -12,5 +12,7 @@ namespace LearnWithMentorBLL.Interfaces
         bool Add(PlanDTO dto);
         List<PlanDTO> Search(string[] str);
         bool ContainsId(int id);
+        IEnumerable<PlanDTO> GetPlansNotUsedInGroup(int groupId);
+        IEnumerable<PlanDTO> SearchPlansNotUsedInGroup(string[] searchCases, int groupId);
     }
 }

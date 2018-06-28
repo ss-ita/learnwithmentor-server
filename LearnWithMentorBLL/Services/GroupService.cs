@@ -140,35 +140,41 @@ namespace LearnWithMentorBLL.Services
             return added;
         }
 
-        public IEnumerable<User> GetUsersNotInGroup(int groupId)
+        public IEnumerable<UserDTO> GetUsersNotInGroup(int groupId)
         {
             var group = db.Groups.Get(groupId);
             if (group == null)
-                throw new InternalServiceException("Group not found", "");
+                return null;
             var usersNotInGroup = db.Users.GetUsersNotInGroup(groupId);
             if (usersNotInGroup == null)
-                throw new InternalServiceException("User not found", "");
-            return usersNotInGroup;
+                return null;
+            List<UserDTO> usersNotInGroupList = new List<UserDTO>();
+            foreach (var user in usersNotInGroup)
+            {
+                UserDTO rdDto = new UserDTO(
+                    user.Id,
+                    user.FirstName,
+                    user.LastName,
+                    user.Roles.Name,
+                    user.Blocked);
+                if (!usersNotInGroupList.Contains(rdDto))
+                    usersNotInGroupList.Add(rdDto);
+            }
+            return usersNotInGroupList;
         }
 
-        public IEnumerable<UserDTO> SearchUserNotinGroup(string[] str, int groupId)
+        public IEnumerable<UserDTO> SearchUserNotInGroup(string[] searchCases, int groupId)
         {
             var usersNotInGroup = GetUsersNotInGroup(groupId);
             List<UserDTO> usersNotInGroupdto = new List<UserDTO>();
-            foreach (var s in str)
+            foreach (var searchCase in searchCases)
             {
-                foreach (var u in usersNotInGroup)
+                foreach (var user in usersNotInGroup)
                 {
-                    if (u.FirstName.Contains(s) || u.LastName.Contains(s))
+                    if (user.FirstName.Contains(searchCase) || user.LastName.Contains(searchCase))
                     {
-                        UserDTO rdDto = new UserDTO(u.Id,
-                            u.FirstName,
-                            u.LastName,
-                            u.Roles.Name,
-                            u.Blocked);
-
-                        if (!usersNotInGroupdto.Contains((rdDto)))
-                            usersNotInGroupdto.Add(rdDto);
+                        if (!usersNotInGroupdto.Contains((user)))
+                            usersNotInGroupdto.Add(user);
                     }
                 }
             }

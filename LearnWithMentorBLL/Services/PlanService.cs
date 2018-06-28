@@ -152,7 +152,7 @@ namespace LearnWithMentorBLL.Services
             return db.Plans.ContainsId(id);
         }
 
-        public IEnumerable<Plan> GetPlansNotUsedInGroup(int groupId)
+        public IEnumerable<PlanDTO> GetPlansNotUsedInGroup(int groupId)
         {
             var group = db.Groups.Get(groupId);
             if (group == null)
@@ -160,35 +160,41 @@ namespace LearnWithMentorBLL.Services
             var plansNotUsedInGroup = db.Plans.GetPlansNotUsedInGroup(groupId);
             if (plansNotUsedInGroup == null)
                 return null;
-            return plansNotUsedInGroup;
+            List<PlanDTO> plansNotUsedInGroupList = new List<PlanDTO>();
+            foreach (var plan in plansNotUsedInGroup)
+            {
+                PlanDTO planDto = new PlanDTO
+                (plan.Id,
+                    plan.Name,
+                    plan.Description,
+                    plan.Published,
+                    plan.Create_Id,
+                    plan.Creator.FirstName,
+                    plan.Creator.LastName,
+                    plan.Mod_Id,
+                    plan.Modifier.FirstName,
+                    plan.Modifier.LastName,
+                    plan.Create_Date,
+                    plan.Mod_Date);
+
+                if (!plansNotUsedInGroupList.Contains(planDto))
+                    plansNotUsedInGroupList.Add(planDto);
+            }
+            return plansNotUsedInGroupList;
         }
 
-        public IEnumerable<PlanDTO> SearchPlansNotUsedInGroup(string[] searchString, int groupId)
+        public IEnumerable<PlanDTO> SearchPlansNotUsedInGroup(string[] searchCases, int groupId)
         {
             var plansNotInGroup = GetPlansNotUsedInGroup(groupId);
             List<PlanDTO> plansNotInGroupdto = new List<PlanDTO>();
-            foreach (var word in searchString)
+            foreach (var searchCase in searchCases)
             {
                 foreach (var plan in plansNotInGroup)
                 {
-                    if (plan.Name.Contains(word))
+                    if (plan.Name.Contains(searchCase))
                     {
-                        PlanDTO pdDto = new PlanDTO
-                        (plan.Id,
-                            plan.Name,
-                            plan.Description,
-                            plan.Published,
-                            plan.Create_Id,
-                            plan.Creator.FirstName,
-                            plan.Creator.LastName,
-                            plan.Mod_Id,
-                            plan.Modifier.FirstName,
-                            plan.Modifier.LastName,
-                            plan.Create_Date,
-                            plan.Mod_Date);
-
-                        if (!plansNotInGroupdto.Contains((pdDto)))
-                            plansNotInGroupdto.Add(pdDto);
+                        if (!plansNotInGroupdto.Contains(plan))
+                            plansNotInGroupdto.Add(plan);
                     }
                 }
             }
