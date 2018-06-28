@@ -5,7 +5,6 @@ using System.Net;
 using System.Net.Http;
 using LearnWithMentorDTO;
 using LearnWithMentorBLL.Interfaces;
-using LearnWithMentorBLL.Infrastructure;
 using LearnWithMentorBLL.Services;
 using System.Text.RegularExpressions;
 using LearnWithMentor.Filters;
@@ -24,7 +23,7 @@ namespace LearnWithMentor.Controllers
         private readonly ITaskService taskService;
         private readonly IMessageService messageService;
         private readonly ITraceWriter tracer;
-        
+
         /// <summary> Services initiation </summary>
         public TaskController()
         {
@@ -48,13 +47,13 @@ namespace LearnWithMentor.Controllers
                     return Request.CreateResponse(HttpStatusCode.OK, allTasks);
                 }
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, "There are no tasks in database.");
-        }
+            }
             catch (EntityException e)
             {
                 tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
-}
+        }
 
         /// <summary>
         /// Returns task by Id.
@@ -82,13 +81,13 @@ namespace LearnWithMentor.Controllers
         /// </summary>
         /// <param name="planTaskId">Id of the planTask.</param>
         [HttpGet]
-        [Route("api/task/plantask/{planTaskId}")] 
+        [Route("api/task/plantask/{planTaskId}")]
         public HttpResponseMessage GetTaskForPlan(int planTaskId)
         {
             try
             {
                 var task = taskService.GetTaskForPlan(planTaskId);
-                if(task!=null)
+                if (task != null)
                     return Request.CreateResponse(HttpStatusCode.OK, task);
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, "This task does not exist in database.");
             }
@@ -105,13 +104,13 @@ namespace LearnWithMentor.Controllers
         /// <param name="planTaskId">Id of the planTask.</param>
         /// <param name="userId">Id of the user.</param>
         [HttpGet]
-        [Route("api/task/usertask")] 
+        [Route("api/task/usertask")]
         public HttpResponseMessage GetUserTask(int planTaskId, int userId)
         {
             try
             {
                 var userTask = taskService.GetUserTaskByUserPlanTaskId(userId, planTaskId);
-                if(userTask!=null)
+                if (userTask != null)
                     return Request.CreateResponse(HttpStatusCode.OK, userTask);
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, "Task for this user does not exist in database.");
             }
@@ -119,19 +118,19 @@ namespace LearnWithMentor.Controllers
             {
                 tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
-            } 
+            }
         }
 
         /// <summary>Returns messages for UserTask by its id.</summary>
         /// <param name="userTaskId">Id of the usertask.</param>
         [HttpGet]
-        [Route("api/task/userTask/{userTaskId}/messages")] 
+        [Route("api/task/userTask/{userTaskId}/messages")]
         public HttpResponseMessage GetUserTaskMessages(int userTaskId)
         {
             try
             {
-                var messageList= messageService.GetMessages(userTaskId);
-                if(messageList!=null)
+                var messageList = messageService.GetMessages(userTaskId);
+                if (messageList != null)
                     return Request.CreateResponse(HttpStatusCode.OK, messageList);
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, "Messages for this user does not exist in database.");
             }
@@ -148,12 +147,12 @@ namespace LearnWithMentor.Controllers
         /// <param name="newMessage">New message to be created.</param>
         /// <returns></returns>
         [HttpPost]
-        [Route("api/task/userTask/{userTaskId}/messages")] 
+        [Route("api/task/userTask/{userTaskId}/messages")]
         public HttpResponseMessage PostUserTaskMessage(int userTaskId, [FromBody]MessageDTO newMessage)
         {
             try
             {
-                if(!ModelState.IsValid)
+                if (!ModelState.IsValid)
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
                 newMessage.UserTaskId = userTaskId;
                 // todo: logic for sender id if needed
@@ -173,7 +172,7 @@ namespace LearnWithMentor.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
         }
-        
+
         /// <summary>
         /// Creates new UserTask.
         /// </summary>
@@ -202,17 +201,17 @@ namespace LearnWithMentor.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
         }
-        
+
         /// <summary>Changes UserTask status by usertask id.</summary>
         /// <param name="userTaskId">Id of the userTask status to be changed.</param>
         /// /// <param name="newStatus">New userTask.</param>
         [HttpPut]
-        [Route("api/task/usertask/status")] 
+        [Route("api/task/usertask/status")]
         public HttpResponseMessage PutNewUserTaskStatus(int userTaskId, string newStatus)
         {
             try
             {
-                if (!Regex.IsMatch(newStatus,ValidationRules.USERTASK_STATE))
+                if (!Regex.IsMatch(newStatus, ValidationRules.USERTASK_STATE))
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "New Status not valid");
                 bool success = taskService.UpdateUserTaskStatus(userTaskId, newStatus);
                 if (success)
@@ -236,7 +235,7 @@ namespace LearnWithMentor.Controllers
         /// <param name="newResult">>New userTask result</param>
         /// <returns></returns>
         [HttpPut]
-        [Route("api/task/usertask/result")] 
+        [Route("api/task/usertask/result")]
         public HttpResponseMessage PutNewUserTaskResult(int userTaskId, string newResult)
         {
             try
@@ -264,7 +263,7 @@ namespace LearnWithMentor.Controllers
         /// <param name="user_id">Id of the user.</param>
         /// <param name="task_ids">Array of tasks id.</param>
         [HttpGet]
-        [Route("api/task/state")] 
+        [Route("api/task/state")]
         public HttpResponseMessage GetAllTasksState(int user_id, int[] task_ids)
         {
             try
