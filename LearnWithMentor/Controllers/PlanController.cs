@@ -10,6 +10,7 @@ using LearnWithMentorBLL.Services;
 using System.Web.Http.Tracing;
 using LearnWithMentor.Log;
 using System.Data.Entity.Core;
+using System.Threading.Tasks;
 
 namespace LearnWithMentor.Controllers
 {
@@ -143,6 +144,12 @@ namespace LearnWithMentor.Controllers
             return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
         }
 
+        [HttpPost]
+        [Route("api/plan/{id}/image")]
+        public Task<HttpResponseMessage> Put(int id)
+        {
+
+        }
         /// <summary>
         /// Searches plans that match q string
         /// </summary>
