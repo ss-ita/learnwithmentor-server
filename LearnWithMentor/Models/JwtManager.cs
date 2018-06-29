@@ -35,7 +35,7 @@ namespace LearnWithMentor.Models
                             new Claim(ClaimTypes.Role, user.Role)
                         }),
 
-                Expires = now.AddDays(expireDays),// AddMinutes(Convert.ToInt32(expireMinutes)),
+                Expires = now.AddDays(expireDays),
 
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(symmetricKey), SecurityAlgorithms.HmacSha256Signature)
             };
