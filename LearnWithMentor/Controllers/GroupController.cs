@@ -77,7 +77,7 @@ namespace LearnWithMentor.Controllers
             else
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"There isn't plans for the group id = {id}");
         }
-
+        
         /// <summary>
         /// Returns users that belong to group by group Id "api/group/{id}/users"
         /// </summary>
@@ -93,6 +93,23 @@ namespace LearnWithMentor.Controllers
             else
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"There isn't users in the group id = {id}");
         }
+
+        /// <summary>
+        /// Returns users that is not belong to group by group Id "api/group/{id}/users"
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/group/{id}/users")]
+        public HttpResponseMessage GetUsersNotInCurrentGroup(int id)
+        {
+            var group = groupService.GetUsersNotInGroup(id);
+            if (group != null)
+                return Request.CreateResponse(HttpStatusCode.OK, group);
+            else
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"There isn't users in the group id = {id}");
+        }
+
 
         /// <summary>
         /// Create new group
