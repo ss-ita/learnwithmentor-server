@@ -4,7 +4,7 @@ using LearnWithMentorDAL.Entities;
 
 namespace LearnWithMentorDAL.Repositories
 {
-    public class UserRepository: BaseRepository<User>, IUserRepository
+    public class UserRepository : BaseRepository<User>, IUserRepository
     {
         public UserRepository(LearnWithMentor_DBEntities context) : base(context)
         {
@@ -23,7 +23,7 @@ namespace LearnWithMentorDAL.Repositories
             return context.Groups.FirstOrDefault(g => g.Id == groupId)?.Users;
         }
 
-            public IEnumerable<User> Search(string[] str, int? roleId)
+        public IEnumerable<User> Search(string[] str, int? roleId)
         {
             List<User> result = new List<User>();
             foreach (var s in str)
@@ -62,7 +62,7 @@ namespace LearnWithMentorDAL.Repositories
             return context.Users.Where(u => u.Blocked == state);
         }
 
-            public string ExtractFullName(int? id)
+        public string ExtractFullName(int? id)
         {
             if (id == null)
                 return null;
@@ -72,9 +72,22 @@ namespace LearnWithMentorDAL.Repositories
                 fullName = string.Concat(currentUser.FirstName, " ", currentUser.LastName);
             return fullName;
         }
+
         public IEnumerable<User> GetUsersNotInGroup(int groupId)
-                    {
-                        return context.Groups.FirstOrDefault(g => g.Id != groupId)?.Users;
-                   }
-}
+        {
+            return context.Groups.FirstOrDefault(g => g.Id != groupId)?.Users;
+        }
+
+        public bool RemoveUserFromGroup(int groupId, int userId)
+        {
+            
+        }
+
+        //public void Remove(T item)
+        //{
+        //    context.Set<T>().Remove(item);
+        //}
+
+
+    }
 }
