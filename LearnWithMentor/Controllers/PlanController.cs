@@ -55,7 +55,7 @@ namespace LearnWithMentor.Controllers
         /// Returns all plans not used in current group.
         /// </summary>
         [HttpGet]
-        [Route("api/plan")]
+        [Route("api/plan/notingroup/{groupId}")]
         public HttpResponseMessage GetPlansNotUsedInCurrentGroup(int groupId)
         {
             var notUsedPlans = planService.GetPlansNotUsedInGroup(groupId);
@@ -64,7 +64,7 @@ namespace LearnWithMentor.Controllers
                 var errorMessage = "No plans in database.";
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, errorMessage);
             }
-            return Request.CreateResponse(HttpStatusCode.OK, notUsedPlans.ToString());
+            return Request.CreateResponse(HttpStatusCode.OK, notUsedPlans);
         }
 
         /// <summary>

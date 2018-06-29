@@ -97,17 +97,17 @@ namespace LearnWithMentor.Controllers
         /// <summary>
         /// Returns users that is not belong to group by group Id "api/group/{id}/users"
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="groupId"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("api/group/{id}/users")]
-        public HttpResponseMessage GetUsersNotInCurrentGroup(int id)
+        [Route("api/group/{groupId}/users/notingroup")]
+        public HttpResponseMessage GetUsersNotInCurrentGroup(int groupId)
         {
-            var group = groupService.GetUsersNotInGroup(id);
+            var group = groupService.GetUsersNotInGroup(groupId);
             if (group != null)
                 return Request.CreateResponse(HttpStatusCode.OK, group);
             else
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"There isn't users in the group id = {id}");
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"There isn't users outside of the group id = {groupId}");
         }
 
 
