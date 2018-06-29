@@ -151,54 +151,5 @@ namespace LearnWithMentorBLL.Services
         {
             return db.Plans.ContainsId(id);
         }
-
-        public IEnumerable<PlanDTO> GetPlansNotUsedInGroup(int groupId)
-        {
-            var group = db.Groups.Get(groupId);
-            if (group == null)
-                return null;
-            var plansNotUsedInGroup = db.Plans.GetPlansNotUsedInGroup(groupId);
-            if (plansNotUsedInGroup == null)
-                return null;
-            List<PlanDTO> plansNotUsedInGroupList = new List<PlanDTO>();
-            foreach (var plan in plansNotUsedInGroup)
-            {
-                PlanDTO planDto = new PlanDTO
-                (plan.Id,
-                    plan.Name,
-                    plan.Description,
-                    plan.Published,
-                    plan.Create_Id,
-                    plan.Creator.FirstName,
-                    plan.Creator.LastName,
-                    plan.Mod_Id,
-                    plan.Modifier?.FirstName,
-                    plan.Modifier?.LastName,
-                    plan.Create_Date,
-                    plan.Mod_Date);
-
-                if (!plansNotUsedInGroupList.Contains(planDto))
-                    plansNotUsedInGroupList.Add(planDto);
-            }
-            return plansNotUsedInGroupList;
-        }
-
-        public IEnumerable<PlanDTO> SearchPlansNotUsedInGroup(string[] searchCases, int groupId)
-        {
-            var plansNotInGroup = GetPlansNotUsedInGroup(groupId);
-            List<PlanDTO> plansNotInGroupdto = new List<PlanDTO>();
-            foreach (var searchCase in searchCases)
-            {
-                foreach (var plan in plansNotInGroup)
-                {
-                    if (plan.Name.Contains(searchCase))
-                    {
-                        if (!plansNotInGroupdto.Contains(plan))
-                            plansNotInGroupdto.Add(plan);
-                    }
-                }
-            }
-            return plansNotInGroupdto;
-        }
     }
 }

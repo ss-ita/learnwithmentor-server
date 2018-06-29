@@ -14,5 +14,7 @@ namespace LearnWithMentorBLL.Interfaces
         bool AddPlansToGroup(int[] usersId, int groupId);
         IEnumerable<UserDTO> GetUsersNotInGroup(int groupId);
         IEnumerable<UserDTO> SearchUserNotInGroup(string[] searchCases, int groupId);
+        IEnumerable<PlanDTO> GetPlansNotUsedInGroup(int groupId);
+        IEnumerable<PlanDTO> SearchPlansNotUsedInGroup(string[] searchCases, int groupId);
     }
 }

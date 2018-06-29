@@ -110,6 +110,22 @@ namespace LearnWithMentor.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"There isn't users outside of the group id = {groupId}");
         }
 
+        /// <summary>
+        /// Returns all plans not used in current group.
+        /// </summary>
+        [HttpGet]
+        [Route("api/plan/notingroup/{groupId}")]
+        public HttpResponseMessage GetPlansNotUsedInCurrentGroup(int groupId)
+        {
+            var notUsedPlans = groupService.GetPlansNotUsedInGroup(groupId);
+            if (notUsedPlans == null)
+            {
+                var errorMessage = "No plans in database.";
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, errorMessage);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, notUsedPlans);
+        }
+
 
         /// <summary>
         /// Create new group

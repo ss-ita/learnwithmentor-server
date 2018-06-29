@@ -50,23 +50,6 @@ namespace LearnWithMentor.Controllers
             return Request.CreateResponse<IEnumerable<PlanDTO>>(HttpStatusCode.OK, dtoList);
         }
 
-
-        /// <summary>
-        /// Returns all plans not used in current group.
-        /// </summary>
-        [HttpGet]
-        [Route("api/plan/notingroup/{groupId}")]
-        public HttpResponseMessage GetPlansNotUsedInCurrentGroup(int groupId)
-        {
-            var notUsedPlans = planService.GetPlansNotUsedInGroup(groupId);
-            if (notUsedPlans == null)
-            {
-                var errorMessage = "No plans in database.";
-                return Request.CreateErrorResponse(HttpStatusCode.NoContent, errorMessage);
-            }
-            return Request.CreateResponse(HttpStatusCode.OK, notUsedPlans);
-        }
-
         /// <summary>
         /// Gets plan by id.
         /// </summary>
