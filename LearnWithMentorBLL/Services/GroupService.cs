@@ -140,39 +140,94 @@ namespace LearnWithMentorBLL.Services
             return added;
         }
 
-        public IEnumerable<User> GetUsersNotInGroup(int groupId)
+        public IEnumerable<UserDTO> GetUsersNotInGroup(int groupId)
         {
             var group = db.Groups.Get(groupId);
             if (group == null)
-                throw new InternalServiceException("Group not found", "");
+                return null;
             var usersNotInGroup = db.Users.GetUsersNotInGroup(groupId);
             if (usersNotInGroup == null)
-                throw new InternalServiceException("User not found", "");
-            return usersNotInGroup;
+                return null;
+            List<UserDTO> usersNotInGroupList = new List<UserDTO>();
+            foreach (var user in usersNotInGroup)
+            {
+                UserDTO rdDto = new UserDTO(
+                    user.Id,
+                    user.FirstName,
+                    user.LastName,
+                    user.Roles.Name,
+                    user.Blocked);
+                if (!usersNotInGroupList.Contains(rdDto))
+                    usersNotInGroupList.Add(rdDto);
+            }
+            return usersNotInGroupList;
         }
 
-        public IEnumerable<UserDTO> SearchUserNotinGroup(string[] str, int groupId)
+        public IEnumerable<UserDTO> SearchUserNotInGroup(string[] searchCases, int groupId)
         {
             var usersNotInGroup = GetUsersNotInGroup(groupId);
             List<UserDTO> usersNotInGroupdto = new List<UserDTO>();
-            foreach (var s in str)
+            foreach (var searchCase in searchCases)
             {
-                foreach (var u in usersNotInGroup)
+                foreach (var user in usersNotInGroup)
                 {
-                    if (u.FirstName.Contains(s) || u.LastName.Contains(s))
+                    if (user.FirstName.Contains(searchCase) || user.LastName.Contains(searchCase))
                     {
-                        UserDTO rdDto = new UserDTO(u.Id,
-                            u.FirstName,
-                            u.LastName,
-                            u.Roles.Name,
-                            u.Blocked);
-
-                        if (!usersNotInGroupdto.Contains((rdDto)))
-                            usersNotInGroupdto.Add(rdDto);
+                        if (!usersNotInGroupdto.Contains((user)))
+                            usersNotInGroupdto.Add(user);
                     }
                 }
             }
             return usersNotInGroupdto;
+        }
+
+        public IEnumerable<PlanDTO> GetPlansNotUsedInGroup(int groupId)
+        {
+            var group = db.Groups.Get(groupId);
+            if (group == null)
+                return null;
+            var plansNotUsedInGroup = db.Plans.GetPlansNotUsedInGroup(groupId);
+            if (plansNotUsedInGroup == null)
+                return null;
+            List<PlanDTO> plansNotUsedInGroupList = new List<PlanDTO>();
+            foreach (var plan in plansNotUsedInGroup)
+            {
+                PlanDTO planDto = new PlanDTO
+                (plan.Id,
+                    plan.Name,
+                    plan.Description,
+                    plan.Published,
+                    plan.Create_Id,
+                    plan.Creator.FirstName,
+                    plan.Creator.LastName,
+                    plan.Mod_Id,
+                    plan.Modifier?.FirstName,
+                    plan.Modifier?.LastName,
+                    plan.Create_Date,
+                    plan.Mod_Date);
+
+                if (!plansNotUsedInGroupList.Contains(planDto))
+                    plansNotUsedInGroupList.Add(planDto);
+            }
+            return plansNotUsedInGroupList;
+        }
+
+        public IEnumerable<PlanDTO> SearchPlansNotUsedInGroup(string[] searchCases, int groupId)
+        {
+            var plansNotInGroup = GetPlansNotUsedInGroup(groupId);
+            List<PlanDTO> plansNotInGroupdto = new List<PlanDTO>();
+            foreach (var searchCase in searchCases)
+            {
+                foreach (var plan in plansNotInGroup)
+                {
+                    if (plan.Name.Contains(searchCase))
+                    {
+                        if (!plansNotInGroupdto.Contains(plan))
+                            plansNotInGroupdto.Add(plan);
+                    }
+                }
+            }
+            return plansNotInGroupdto;
         }
 
     }

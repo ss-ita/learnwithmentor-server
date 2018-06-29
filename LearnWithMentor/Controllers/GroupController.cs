@@ -77,7 +77,7 @@ namespace LearnWithMentor.Controllers
             else
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"There isn't plans for the group id = {id}");
         }
-
+        
         /// <summary>
         /// Returns users that belong to group by group Id "api/group/{id}/users"
         /// </summary>
@@ -93,6 +93,39 @@ namespace LearnWithMentor.Controllers
             else
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"There isn't users in the group id = {id}");
         }
+
+        /// <summary>
+        /// Returns users that is not belong to group by group Id "api/group/{id}/users"
+        /// </summary>
+        /// <param name="groupId"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/group/{groupId}/users/notingroup")]
+        public HttpResponseMessage GetUsersNotInCurrentGroup(int groupId)
+        {
+            var group = groupService.GetUsersNotInGroup(groupId);
+            if (group != null)
+                return Request.CreateResponse(HttpStatusCode.OK, group);
+            else
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"There isn't users outside of the group id = {groupId}");
+        }
+
+        /// <summary>
+        /// Returns all plans not used in current group.
+        /// </summary>
+        [HttpGet]
+        [Route("api/plan/notingroup/{groupId}")]
+        public HttpResponseMessage GetPlansNotUsedInCurrentGroup(int groupId)
+        {
+            var notUsedPlans = groupService.GetPlansNotUsedInGroup(groupId);
+            if (notUsedPlans == null)
+            {
+                var errorMessage = "No plans in database.";
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, errorMessage);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, notUsedPlans);
+        }
+
 
         /// <summary>
         /// Create new group

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using LearnWithMentorDAL;
-using LearnWithMentorDAL.Entities;
+﻿using System.Collections.Generic;
 using LearnWithMentorDTO;
 
 namespace LearnWithMentorBLL.Interfaces
@@ -15,5 +12,9 @@ namespace LearnWithMentorBLL.Interfaces
         bool AddGroup(GroupDTO group);        
         bool AddUsersToGroup(int []usersId , int groupId);
         bool AddPlansToGroup(int[] usersId, int groupId);
+        IEnumerable<UserDTO> GetUsersNotInGroup(int groupId);
+        IEnumerable<UserDTO> SearchUserNotInGroup(string[] searchCases, int groupId);
+        IEnumerable<PlanDTO> GetPlansNotUsedInGroup(int groupId);
+        IEnumerable<PlanDTO> SearchPlansNotUsedInGroup(string[] searchCases, int groupId);
     }
 }
