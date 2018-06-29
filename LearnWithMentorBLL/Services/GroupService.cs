@@ -14,20 +14,20 @@ namespace LearnWithMentorBLL.Services
         {
         }
         public bool AddGroup(GroupDTO group)
-        {           
-                if (string.IsNullOrEmpty(group.Name))
-                    return false;
-                var groupNew = new Group
-                {
-                    Name = group.Name,
-                    Mentor_Id = group.MentorID
-                };
-                db.Groups.Add(groupNew);
-                db.Save();
-                return true;            
+        {
+            if (string.IsNullOrEmpty(group.Name))
+                return false;
+            var groupNew = new Group
+            {
+                Name = group.Name,
+                Mentor_Id = group.MentorID
+            };
+            db.Groups.Add(groupNew);
+            db.Save();
+            return true;
         }
-        
-        
+
+
         public GroupDTO GetGroupById(int id)
         {
             Group group = db.Groups.Get(id);
@@ -65,7 +65,8 @@ namespace LearnWithMentorBLL.Services
             }
             return planList;
         }
-            public IEnumerable<UserIdentityDTO> GetUsers(int groupId)
+
+        public IEnumerable<UserIdentityDTO> GetUsers(int groupId)
         {
             var group = db.Groups.GetGroupsByMentor(groupId);
             var users = db.Users.GetUsersByGroup(groupId);
@@ -89,10 +90,10 @@ namespace LearnWithMentorBLL.Services
 
         }
 
-            public IEnumerable<GroupDTO> GetGroupsByMentor(int mentorId)
+        public IEnumerable<GroupDTO> GetGroupsByMentor(int mentorId)
         {
 
-           var groups = db.Groups.GetGroupsByMentor(mentorId);
+            var groups = db.Groups.GetGroupsByMentor(mentorId);
             if (groups == null)
                 return null;
             List<GroupDTO> groupList = new List<GroupDTO>();
@@ -115,7 +116,7 @@ namespace LearnWithMentorBLL.Services
             foreach (int userId in allUsersId)
             {
                 var addUser = db.Users.Get(userId);
-                if(addUser != null)
+                if (addUser != null)
                 {
                     added = db.Groups.AddUserToGroup(userId, groupId);
                     db.Save();
@@ -142,7 +143,7 @@ namespace LearnWithMentorBLL.Services
             return added;
         }
 
-        public IEnumerable<UserIdentityDTO>  GetUsersNotInGroup(int groupId)
+        public IEnumerable<UserIdentityDTO> GetUsersNotInGroup(int groupId)
         {
             var group = db.Groups.Get(groupId);
             if (group == null)

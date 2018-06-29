@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using LearnWithMentor.Filters;
@@ -222,6 +223,62 @@ namespace LearnWithMentor.Controllers
         {
             groupService.Dispose();
             base.Dispose(disposing);
+        }
+
+        /// <summary>
+        /// Returns plans that is no used in current group and which names contain string key.
+        /// </summary>
+        /// <param name="searchkey">Key for search.</param>
+        /// <param name="groupId">Id of the plan.</param>
+        [HttpGet]
+        [Route("api/group/searchinNotUsedPlan")]
+        public HttpResponseMessage SearchPlansNotUsedInCurrentGroup(string searchKey, int groupId)
+        {
+            try
+            {
+                if (searchKey == null)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax.");
+                }
+                string[] lines = searchKey.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                var plansList = groupService.SearchPlansNotUsedInGroup(lines,groupId);
+                if (plansList == null)
+                    return Request.CreateErrorResponse(HttpStatusCode.NoContent, "This plan does not exist.");
+                return Request.CreateResponse(HttpStatusCode.OK, plansList);
+            }
+            catch (EntityException e)
+            {
+                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
+        }
+
+        /// <summary>
+        /// Returns users that is not involved in current group and which names contain string key.
+        /// </summary>
+        /// <param name="searchkey">Key for search.</param>
+        /// <param name="groupId">Id of the plan.</param>
+        [HttpGet]
+        [Route("api/group/searchinNotInvolvedUser")]
+        public HttpResponseMessage SearchUsersNotUsedInCurrentGroup(string searchKey, int groupId)
+        {
+            try
+            {
+                if (searchKey == null)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax.");
+                }
+                string[] lines = searchKey.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                var usersList = groupService.SearchUserNotInGroup(lines, groupId);
+                if (usersList == null)
+                    return Request.CreateErrorResponse(HttpStatusCode.NoContent, "This user does not exist.");
+                return Request.CreateResponse(HttpStatusCode.OK, usersList);
+            }
+            catch (EntityException e)
+            {
+                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
         }
     }
 }
