@@ -65,7 +65,7 @@ namespace LearnWithMentorBLL.Services
             }
             return planList;
         }
-            public IEnumerable<UserDTO> GetUsers(int groupId)
+            public IEnumerable<UserIdentityDTO> GetUsers(int groupId)
         {
             var group = db.Groups.GetGroupsByMentor(groupId);
             var users = db.Users.GetUsersByGroup(groupId);
@@ -73,10 +73,12 @@ namespace LearnWithMentorBLL.Services
                 return null;
             if (users == null)
                 return null;
-            List<UserDTO> userList = new List<UserDTO>();
+            List<UserIdentityDTO> userList = new List<UserIdentityDTO>();
             foreach (var user in users)
             {
-                userList.Add(new UserDTO(user.Id,
+                userList.Add(new UserIdentityDTO(user.Email,
+                                     null,
+                                     user.Id,
                                      user.FirstName,
                                      user.LastName,
                                      user.Roles.Name,
@@ -140,7 +142,7 @@ namespace LearnWithMentorBLL.Services
             return added;
         }
 
-        public IEnumerable<UserDTO> GetUsersNotInGroup(int groupId)
+        public IEnumerable<UserIdentityDTO>  GetUsersNotInGroup(int groupId)
         {
             var group = db.Groups.Get(groupId);
             if (group == null)
@@ -148,10 +150,11 @@ namespace LearnWithMentorBLL.Services
             var usersNotInGroup = db.Users.GetUsersNotInGroup(groupId);
             if (usersNotInGroup == null)
                 return null;
-            List<UserDTO> usersNotInGroupList = new List<UserDTO>();
+            List<UserIdentityDTO> usersNotInGroupList = new List<UserIdentityDTO>();
             foreach (var user in usersNotInGroup)
             {
-                UserDTO rdDto = new UserDTO(
+                UserIdentityDTO rdDto = new UserIdentityDTO(user.Email,
+                    null,
                     user.Id,
                     user.FirstName,
                     user.LastName,
@@ -163,10 +166,10 @@ namespace LearnWithMentorBLL.Services
             return usersNotInGroupList;
         }
 
-        public IEnumerable<UserDTO> SearchUserNotInGroup(string[] searchCases, int groupId)
+        public IEnumerable<UserIdentityDTO> SearchUserNotInGroup(string[] searchCases, int groupId)
         {
             var usersNotInGroup = GetUsersNotInGroup(groupId);
-            List<UserDTO> usersNotInGroupdto = new List<UserDTO>();
+            List<UserIdentityDTO> usersNotInGroupdto = new List<UserIdentityDTO>();
             foreach (var searchCase in searchCases)
             {
                 foreach (var user in usersNotInGroup)
