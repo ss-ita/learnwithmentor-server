@@ -32,5 +32,19 @@ namespace LearnWithMentorDAL.Repositories
             context.Groups.FirstOrDefault(group => group.Id == groupId).Users.Add(userAdd);
             return true;
         }
+
+        public void DeleteUserFromGroup(int groupId, int userId)
+        {
+            var group = Get(groupId);
+            var userToDelete = context.Users.FirstOrDefault(user => user.Id == userId);
+            group.Users.Remove(userToDelete);
+        }
+
+        public void DeletePlanFromGroup(int groupId, int planId)
+        {
+            var group = Get(groupId);
+            var planToDelete = context.Plans.FirstOrDefault(plan => plan.Id == planId);
+            group.Plans.Remove(planToDelete);
+        }
     }
 }
