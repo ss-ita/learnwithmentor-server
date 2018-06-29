@@ -73,8 +73,8 @@ namespace LearnWithMentorDAL.Repositories
             return fullName;
         }
         public IEnumerable<User> GetUsersNotInGroup(int groupId)
-                    {
-                        return context.Groups.FirstOrDefault(g => g.Id != groupId)?.Users;
-                   }
-}
+        {
+            return context.Users.Where(u => !u.Groups.Select(g => g.Id).Contains(groupId));
+        }
+    }
 }
