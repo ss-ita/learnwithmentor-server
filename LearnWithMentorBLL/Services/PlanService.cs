@@ -113,13 +113,14 @@ namespace LearnWithMentorBLL.Services
             return modified;
         }
 
-        public bool SetImage(int id, byte[] image)
+        public bool SetImage(int id, byte[] image, string imageName)
         {
             Plan toUpdate = db.Plans.Get(id);
             if (toUpdate == null)
                 return false;
             string converted = Convert.ToBase64String(image);
             toUpdate.Image = converted;
+            toUpdate.Image_Name = imageName;
             db.Save();
             return true;
         }

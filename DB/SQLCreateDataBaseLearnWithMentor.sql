@@ -55,6 +55,7 @@ CREATE TABLE Plans
     Name NVARCHAR(50) NOT NULL,
     Description NVARCHAR(500),
 	Image VARCHAR(MAX),
+	Image_Name NVARCHAR(1000),
     Published BIT  NOT NULL CONSTRAINT DF_Plans_Published  DEFAULT  0,
     Create_Id INT NOT NULL,
 	Mod_Id INT,
