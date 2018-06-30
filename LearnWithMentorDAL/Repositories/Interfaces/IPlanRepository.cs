@@ -10,5 +10,6 @@ namespace LearnWithMentorDAL.Repositories
         IEnumerable<Plan> GetPlansForGroup(int groupId);
         bool ContainsId(int id);
         IEnumerable<Plan> GetPlansNotUsedInGroup(int planId);
+        string GetImageBase64(int planId);
     }
 }

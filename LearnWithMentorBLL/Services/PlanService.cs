@@ -4,6 +4,8 @@ using System.Linq;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDTO;
 using LearnWithMentorDAL.Entities;
+using System.Drawing;
+using System.IO;
 
 namespace LearnWithMentorBLL.Services
 {
@@ -120,6 +122,14 @@ namespace LearnWithMentorBLL.Services
             toUpdate.Image = converted;
             db.Save();
             return true;
+        }
+
+        public byte[] GetImage(int id)
+        {
+            string imageString = db.Plans.GetImageBase64(id);
+            if (string.IsNullOrEmpty(imageString))
+                return null;
+            return Convert.FromBase64String(imageString);
         }
 
         public bool Add(PlanDTO dto)

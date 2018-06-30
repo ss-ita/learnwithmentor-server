@@ -10,9 +10,9 @@ using LearnWithMentorBLL.Services;
 using System.Web.Http.Tracing;
 using LearnWithMentor.Log;
 using System.Data.Entity.Core;
-using System.Threading.Tasks;
 using System.Web;
 using System.IO;
+using System.Drawing;
 
 namespace LearnWithMentor.Controllers
 {
@@ -146,17 +146,21 @@ namespace LearnWithMentor.Controllers
             return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
         }
 
+        /// <summary>
+        /// Sets image for plan by plan id.
+        /// </summary>
+        /// <param name="id"> Id of the plan. </param>
         [HttpPost]
         [Route("api/plan/{id}/image")]
-        public async Task<HttpResponseMessage> Put(int id)
+        public HttpResponseMessage PostImage(int id)
         {
             if (!planService.ContainsId(id))
             {
                 var errorMessage = "No plan with this id in database.";
                 return Request.CreateResponse(HttpStatusCode.BadRequest, errorMessage);
             }
-            var h = Request.Headers;
-            if (HttpContext.Current.Request.Files.Count != 1 /*|| HttpContext.Current.Request.Files == null*/)
+
+            if (HttpContext.Current.Request.Files.Count != 1)
             {
                 var errorMessage = "Only one image can be sent.";
                 return Request.CreateResponse(HttpStatusCode.BadRequest, errorMessage);
@@ -196,7 +200,44 @@ namespace LearnWithMentor.Controllers
                 string emptyImageMessage = "Empty image.";
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, emptyImageMessage);
             }
-            catch (Exception e)
+            catch (EntityException e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, e);
+            }
+        }
+
+        /// <summary>
+        /// Returns image of concrete plan form database.
+        /// </summary>
+        /// <param name="id"> Id of the plan. </param>
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("api/plan/{id}/image")]
+        public HttpResponseMessage GetImage(int id)
+        {
+            try
+            {
+                if (!planService.ContainsId(id))
+                {
+                    var errorMessage = "No plan with this id in database.";
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, errorMessage);
+                }
+                byte[] image = planService.GetImage(id);
+                if (image == null)
+                {
+                    var noImgMessage = "Plan has no image.";
+                    return Request.CreateResponse(HttpStatusCode.NoContent, noImgMessage);
+                }
+                HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
+
+                MemoryStream memStream = new MemoryStream(image);
+                
+                response.Content = new ByteArrayContent(memStream.ToArray());
+                response.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("image/jpg");
+                
+                return response;
+            }
+            catch (EntityException e)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, e);
             }

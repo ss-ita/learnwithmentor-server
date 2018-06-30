@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using LearnWithMentorDTO;
+using System.Drawing;
 
 namespace LearnWithMentorBLL.Interfaces
 {
@@ -13,5 +14,6 @@ namespace LearnWithMentorBLL.Interfaces
         List<PlanDTO> Search(string[] str);
         bool ContainsId(int id);
         bool SetImage(int planId, byte[] image);
+        byte[] GetImage(int id);
     }
 }
