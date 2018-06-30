@@ -125,12 +125,16 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public byte[] GetImage(int id)
+        public ImageDTO GetImage(int id)
         {
-            string imageString = db.Plans.GetImageBase64(id);
-            if (string.IsNullOrEmpty(imageString))
+            Plan toGetImage = db.Plans.Get(id);
+            if (toGetImage == null)
                 return null;
-            return Convert.FromBase64String(imageString);
+            return new ImageDTO()
+            {
+                Name = toGetImage.Image_Name,
+                Base64Data = toGetImage.Image
+            };            
         }
 
         public bool Add(PlanDTO dto)

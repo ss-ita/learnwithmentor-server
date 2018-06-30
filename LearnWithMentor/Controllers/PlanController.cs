@@ -210,43 +210,10 @@ namespace LearnWithMentor.Controllers
         /// Returns image of concrete plan form database.
         /// </summary>
         /// <param name="id"> Id of the plan. </param>
-        //[HttpGet]
-        //[AllowAnonymous]
-        //[Route("api/plan/{id}/imag")]
-        //public HttpResponseMessage GetImage(int id)
-        //{
-        //    try
-        //    {
-        //        if (!planService.ContainsId(id))
-        //        {
-        //            var errorMessage = "No plan with this id in database.";
-        //            return Request.CreateResponse(HttpStatusCode.BadRequest, errorMessage);
-        //        }
-        //        byte[] image = planService.GetImage(id);
-        //        if (image == null)
-        //        {
-        //            var noImgMessage = "Plan has no image.";
-        //            return Request.CreateResponse(HttpStatusCode.NoContent, noImgMessage);
-        //        }
-        //        HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
-
-        //        MemoryStream memStream = new MemoryStream(image);
-                
-        //        response.Content = new ByteArrayContent(memStream.ToArray());
-        //        response.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("image/jpg");
-                
-        //        return response;
-        //    }
-        //    catch (EntityException e)
-        //    {
-        //        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, e);
-        //    }
-        //}
-
         [HttpGet]
         [AllowAnonymous]
         [Route("api/plan/{id}/image")]
-        public HttpResponseMessage GetBase64Image(int id)
+        public HttpResponseMessage GetImage(int id)
         {
             try
             {
@@ -255,16 +222,14 @@ namespace LearnWithMentor.Controllers
                     var errorMessage = "No plan with this id in database.";
                     return Request.CreateResponse(HttpStatusCode.BadRequest, errorMessage);
                 }
-                byte[] image = planService.GetImage(id);
-                return Request.CreateResponse(HttpStatusCode.OK, System.Convert.ToBase64String(image));
+                ImageDTO dto = planService.GetImage(id);
+                return Request.CreateResponse(HttpStatusCode.OK, dto);
             }
             catch (EntityException e)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, e);
             }
         }
-
-
 
         /// <summary>
         /// Searches plans that match q string
