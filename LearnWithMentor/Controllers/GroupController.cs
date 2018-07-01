@@ -259,7 +259,7 @@ namespace LearnWithMentor.Controllers
         /// <param name="searchkey">Key for search.</param>
         /// <param name="groupId">Id of the plan.</param>
         [HttpGet]
-        [Route("api/group/searchinNotInvolvedUser")]
+        [Route("api/group/searchinNotInvolvedUsers")]
         public HttpResponseMessage SearchUsersNotUsedInCurrentGroup(string searchKey, int groupId)
         {
             try

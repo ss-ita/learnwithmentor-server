@@ -9,5 +9,7 @@ namespace LearnWithMentorDAL.Repositories
         IEnumerable<Group> GetGroupsByMentor(int mentor_id);
         bool AddUserToGroup(int userId, int groupId);
         bool AddPlanToGroup(int planId, int groupId);
+        void RemoveUserFromGroup(int groupId, int userId);
+        void RemovePlanFromGroup(int groupId, int planId);
     }
 }

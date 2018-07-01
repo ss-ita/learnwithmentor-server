@@ -77,17 +77,5 @@ namespace LearnWithMentorDAL.Repositories
         {
             return context.Groups.FirstOrDefault(g => g.Id != groupId)?.Users;
         }
-
-        public bool RemoveUserFromGroup(int groupId, int userId)
-        {
-            
-        }
-
-        //public void Remove(T item)
-        //{
-        //    context.Set<T>().Remove(item);
-        //}
-
-
     }
 }
