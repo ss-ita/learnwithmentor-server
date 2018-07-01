@@ -310,7 +310,6 @@ namespace LearnWithMentor.Controllers
             
         }
 
-
         /// <summary>
         /// Removes plan from current group.
         /// </summary>
