@@ -10,6 +10,9 @@ using LearnWithMentorBLL.Services;
 using System.Web.Http.Tracing;
 using LearnWithMentor.Log;
 using System.Data.Entity.Core;
+using System.Web;
+using System.IO;
+using System.Drawing;
 
 namespace LearnWithMentor.Controllers
 {
@@ -65,6 +68,25 @@ namespace LearnWithMentor.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
             }
             return Request.CreateResponse<PlanDTO>(HttpStatusCode.OK, plan);
+        }
+
+        /// <summary>
+        /// Gets some number of plans on page. 
+        /// </summary>
+        /// <param name="prevAmount"> Previous amount to start with. </param>
+        /// <param name="amount"> Amount of plans to be returned. </param>
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("api/plan/some")]
+        public HttpResponseMessage GetSome(int prevAmount, int amount)
+        {
+            List<PlanDTO> dtoList = planService.GetSomeAmount(prevAmount, amount);
+            if (dtoList == null || dtoList.Count == 0)
+            {
+                var errorMessage = "No plans in database.";
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, errorMessage);
+            }
+            return Request.CreateResponse<IEnumerable<PlanDTO>>(HttpStatusCode.OK, dtoList);
         }
 
         /// <summary>
@@ -141,6 +163,91 @@ namespace LearnWithMentor.Controllers
             tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on updating plan");
             var message = "Incorrect request syntax or plan does not exist.";
             return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
+        }
+
+        /// <summary>
+        /// Sets image for plan by plan id.
+        /// </summary>
+        /// <param name="id"> Id of the plan. </param>
+        [HttpPost]
+        [Route("api/plan/{id}/image")]
+        public HttpResponseMessage PostImage(int id)
+        {
+            if (!planService.ContainsId(id))
+            {
+                var errorMessage = "No plan with this id in database.";
+                return Request.CreateResponse(HttpStatusCode.BadRequest, errorMessage);
+            }
+
+            if (HttpContext.Current.Request.Files.Count != 1)
+            {
+                var errorMessage = "Only one image can be sent.";
+                return Request.CreateResponse(HttpStatusCode.BadRequest, errorMessage);
+            }
+
+            try
+            {
+                var postedFile = HttpContext.Current.Request.Files[0];
+                if (postedFile != null && postedFile.ContentLength > 0)
+                {
+                    List<string> allowedFileExtensions = new List<string> { ".jpeg", ".jpg", ".png" };
+
+                    var extension = postedFile.FileName.Substring(postedFile.FileName.LastIndexOf('.')).ToLower();
+                    if (!allowedFileExtensions.Contains(extension))
+                    {
+                        string errorMessage = "Types allowed only .jpeg .jpg .png";
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, errorMessage);
+                    }
+
+                    int maxContentLength = 1024 * 1024 * 1; //Size = 1 MB  
+                    if (postedFile.ContentLength > maxContentLength)
+                    {
+                        string errorMessage = "Please Upload a file upto 1 mb.";
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, errorMessage);
+                    }
+
+                    byte[] imageData = null;
+                    using (var binaryReader = new BinaryReader(postedFile.InputStream))
+                    {
+                        imageData = binaryReader.ReadBytes(postedFile.ContentLength);
+                    }
+
+                    planService.SetImage(id, imageData, postedFile.FileName);
+                    var okMessage = "Successfully created image.";
+                    return Request.CreateResponse(HttpStatusCode.OK, okMessage);
+                }
+                string emptyImageMessage = "Empty image.";
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, emptyImageMessage);
+            }
+            catch (EntityException e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, e);
+            }
+        }
+
+        /// <summary>
+        /// Returns image of concrete plan form database.
+        /// </summary>
+        /// <param name="id"> Id of the plan. </param>
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("api/plan/{id}/image")]
+        public HttpResponseMessage GetImage(int id)
+        {
+            try
+            {
+                if (!planService.ContainsId(id))
+                {
+                    var errorMessage = "No plan with this id in database.";
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, errorMessage);
+                }
+                ImageDTO dto = planService.GetImage(id);
+                return Request.CreateResponse(HttpStatusCode.OK, dto);
+            }
+            catch (EntityException e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, e);
+            }
         }
 
         /// <summary>

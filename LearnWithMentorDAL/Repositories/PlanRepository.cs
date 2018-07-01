@@ -41,9 +41,19 @@ namespace LearnWithMentorDAL.Repositories
             return context.Plans.Any(p => p.Id == id);
         }
 
-        public IEnumerable<Plan> GetPlansNotUsedInGroup(int planId)
+        public string GetImageBase64(int planId)
         {
-            return context.Groups.FirstOrDefault(g => !g.Plans.Select(p => p.Id).Contains(planId))?.Plans;
+            return context.Plans.FirstOrDefault(p => p.Id == planId)?.Image;
+        }
+
+        public IEnumerable<Plan> GetSomePlans(int previousNumberOfPlans, int numberOfPlans)
+        {
+            return context.Plans.OrderBy(p => p.Id).Skip(previousNumberOfPlans).Take(numberOfPlans);
+        }
+
+        public IEnumerable<Plan> GetPlansNotUsedInGroup(int groupId)
+        {
+            return context.Plans.Where(p => !p.Groups.Select(g => g.Id).Contains(groupId));
         }
     }
 }
