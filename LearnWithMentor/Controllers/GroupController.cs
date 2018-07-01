@@ -238,7 +238,7 @@ namespace LearnWithMentor.Controllers
             {
                 if (searchKey == null)
                 {
-                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax.");
+                    return GetPlansNotUsedInCurrentGroup(groupId);
                 }
                 string[] lines = searchKey.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 var plansList = groupService.SearchPlansNotUsedInGroup(lines,groupId);
@@ -266,7 +266,7 @@ namespace LearnWithMentor.Controllers
             {
                 if (searchKey == null)
                 {
-                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax.");
+                    return GetUsersNotInCurrentGroup(groupId);
                 }
                 string[] lines = searchKey.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 var usersList = groupService.SearchUserNotInGroup(lines, groupId);
