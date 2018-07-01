@@ -51,6 +51,8 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.GroupPlans' does not have a
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Description" Type="nvarchar" MaxLength="500" />
+          <Property Name="Image" Type="varchar(max)" />
+          <Property Name="Image_Name" Type="nvarchar" MaxLength="1000" />
           <Property Name="Published" Type="bit" Nullable="false" />
           <Property Name="Create_Id" Type="int" Nullable="false" />
           <Property Name="Mod_Id" Type="int" />
@@ -470,9 +472,9 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
           <EntitySet Name="Tasks" EntityType="Self.Tasks" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserTasks" EntityType="Self.UserTasks" Schema="dbo" store:Type="Tables" />
-    
+          
           <EntitySet Name="GroupPlans" EntityType="Self.GroupPlans" store:Type="Tables" Schema="dbo">
-    
+            
           </EntitySet>
           <EntitySet Name="PlanSuggestion" EntityType="Self.PlanSuggestion" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -482,8 +484,8 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
     [PlanSuggestion].[Text] AS [Text]
     FROM [dbo].[PlanSuggestion] AS [PlanSuggestion]</DefiningQuery>
           </EntitySet>
-          <EntitySet Name="UserGroups" EntityType="Self.UserGroups" store:Type="Tables"  Schema="dbo">
-    
+          <EntitySet Name="UserGroups" EntityType="Self.UserGroups" store:Type="Tables" Schema="dbo">
+         
           </EntitySet>
           <EntitySet Name="GROUPS-PLANS-TASKS" EntityType="Self.GROUPS-PLANS-TASKS" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -753,6 +755,8 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
           <NavigationProperty Name="PlanSuggestion" Relationship="LearnWithMentor_DBModel.FK_PlanSuggestion_To_Plans" FromRole="Plans" ToRole="PlanSuggestion" />
           <NavigationProperty Name="PlanTasks" Relationship="LearnWithMentor_DBModel.FK_PlanTasks_To_Plans" FromRole="Plans" ToRole="PlanTasks" />
           <NavigationProperty Name="Groups" Relationship="LearnWithMentor_DBModel.GroupPlans" FromRole="Plans" ToRole="Groups" />
+          <Property Name="Image" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Image_Name" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="PlanTask">
           <Key>
@@ -1182,6 +1186,8 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
           <EntitySetMapping Name="Plans">
             <EntityTypeMapping TypeName="LearnWithMentor_DBModel.Plan">
               <MappingFragment StoreEntitySet="Plans">
+                <ScalarProperty Name="Image_Name" ColumnName="Image_Name" />
+                <ScalarProperty Name="Image" ColumnName="Image" />
                 <ScalarProperty Name="Mod_Date" ColumnName="Mod_Date" />
                 <ScalarProperty Name="Create_Date" ColumnName="Create_Date" />
                 <ScalarProperty Name="Mod_Id" ColumnName="Mod_Id" />

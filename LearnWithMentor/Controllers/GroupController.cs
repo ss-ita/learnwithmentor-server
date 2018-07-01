@@ -15,8 +15,8 @@ namespace LearnWithMentor.Controllers
     /// <summary>
     /// Controller for groups.
     /// </summary>
-    //[Authorize]
-    //[JwtAuthentication]
+    [Authorize]
+    [JwtAuthentication]
     public class GroupController : ApiController
     {
         private readonly IGroupService groupService;
@@ -228,7 +228,7 @@ namespace LearnWithMentor.Controllers
         /// <summary>
         /// Returns plans that is no used in current group and which names contain string key.
         /// </summary>
-        /// <param name="searchkey">Key for search.</param>
+        /// <param name="searchKey">Key for search.</param>
         /// <param name="groupId">Id of the plan.</param>
         [HttpGet]
         [Route("api/group/searchinNotUsedPlan")]
@@ -256,7 +256,7 @@ namespace LearnWithMentor.Controllers
         /// <summary>
         /// Returns users that is not involved in current group and which names contain string key.
         /// </summary>
-        /// <param name="searchkey">Key for search.</param>
+        /// <param name="searchKey">Key for search.</param>
         /// <param name="groupId">Id of the plan.</param>
         [HttpGet]
         [Route("api/group/searchinNotInvolvedUser")]

@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDTO;
 using LearnWithMentorDAL.Entities;
+using System.Drawing;
+using System.IO;
 
 namespace LearnWithMentorBLL.Services
 {
@@ -36,6 +39,29 @@ namespace LearnWithMentorBLL.Services
                 return null;
             List<PlanDTO> dtosList = new List<PlanDTO>();
             foreach (var plan in allPlans)
+            {
+                dtosList.Add(new PlanDTO(plan.Id,
+                               plan.Name,
+                               plan.Description,
+                               plan.Published,
+                               plan.Create_Id,
+                               plan.Creator.FirstName,
+                               plan.Creator.LastName,
+                               plan.Mod_Id,
+                               plan.Modifier?.FirstName,
+                               plan.Modifier?.LastName,
+                               plan.Create_Date,
+                               plan.Mod_Date));
+            }
+            return dtosList;
+        }
+        public List<PlanDTO> GetSomeAmount(int prevAmount, int amount)
+        {
+            var somePlans = db.Plans.GetSomePlans(prevAmount, amount);
+            if (!somePlans.Any())
+                return null;
+            List<PlanDTO> dtosList = new List<PlanDTO>();
+            foreach(var plan in somePlans)
             {
                 dtosList.Add(new PlanDTO(plan.Id,
                                plan.Name,
@@ -109,6 +135,31 @@ namespace LearnWithMentorBLL.Services
             db.Save();
             return modified;
         }
+
+        public bool SetImage(int id, byte[] image, string imageName)
+        {
+            Plan toUpdate = db.Plans.Get(id);
+            if (toUpdate == null)
+                return false;
+            string converted = Convert.ToBase64String(image);
+            toUpdate.Image = converted;
+            toUpdate.Image_Name = imageName;
+            db.Save();
+            return true;
+        }
+
+        public ImageDTO GetImage(int id)
+        {
+            Plan toGetImage = db.Plans.Get(id);
+            if (toGetImage == null || toGetImage.Image == null || toGetImage.Image_Name == null)
+                return null;
+            return new ImageDTO()
+            {
+                Name = toGetImage.Image_Name,
+                Base64Data = toGetImage.Image
+            };            
+        }
+
         public bool Add(PlanDTO dto)
         {
             if (!ContainsId(dto.CreatorId))

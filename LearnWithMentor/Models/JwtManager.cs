@@ -17,7 +17,7 @@ namespace LearnWithMentor.Models
         /// </summary>
         private const string Secret = "db3OIsj+BXE9NZDy0t8W3TcNekrF+2d/1sFnWG4HnV8TZY30iTOdtVWJG8abWvB1GlOgJuQZdcF2Luqm/hccMw==";
 
-        public static string GenerateToken(UserIdentityDTO user, int expireMinutes = 20)
+        public static string GenerateToken(UserIdentityDTO user, int expireDays = 1)
         {
 
 
@@ -35,7 +35,7 @@ namespace LearnWithMentor.Models
                             new Claim(ClaimTypes.Role, user.Role)
                         }),
 
-                Expires = now.AddMinutes(Convert.ToInt32(expireMinutes)),
+                Expires = now.AddDays(expireDays),
 
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(symmetricKey), SecurityAlgorithms.HmacSha256Signature)
             };
