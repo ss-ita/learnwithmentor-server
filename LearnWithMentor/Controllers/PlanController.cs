@@ -75,9 +75,8 @@ namespace LearnWithMentor.Controllers
         /// </summary>
         /// <param name="prevAmount"> Previous amount to start with. </param>
         /// <param name="amount"> Amount of plans to be returned. </param>
-        /// <returns></returns>
-        [HttpGet]
         [AllowAnonymous]
+        [HttpGet]
         [Route("api/plan/some")]
         public HttpResponseMessage GetSome(int prevAmount, int amount)
         {
@@ -230,8 +229,8 @@ namespace LearnWithMentor.Controllers
         /// Returns image of concrete plan form database.
         /// </summary>
         /// <param name="id"> Id of the plan. </param>
-        [HttpGet]
         [AllowAnonymous]
+        [HttpGet]
         [Route("api/plan/{id}/image")]
         public HttpResponseMessage GetImage(int id)
         {
