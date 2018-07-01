@@ -7,6 +7,7 @@ namespace LearnWithMentorBLL.Interfaces
     {
         PlanDTO Get(int id);
         List<PlanDTO> GetAll();
+        List<PlanDTO> GetSomeAmount(int prevAmount, int amount);
         List<TaskDTO> GetAllTasks(int planId);
         bool UpdateById(PlanDTO plan, int id);
         bool Add(PlanDTO dto);

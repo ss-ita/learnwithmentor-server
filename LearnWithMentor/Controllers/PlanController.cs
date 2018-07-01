@@ -71,6 +71,26 @@ namespace LearnWithMentor.Controllers
         }
 
         /// <summary>
+        /// Gets some number of plans on page. 
+        /// </summary>
+        /// <param name="prevAmount"> Previous amount to start with. </param>
+        /// <param name="amount"> Amount of plans to be returned. </param>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("api/plan/some")]
+        public HttpResponseMessage GetSome(int prevAmount, int amount)
+        {
+            List<PlanDTO> dtoList = planService.GetSomeAmount(prevAmount, amount);
+            if (dtoList == null || dtoList.Count == 0)
+            {
+                var errorMessage = "No plans in database.";
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, errorMessage);
+            }
+            return Request.CreateResponse<IEnumerable<PlanDTO>>(HttpStatusCode.OK, dtoList);
+        }
+
+        /// <summary>
         /// Gets all tasks assigned to plan.
         /// </summary>
         /// <param name="plan_id"> Id of plan. </param>

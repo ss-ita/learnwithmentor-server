@@ -55,6 +55,29 @@ namespace LearnWithMentorBLL.Services
             }
             return dtosList;
         }
+        public List<PlanDTO> GetSomeAmount(int prevAmount, int amount)
+        {
+            var somePlans = db.Plans.GetSomePlans(prevAmount, amount);
+            if (!somePlans.Any())
+                return null;
+            List<PlanDTO> dtosList = new List<PlanDTO>();
+            foreach(var plan in somePlans)
+            {
+                dtosList.Add(new PlanDTO(plan.Id,
+                               plan.Name,
+                               plan.Description,
+                               plan.Published,
+                               plan.Create_Id,
+                               plan.Creator.FirstName,
+                               plan.Creator.LastName,
+                               plan.Mod_Id,
+                               plan.Modifier?.FirstName,
+                               plan.Modifier?.LastName,
+                               plan.Create_Date,
+                               plan.Mod_Date));
+            }
+            return dtosList;
+        }
         public List<TaskDTO> GetAllTasks(int planId)
         {
             var plan = db.Plans.Get(planId);
