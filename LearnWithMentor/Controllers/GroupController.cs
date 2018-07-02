@@ -228,7 +228,7 @@ namespace LearnWithMentor.Controllers
         /// <summary>
         /// Returns plans that is no used in current group and which names contain string key.
         /// </summary>
-        /// <param name="searchkey">Key for search.</param>
+        /// <param name="searchKey">Key for search.</param>
         /// <param name="groupId">Id of the plan.</param>
         [HttpGet]
         [Route("api/group/searchinNotUsedPlan")]
@@ -238,7 +238,7 @@ namespace LearnWithMentor.Controllers
             {
                 if (searchKey == null)
                 {
-                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax.");
+                    return GetPlansNotUsedInCurrentGroup(groupId);
                 }
                 string[] lines = searchKey.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 var plansList = groupService.SearchPlansNotUsedInGroup(lines,groupId);
@@ -256,7 +256,7 @@ namespace LearnWithMentor.Controllers
         /// <summary>
         /// Returns users that is not involved in current group and which names contain string key.
         /// </summary>
-        /// <param name="searchkey">Key for search.</param>
+        /// <param name="searchKey">Key for search.</param>
         /// <param name="groupId">Id of the plan.</param>
         [HttpGet]
         [Route("api/group/searchinNotInvolvedUsers")]
@@ -266,7 +266,7 @@ namespace LearnWithMentor.Controllers
             {
                 if (searchKey == null)
                 {
-                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax.");
+                    return GetUsersNotInCurrentGroup(groupId);
                 }
                 string[] lines = searchKey.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 var usersList = groupService.SearchUserNotInGroup(lines, groupId);

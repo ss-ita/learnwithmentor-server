@@ -242,6 +242,11 @@ namespace LearnWithMentor.Controllers
                     return Request.CreateResponse(HttpStatusCode.BadRequest, errorMessage);
                 }
                 ImageDTO dto = planService.GetImage(id);
+                if (dto == null)
+                {
+                    var message = "No image for this plan in database.";
+                    return Request.CreateResponse(HttpStatusCode.NoContent, message);
+                }
                 return Request.CreateResponse(HttpStatusCode.OK, dto);
             }
             catch (EntityException e)
