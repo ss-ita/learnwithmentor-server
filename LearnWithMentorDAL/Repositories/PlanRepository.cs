@@ -53,7 +53,8 @@ namespace LearnWithMentorDAL.Repositories
 
         public IEnumerable<Plan> GetPlansNotUsedInGroup(int groupId)
         {
-            return context.Plans.Where(p => !p.Groups.Select(g => g.Id).Contains(groupId));
+            var usedPlans = context.Groups.FirstOrDefault(g => g.Id == groupId).Plans.Select(p=>p.Id);
+            return context.Plans.Where(p => !usedPlans.Contains(p.Id));
         }
     }
 }
