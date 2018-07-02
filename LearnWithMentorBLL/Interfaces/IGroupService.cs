@@ -16,5 +16,7 @@ namespace LearnWithMentorBLL.Interfaces
         IEnumerable<UserIdentityDTO> SearchUserNotInGroup(string[] searchCases, int groupId);
         IEnumerable<PlanDTO> GetPlansNotUsedInGroup(int groupId);
         IEnumerable<PlanDTO> SearchPlansNotUsedInGroup(string[] searchCases, int groupId);
+        bool RemoveUserFromGroup(int groupId, int userIdToRemove);
+        bool RemovePlanFromGroup(int groupId, int planIdToRemove);
     }
 }

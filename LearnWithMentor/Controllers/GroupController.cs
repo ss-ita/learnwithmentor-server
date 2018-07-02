@@ -259,7 +259,7 @@ namespace LearnWithMentor.Controllers
         /// <param name="searchKey">Key for search.</param>
         /// <param name="groupId">Id of the plan.</param>
         [HttpGet]
-        [Route("api/group/searchinNotInvolvedUser")]
+        [Route("api/group/searchinNotInvolvedUsers")]
         public HttpResponseMessage SearchUsersNotUsedInCurrentGroup(string searchKey, int groupId)
         {
             try
@@ -279,6 +279,64 @@ namespace LearnWithMentor.Controllers
                 tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
+        }
+
+        /// <summary>
+        /// Removes user from current group.
+        /// </summary>
+        /// <param name="groupId">Group ID where user should be removed.</param>
+        /// <param name="userId">Id of the user to remove.</param>
+        [HttpDelete]
+        [Route("api/group/removeUserFromGroup")]
+        public HttpResponseMessage RemoveUserFromCurrentGroup(int groupId, int userToRemoveId)
+        {
+            try
+            {
+                bool successfullyRemoved = groupService.RemoveUserFromGroup(groupId, userToRemoveId);
+                if (successfullyRemoved)
+                {
+                    var log = $"Succesfully removed user with id = {userToRemoveId} to group with id = {groupId}";
+                    tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
+                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully removed user from group ({groupId}).");
+                }
+                tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on removing user from the group");
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax or user or group does not exist.");
+            }
+            catch (EntityException e)
+            {
+                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
+            
+        }
+
+        /// <summary>
+        /// Removes plan from current group.
+        /// </summary>
+        /// <param name="groupId">Group ID where user should be removed.</param>
+        /// <param name="planId">Id of the plan to remove.</param>
+        [HttpDelete]
+        [Route("api/group/removePlanFromGroup")]
+        public HttpResponseMessage RemovePlanFromCurrentGroup(int groupId, int planToRemoveId)
+        {
+            try
+            {
+                bool successfullyRemoved = groupService.RemovePlanFromGroup(groupId, planToRemoveId);
+                if (successfullyRemoved)
+                {
+                    var log = $"Succesfully removed plan with id = {planToRemoveId} to group with id = {groupId}";
+                    tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
+                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully removed plan from group ({groupId}).");
+                }
+                tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on removing user from the group");
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax or plan or group does not exist.");
+            }
+            catch (EntityException e)
+            {
+                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
+
         }
     }
 }

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using LearnWithMentorBLL.Infrastructure;
+﻿using System.Collections.Generic;
 using LearnWithMentorBLL.Interfaces;
-using LearnWithMentorDAL;
 using LearnWithMentorDAL.Entities;
 using LearnWithMentorDTO;
 
@@ -234,5 +231,28 @@ namespace LearnWithMentorBLL.Services
             return plansNotInGroupdto;
         }
 
+        public bool RemoveUserFromGroup(int groupId, int userIdToRemove)
+        {
+            var group = db.Groups.Get(groupId);
+            var userToRemove = db.Users.Get(userIdToRemove);
+            if (group == null)
+                return false;
+            if (userToRemove == null)
+                return false;
+            group.Users.Remove(userToRemove);
+            return true;
+        }
+
+        public bool RemovePlanFromGroup(int groupId, int planIdToRemove)
+        {
+            var group = db.Groups.Get(groupId);
+            var planToRemove = db.Plans.Get(planIdToRemove);
+            if (group == null)
+                return false;
+            if (planToRemove == null)
+                return false;
+            group.Plans.Remove(planToRemove);
+            return true;
+        }
     }
 }
