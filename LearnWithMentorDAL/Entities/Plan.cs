@@ -30,6 +30,8 @@ namespace LearnWithMentorDAL.Entities
         public Nullable<int> Mod_Id { get; set; }
         public Nullable<System.DateTime> Create_Date { get; set; }
         public Nullable<System.DateTime> Mod_Date { get; set; }
+        public string Image { get; set; }
+        public string Image_Name { get; set; }
     
         public virtual User Creator { get; set; }
         public virtual User Modifier { get; set; }

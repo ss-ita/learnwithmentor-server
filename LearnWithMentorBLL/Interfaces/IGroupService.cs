@@ -7,13 +7,13 @@ namespace LearnWithMentorBLL.Interfaces
     {
         GroupDTO GetGroupById(int id);
         IEnumerable<GroupDTO> GetGroupsByMentor(int mentorId);
-        IEnumerable<UserDTO> GetUsers(int groupId);
+        IEnumerable<UserIdentityDTO> GetUsers(int groupId);
         IEnumerable<PlanDTO> GetPlans(int groupId);
         bool AddGroup(GroupDTO group);        
         bool AddUsersToGroup(int []usersId , int groupId);
         bool AddPlansToGroup(int[] usersId, int groupId);
-        IEnumerable<UserDTO> GetUsersNotInGroup(int groupId);
-        IEnumerable<UserDTO> SearchUserNotInGroup(string[] searchCases, int groupId);
+        IEnumerable<UserIdentityDTO> GetUsersNotInGroup(int groupId);
+        IEnumerable<UserIdentityDTO> SearchUserNotInGroup(string[] searchCases, int groupId);
         IEnumerable<PlanDTO> GetPlansNotUsedInGroup(int groupId);
         IEnumerable<PlanDTO> SearchPlansNotUsedInGroup(string[] searchCases, int groupId);
         bool RemoveUserFromGroup(int groupId, int userIdToRemove);
