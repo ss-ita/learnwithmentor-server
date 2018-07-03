@@ -15,11 +15,12 @@ namespace LearnWithMentor.Controllers
     /// <summary>
     /// Controller for groups.
     /// </summary>
-    [Authorize]
-    [JwtAuthentication]
+    //[Authorize]
+    //[JwtAuthentication]
     public class GroupController : ApiController
     {
         private readonly IGroupService groupService;
+        private readonly IUserService userService;
         private readonly ITraceWriter tracer;
 
         /// <summary>
@@ -28,6 +29,7 @@ namespace LearnWithMentor.Controllers
         public GroupController()
         {
             groupService = new GroupService();
+            userService = new UserService();
             tracer = new LWMLogger();
         }
 
@@ -337,6 +339,25 @@ namespace LearnWithMentor.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
 
+        }
+        /// <summary>
+        /// If user: strudent - returns its learning groups, if mentor - returns mentored groups, if admin - returns all groups."
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/group/user/{userId}/groups")]
+        public HttpResponseMessage GetUserGroups(int userId)
+        {
+            if(!userService.ContainsId(userId))
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"There are no users with id = {userId}");
+            if (groupService.GroupsCount()==0)
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"There are no groups in database.");
+            var groups = groupService.GetUserGroups(userId);
+            if (groups != null)
+                return Request.CreateResponse(HttpStatusCode.OK, groups);
+            else
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"There are no groups for this user");
         }
     }
 }
