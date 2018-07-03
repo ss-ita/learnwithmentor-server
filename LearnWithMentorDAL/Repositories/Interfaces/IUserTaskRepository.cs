@@ -6,5 +6,6 @@ namespace LearnWithMentorDAL.Repositories
     {
         UserTask Get(int id);
         UserTask GetByPlanTaskForUser(int planTaskId, int userId);
+        int GetNumberOfTasksByState(int userId, string state);
     }
 }

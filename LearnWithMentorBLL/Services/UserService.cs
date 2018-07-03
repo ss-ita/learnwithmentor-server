@@ -154,7 +154,7 @@ namespace LearnWithMentorBLL.Services
 
         public ImageDTO GetImage(int id)
         {
-            var userToGetImage = db.Plans.Get(id);
+            var userToGetImage = db.Users.Get(id);
             if (userToGetImage == null || userToGetImage.Image == null || userToGetImage.Image_Name == null)
                 return null;
             return new ImageDTO()

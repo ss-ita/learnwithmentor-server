@@ -23,6 +23,7 @@ namespace LearnWithMentor.Controllers
     {
         private readonly IUserService userService;
         private readonly IRoleService roleService;
+        private readonly ITaskService taskService;
         private readonly ITraceWriter tracer;
 
         /// <summary>
@@ -32,6 +33,7 @@ namespace LearnWithMentor.Controllers
         {
             userService = new UserService();
             roleService = new RoleService();
+            taskService = new TaskService();
             tracer = new LWMLogger();
         }
 
@@ -146,6 +148,24 @@ namespace LearnWithMentor.Controllers
             var message = "Incorrect request syntax.";
             tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, message);
             return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
+        }
+
+        /// <summary>
+        /// Returns statistics dto with number of tasks in different states for one user.
+        /// </summary>
+        /// <param name="id"> Id of the user. </param>
+        [JwtAuthentication]
+        [HttpGet]
+        [Route("api/user/{id}/statistics")]
+        public HttpResponseMessage GetStatistics(int id)
+        {
+            var statsDTO = taskService.GetUserStatistics(id);
+            if (statsDTO == null)
+            {
+                var errorMessage = "No user with this id in database.";
+                return Request.CreateResponse(HttpStatusCode.NoContent, errorMessage);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, statsDTO);
         }
 
         /// <summary>
