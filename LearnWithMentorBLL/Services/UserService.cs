@@ -3,6 +3,7 @@ using System.Linq;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDTO;
 using LearnWithMentorDAL.Entities;
+using System;
 
 namespace LearnWithMentorBLL.Services
 {
@@ -138,6 +139,31 @@ namespace LearnWithMentorBLL.Services
             }
             return dtos;
         }
+
+        public bool SetImage(int id, byte[] image, string imageName)
+        {
+            var userToUpdate = db.Users.Get(id);
+            if (userToUpdate == null)
+                return false;
+            string converted = Convert.ToBase64String(image);
+            userToUpdate.Image = converted;
+            userToUpdate.Image_Name = imageName;
+            db.Save();
+            return true;
+        }
+
+        public ImageDTO GetImage(int id)
+        {
+            var userToGetImage = db.Plans.Get(id);
+            if (userToGetImage == null || userToGetImage.Image == null || userToGetImage.Image_Name == null)
+                return null;
+            return new ImageDTO()
+            {
+                Name = userToGetImage.Image_Name,
+                Base64Data = userToGetImage.Image
+            };
+        }
+
         public List<UserDTO> GetUsersByState(bool state)
         {
             var users = db.Users.GetUsersByState(state);

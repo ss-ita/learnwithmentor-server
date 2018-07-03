@@ -52,6 +52,11 @@ namespace LearnWithMentorDAL.Repositories
             return result;
         }
 
+        public string GetImageBase64(int userId)
+        {
+            return context.Users.FirstOrDefault(u => u.Id == userId)?.Image;
+        }
+
         public IEnumerable<User> GetUsersByRole(int role_id)
         {
             return context.Users.Where(u => u.Role_Id == role_id);
