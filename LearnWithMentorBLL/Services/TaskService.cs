@@ -91,6 +91,21 @@ namespace LearnWithMentorBLL.Services
             return taskDTO;
         }
 
+        public StatisticsDTO GetUserStatistics(int userId)
+        {
+            if(!db.Users.ContainsId(userId))
+            {
+                return null;
+            }
+            return new StatisticsDTO()
+            {
+                InProgressNumber = db.UserTasks.GetNumberOfTasksByState(userId, "P"),
+                DoneNumber = db.UserTasks.GetNumberOfTasksByState(userId, "D"),
+                ApprovedNumber = db.UserTasks.GetNumberOfTasksByState(userId, "A"),
+                RejectedNumber = db.UserTasks.GetNumberOfTasksByState(userId, "R")
+            };
+        }
+
         public IEnumerable<TaskDTO> Search(string[] keys, int planId)
         {
             if (!db.Plans.ContainsId(planId))

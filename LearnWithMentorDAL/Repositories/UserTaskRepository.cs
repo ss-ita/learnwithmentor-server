@@ -13,6 +13,11 @@ namespace LearnWithMentorDAL.Repositories
             return context.UserTasks.FirstOrDefault(t => t.Id == id);
         }
 
+        public int GetNumberOfTasksByState(int userId, string state)
+        {
+            return context.UserTasks.Where(ut => ut.User_Id == userId).Count(ut => ut.State == state);
+        }
+
         public UserTask GetByPlanTaskForUser(int planTaskId, int userId)
         {
             return context.UserTasks.FirstOrDefault(ut => ut.User_Id == userId && ut.PlanTask_Id == planTaskId);
