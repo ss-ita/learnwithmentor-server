@@ -57,6 +57,11 @@ namespace LearnWithMentorDAL.Repositories
             return context.Users.FirstOrDefault(u => u.Id == userId)?.Image;
         }
 
+        public bool ContainsId(int id)
+        {
+            return context.Users.Any(u => u.Id == id);
+        }
+
         public IEnumerable<User> GetUsersByRole(int role_id)
         {
             return context.Users.Where(u => u.Role_Id == role_id);

@@ -164,6 +164,11 @@ namespace LearnWithMentorBLL.Services
             };
         }
 
+        public bool ContainsId(int id)
+        {
+            return db.Users.ContainsId(id);
+        }
+
         public List<UserDTO> GetUsersByState(bool state)
         {
             var users = db.Users.GetUsersByState(state);

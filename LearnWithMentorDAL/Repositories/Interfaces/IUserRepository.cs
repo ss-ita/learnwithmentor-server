@@ -15,5 +15,6 @@ namespace LearnWithMentorDAL.Repositories
         string ExtractFullName(int? id);
         string GetImageBase64(int userId);
         IEnumerable<User> GetUsersNotInGroup(int groupId);
+        bool ContainsId(int id);
     }
 }
