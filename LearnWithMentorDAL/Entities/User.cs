@@ -38,6 +38,8 @@ namespace LearnWithMentorDAL.Entities
         public string Password { get; set; }
         public int Role_Id { get; set; }
         public bool Blocked { get; set; }
+        public string Image { get; set; }
+        public string Image_Name { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Comment> Comments { get; set; }

@@ -131,6 +131,8 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.UserGroups' does not have a
           <Property Name="Password" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="Role_Id" Type="int" Nullable="false" />
           <Property Name="Blocked" Type="bit" Nullable="false" />
+          <Property Name="Image" Type="varchar(max)" />
+          <Property Name="Image_Name" Type="nvarchar" MaxLength="1000" />
         </EntityType>
         <EntityType Name="UserTasks">
           <Key>
@@ -472,20 +474,11 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
           <EntitySet Name="Tasks" EntityType="Self.Tasks" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserTasks" EntityType="Self.UserTasks" Schema="dbo" store:Type="Tables" />
-          
           <EntitySet Name="GroupPlans" EntityType="Self.GroupPlans" store:Type="Tables" Schema="dbo">
-            
           </EntitySet>
-          <EntitySet Name="PlanSuggestion" EntityType="Self.PlanSuggestion" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [PlanSuggestion].[Plan_Id] AS [Plan_Id], 
-    [PlanSuggestion].[User_Id] AS [User_Id], 
-    [PlanSuggestion].[Mentor_Id] AS [Mentor_Id], 
-    [PlanSuggestion].[Text] AS [Text]
-    FROM [dbo].[PlanSuggestion] AS [PlanSuggestion]</DefiningQuery>
+          <EntitySet Name="PlanSuggestion" EntityType="Self.PlanSuggestion" store:Type="Tables" Schema="dbo">
           </EntitySet>
           <EntitySet Name="UserGroups" EntityType="Self.UserGroups" store:Type="Tables" Schema="dbo">
-         
           </EntitySet>
           <EntitySet Name="GROUPS-PLANS-TASKS" EntityType="Self.GROUPS-PLANS-TASKS" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -829,6 +822,8 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
           <Property Name="Blocked" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="UserTaskMentor" Relationship="LearnWithMentor_DBModel.FK_UserTasks_To_UsersMentor" FromRole="User" ToRole="UserTask" />
           <NavigationProperty Name="Messages" Relationship="LearnWithMentor_DBModel.FK_Masssage_To_Users" FromRole="User" ToRole="Messages" />
+          <Property Name="Image" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Image_Name" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="UserTask">
           <Key>
@@ -1243,6 +1238,8 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="LearnWithMentor_DBModel.User">
               <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="Image_Name" ColumnName="Image_Name" />
+                <ScalarProperty Name="Image" ColumnName="Image" />
                 <ScalarProperty Name="Blocked" ColumnName="Blocked" />
                 <ScalarProperty Name="Role_Id" ColumnName="Role_Id" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
