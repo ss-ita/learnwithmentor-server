@@ -369,9 +369,6 @@ namespace LearnWithMentor.Controllers
                 tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
-            var message = "Incorrect request syntax.";
-            tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, message);
-            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
         }
 
         /// <summary>
