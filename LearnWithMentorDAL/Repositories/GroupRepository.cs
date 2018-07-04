@@ -25,8 +25,7 @@ namespace LearnWithMentorDAL.Repositories
         }
         public IEnumerable<Group> GetStudentGroups(int studentId)
         {
-            var usr= context.Users.FirstOrDefault(u => u.Id == studentId);
-            return usr.Groups;
+            return context.Users.FirstOrDefault(u => u.Id == studentId).Groups;
         }
 
         public bool AddPlanToGroup(int planId, int groupId)

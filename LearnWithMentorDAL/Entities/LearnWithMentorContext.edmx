@@ -474,17 +474,11 @@ warning 6002: The table/view 'LearnWithMentor_DB.dbo.USERS_ROLES' does not have 
           <EntitySet Name="Tasks" EntityType="Self.Tasks" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserTasks" EntityType="Self.UserTasks" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="GroupPlans" EntityType="Self.GroupPlans" store:Type="Tables">
+          <EntitySet Name="GroupPlans" EntityType="Self.GroupPlans" store:Type="Tables" Schema="dbo">
           </EntitySet>
-          <EntitySet Name="PlanSuggestion" EntityType="Self.PlanSuggestion" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [PlanSuggestion].[Plan_Id] AS [Plan_Id], 
-    [PlanSuggestion].[User_Id] AS [User_Id], 
-    [PlanSuggestion].[Mentor_Id] AS [Mentor_Id], 
-    [PlanSuggestion].[Text] AS [Text]
-    FROM [dbo].[PlanSuggestion] AS [PlanSuggestion]</DefiningQuery>
+          <EntitySet Name="PlanSuggestion" EntityType="Self.PlanSuggestion" store:Type="Tables" Schema="dbo">
           </EntitySet>
-          <EntitySet Name="UserGroups" EntityType="Self.UserGroups" store:Type="Tables">
+          <EntitySet Name="UserGroups" EntityType="Self.UserGroups" store:Type="Tables" Schema="dbo">
           </EntitySet>
           <EntitySet Name="GROUPS-PLANS-TASKS" EntityType="Self.GROUPS-PLANS-TASKS" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
