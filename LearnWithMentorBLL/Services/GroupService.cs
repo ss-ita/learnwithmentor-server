@@ -35,6 +35,10 @@ namespace LearnWithMentorBLL.Services
                                group.Mentor_Id
                                );
         }
+        public int GroupsCount()
+        {
+            return db.Groups.Count();
+        }
         public IEnumerable<PlanDTO> GetPlans(int groupId)
         {
             var group = db.Groups.GetGroupsByMentor(groupId);
@@ -91,6 +95,32 @@ namespace LearnWithMentorBLL.Services
         {
 
             var groups = db.Groups.GetGroupsByMentor(mentorId);
+            if (groups == null)
+                return null;
+            List<GroupDTO> groupList = new List<GroupDTO>();
+            foreach (var group in groups)
+            {
+                groupList.Add(new GroupDTO(group.Id,
+                                         group.Name,
+                                         group.Mentor_Id
+                                        ));
+            }
+            return groupList;
+        }
+
+        public IEnumerable<GroupDTO> GetUserGroups(int userId)
+        {
+            var user = db.Users.Get(userId);
+            if (user == null)
+                return null;
+            IEnumerable<Group> groups;
+            if (user.Role_Id == 0)
+                groups = db.Groups.GetGroupsByMentor(userId);
+            else if (user.Role_Id == 1)
+                groups = db.Groups.GetStudentGroups(userId);
+            else
+                groups = db.Groups.GetAll();
+
             if (groups == null)
                 return null;
             List<GroupDTO> groupList = new List<GroupDTO>();
