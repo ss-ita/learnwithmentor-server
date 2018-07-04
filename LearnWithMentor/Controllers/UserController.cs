@@ -29,12 +29,12 @@ namespace LearnWithMentor.Controllers
         /// <summary>
         /// Creates an instance of UserController.
         /// </summary>
-        public UserController()
+        public UserController(IUserService userService, IRoleService roleService, ITaskService taskService, ITraceWriter tracer)
         {
-            userService = new UserService();
-            roleService = new RoleService();
-            taskService = new TaskService();
-            tracer = new LWMLogger();
+            this.userService = userService;
+            this.roleService = roleService;
+            this.taskService = taskService;
+            this.tracer = tracer;
         }
 
         /// <summary>

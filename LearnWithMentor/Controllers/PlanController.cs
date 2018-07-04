@@ -30,11 +30,11 @@ namespace LearnWithMentor.Controllers
         /// <summary>
         /// Creates new instance of controller.
         /// </summary>
-        public PlanController()
+        public PlanController(IPlanService planService, ITaskService taskService, ITraceWriter tracer)
         {
-            planService = new PlanService();
-            taskService = new TaskService();
-            tracer = new LWMLogger();
+            this.planService = planService;
+            this.taskService = taskService;
+            this.tracer = tracer;
         }
 
         /// <summary>
