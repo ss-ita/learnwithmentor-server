@@ -109,6 +109,16 @@ namespace LearnWithMentorBLL.Services
             db.Save();
             return true;
         }
+        public bool UpdatePassword(int userId, string password)
+        {
+            var user = db.Users.Get(userId);
+            if(user == null)
+                return false;
+            user.Password = BCrypt.Net.BCrypt.HashPassword(password);
+            db.Users.Update(user);
+            db.Save();
+            return true;
+        }
         public List<UserDTO> Search(string[] str, int? roleId)
         {
             var users = db.Users.Search(str, roleId);
