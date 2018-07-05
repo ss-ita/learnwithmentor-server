@@ -347,6 +347,30 @@ namespace LearnWithMentor.Controllers
             return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
         }
 
+        [JwtAuthentication]
+        [HttpPut]
+        [Route("api/user/{id}/newpassword")]
+        public HttpResponseMessage Post(int id, [FromBody]string value)
+        {
+            try
+            {
+                bool success = userService.UpdatePassword(id, value);
+                if (success)
+                {
+                    var okMessage = $"Succesfully updated password.";
+                    tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, okMessage);
+                    return Request.CreateResponse(HttpStatusCode.OK, okMessage);
+                }
+                var noUserMessage = "No user with this ID in database.";
+                return Request.CreateResponse(HttpStatusCode.NoContent, noUserMessage);
+            }
+            catch (EntityException e)
+            {
+                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
+        }
+
         /// <summary>
         /// Returns all roles of the users.
         /// </summary>
