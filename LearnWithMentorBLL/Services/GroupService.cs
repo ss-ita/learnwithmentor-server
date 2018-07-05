@@ -17,7 +17,7 @@ namespace LearnWithMentorBLL.Services
             var groupNew = new Group
             {
                 Name = group.Name,
-                Mentor_Id = group.MentorID
+                Mentor_Id = group.MentorId
             };
             db.Groups.Add(groupNew);
             db.Save();

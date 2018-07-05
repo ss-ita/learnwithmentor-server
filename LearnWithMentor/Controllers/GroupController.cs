@@ -144,7 +144,7 @@ namespace LearnWithMentor.Controllers
                 bool success = groupService.AddGroup(group);
                 if (success)
                 {
-                    var log = $"Succesfully created group {group.Name} with id = {group.ID} with mentor id = {group.MentorID}";
+                    var log = $"Succesfully created group {group.Name} with id = {group.Id} with mentor id = {group.MentorId}";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
                     return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully created group: {group.Name}.");
                 }
