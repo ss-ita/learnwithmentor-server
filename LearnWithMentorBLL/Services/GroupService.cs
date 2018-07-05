@@ -32,8 +32,8 @@ namespace LearnWithMentorBLL.Services
                 return null;
             return new GroupDTO(group.Id,
                                group.Name,
-                               group.Mentor_Id
-                               );
+                               group.Mentor_Id,
+                               db.Users.ExtractFullName(group.Mentor_Id));
         }
         public int GroupsCount()
         {
@@ -102,8 +102,8 @@ namespace LearnWithMentorBLL.Services
             {
                 groupList.Add(new GroupDTO(group.Id,
                                          group.Name,
-                                         group.Mentor_Id
-                                        ));
+                                         group.Mentor_Id,
+                                         db.Users.ExtractFullName(group.Mentor_Id)));
             }
             return groupList;
         }
@@ -128,8 +128,8 @@ namespace LearnWithMentorBLL.Services
             {
                 groupList.Add(new GroupDTO(group.Id,
                                          group.Name,
-                                         group.Mentor_Id
-                                        ));
+                                         group.Mentor_Id,
+                                         db.Users.ExtractFullName(group.Mentor_Id)));
             }
             return groupList;
         }
