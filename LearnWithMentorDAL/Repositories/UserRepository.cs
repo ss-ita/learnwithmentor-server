@@ -23,12 +23,12 @@ namespace LearnWithMentorDAL.Repositories
             return context.Groups.FirstOrDefault(g => g.Id == groupId)?.Users;
         }
 
-        public IEnumerable<User> Search(string[] str, int? roleId)
+        public IEnumerable<User> Search(string[] searchString, int? roleId)
         {
             List<User> result = new List<User>();
             IQueryable<User> usersWithCriteria;
-            string firstWord = str.Length == 1 ? str[0] : "";
-            string secondWord = str.Length == 2 ? str[1] : "";
+            string firstWord = searchString.Length == 1 ? searchString[0] : "";
+            string secondWord = searchString.Length == 2 ? searchString[1] : "";
             if (roleId == null)
             {
                 usersWithCriteria = context.Users;
