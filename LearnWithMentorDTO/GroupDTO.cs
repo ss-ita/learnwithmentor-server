@@ -12,12 +12,12 @@ namespace LearnWithMentorDTO
         public int? MentorId { get; set; }
         public string MentorName { get; set; }
 
-        public GroupDTO(int id, string name, int? mentorId, string mantorName)
+        public GroupDTO(int id, string name, int? mentorId, string mentorName)
         {
             this.Id = id;
             this.Name = name;
             this.MentorId = mentorId;
-            this.MentorName = mantorName;
+            this.MentorName = mentorName;
         }
 
     }
