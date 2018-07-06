@@ -23,30 +23,32 @@ namespace LearnWithMentorDAL.Repositories
             return context.Groups.FirstOrDefault(g => g.Id == groupId)?.Users;
         }
 
-        public IEnumerable<User> Search(string[] str, int? roleId)
+        public IEnumerable<User> Search(string[] searchString, int? roleId)
         {
             List<User> result = new List<User>();
-            foreach (var s in str)
+            IQueryable<User> usersWithCriteria;
+            string firstWord = searchString.Length == 1 ? searchString[0] : "";
+            string secondWord = searchString.Length == 2 ? searchString[1] : "";
+            if (roleId == null)
             {
-                IQueryable<User> found;
-                if (roleId == null)
+                usersWithCriteria = context.Users;
+            }
+            else if (roleId == -1)
+            {
+                usersWithCriteria = context.Users.Where(u => u.Blocked);
+            }
+            else
+            {
+                usersWithCriteria = context.Users.Where(u => u.Role_Id == roleId);
+            }
+            usersWithCriteria = usersWithCriteria.Where(u =>
+                (u.FirstName.Contains(firstWord) && u.LastName.Contains(secondWord))
+                || (u.FirstName.Contains(secondWord) && u.LastName.Contains(firstWord)));
+            foreach (var user in usersWithCriteria)
+            {
+                if (!result.Contains(user))
                 {
-                    found = context.Users.Where(u => u.FirstName.Contains(s) || u.LastName.Contains(s));
-                }
-                else if (roleId == -1)
-                {
-                    found = context.Users.Where(u => (u.FirstName.Contains(s) || u.LastName.Contains(s)) && (u.Blocked));
-                }
-                else
-                {
-                    found = context.Users.Where(u => u.Role_Id == roleId).Where(u => u.FirstName.Contains(s) || u.LastName.Contains(s));
-                }
-                foreach (var f in found)
-                {
-                    if (!result.Contains(f))
-                    {
-                        result.Add(f);
-                    }
+                    result.Add(user);
                 }
             }
             return result;
