@@ -12,6 +12,7 @@ using LearnWithMentor.Log;
 using System.Data.Entity.Core;
 using System.Web;
 using System.IO;
+using System.Linq;
 
 namespace LearnWithMentor.Controllers
 {
@@ -329,14 +330,14 @@ namespace LearnWithMentor.Controllers
         public HttpResponseMessage Search(string q, string role)
         {
             if (q == null)
-            {
-                return Get();
-            }
+                q = "";
             RoleDTO criteria = roleService.GetByName(role);
             string[] lines = q.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             int? searchParametr = null;
             if (role == "blocked")
                 searchParametr = -1;
+            if (lines.Length > 2)
+                lines = lines.Take(2).ToArray();
             List<UserDTO> users = criteria != null ? userService.Search(lines, criteria.Id) :
                 userService.Search(lines, searchParametr);
             if (users.Count != 0)
