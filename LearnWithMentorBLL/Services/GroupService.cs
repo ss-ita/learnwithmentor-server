@@ -270,6 +270,7 @@ namespace LearnWithMentorBLL.Services
             if (userToRemove == null)
                 return false;
             group.Users.Remove(userToRemove);
+            db.Save();
             return true;
         }
 
@@ -282,6 +283,7 @@ namespace LearnWithMentorBLL.Services
             if (planToRemove == null)
                 return false;
             group.Plans.Remove(planToRemove);
+            db.Save();
             return true;
         }
     }
