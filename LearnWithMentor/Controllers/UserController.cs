@@ -12,6 +12,7 @@ using LearnWithMentor.Log;
 using System.Data.Entity.Core;
 using System.Web;
 using System.IO;
+using System.Linq;
 
 namespace LearnWithMentor.Controllers
 {
@@ -329,14 +330,14 @@ namespace LearnWithMentor.Controllers
         public HttpResponseMessage Search(string q, string role)
         {
             if (q == null)
-            {
-                return Get();
-            }
+                q = "";
             RoleDTO criteria = roleService.GetByName(role);
             string[] lines = q.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             int? searchParametr = null;
             if (role == "blocked")
                 searchParametr = -1;
+            if (lines.Length > 2)
+                lines = lines.Take(2).ToArray();
             List<UserDTO> users = criteria != null ? userService.Search(lines, criteria.Id) :
                 userService.Search(lines, searchParametr);
             if (users.Count != 0)
@@ -345,6 +346,30 @@ namespace LearnWithMentor.Controllers
             }
             var message = "No users found.";
             return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
+        }
+
+        [JwtAuthentication]
+        [HttpPut]
+        [Route("api/user/{id}/newpassword")]
+        public HttpResponseMessage Post(int id, [FromBody]string value)
+        {
+            try
+            {
+                bool success = userService.UpdatePassword(id, value);
+                if (success)
+                {
+                    var okMessage = $"Succesfully updated password.";
+                    tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, okMessage);
+                    return Request.CreateResponse(HttpStatusCode.OK, okMessage);
+                }
+                var noUserMessage = "No user with this ID in database.";
+                return Request.CreateResponse(HttpStatusCode.NoContent, noUserMessage);
+            }
+            catch (EntityException e)
+            {
+                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
         }
 
         /// <summary>
