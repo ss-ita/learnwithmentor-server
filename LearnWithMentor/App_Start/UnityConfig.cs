@@ -26,7 +26,7 @@ namespace LearnWithMentor
             container.RegisterType<IUserService, UserService>();
             container.RegisterType<IRoleService, RoleService>();
 
-            //container.RegisterType<IUnitOfWork, UnitOfWork>(new InjectionConstructor(new LearnWithMentor_DBEntities()));
+            container.RegisterType<IUnitOfWork, UnitOfWork>(new InjectionConstructor(typeof (LearnWithMentor_DBEntities)));
 
             GlobalConfiguration.Configuration.DependencyResolver = new UnityDependencyResolver(container);
         }

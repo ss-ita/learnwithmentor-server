@@ -13,10 +13,9 @@ namespace LearnWithMentorBLL.Services
     public class BaseService: IDisposableService
     {
         protected readonly IUnitOfWork db;
-
-        public BaseService()
+        public BaseService(IUnitOfWork db)
         {
-            db = new UnitOfWork(new LearnWithMentor_DBEntities());
+            this.db = db;
         }
         public void Dispose()
         {

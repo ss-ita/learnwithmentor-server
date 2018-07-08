@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using LearnWithMentorDTO;
 using LearnWithMentorDAL.Entities;
 using LearnWithMentorBLL.Interfaces;
+using LearnWithMentorDAL.UnitOfWork;
 
 namespace LearnWithMentorBLL.Services
 {
     public class TaskService : BaseService, ITaskService
     {
-        public TaskService() : base()
+        public TaskService(IUnitOfWork db) : base(db)
         {
         }
           

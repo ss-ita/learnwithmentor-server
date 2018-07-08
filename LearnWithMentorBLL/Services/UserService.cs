@@ -4,12 +4,13 @@ using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDTO;
 using LearnWithMentorDAL.Entities;
 using System;
+using LearnWithMentorDAL.UnitOfWork;
 
 namespace LearnWithMentorBLL.Services
 {
     public class UserService : BaseService, IUserService
     {
-        public UserService() : base()
+        public UserService(IUnitOfWork db) : base(db)
         {
         }
         public UserDTO Get(int id)

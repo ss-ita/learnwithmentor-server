@@ -2,12 +2,13 @@
 using LearnWithMentorDAL.Entities;
 using LearnWithMentorDTO;
 using LearnWithMentorBLL.Interfaces;
+using LearnWithMentorDAL.UnitOfWork;
 
 namespace LearnWithMentorBLL.Services
 {
     public class MessageService: BaseService, IMessageService
     {
-        public MessageService() : base()
+        public MessageService(IUnitOfWork db) : base(db)
         {
         }
 
