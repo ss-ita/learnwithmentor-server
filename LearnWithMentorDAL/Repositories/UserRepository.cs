@@ -27,7 +27,7 @@ namespace LearnWithMentorDAL.Repositories
         {
             List<User> result = new List<User>();
             IQueryable<User> usersWithCriteria;
-            string firstWord = searchString.Length == 1 ? searchString[0] : "";
+            string firstWord = searchString.Length >= 1 ? searchString[0] : "";
             string secondWord = searchString.Length == 2 ? searchString[1] : "";
             if (roleId == null)
             {
