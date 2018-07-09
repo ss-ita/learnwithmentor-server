@@ -25,11 +25,11 @@ namespace LearnWithMentor.Controllers
         private readonly ITraceWriter tracer;
 
         /// <summary> Services initiation </summary>
-        public TaskController()
+        public TaskController(ITaskService taskService, IMessageService messageService, ITraceWriter tracer)
         {
-            taskService = new TaskService();
-            messageService = new MessageService();
-            tracer = new LWMLogger();
+            this.taskService = taskService;
+            this.messageService = messageService;
+            this.tracer = tracer;
         }
 
         /// <summary>

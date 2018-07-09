@@ -30,11 +30,11 @@ namespace LearnWithMentor.Controllers
         /// <summary>
         /// Creates new instance of controller.
         /// </summary>
-        public PlanController()
+        public PlanController(IPlanService planService, ITaskService taskService, ITraceWriter tracer)
         {
-            planService = new PlanService();
-            taskService = new TaskService();
-            tracer = new LWMLogger();
+            this.planService = planService;
+            this.taskService = taskService;
+            this.tracer = tracer;
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace LearnWithMentor.Controllers
             if (!planService.ContainsId(id))
             {
                 var errorMessage = "No plan with this id in database.";
-                return Request.CreateResponse(HttpStatusCode.BadRequest, errorMessage);
+                return Request.CreateResponse(HttpStatusCode.NoContent, errorMessage);
             }
 
             if (HttpContext.Current.Request.Files.Count != 1)
@@ -226,7 +226,7 @@ namespace LearnWithMentor.Controllers
                     return Request.CreateResponse(HttpStatusCode.OK, okMessage);
                 }
                 string emptyImageMessage = "Empty image.";
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, emptyImageMessage);
+                return Request.CreateErrorResponse(HttpStatusCode.NotModified, emptyImageMessage);
             }
             catch (EntityException e)
             {
@@ -248,7 +248,7 @@ namespace LearnWithMentor.Controllers
                 if (!planService.ContainsId(id))
                 {
                     var errorMessage = "No plan with this id in database.";
-                    return Request.CreateResponse(HttpStatusCode.BadRequest, errorMessage);
+                    return Request.CreateResponse(HttpStatusCode.NoContent, errorMessage);
                 }
                 ImageDTO dto = planService.GetImage(id);
                 if (dto == null)

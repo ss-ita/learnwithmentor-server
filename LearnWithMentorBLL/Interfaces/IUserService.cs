@@ -14,5 +14,9 @@ namespace LearnWithMentorBLL.Interfaces
         List<UserDTO> Search(string[] str, int? role_id);
         List<UserDTO> GetUsersByRole(int roleId);
         List<UserDTO> GetUsersByState(bool state);
+        bool SetImage(int planId, byte[] image, string imageName);
+        ImageDTO GetImage(int id);
+        bool ContainsId(int id);
+        bool UpdatePassword(int userId, string password);
     }
 }

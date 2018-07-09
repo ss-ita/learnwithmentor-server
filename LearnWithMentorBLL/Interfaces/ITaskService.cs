@@ -19,5 +19,6 @@ namespace LearnWithMentorBLL.Interfaces
         List<UserTaskStateDTO> GetTaskStatesForUser(int[] planTaskIds, int userId);
         IEnumerable<TaskDTO> Search(string[] str, int planId);
         IEnumerable<TaskDTO> Search(string[] str);
+        StatisticsDTO GetUserStatistics(int userId);
     }
 }
