@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDAL.Entities;
+using LearnWithMentorDAL.UnitOfWork;
 using LearnWithMentorDTO;
 
 namespace LearnWithMentorBLL.Services
 {
     public class GroupService : BaseService, IGroupService
     {
-        public GroupService() : base()
+        public GroupService(IUnitOfWork db) : base(db)
         {
         }
         public bool AddGroup(GroupDTO group)

@@ -8,6 +8,7 @@ using System.Web.Http.Filters;
 using LearnWithMentor.Models;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorBLL.Services;
+using LearnWithMentorDAL.UnitOfWork;
 using LearnWithMentorDTO;
 
 namespace LearnWithMentor.Filters
@@ -16,7 +17,8 @@ namespace LearnWithMentor.Filters
     {
         public string Realm { get; set; }
         public bool AllowMultiple => false;
-        private readonly IUserService userService = new UserService();
+        //ToDo: maybe it's possible to add DI to the field
+        private readonly IUserService userService = new UserService(new UnitOfWork(new LearnWithMentorDAL.Entities.LearnWithMentor_DBEntities()));
         public async Task AuthenticateAsync(HttpAuthenticationContext context, CancellationToken cancellationToken)
         {
             var request = context.Request;

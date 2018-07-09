@@ -26,11 +26,11 @@ namespace LearnWithMentor.Controllers
         /// <summary>
         /// Creates new instance of controller.
         /// </summary>
-        public GroupController()
+        public GroupController(IGroupService groupService, IUserService userService, ITraceWriter tracer)
         {
-            groupService = new GroupService();
-            userService = new UserService();
-            tracer = new LWMLogger();
+            this.userService = userService;
+            this.groupService = groupService;
+            this.tracer = tracer;
         }
 
         // GET api/<controller>

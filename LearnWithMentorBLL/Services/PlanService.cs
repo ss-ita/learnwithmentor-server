@@ -6,12 +6,13 @@ using LearnWithMentorDTO;
 using LearnWithMentorDAL.Entities;
 using System.Drawing;
 using System.IO;
+using LearnWithMentorDAL.UnitOfWork;
 
 namespace LearnWithMentorBLL.Services
 {
     public class PlanService : BaseService, IPlanService
     {
-        public PlanService() : base()
+        public PlanService(IUnitOfWork db) : base(db)
         {
         }
         public PlanDTO Get(int id)
