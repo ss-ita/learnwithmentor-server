@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using LearnWithMentorDAL.EF;
 using LearnWithMentorDAL.Entities;
 
 namespace LearnWithMentorDAL.Repositories
@@ -8,6 +9,7 @@ namespace LearnWithMentorDAL.Repositories
     {
         public PlanRepository(LearnWithMentor_DBEntities context) : base(context)
         {
+            
         }
 
         public Plan Get(int id)
