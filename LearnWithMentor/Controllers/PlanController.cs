@@ -106,6 +106,15 @@ namespace LearnWithMentor.Controllers
             return Request.CreateResponse<IEnumerable<TaskDTO>>(HttpStatusCode.OK, dtosList);
         }
 
+
+        [HttpGet]
+        [Route("api/plan/{plan_id}/test")]
+        public HttpResponseMessage GetTasks(int plan_id)
+        {
+            var tasks = planService.GetTasksForPlan(plan_id);
+            return Request.CreateResponse<IEnumerable<SectionDTO>>(HttpStatusCode.OK, tasks);
+        }
+
         /// <summary>
         /// Creates new plan.
         /// </summary>
