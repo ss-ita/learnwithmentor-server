@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using LearnWithMentorDTO;
 using LearnWithMentorDAL.Entities;
 using LearnWithMentorBLL.Interfaces;
+using LearnWithMentorDAL.UnitOfWork;
 
 namespace LearnWithMentorBLL.Services
 {
     public class TaskService : BaseService, ITaskService
     {
-        public TaskService() : base()
+        public TaskService(IUnitOfWork db) : base(db)
         {
         }
           
@@ -89,6 +90,21 @@ namespace LearnWithMentorBLL.Services
                                     planTask?.Section_Id,
                                     planTask.Id);
             return taskDTO;
+        }
+
+        public StatisticsDTO GetUserStatistics(int userId)
+        {
+            if(!db.Users.ContainsId(userId))
+            {
+                return null;
+            }
+            return new StatisticsDTO()
+            {
+                InProgressNumber = db.UserTasks.GetNumberOfTasksByState(userId, "P"),
+                DoneNumber = db.UserTasks.GetNumberOfTasksByState(userId, "D"),
+                ApprovedNumber = db.UserTasks.GetNumberOfTasksByState(userId, "A"),
+                RejectedNumber = db.UserTasks.GetNumberOfTasksByState(userId, "R")
+            };
         }
 
         public IEnumerable<TaskDTO> Search(string[] keys, int planId)

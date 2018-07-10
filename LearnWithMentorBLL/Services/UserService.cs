@@ -3,12 +3,14 @@ using System.Linq;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDTO;
 using LearnWithMentorDAL.Entities;
+using System;
+using LearnWithMentorDAL.UnitOfWork;
 
 namespace LearnWithMentorBLL.Services
 {
     public class UserService : BaseService, IUserService
     {
-        public UserService() : base()
+        public UserService(IUnitOfWork db) : base(db)
         {
         }
         public UserDTO Get(int id)
@@ -108,6 +110,16 @@ namespace LearnWithMentorBLL.Services
             db.Save();
             return true;
         }
+        public bool UpdatePassword(int userId, string password)
+        {
+            var user = db.Users.Get(userId);
+            if(user == null)
+                return false;
+            user.Password = BCrypt.Net.BCrypt.HashPassword(password);
+            db.Users.Update(user);
+            db.Save();
+            return true;
+        }
         public List<UserDTO> Search(string[] str, int? roleId)
         {
             var users = db.Users.Search(str, roleId);
@@ -138,6 +150,36 @@ namespace LearnWithMentorBLL.Services
             }
             return dtos;
         }
+
+        public bool SetImage(int id, byte[] image, string imageName)
+        {
+            var userToUpdate = db.Users.Get(id);
+            if (userToUpdate == null)
+                return false;
+            string converted = Convert.ToBase64String(image);
+            userToUpdate.Image = converted;
+            userToUpdate.Image_Name = imageName;
+            db.Save();
+            return true;
+        }
+
+        public ImageDTO GetImage(int id)
+        {
+            var userToGetImage = db.Users.Get(id);
+            if (userToGetImage == null || userToGetImage.Image == null || userToGetImage.Image_Name == null)
+                return null;
+            return new ImageDTO()
+            {
+                Name = userToGetImage.Image_Name,
+                Base64Data = userToGetImage.Image
+            };
+        }
+
+        public bool ContainsId(int id)
+        {
+            return db.Users.ContainsId(id);
+        }
+
         public List<UserDTO> GetUsersByState(bool state)
         {
             var users = db.Users.GetUsersByState(state);

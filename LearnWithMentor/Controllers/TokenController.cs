@@ -11,9 +11,9 @@ namespace LearnWithMentor.Controllers
     public class TokenController : ApiController
     {
         private readonly IUserService userService;
-        public TokenController()
+        public TokenController(IUserService userService)
         {
-            userService = new UserService();
+            this.userService = userService;
         }
         [AllowAnonymous]
         public HttpResponseMessage Post([FromBody]UserLoginDTO value)

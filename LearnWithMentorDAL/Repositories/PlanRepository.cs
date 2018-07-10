@@ -14,6 +14,11 @@ namespace LearnWithMentorDAL.Repositories
         {
             return context.Plans.FirstOrDefault(p => p.Id == id);
         }
+        public Plan AddAndReturnElement(Plan plan)
+        {
+            context.Plans.Add(plan);
+            return plan;
+        }
         public IEnumerable<Plan> GetPlansForGroup(int groupId)
         {
             return context.Groups.FirstOrDefault(g => g.Id == groupId)?.Plans;
@@ -69,6 +74,10 @@ namespace LearnWithMentorDAL.Repositories
         }
         public IEnumerable<Plan> GetSomePlans(int previousNumberOfPlans, int numberOfPlans)
         {
+            var n = context.Plans;
+            var n1 = context.Plans.OrderBy(p => p.Id);
+            var n2 = context.Plans.OrderBy(p => p.Id).Skip(previousNumberOfPlans);
+            var n3 = n2.Take(numberOfPlans);
             return context.Plans.OrderBy(p => p.Id).Skip(previousNumberOfPlans).Take(numberOfPlans);
         }
 

@@ -20,15 +20,17 @@ namespace LearnWithMentor.Controllers
     public class GroupController : ApiController
     {
         private readonly IGroupService groupService;
+        private readonly IUserService userService;
         private readonly ITraceWriter tracer;
 
         /// <summary>
         /// Creates new instance of controller.
         /// </summary>
-        public GroupController()
+        public GroupController(IGroupService groupService, IUserService userService, ITraceWriter tracer)
         {
-            groupService = new GroupService();
-            tracer = new LWMLogger();
+            this.userService = userService;
+            this.groupService = groupService;
+            this.tracer = tracer;
         }
 
         // GET api/<controller>
@@ -144,7 +146,7 @@ namespace LearnWithMentor.Controllers
                 bool success = groupService.AddGroup(group);
                 if (success)
                 {
-                    var log = $"Succesfully created group {group.Name} with id = {group.ID} with mentor id = {group.MentorID}";
+                    var log = $"Succesfully created group {group.Name} with id = {group.Id} with mentor id = {group.MentorId}";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
                     return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully created group: {group.Name}.");
                 }
@@ -337,6 +339,25 @@ namespace LearnWithMentor.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
 
+        }
+        /// <summary>
+        /// If user: strudent - returns its learning groups, if mentor - returns mentored groups, if admin - returns all groups."
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/group/user/{userId}/groups")]
+        public HttpResponseMessage GetUserGroups(int userId)
+        {
+            if(!userService.ContainsId(userId))
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"There are no users with id = {userId}");
+            if (groupService.GroupsCount()==0)
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"There are no groups in database.");
+            var groups = groupService.GetUserGroups(userId);
+            if (groups != null)
+                return Request.CreateResponse(HttpStatusCode.OK, groups);
+            else
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"There are no groups for this user");
         }
     }
 }

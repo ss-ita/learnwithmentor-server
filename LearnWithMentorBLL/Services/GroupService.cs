@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDAL.Entities;
+using LearnWithMentorDAL.UnitOfWork;
 using LearnWithMentorDTO;
 
 namespace LearnWithMentorBLL.Services
 {
     public class GroupService : BaseService, IGroupService
     {
-        public GroupService() : base()
+        public GroupService(IUnitOfWork db) : base(db)
         {
         }
         public bool AddGroup(GroupDTO group)
@@ -17,7 +18,7 @@ namespace LearnWithMentorBLL.Services
             var groupNew = new Group
             {
                 Name = group.Name,
-                Mentor_Id = group.MentorID
+                Mentor_Id = group.MentorId
             };
             db.Groups.Add(groupNew);
             db.Save();
@@ -32,8 +33,12 @@ namespace LearnWithMentorBLL.Services
                 return null;
             return new GroupDTO(group.Id,
                                group.Name,
-                               group.Mentor_Id
-                               );
+                               group.Mentor_Id,
+                               db.Users.ExtractFullName(group.Mentor_Id));
+        }
+        public int GroupsCount()
+        {
+            return db.Groups.Count();
         }
         public IEnumerable<PlanDTO> GetPlans(int groupId)
         {
@@ -98,8 +103,34 @@ namespace LearnWithMentorBLL.Services
             {
                 groupList.Add(new GroupDTO(group.Id,
                                          group.Name,
-                                         group.Mentor_Id
-                                        ));
+                                         group.Mentor_Id,
+                                         db.Users.ExtractFullName(group.Mentor_Id)));
+            }
+            return groupList;
+        }
+
+        public IEnumerable<GroupDTO> GetUserGroups(int userId)
+        {
+            var user = db.Users.Get(userId);
+            if (user == null)
+                return null;
+            IEnumerable<Group> groups;
+            if (user.Role_Id == 0)
+                groups = db.Groups.GetGroupsByMentor(userId);
+            else if (user.Role_Id == 1)
+                groups = db.Groups.GetStudentGroups(userId);
+            else
+                groups = db.Groups.GetAll();
+
+            if (groups == null)
+                return null;
+            List<GroupDTO> groupList = new List<GroupDTO>();
+            foreach (var group in groups)
+            {
+                groupList.Add(new GroupDTO(group.Id,
+                                         group.Name,
+                                         group.Mentor_Id,
+                                         db.Users.ExtractFullName(group.Mentor_Id)));
             }
             return groupList;
         }
@@ -240,6 +271,7 @@ namespace LearnWithMentorBLL.Services
             if (userToRemove == null)
                 return false;
             group.Users.Remove(userToRemove);
+            db.Save();
             return true;
         }
 
@@ -252,6 +284,7 @@ namespace LearnWithMentorBLL.Services
             if (planToRemove == null)
                 return false;
             group.Plans.Remove(planToRemove);
+            db.Save();
             return true;
         }
     }

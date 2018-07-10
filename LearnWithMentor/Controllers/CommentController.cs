@@ -27,10 +27,10 @@ namespace LearnWithMentor.Controllers
         /// <summary>
         /// Services initiation
         /// </summary>
-        public CommentController()
+        public CommentController(ICommentService commentService, ITraceWriter tracer)
         {
-            commentService = new CommentService();
-            tracer = new LWMLogger();
+            this.commentService = commentService;
+            this.tracer = tracer;
         }
 
         /// <summary>Returns comment by id.</summary>

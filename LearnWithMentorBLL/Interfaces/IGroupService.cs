@@ -6,6 +6,7 @@ namespace LearnWithMentorBLL.Interfaces
     public interface IGroupService: IDisposableService
     {
         GroupDTO GetGroupById(int id);
+        int GroupsCount();
         IEnumerable<GroupDTO> GetGroupsByMentor(int mentorId);
         IEnumerable<UserIdentityDTO> GetUsers(int groupId);
         IEnumerable<PlanDTO> GetPlans(int groupId);
@@ -18,5 +19,6 @@ namespace LearnWithMentorBLL.Interfaces
         IEnumerable<PlanDTO> SearchPlansNotUsedInGroup(string[] searchCases, int groupId);
         bool RemoveUserFromGroup(int groupId, int userIdToRemove);
         bool RemovePlanFromGroup(int groupId, int planIdToRemove);
+        IEnumerable<GroupDTO> GetUserGroups(int userId);
     }
 }
