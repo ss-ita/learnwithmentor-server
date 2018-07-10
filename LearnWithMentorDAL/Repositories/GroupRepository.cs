@@ -14,6 +14,11 @@ namespace LearnWithMentorDAL.Repositories
             return context.Groups.FirstOrDefault(group => group.Id == id);
         }
 
+        public bool GroupNameExists(string groupName)
+        {
+            return context.Groups.Any(g => g.Name.Equals(groupName));
+        }
+
         public int Count()
         {
             return context.Groups.Count();

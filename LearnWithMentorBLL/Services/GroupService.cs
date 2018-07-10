@@ -13,7 +13,7 @@ namespace LearnWithMentorBLL.Services
         }
         public bool AddGroup(GroupDTO group)
         {
-            if (string.IsNullOrEmpty(group.Name))
+            if (string.IsNullOrEmpty(group.Name) || db.Groups.GroupNameExists(group.Name))
                 return false;
             var groupNew = new Group
             {

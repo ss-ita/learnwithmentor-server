@@ -146,12 +146,12 @@ namespace LearnWithMentor.Controllers
                 bool success = groupService.AddGroup(group);
                 if (success)
                 {
-                    var log = $"Succesfully created group {group.Name} with id = {group.Id} with mentor id = {group.MentorId}";
+                    var log = $"Group succesfully created.";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
                     return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully created group: {group.Name}.");
                 }
                 tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on creating group");
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Creation error.");
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Group with this name already exists");
             }
             catch (EntityException e)
             {
