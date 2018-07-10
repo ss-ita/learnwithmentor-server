@@ -232,20 +232,21 @@ namespace LearnWithMentor.Controllers
 
         /// <summary> Changes UserTask result by usertask id. </summary>
         /// <param name="userTaskId">Id of the userTask status to be changed</param>
-        /// <param name="newResult">>New userTask result</param>
+        /// <param name="value">>New userTask result</param>
         /// <returns></returns>
         [HttpPut]
         [Route("api/task/usertask/result")]
-        public HttpResponseMessage PutNewUserTaskResult(int userTaskId, string newResult)
+        public HttpResponseMessage PutNewUserTaskResult(int userTaskId, HttpRequestMessage newMessage)
         {
             try
             {
-                if (newResult.Length >= ValidationRules.MAX_USERTASK_RESULT_LENGTH)
+                string value = newMessage.Content.ReadAsStringAsync().Result;
+                if (value.Length >= ValidationRules.MAX_USERTASK_RESULT_LENGTH)
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "New Result is too long");
-                bool success = taskService.UpdateUserTaskResult(userTaskId, newResult);
+                bool success = taskService.UpdateUserTaskResult(userTaskId, value);
                 if (success)
                 {
-                    var message = $"Succesfully updated user task with id = {userTaskId} on result {newResult}";
+                    var message = $"Succesfully updated user task with id = {userTaskId} on result {value}";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, message);
                     return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully updated user task result.");
                 }

@@ -348,6 +348,12 @@ namespace LearnWithMentor.Controllers
             return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
         }
 
+        /// <summary>
+        /// Updates user password.
+        /// </summary>
+        /// <param name="id"> Id of the user. </param>
+        /// <param name="value"> New password value. </param>
+        /// <returns></returns>
         [JwtAuthentication]
         [HttpPut]
         [Route("api/user/{id}/newpassword")]
