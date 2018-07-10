@@ -14,6 +14,11 @@ namespace LearnWithMentorDAL.Repositories
         {
             return context.Plans.FirstOrDefault(p => p.Id == id);
         }
+        public Plan AddAndReturnElement(Plan plan)
+        {
+            context.Plans.Add(plan);
+            return plan;
+        }
         public IEnumerable<Plan> GetPlansForGroup(int groupId)
         {
             return context.Groups.FirstOrDefault(g => g.Id == groupId)?.Plans;

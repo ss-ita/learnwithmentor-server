@@ -6,6 +6,7 @@ namespace LearnWithMentorDAL.Repositories
     public interface IPlanRepository: IRepository<Plan>
     {
         Plan Get(int id);
+        Plan AddAndReturnElement(Plan plan);
         IEnumerable<Plan> Search(string[] str);
         IEnumerable<Plan> GetPlansForGroup(int groupId);
         IEnumerable<Plan> GetSomePlans(int previousNumberOfPlans, int numberOfPlans);
