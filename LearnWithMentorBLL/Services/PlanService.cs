@@ -136,6 +136,21 @@ namespace LearnWithMentorBLL.Services
             return modified;
         }
 
+
+        public bool AddTaskToPlan(int planId, int taskId, int? sectionId, int? priority)
+        {
+            var plan = db.Plans.Get(planId);
+            if (plan == null)
+                return false;
+            var task = db.Tasks.Get(taskId);
+            if (task == null)
+                return false;
+            db.Plans.AddTaskToPlan(planId, taskId, sectionId, priority);            
+            db.Save();             
+            
+            return true;
+        }
+
         public bool SetImage(int id, byte[] image, string imageName)
         {
             Plan toUpdate = db.Plans.Get(id);

@@ -14,6 +14,7 @@ namespace LearnWithMentorBLL.Interfaces
         List<PlanDTO> Search(string[] str);
         bool ContainsId(int id);
         bool SetImage(int planId, byte[] image, string imageName);
+        bool AddTaskToPlan(int planId, int taskId, int? sectionId, int? priority);
         ImageDTO GetImage(int id);
     }
 }

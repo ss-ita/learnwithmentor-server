@@ -19,8 +19,8 @@ namespace LearnWithMentor.Controllers
     /// <summary>
     /// Controller for plans.
     /// </summary>
-    [Authorize]
-    [JwtAuthentication]
+    //[Authorize]
+    //[JwtAuthentication]
     public class PlanController : ApiController
     {
         private readonly IPlanService planService;
@@ -163,6 +163,57 @@ namespace LearnWithMentor.Controllers
             tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on updating plan");
             var message = "Incorrect request syntax or plan does not exist.";
             return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
+        }
+
+      
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="taskId"></param>
+        /// <param name="sectionId"></param>
+        /// <param name="priority"></param>
+        /// <returns></returns>            
+        [HttpPut]
+        [Route("api/plan/{id}/task/{taskId}")]
+        public HttpResponseMessage PutTaskToPlan(int id,  int taskId,string sectionId, string priority)
+        {
+            try
+            {
+                int? section;
+                int? priorityNew;
+
+                if (string.IsNullOrEmpty(sectionId))
+                {
+                    section = 0;
+                }
+                else
+                    section = int.Parse(sectionId);
+
+                if (string.IsNullOrEmpty(priority))
+                {
+                    priorityNew = 0;
+                }
+                else
+                    priorityNew = int.Parse(priority);
+
+
+                bool success = planService.AddTaskToPlan(id, taskId, section, priorityNew);
+                    
+                if (success)
+                {
+                    var log = $"Succesfully add task with id {taskId} to plan with id = {id}";
+                    tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
+                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully added task to plan ({id}).");
+                }
+                tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on adding task to plan");
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax or task or plan does not exist.");
+            }
+            catch (EntityException e)
+            {
+                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
         }
 
         /// <summary>
