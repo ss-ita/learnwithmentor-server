@@ -176,6 +176,23 @@ namespace LearnWithMentorBLL.Services
             db.Save();
             return true;
         }
+        public int? AddAndGetId(PlanDTO dto)
+        {
+            if (!ContainsId(dto.CreatorId))
+                return null;
+            var plan = new Plan
+            {
+                Name = dto.Name,
+                Description = dto.Description,
+                Create_Id = dto.CreatorId,
+                Published = dto.Published
+            };
+            var createdPlan = db.Plans.AddAndReturnElement(plan);
+            db.Save();
+            if (createdPlan == null)
+                return null;
+            return createdPlan?.Id;
+        }
         public List<PlanDTO> Search(string[] searchString)
         {
             var result = db.Plans.Search(searchString);
