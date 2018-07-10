@@ -9,12 +9,13 @@ namespace LearnWithMentorDAL.EF
     //TO DO
     //check if base is already created
     //launch before first request
-    //Кожна сутність - інший метод - in progress
     //перевірка на ініціалізацію бази
     //перевірка на наявних користувачів
     //обгорнути try catch
     //скрипт after connect??
     //Графічна ініціалізація
+    //секція для плантаска
+
 
     public class LearnWithMentorInitializer
     {
@@ -22,11 +23,15 @@ namespace LearnWithMentorDAL.EF
         {
             using (LearnWithMentor_DBEntities context = new LearnWithMentor_DBEntities())
             {
-                InitializeUsers(context);
                 InitializeRoles(context);
+                InitializeUsers(context);
+                InitializePlans(context);
+                InitializeGroups(context);
+                InitializeTasks(context);
+                InitializePlanTask(context);
             }
-
         }
+
         public static void InitializeRoles(LearnWithMentor_DBEntities context)
         {
             if (!context.Roles.Any())
@@ -104,14 +109,12 @@ namespace LearnWithMentorDAL.EF
                 }
 
                 //Assigning student roles for rest of the users
-                for (int i = 11; i <= users.Count; i++)
+                for (int i = 11; i < users.Count; i++)
                 {
                     users[i].Role_Id = 2;
                 }
-
                 context.Users.AddRange(users);
                 context.SaveChanges();
-
             }
         }
 
@@ -194,7 +197,7 @@ namespace LearnWithMentorDAL.EF
                 //Assigning creation date for plans on third of july
                 foreach (var plan in plans)
                 {
-                    plan.Create_Date = new DateTime(2018, 7, 3);
+                    plan.Create_Date = new DateTime(2018, 7, 3, 23, 59, 59);
                 }
 
                 //Assigning creator of plans on each user by one
@@ -210,10 +213,9 @@ namespace LearnWithMentorDAL.EF
 
         public static void InitializeGroups(LearnWithMentor_DBEntities context)
         {
-            if (!context.Plans.Any())
+            if (!context.Groups.Any())
             {
                 #region List of groups
-
                 List<Group> groups = new List<Group>();
                 groups.Add(new Group() { Name = "Lv-319.Net" });
                 groups.Add(new Group() { Name = "Lv-320.Net" });
@@ -222,10 +224,10 @@ namespace LearnWithMentorDAL.EF
                 groups.Add(new Group() { Name = "Lv-323.SQL" });
                 groups.Add(new Group() { Name = "Lv-324.Net" });
                 groups.Add(new Group() { Name = "Lv-325.Web" });
-                groups.Add(new Group() { Name = "Lv-326.Web" });
-                groups.Add(new Group() { Name = "Lv-327.C++" });
-                groups.Add(new Group() { Name = "Lv-328.Python" });
-
+                groups.Add(new Group() { Name = "Lv-326.Java" });
+                groups.Add(new Group() { Name = "Lv-327.Web" });
+                groups.Add(new Group() { Name = "Lv-328.C++" });
+                groups.Add(new Group() { Name = "Lv-329.Python" });
                 #endregion
 
                 //Assigning Id's for groups
@@ -234,10 +236,10 @@ namespace LearnWithMentorDAL.EF
                     groups[i].Id = j;
                 }
                 //Assigning mentors for groups
-                //foreach (var group in groups)
-                //{
-                //    group.Mentor_Id = group.Id;
-                //}
+                foreach (var group in groups)
+                {
+                    group.Mentor_Id = group.Id;
+                }
 
                 context.Groups.AddRange(groups);
                 context.SaveChanges();
@@ -246,107 +248,113 @@ namespace LearnWithMentorDAL.EF
 
         public static void InitializeTasks(LearnWithMentor_DBEntities context)
         {
-            #region List of Tasks
-
-            List<Task> tasks = new List<Task>();
-            tasks.Add(new Task() { Name = "C#. Installing Visual Studio." });
-            tasks.Add(new Task() { Name = "C#. Variables, Loops." });
-            tasks.Add(new Task() { Name = "C#. Array." });
-            tasks.Add(new Task() { Name = "C#. Class, Method, Exception." });
-            tasks.Add(new Task() { Name = "ASP NET Controllers." });
-            tasks.Add(new Task() { Name = "ASP.NET Routes." });
-            tasks.Add(new Task() { Name = "ASP.NET View." });
-            tasks.Add(new Task() { Name = "ASP.NET Making App." });
-            tasks.Add(new Task() { Name = "Angular. Installing Atom." });
-            tasks.Add(new Task() { Name = "Angular. App component." });
-            tasks.Add(new Task() { Name = "Angular. Services." });
-            tasks.Add(new Task() { Name = "Angular. Observables." });
-            tasks.Add(new Task() { Name = "Angular Material. Installing Angular material" });
-            tasks.Add(new Task() { Name = "Angular Material. Adding NavBar" });
-            tasks.Add(new Task() { Name = "Angular Material. Working on welcome screen" });
-            tasks.Add(new Task() { Name = "Angular Material. Working with Data and Angular Material" });
-            tasks.Add(new Task() { Name = "SQL. Installing Microsoft SQL Server and Microsoft SQL Management studio" });
-            tasks.Add(new Task() { Name = "SQL. Creating databases and tables." });
-            tasks.Add(new Task() { Name = "SQL. Data insertion and manipulation." });
-            tasks.Add(new Task() { Name = "SQL. JOIN" });
-            tasks.Add(new Task() { Name = "Full stack WEB App. Modeling app structure" });
-            tasks.Add(new Task() { Name = "Full stack WEB App. Creating Database" });
-            tasks.Add(new Task() { Name = "Full stack WEB App. Creating Data Access layer and business logic layer." });
-            tasks.Add(new Task() { Name = "Full stack WEB App. Creating fron-end part in angular" });
-            tasks.Add(new Task() { Name = "React. React basics" });
-            tasks.Add(new Task() { Name = "React. Routes, Lifecycle" });
-            tasks.Add(new Task() { Name = "React. Transitions & Typechecking" });
-            tasks.Add(new Task() { Name = "React. Working with forms" });
-            tasks.Add(new Task() { Name = "Java. Getting Started. " });
-            tasks.Add(new Task() { Name = "Java. Working with Variables." });
-            tasks.Add(new Task() { Name = "Java. Working with Objects." });
-            tasks.Add(new Task() { Name = "Java. Exception Handling and Debugging." });
-            tasks.Add(new Task() { Name = "JavaScript. Language Basics" });
-            tasks.Add(new Task() { Name = "JavaScript. How JavaScript Works Behind the Scenes" });
-            tasks.Add(new Task() { Name = "JavaScript. DOM Manipulation and Events" });
-            tasks.Add(new Task() { Name = "JavaScript. Objects and Functions" });
-            tasks.Add(new Task() { Name = "C++. Basic Syntax. " });
-            tasks.Add(new Task() { Name = "C++. Defining Functions" });
-            tasks.Add(new Task() { Name = "C++. The Preprocessor" });
-            tasks.Add(new Task() { Name = "C++. Classes and Objects" });
-            tasks.Add(new Task() { Name = "Python. Programming Basics" });
-            tasks.Add(new Task() { Name = "Python. Advanced Concepts" });
-            tasks.Add(new Task() { Name = "Python. RPG Battle Script" });
-            tasks.Add(new Task() { Name = "Python. Web Scraper" });
-
-            #endregion
-
-            //Assigning creators of tasks
-            //Each creator created 4 plans
-            int count = 0;
-            for (int i = 0; i < 10; i++)
+            if (!context.Tasks.Any())
             {
-                for (int j = count; j < count + 4; j++)
+                #region List of Tasks
+
+                List<Task> tasks = new List<Task>();
+                tasks.Add(new Task() {Name = "C#. Installing Visual Studio."});
+                tasks.Add(new Task() {Name = "C#. Variables, Loops."});
+                tasks.Add(new Task() {Name = "C#. Array."});
+                tasks.Add(new Task() {Name = "C#. Class, Method, Exception."});
+                tasks.Add(new Task() {Name = "ASP NET Controllers."});
+                tasks.Add(new Task() {Name = "ASP.NET Routes."});
+                tasks.Add(new Task() {Name = "ASP.NET View."});
+                tasks.Add(new Task() {Name = "ASP.NET Making App."});
+                tasks.Add(new Task() {Name = "Angular. Installing Atom."});
+                tasks.Add(new Task() {Name = "Angular. App component."});
+                tasks.Add(new Task() {Name = "Angular. Services."});
+                tasks.Add(new Task() {Name = "Angular. Observables."});
+                tasks.Add(new Task() {Name = "Angular Material. Installing Angular material"});
+                tasks.Add(new Task() {Name = "Angular Material. Adding NavBar"});
+                tasks.Add(new Task() {Name = "Angular Material. Working on welcome screen"});
+                tasks.Add(new Task() {Name = "Angular Material. Working with Data "});
+                tasks.Add(new Task() {Name = "SQL. Installing SQL Server and Management studio"});
+                tasks.Add(new Task() {Name = "SQL. Creating databases and tables."});
+                tasks.Add(new Task() {Name = "SQL. Data insertion and manipulation."});
+                tasks.Add(new Task() {Name = "SQL. JOIN"});
+                tasks.Add(new Task() {Name = "Full stack WEB App. Modeling app structure"});
+                tasks.Add(new Task() {Name = "Full stack WEB App. Creating Database"});
+                tasks.Add(new Task() {Name = "Full stack WEB App. Data Access, business logic."});
+                tasks.Add(new Task() {Name = "Full stack WEB App. Fron-end part in angular"});
+                tasks.Add(new Task() {Name = "React. React basics"});
+                tasks.Add(new Task() {Name = "React. Routes, Lifecycle"});
+                tasks.Add(new Task() {Name = "React. Transitions & Typechecking"});
+                tasks.Add(new Task() {Name = "React. Working with forms"});
+                tasks.Add(new Task() {Name = "Java. Getting Started. "});
+                tasks.Add(new Task() {Name = "Java. Working with Variables."});
+                tasks.Add(new Task() {Name = "Java. Working with Objects."});
+                tasks.Add(new Task() {Name = "Java. Exception Handling and Debugging."});
+                tasks.Add(new Task() {Name = "JavaScript. Language Basics"});
+                tasks.Add(new Task() {Name = "JavaScript. Works Behind the Scenes"});
+                tasks.Add(new Task() {Name = "JavaScript. DOM Manipulation and Events"});
+                tasks.Add(new Task() {Name = "JavaScript. Objects and Functions"});
+                tasks.Add(new Task() {Name = "C++. Basic Syntax. "});
+                tasks.Add(new Task() {Name = "C++. Defining Functions"});
+                tasks.Add(new Task() {Name = "C++. The Preprocessor"});
+                tasks.Add(new Task() {Name = "C++. Classes and Objects"});
+                tasks.Add(new Task() {Name = "Python. Programming Basics"});
+                tasks.Add(new Task() {Name = "Python. Advanced Concepts"});
+                tasks.Add(new Task() {Name = "Python. RPG Battle Script"});
+                tasks.Add(new Task() {Name = "Python. Web Scraper"});
+
+                #endregion
+
+                //Assigning Id's for groups
+                for (int i = 0, j = 1; i < tasks.Count; i++, j++)
                 {
-                    tasks[j].Creator = users[i];
+                    tasks[i].Id = j;
                 }
 
-                count = count + 4;
+                //Setting tasks as public
+                foreach (var task in tasks)
+                {
+                    task.Private = false;
+                }
+
+                //Assigning creators of tasks
+                //Each creator created 4 plans
+                int count = 1;
+                for (int i = 1; i <= 11; i++)
+                {
+                    for (int j = count; j < count + 4; j++)
+                    {
+                        tasks[j - 1].Create_Id = i;
+                    }
+                    count = count + 4;
+                }
+
+                context.Tasks.AddRange(tasks);
+                context.SaveChanges();
             }
-
-            //Setting tasks as public
-            foreach (var task in tasks)
-            {
-                task.Private = false;
-            }
-
-            context.Tasks.AddRange(tasks);
-            context.SaveChanges();
-        }
-
-        public static void InitializeSections(LearnWithMentor_DBEntities context)
-        {
-            List<Section> sections = new List<Section>();
-            sections.Add(new Section() { Name = "Base C#" });
-            sections.Add(new Section() { Name = "Advaced C#" });
-            sections.Add(new Section() { Name = "Full stack app" });
-            context.Sections.AddRange(sections);
-            context.SaveChanges();
         }
 
         public static void InitializePlanTask(LearnWithMentor_DBEntities context)
         {
-            List<PlanTask> planTasks = new List<PlanTask>();
-            //Assigning tasks for plantasks
-            //Each plan has 4 tasks
-            int count = 0;
-            for (int i = 0; i < 10; i++)
+            if (!context.PlanTasks.Any())
             {
-                for (int j = count; j < count + 4; j++)
+                List<PlanTask> planTasks = new List<PlanTask>();
+                //Assigning tasks for plantasks
+                //Each plan has 4 tasks
+                int count = 1;
+                for (int i = 1; i <= 11; i++)
                 {
-                    planTasks.Add(new PlanTask() { Plan_Id = i, Task_Id = j, Section_Id = j, });
+                    for (int j = count; j < count + 4; j++)
+                    {
+                        planTasks.Add(new PlanTask() {Id = i, Plan_Id = i, Task_Id = j});
+                    }
+
+                    count = count + 4;
                 }
 
-                count = count + 4;
-            }
+                for (int i = 0, j = 1; i < planTasks.Count; i++, j++)
+                {
+                    planTasks[i].Id = j;
+                }
 
-            context.PlanTasks.AddRange(planTasks);
-            context.SaveChanges();
+                context.PlanTasks.AddRange(planTasks);
+                context.SaveChanges();
+            }
         }
 
         private static void InitializeUserTasks(LearnWithMentor_DBEntities context)
@@ -418,6 +426,16 @@ namespace LearnWithMentorDAL.EF
             comments.Add(new Comment() { PlanTask_Id = 2, Create_Id = 12, Text = "Easy task" });
             comments.Add(new Comment() { PlanTask_Id = 1, Create_Id = 13, Text = "Hard task" });
             context.Comments.AddRange(comments);
+        }
+
+        public static void InitializeSections(LearnWithMentor_DBEntities context)
+        {
+            List<Section> sections = new List<Section>();
+            sections.Add(new Section() { Name = "Base C#" });
+            sections.Add(new Section() { Name = "Advaced C#" });
+            sections.Add(new Section() { Name = "Full stack app" });
+            context.Sections.AddRange(sections);
+            context.SaveChanges();
         }
     }
 }
