@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="CommentDTO.cs" />
     <Compile Include="GroupDTO.cs" />
+    <Compile Include="GroupUsersTaskState.cs" />
     <Compile Include="ImageDTO.cs" />
     <Compile Include="MessageDTO.cs" />
     <Compile Include="PlanDTO.cs" />

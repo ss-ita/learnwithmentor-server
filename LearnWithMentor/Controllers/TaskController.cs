@@ -15,8 +15,8 @@ using System.Data.Entity.Core;
 namespace LearnWithMentor.Controllers
 {
     /// <summary> Controller for working with tasks </summary>
-    [Authorize]
-    [JwtAuthentication]
+    //[Authorize]
+    //[JwtAuthentication]
     public class TaskController : ApiController
     {
         /// <summary> Services for work with different DB parts </summary>
@@ -260,21 +260,50 @@ namespace LearnWithMentor.Controllers
             }
         }
 
-        /// <summary>Returns tasks states for array of id.</summary>
+        /// <summary>Returns tasks states for array of  planTaskId.</summary>
         /// <param name="user_id">Id of the user.</param>
-        /// <param name="task_ids">Array of tasks id.</param>
+        /// <param name="planTaskIds">Array of planTaskId.</param>
         [HttpGet]
         [Route("api/task/state")]
-        public HttpResponseMessage GetAllTasksState(int user_id, int[] task_ids)
+        public HttpResponseMessage GetAllTasksState(int user_id, int[] planTaskIds)
         {
             try
             {
-                List<UserTaskStateDTO> userTaskStateList = taskService.GetTaskStatesForUser(task_ids, user_id);
+                List<UserTaskStateDTO> userTaskStateList = taskService.GetTaskStatesForUser(planTaskIds, user_id);
                 if (userTaskStateList == null || userTaskStateList.Count == 0)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, "There are no created usertasks.");
                 }
                 return Request.CreateResponse(HttpStatusCode.OK, userTaskStateList);
+            }
+            catch (EntityException e)
+            {
+                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
+        }
+
+        /// <summary>Returns array of arrays tasks states and user ids for array of  planTaskId and for array of userid.</summary>
+        /// <param name="userIds"> Array  of the user.</param>
+        /// <param name="planTaskIds">Array of planTaskId.</param>
+        [HttpGet]
+        [Route("api/task/state/all")]
+        public HttpResponseMessage GetAllTasksStateForAllGroupUsers([FromUri]int[] userIds, [FromUri]int[] planTaskIds)
+        {
+            try
+            {
+                List<GroupUsersTaskState> groupUsersTaskStateList= new List<GroupUsersTaskState>();
+
+                for (int i=0;i< userIds.Length;i++)
+                {
+                    List<UserTaskStateDTO> userTaskStateList = taskService.GetTaskStatesForUser(planTaskIds, userIds[i]);
+                    if (userTaskStateList == null || userTaskStateList.Count == 0)
+                    {
+                        return Request.CreateErrorResponse(HttpStatusCode.NoContent, "There are no created usertasks. for user with id: "+userIds[i]);
+                    }
+                    groupUsersTaskStateList.Add(new GroupUsersTaskState(){UserId = userIds[i], Tasks= userTaskStateList });
+                }
+                return Request.CreateResponse(HttpStatusCode.OK, groupUsersTaskStateList);
             }
             catch (EntityException e)
             {
