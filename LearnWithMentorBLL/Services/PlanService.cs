@@ -115,7 +115,7 @@ namespace LearnWithMentorBLL.Services
             if (plan == null)
                 return null;
 
-            var section = db.PlanTasks.GetAll().GroupBy(s => s.Sections).Select(p => new { Name = p.Key.Name, Tasks = p.Key.PlanTasks.Where(pt => pt.Plan_Id == plan.Id).Select(pt => pt.Tasks) }).ToList();
+            var section = db.PlanTasks.GetAll().GroupBy(s => s.Sections).Select(p => new { Id = p.Key.Id,  Name = p.Key.Name, Tasks = p.Key.PlanTasks.Where(pt => pt.Plan_Id == plan.Id).Select(pt => pt.Tasks) }).ToList();
 
             List<SectionDTO> sectionDTOs = new List<SectionDTO>();
 
