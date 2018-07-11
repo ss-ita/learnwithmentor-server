@@ -1,12 +1,13 @@
 ﻿using LearnWithMentorBLL.Interfaces;
+using LearnWithMentorDAL.UnitOfWork;
 
 namespace LearnWithMentorBLL.Services
 {
-    public class DataBaseService : BaseService, IDataBaseService
+    public class DataBaseService
     {
-        public DataBaseService()
+        public  DataBaseService()
         {
-
+            DbInitialize();
         }
 
         public void DbInitialize()

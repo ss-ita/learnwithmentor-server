@@ -18,6 +18,16 @@ namespace LearnWithMentorDAL.EF
 
     public class LearnWithMentorInitializer
     {
+        public LearnWithMentorInitializer()
+        {
+
+        }
+
+        static LearnWithMentorInitializer()
+        {
+            Initialize();
+        }
+
         public static void Initialize()
         {
             using (LearnWithMentor_DBEntities context = new LearnWithMentor_DBEntities())
@@ -31,7 +41,7 @@ namespace LearnWithMentorDAL.EF
                 InitializePlanTask(context);
                 InitializeUserTasks(context);
                 InitializeMessages(context);
-                InitializeComments(context);
+                //InitializeComments(context);
             }
         }
 
@@ -254,7 +264,6 @@ namespace LearnWithMentorDAL.EF
             if (!context.Tasks.Any())
             {
                 #region List of Tasks
-
                 List<Task> tasks = new List<Task>();
                 tasks.Add(new Task() {Name = "C#. Installing Visual Studio."});
                 tasks.Add(new Task() {Name = "C#. Variables, Loops."});
@@ -300,7 +309,6 @@ namespace LearnWithMentorDAL.EF
                 tasks.Add(new Task() {Name = "Python. Advanced Concepts"});
                 tasks.Add(new Task() {Name = "Python. RPG Battle Script"});
                 tasks.Add(new Task() {Name = "Python. Web Scraper"});
-
                 #endregion
 
                 //Assigning Id's for groups
@@ -430,13 +438,13 @@ namespace LearnWithMentorDAL.EF
            
             //Creating messages
             List<Message> messages = new List<Message>();
-            messages.Add(new Message() { UserTask_Id = 0, User_Id = 11, Text = "Sorry, i've got cold." });
+            messages.Add(new Message() { UserTask_Id = 1, User_Id = 11, Text = "Sorry, i've got cold." });
             messages.Add(
                 new Message() { UserTask_Id = 25, User_Id = 12, Text = "Hello. I've done this task. Can you review?" });
             messages.Add(
                 new Message() { UserTask_Id = 50, User_Id = 13, Text = "I have problem with this task. Can you help me?" });
             messages.Add(new Message() { UserTask_Id = 101, User_Id = 14, Text = "There some bugs in my code." });
-            messages.Add(new Message() { UserTask_Id = 0, User_Id = 0, Text = "Here you have new info about your task." });
+            messages.Add(new Message() { UserTask_Id = 1, User_Id = 1, Text = "Here you have new info about your task." });
             
             //Assigning Id's for messages
             for (int i = 0, j = 1; i < messages.Count; i++, j++)

@@ -14,7 +14,7 @@ namespace LearnWithMentor.Controllers
 
         public DataBaseController()
         {
-            dataBaseService = new DataBaseService();
+         //   dataBaseService = new DataBaseService();
         }
 
         [HttpPost]
