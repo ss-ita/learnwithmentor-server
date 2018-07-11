@@ -7,7 +7,6 @@ using LearnWithMentorDAL.Entities;
 namespace LearnWithMentorDAL.EF
 {
     //TO DO
-    //check if base is already created
     //launch before first request
     //перевірка на ініціалізацію бази
     //перевірка на наявних користувачів
@@ -28,7 +27,11 @@ namespace LearnWithMentorDAL.EF
                 InitializePlans(context);
                 InitializeGroups(context);
                 InitializeTasks(context);
+                InitializeSections(context);
                 InitializePlanTask(context);
+                InitializeUserTasks(context);
+                InitializeMessages(context);
+                InitializeComments(context);
             }
         }
 
@@ -46,7 +49,7 @@ namespace LearnWithMentorDAL.EF
 
         }
 
-        public static void InitializeUsers(LearnWithMentor_DBEntities context)
+        private static void InitializeUsers(LearnWithMentor_DBEntities context)
         {
             if (!context.Users.Any())
             {
@@ -118,7 +121,7 @@ namespace LearnWithMentorDAL.EF
             }
         }
 
-        public static void InitializePlans(LearnWithMentor_DBEntities context)
+        private static void InitializePlans(LearnWithMentor_DBEntities context)
         {
             if (!context.Plans.Any())
             {
@@ -211,7 +214,7 @@ namespace LearnWithMentorDAL.EF
             }
         }
 
-        public static void InitializeGroups(LearnWithMentor_DBEntities context)
+        private static void InitializeGroups(LearnWithMentor_DBEntities context)
         {
             if (!context.Groups.Any())
             {
@@ -246,7 +249,7 @@ namespace LearnWithMentorDAL.EF
             }
         }
 
-        public static void InitializeTasks(LearnWithMentor_DBEntities context)
+        private static void InitializeTasks(LearnWithMentor_DBEntities context)
         {
             if (!context.Tasks.Any())
             {
@@ -329,7 +332,16 @@ namespace LearnWithMentorDAL.EF
             }
         }
 
-        public static void InitializePlanTask(LearnWithMentor_DBEntities context)
+        private static void InitializeSections(LearnWithMentor_DBEntities context)
+        {
+            List<Section> sections = new List<Section>();
+
+           
+            context.Sections.AddRange(sections);
+            context.SaveChanges();
+        }
+
+        private static void InitializePlanTask(LearnWithMentor_DBEntities context)
         {
             if (!context.PlanTasks.Any())
             {
@@ -357,65 +369,83 @@ namespace LearnWithMentorDAL.EF
             }
         }
 
+        
+
         private static void InitializeUserTasks(LearnWithMentor_DBEntities context)
         {
-            //Assigning tasks for usertasks
-            //Task will have only first seven students
-            List<UserTask> userTasks = new List<UserTask>();
-            for (int i = 11; i < 17; i++)
+            if (!context.UserTasks.Any())
             {
-                for (int j = 0; j < 24; j++)
+                //Assigning tasks for usertasks
+                //Task will have only first seven students
+                List<UserTask> userTasks = new List<UserTask>();
+                //Assigning Id's for userTasks
+                for (int i = 0, j = 1; i < userTasks.Count; i++, j++)
                 {
-                    userTasks.Add(new UserTask()
-                    {
-                        User_Id = i,
-                        PlanTask_Id = j,
-                        Mentor_Id = 0,
-                        State = "Done",
-                        Result = "Ref to GitHub"
-                    });
-                    userTasks.Add(new UserTask()
-                    {
-                        User_Id = i,
-                        PlanTask_Id = j,
-                        Mentor_Id = 0,
-                        State = "In progress",
-                        Result = "ref to GitHub"
-                    });
-                    userTasks.Add(new UserTask()
-                    {
-                        User_Id = i,
-                        PlanTask_Id = j,
-                        Mentor_Id = 0,
-                        State = "In progress",
-                        Result = "ref to GitHub"
-                    });
-                    userTasks.Add(new UserTask()
-                    {
-                        User_Id = i,
-                        PlanTask_Id = j,
-                        Mentor_Id = 0,
-                        State = "Done",
-                        Result = "Ref to GitHub"
-                    });
+                    userTasks[i].Id = j;
                 }
-            }
 
-            context.UserTasks.AddRange(userTasks);
+                for (int i = 11; i <= 17; i++)
+                {
+                    for (int j = 1; j < 25; j++)
+                    {
+                        userTasks.Add(new UserTask()
+                        {
+                            User_Id = i,
+                            PlanTask_Id = j,
+                            Mentor_Id = 1,
+                            Result = "Ref to GitHub"
+                        });
+                    }
+                }
+
+                var doneUserTasks = userTasks.Where(ut => ut.User_Id   == 11 &&
+                                                                  ut.User_Id == 12);
+                foreach (var userTask in userTasks)
+                {
+                    switch (userTask.User_Id)
+                    {
+                        case 11:
+                        case 12:
+                            userTask.State = "P";
+                            break;
+                        case 13:
+                        case 14:
+                            userTask.State = "D";
+                            break;
+                        case 15:
+                        case 16:
+                            userTask.State = "A";
+                            break;
+                        case 17:
+                            userTask.State = "R";
+                            break;
+                    }
+                }
+                context.UserTasks.AddRange(userTasks);
+                context.SaveChanges();
+            }
         }
 
-        public static void InitializeMessages(LearnWithMentor_DBEntities context){
+        private static void InitializeMessages(LearnWithMentor_DBEntities context){
            
             //Creating messages
             List<Message> messages = new List<Message>();
             messages.Add(new Message() { UserTask_Id = 0, User_Id = 11, Text = "Sorry, i've got cold." });
             messages.Add(
-                new Message() { UserTask_Id = 0, User_Id = 12, Text = "Hello. I've done this task. Can you review?" });
+                new Message() { UserTask_Id = 25, User_Id = 12, Text = "Hello. I've done this task. Can you review?" });
             messages.Add(
-                new Message() { UserTask_Id = 0, User_Id = 13, Text = "I have problem with this task. Can you help me?" });
-            messages.Add(new Message() { UserTask_Id = 0, User_Id = 14, Text = "There some bugs in my code." });
+                new Message() { UserTask_Id = 50, User_Id = 13, Text = "I have problem with this task. Can you help me?" });
+            messages.Add(new Message() { UserTask_Id = 101, User_Id = 14, Text = "There some bugs in my code." });
             messages.Add(new Message() { UserTask_Id = 0, User_Id = 0, Text = "Here you have new info about your task." });
+            
+            //Assigning Id's for messages
+            for (int i = 0, j = 1; i < messages.Count; i++, j++)
+            {
+                messages[i].Id = j;
+            }
+
             context.Messages.AddRange(messages);
+            context.SaveChanges();
         }
 
         private static void InitializeComments(LearnWithMentor_DBEntities context)
@@ -425,16 +455,14 @@ namespace LearnWithMentorDAL.EF
             comments.Add(new Comment() { PlanTask_Id = 3, Create_Id = 11, Text = "Nice task" });
             comments.Add(new Comment() { PlanTask_Id = 2, Create_Id = 12, Text = "Easy task" });
             comments.Add(new Comment() { PlanTask_Id = 1, Create_Id = 13, Text = "Hard task" });
-            context.Comments.AddRange(comments);
-        }
+            //Assigning Id's for comments
+            for (int i = 0, j = 1; i < comments.Count; i++, j++)
+            {
+                comments[i].Id = j;
+            }
 
-        public static void InitializeSections(LearnWithMentor_DBEntities context)
-        {
-            List<Section> sections = new List<Section>();
-            sections.Add(new Section() { Name = "Base C#" });
-            sections.Add(new Section() { Name = "Advaced C#" });
-            sections.Add(new Section() { Name = "Full stack app" });
-            context.Sections.AddRange(sections);
+
+            context.Comments.AddRange(comments);
             context.SaveChanges();
         }
     }
