@@ -109,6 +109,46 @@ namespace LearnWithMentorBLL.Services
             return dtosList;
         }
 
+        public List<SectionDTO> GetTasksForPlan(int planId)
+        {
+            var plan = db.Plans.Get(planId);
+            if (plan == null)
+                return null;
+
+            var section = db.PlanTasks.GetAll().GroupBy(s => s.Sections).Select(p => new { Name = p.Key.Name, Tasks = p.Key.PlanTasks.Where(pt => pt.Plan_Id == plan.Id).Select(pt => pt.Tasks) }).ToList();
+
+            List<SectionDTO> sectionDTOs = new List<SectionDTO>();
+
+            foreach (var sec in section)
+            {
+                List<TaskDTO> taskDTOs = new List<TaskDTO>();
+                foreach (var task in sec.Tasks)
+                {
+                    TaskDTO toAdd = new TaskDTO(task.Id,
+                        task.Name,
+                        task.Description,
+                        task.Private,
+                        task.Create_Id,
+                        db.Users.ExtractFullName(task.Create_Id),
+                        task.Mod_Id,
+                        db.Users.ExtractFullName(task.Mod_Id),
+                        task.Create_Date,
+                        task.Mod_Date,
+                        db.PlanTasks.GetTaskPriorityInPlan(task.Id, planId),
+                        db.PlanTasks.GetTaskSectionIdInPlan(task.Id, planId),
+                        db.PlanTasks.GetIdByTaskAndPlan(task.Id, planId));
+                                            taskDTOs.Add(toAdd);
+                }
+                SectionDTO sectionDTO = new SectionDTO()
+                {
+                    Name = sec.Name,
+                    Tasks = taskDTOs
+                };
+                sectionDTOs.Add(sectionDTO);
+            }
+            return sectionDTOs;
+        }
+
         public bool UpdateById(PlanDTO plan, int id)
         {
             var toUpdate = db.Plans.Get(id);
