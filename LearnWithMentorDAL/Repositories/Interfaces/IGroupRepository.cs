@@ -7,6 +7,7 @@ namespace LearnWithMentorDAL.Repositories
     {
         Group Get(int id);
         int Count();
+        bool GroupNameExists(string groupName);
         IEnumerable<Group> GetGroupsByMentor(int mentor_id);
         bool AddUserToGroup(int userId, int groupId);
         bool AddPlanToGroup(int planId, int groupId);
