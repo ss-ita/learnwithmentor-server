@@ -18,7 +18,6 @@ namespace LearnWithMentor
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             new DataBaseService();
-            Console.WriteLine("вася пупкін");
         }
     }
 }
