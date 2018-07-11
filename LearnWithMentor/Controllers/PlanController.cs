@@ -30,11 +30,11 @@ namespace LearnWithMentor.Controllers
         /// <summary>
         /// Creates new instance of controller.
         /// </summary>
-        public PlanController()
+        public PlanController(IPlanService planService, ITaskService taskService, ITraceWriter tracer)
         {
-            planService = new PlanService();
-            taskService = new TaskService();
-            tracer = new LWMLogger();
+            this.planService = planService;
+            this.taskService = taskService;
+            this.tracer = tracer;
         }
 
         /// <summary>
@@ -123,6 +123,35 @@ namespace LearnWithMentor.Controllers
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
                     var okMessage = $"Succesfully created plan: {value.Name}";
                     return Request.CreateResponse(HttpStatusCode.OK, okMessage);
+                }
+            }
+            catch (EntityException e)
+            {
+                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
+            tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on creating plan");
+            var message = "Incorrect request syntax.";
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
+        }
+
+        /// <summary>
+        /// Creates new plan and returns id of the created plan.
+        /// </summary>
+        /// <param name="value"> New plan to be created. </param>
+        [HttpPost]
+        [Route("api/plan/return")]
+        public HttpResponseMessage PostAndReturnId([FromBody]PlanDTO value)
+        {
+            try
+            {
+                var result = planService.AddAndGetId(value);
+                if (result != null)
+                {
+                    var log = $"Succesfully created plan {value.Name} with id = {result} by user with id = {value.CreatorId}";
+                    tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
+                    var okMessage = $"Succesfully created plan: {value.Name}";
+                    return Request.CreateResponse(HttpStatusCode.OK, result);
                 }
             }
             catch (EntityException e)

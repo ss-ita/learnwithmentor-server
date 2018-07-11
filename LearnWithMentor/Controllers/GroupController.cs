@@ -26,11 +26,11 @@ namespace LearnWithMentor.Controllers
         /// <summary>
         /// Creates new instance of controller.
         /// </summary>
-        public GroupController()
+        public GroupController(IGroupService groupService, IUserService userService, ITraceWriter tracer)
         {
-            groupService = new GroupService();
-            userService = new UserService();
-            tracer = new LWMLogger();
+            this.userService = userService;
+            this.groupService = groupService;
+            this.tracer = tracer;
         }
 
         // GET api/<controller>
@@ -146,7 +146,7 @@ namespace LearnWithMentor.Controllers
                 bool success = groupService.AddGroup(group);
                 if (success)
                 {
-                    var log = $"Succesfully created group {group.Name} with id = {group.ID} with mentor id = {group.MentorID}";
+                    var log = $"Succesfully created group {group.Name} with id = {group.Id} with mentor id = {group.MentorId}";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
                     return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully created group: {group.Name}.");
                 }

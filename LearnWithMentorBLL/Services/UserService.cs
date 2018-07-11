@@ -4,12 +4,13 @@ using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDTO;
 using LearnWithMentorDAL.Entities;
 using System;
+using LearnWithMentorDAL.UnitOfWork;
 
 namespace LearnWithMentorBLL.Services
 {
     public class UserService : BaseService, IUserService
     {
-        public UserService() : base()
+        public UserService(IUnitOfWork db) : base(db)
         {
         }
         public UserDTO Get(int id)
@@ -106,6 +107,16 @@ namespace LearnWithMentorBLL.Services
             toAdd.FirstName = userLoginDTO.FirstName;
             toAdd.LastName = userLoginDTO.LastName;
             db.Users.Add(toAdd);
+            db.Save();
+            return true;
+        }
+        public bool UpdatePassword(int userId, string password)
+        {
+            var user = db.Users.Get(userId);
+            if(user == null)
+                return false;
+            user.Password = BCrypt.Net.BCrypt.HashPassword(password);
+            db.Users.Update(user);
             db.Save();
             return true;
         }

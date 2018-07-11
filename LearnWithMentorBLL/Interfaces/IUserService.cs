@@ -17,5 +17,6 @@ namespace LearnWithMentorBLL.Interfaces
         bool SetImage(int planId, byte[] image, string imageName);
         ImageDTO GetImage(int id);
         bool ContainsId(int id);
+        bool UpdatePassword(int userId, string password);
     }
 }

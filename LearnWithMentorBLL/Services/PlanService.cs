@@ -6,12 +6,13 @@ using LearnWithMentorDTO;
 using LearnWithMentorDAL.Entities;
 using System.Drawing;
 using System.IO;
+using LearnWithMentorDAL.UnitOfWork;
 
 namespace LearnWithMentorBLL.Services
 {
     public class PlanService : BaseService, IPlanService
     {
-        public PlanService() : base()
+        public PlanService(IUnitOfWork db) : base(db)
         {
         }
         public PlanDTO Get(int id)
@@ -174,6 +175,23 @@ namespace LearnWithMentorBLL.Services
             db.Plans.Add(plan);
             db.Save();
             return true;
+        }
+        public int? AddAndGetId(PlanDTO dto)
+        {
+            if (!ContainsId(dto.CreatorId))
+                return null;
+            var plan = new Plan
+            {
+                Name = dto.Name,
+                Description = dto.Description,
+                Create_Id = dto.CreatorId,
+                Published = dto.Published
+            };
+            var createdPlan = db.Plans.AddAndReturnElement(plan);
+            db.Save();
+            if (createdPlan == null)
+                return null;
+            return createdPlan?.Id;
         }
         public List<PlanDTO> Search(string[] searchString)
         {
