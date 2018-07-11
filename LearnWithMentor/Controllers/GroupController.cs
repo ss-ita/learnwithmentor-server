@@ -80,7 +80,7 @@ namespace LearnWithMentor.Controllers
             else
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"There isn't plans for the group id = {id}");
         }
-        
+
         /// <summary>
         /// Returns users that belong to group by group Id "api/group/{id}/users"
         /// </summary>
@@ -243,7 +243,7 @@ namespace LearnWithMentor.Controllers
                     return GetPlansNotUsedInCurrentGroup(groupId);
                 }
                 string[] lines = searchKey.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                var plansList = groupService.SearchPlansNotUsedInGroup(lines,groupId);
+                var plansList = groupService.SearchPlansNotUsedInGroup(lines, groupId);
                 if (plansList == null)
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, "This plan does not exist.");
                 return Request.CreateResponse(HttpStatusCode.OK, plansList);
@@ -309,7 +309,7 @@ namespace LearnWithMentor.Controllers
                 tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
-            
+
         }
 
         /// <summary>
@@ -349,14 +349,22 @@ namespace LearnWithMentor.Controllers
         [Route("api/group/user/{userId}/groups")]
         public HttpResponseMessage GetUserGroups(int userId)
         {
-            if(!userService.ContainsId(userId))
-                return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"There are no users with id = {userId}");
-            if (groupService.GroupsCount()==0)
-                return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"There are no groups in database.");
-            var groups = groupService.GetUserGroups(userId);
-            if (groups == null)
-                return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"There are no groups for this user");
-            return Request.CreateResponse(HttpStatusCode.OK, groups);                
+            try
+            {
+                if (!userService.ContainsId(userId))
+                    return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"There are no users with id = {userId}");
+                if (groupService.GroupsCount() == 0)
+                    return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"There are no groups in database.");
+                var groups = groupService.GetUserGroups(userId);
+                if (groups == null)
+                    return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"There are no groups for this user");
+                return Request.CreateResponse(HttpStatusCode.OK, groups);
+            }
+            catch (EntityException e)
+            {
+                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
         }
     }
 }
