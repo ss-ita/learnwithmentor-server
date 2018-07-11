@@ -354,10 +354,9 @@ namespace LearnWithMentor.Controllers
             if (groupService.GroupsCount()==0)
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"There are no groups in database.");
             var groups = groupService.GetUserGroups(userId);
-            if (groups != null)
-                return Request.CreateResponse(HttpStatusCode.OK, groups);
-            else
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"There are no groups for this user");
+            if (groups == null)
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"There are no groups for this user");
+            return Request.CreateResponse(HttpStatusCode.OK, groups);                
         }
     }
 }

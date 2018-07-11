@@ -121,7 +121,6 @@ namespace LearnWithMentorBLL.Services
                 groups = db.Groups.GetStudentGroups(userId);
             else
                 groups = db.Groups.GetAll();
-
             if (groups == null)
                 return null;
             List<GroupDTO> groupList = new List<GroupDTO>();
@@ -132,6 +131,8 @@ namespace LearnWithMentorBLL.Services
                                          group.Mentor_Id,
                                          db.Users.ExtractFullName(group.Mentor_Id)));
             }
+            if (groupList.Count < 1)
+                return null;
             return groupList;
         }
 
