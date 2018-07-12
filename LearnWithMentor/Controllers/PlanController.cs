@@ -19,8 +19,8 @@ namespace LearnWithMentor.Controllers
     /// <summary>
     /// Controller for plans.
     /// </summary>
-    //[Authorize]
-    //[JwtAuthentication]
+    [Authorize]
+    [JwtAuthentication]
     public class PlanController : ApiController
     {
         private readonly IPlanService planService;
