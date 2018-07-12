@@ -67,40 +67,40 @@ namespace LearnWithMentorDAL.EF
                 List<User> users = new List<User>();
 
                 #region List of Mentors
-                users.Add(new User() { FirstName = "Vyacheslav", LastName = "Koldovsky", Email = "koldovsky@gmail.com" });
-                users.Add(new User() { FirstName = "Khrystyna ", LastName = "Romaniv", Email = "romaniv@gmail.com" });
-                users.Add(new User() { FirstName = "Orysia", LastName = "Khoroshchak", Email = "khoroshchak@gmail.com" });
-                users.Add(new User() { FirstName = "Lesya", LastName = "Klakovych", Email = "klakovych@gmail.com" });
-                users.Add(new User() { FirstName = "Viktoria", LastName = "Ryazhska", Email = "ryazhska@gmail.com" });
-                users.Add(new User() { FirstName = "Liubomyr", LastName = "Halamaha", Email = "halamaha@gmail.com" });
-                users.Add(new User() { FirstName = "Igor", LastName = "Kohut", Email = "kohut@gmail.com" });
-                users.Add(new User() { FirstName = "Andriy", LastName = "Korkuna", Email = "korkuna@gmail.com" });
-                users.Add(new User() { FirstName = "Yaroslav", LastName = "Harasym", Email = "harasym@gmail.com" });
-                users.Add(new User() { FirstName = "Mykhaylo", LastName = "Plesna", Email = "plesna@gmail.com" });
-                users.Add(new User() { FirstName = "Maryana", LastName = "Lopatynska", Email = "lopatynska@gmail.com" });
+                users.Add(new User() { FirstName = "Vyacheslav", LastName = "Koldovsky", Email = "koldovsky@gmail.com" });//1
+                users.Add(new User() { FirstName = "Khrystyna ", LastName = "Romaniv", Email = "romaniv@gmail.com" });//2
+                users.Add(new User() { FirstName = "Orysia", LastName = "Khoroshchak", Email = "khoroshchak@gmail.com" });//3
+                users.Add(new User() { FirstName = "Lesya", LastName = "Klakovych", Email = "klakovych@gmail.com" });//4
+                users.Add(new User() { FirstName = "Viktoria", LastName = "Ryazhska", Email = "ryazhska@gmail.com" });//5
+                users.Add(new User() { FirstName = "Liubomyr", LastName = "Halamaha", Email = "halamaha@gmail.com" });//6
+                users.Add(new User() { FirstName = "Igor", LastName = "Kohut", Email = "kohut@gmail.com" });//7
+                users.Add(new User() { FirstName = "Andriy", LastName = "Korkuna", Email = "korkuna@gmail.com" });//8
+                users.Add(new User() { FirstName = "Yaroslav", LastName = "Harasym", Email = "harasym@gmail.com" });//9
+                users.Add(new User() { FirstName = "Mykhaylo", LastName = "Plesna", Email = "plesna@gmail.com" });//10
+                users.Add(new User() { FirstName = "Maryana", LastName = "Lopatynska", Email = "lopatynska@gmail.com" });//11
                 #endregion
 
                 #region List of Students
-                users.Add(new User() { FirstName = "Roman", LastName = "Maksymyshyn", Email = "maksymyshyn@gmail.com" });
-                users.Add(new User() { FirstName = "Yurii-Stefan", LastName = "Zhydetskyi", Email = "zhydetskyi@gmail.com" });
-                users.Add(new User() { FirstName = "Oleksandr", LastName = "Isakov", Email = "isakov@gmail.com" });
-                users.Add(new User() { FirstName = "Roman", LastName = "Parobii", Email = "parobii@gmail.com" });
-                users.Add(new User() { FirstName = "Andrii", LastName = "Lysyi", Email = "lysyi@gmail.com" });
-                users.Add(new User() { FirstName = "Andrii", LastName = "Panchyshyn", Email = "panchyshyn@gmail.com" });
-                users.Add(new User() { FirstName = "Yulia", LastName = "Pavlyk", Email = "pavlyk@gmail.com" });
-                users.Add(new User() { FirstName = "Karim", LastName = "Benkhenni", Email = "benkhenni@gmail.com" });
-                users.Add(new User() { FirstName = "Pedro", LastName = "Alvares", Email = "alvares@gmail.com" });
-                users.Add(new User() { FirstName = "Dmytro", LastName = "Chalyi", Email = "chalyi@gmail.com" });
-                users.Add(new User() { FirstName = "Adriana", LastName = "Prudyvus", Email = "prudyvus@gmail.com" });
-                users.Add(new User() { FirstName = "Yaromyr", LastName = "Oryshchyn", Email = "oryshchyn@gmail.com" });
-                users.Add(new User() { FirstName = "Andrii", LastName = "Danyliuk", Email = "danyliuk@gmail.com" });
-                users.Add(new User() { FirstName = "Maksym", LastName = "Prytyka", Email = "prytyka@gmail.com" });
-                users.Add(new User() { FirstName = "Mykhailo", LastName = "Kyzyma", Email = "kyzyma@gmail.com" });
-                users.Add(new User() { FirstName = "Dmytro", LastName = "Khomyk", Email = "khomyk@gmail.com" });
-                users.Add(new User() { FirstName = "Pavlo", LastName = "Kruk", Email = "kruk@gmail.com" });
-                users.Add(new User() { FirstName = "Kateryna", LastName = "Obrizan", Email = "obrizan@gmail.com" });
-                users.Add(new User() { FirstName = "Viktor", LastName = "Levak", Email = "levak@gmail.com" });
-                users.Add(new User() { FirstName = "Oleksandr", LastName = "Mykhalchuk", Email = "mykhalchuk@gmail.com" });
+                users.Add(new User() { FirstName = "Roman", LastName = "Maksymyshyn", Email = "maksymyshyn@gmail.com" });//12
+                users.Add(new User() { FirstName = "Yurii-Stefan", LastName = "Zhydetskyi", Email = "zhydetskyi@gmail.com" });//13
+                users.Add(new User() { FirstName = "Oleksandr", LastName = "Isakov", Email = "isakov@gmail.com" });//14
+                users.Add(new User() { FirstName = "Roman", LastName = "Parobii", Email = "parobii@gmail.com" });//15
+                users.Add(new User() { FirstName = "Andrii", LastName = "Lysyi", Email = "lysyi@gmail.com" });//16
+                users.Add(new User() { FirstName = "Andrii", LastName = "Panchyshyn", Email = "panchyshyn@gmail.com" });//17
+                users.Add(new User() { FirstName = "Yulia", LastName = "Pavlyk", Email = "pavlyk@gmail.com" });//18________
+                users.Add(new User() { FirstName = "Karim", LastName = "Benkhenni", Email = "benkhenni@gmail.com" });//19
+                users.Add(new User() { FirstName = "Pedro", LastName = "Alvares", Email = "alvares@gmail.com" });//20
+                users.Add(new User() { FirstName = "Dmytro", LastName = "Chalyi", Email = "chalyi@gmail.com" });//21
+                users.Add(new User() { FirstName = "Adriana", LastName = "Prudyvus", Email = "prudyvus@gmail.com" });//21
+                users.Add(new User() { FirstName = "Yaromyr", LastName = "Oryshchyn", Email = "oryshchyn@gmail.com" });//22
+                users.Add(new User() { FirstName = "Andrii", LastName = "Danyliuk", Email = "danyliuk@gmail.com" });//23
+                users.Add(new User() { FirstName = "Maksym", LastName = "Prytyka", Email = "prytyka@gmail.com" });//24_____
+                users.Add(new User() { FirstName = "Mykhailo", LastName = "Kyzyma", Email = "kyzyma@gmail.com" });//25
+                users.Add(new User() { FirstName = "Dmytro", LastName = "Khomyk", Email = "khomyk@gmail.com" });//26
+                users.Add(new User() { FirstName = "Pavlo", LastName = "Kruk", Email = "kruk@gmail.com" });//27
+                users.Add(new User() { FirstName = "Kateryna", LastName = "Obrizan", Email = "obrizan@gmail.com" });//28
+                users.Add(new User() { FirstName = "Viktor", LastName = "Levak", Email = "levak@gmail.com" });//29
+                users.Add(new User() { FirstName = "Oleksandr", LastName = "Mykhalchuk", Email = "mykhalchuk@gmail.com" });//30
                 #endregion
 
                 //Assigning Id's for users
@@ -255,12 +255,23 @@ namespace LearnWithMentorDAL.EF
                     group.Mentor_Id = group.Id;
                 }
 
-                var students319 = context.Users.Where(user => user.Id >= 11 && user.Id <= 18);
+                var students319 = context.Users.Where(user => user.Id >= 12 && user.Id <= 18);
                 foreach (var student319 in students319)
                 {
                     groups[0].Users.Add(student319);
                 }
-                
+
+                var students320 = context.Users.Where(user => user.Id >= 19 && user.Id <= 24);
+                foreach (var student320 in students320)
+                {
+                    groups[1].Users.Add(student320);
+                }
+                var students321 = context.Users.Where(user => user.Id >= 25 && user.Id <= 30);
+                foreach (var student321 in students321)
+                {
+                    groups[2].Users.Add(student321);
+                }
+
                 context.Groups.AddRange(groups);
                 context.SaveChanges();
             }
@@ -272,30 +283,30 @@ namespace LearnWithMentorDAL.EF
             {
                 #region List of Tasks
                 List<Task> tasks = new List<Task>();
-                tasks.Add(new Task() { Name = "C#. Installing Visual Studio." });
-                tasks.Add(new Task() { Name = "C#. Variables, Loops." });
-                tasks.Add(new Task() { Name = "C#. Array." });
-                tasks.Add(new Task() { Name = "C#. Class, Method, Exception." });
-                tasks.Add(new Task() { Name = "ASP NET Controllers." });
-                tasks.Add(new Task() { Name = "ASP.NET Routes." });
-                tasks.Add(new Task() { Name = "ASP.NET View." });
-                tasks.Add(new Task() { Name = "ASP.NET Making App." });
-                tasks.Add(new Task() { Name = "Angular. Installing Atom." });
-                tasks.Add(new Task() { Name = "Angular. App component." });
-                tasks.Add(new Task() { Name = "Angular. Services." });
-                tasks.Add(new Task() { Name = "Angular. Observables." });
-                tasks.Add(new Task() { Name = "Angular Material. Installing Angular material" });
-                tasks.Add(new Task() { Name = "Angular Material. Adding NavBar" });
-                tasks.Add(new Task() { Name = "Angular Material. Working on welcome screen" });
-                tasks.Add(new Task() { Name = "Angular Material. Working with Data " });
-                tasks.Add(new Task() { Name = "SQL. Installing SQL Server and Management studio" });
-                tasks.Add(new Task() { Name = "SQL. Creating databases and tables." });
-                tasks.Add(new Task() { Name = "SQL. Data insertion and manipulation." });
-                tasks.Add(new Task() { Name = "SQL. JOIN" });
-                tasks.Add(new Task() { Name = "Full stack WEB App. Modeling app structure" });
-                tasks.Add(new Task() { Name = "Full stack WEB App. Creating Database" });
-                tasks.Add(new Task() { Name = "Full stack WEB App. Data Access, business logic." });
-                tasks.Add(new Task() { Name = "Full stack WEB App. Fron-end part in angular" });
+                tasks.Add(new Task() { Name = "C#. Installing Visual Studio." });//Section 1 [1]
+                tasks.Add(new Task() { Name = "C#. Variables, Loops." });//Section 1 [2]
+                tasks.Add(new Task() { Name = "C#. Array." });//Section 1 [3]
+                tasks.Add(new Task() { Name = "C#. Class, Method, Exception." });//Section 1 [4]
+                tasks.Add(new Task() { Name = "ASP NET Controllers." });//Section 2 [5]
+                tasks.Add(new Task() { Name = "ASP.NET Routes." });//Section 2 [6]
+                tasks.Add(new Task() { Name = "ASP.NET View." });//Section 3  [7]
+                tasks.Add(new Task() { Name = "ASP.NET Making App." });//Section 3 [8]
+                tasks.Add(new Task() { Name = "Angular. Installing Atom." });//Section 4 [9]
+                tasks.Add(new Task() { Name = "Angular. App component." });//Section 4 [10]
+                tasks.Add(new Task() { Name = "Angular. Services." });//Section 5 [11]
+                tasks.Add(new Task() { Name = "Angular. Observables." });//Section 5 [12]
+                tasks.Add(new Task() { Name = "Angular Material. Installing Angular material" });//Section 6 [13]
+                tasks.Add(new Task() { Name = "Angular Material. Adding NavBar" });//Section 6 [14]
+                tasks.Add(new Task() { Name = "Angular Material. Working on welcome screen" });//Section 7 [15]
+                tasks.Add(new Task() { Name = "Angular Material. Working with Data " });//Section 7 [16]
+                tasks.Add(new Task() { Name = "SQL. Installing SQL Server and Management studio" });//Section 8 [17]
+                tasks.Add(new Task() { Name = "SQL. Creating databases and tables." });//Section 8 [18]
+                tasks.Add(new Task() { Name = "SQL. Data insertion and manipulation." });//Section 9 [19]
+                tasks.Add(new Task() { Name = "SQL. JOIN" });//Section 9 [20]
+                tasks.Add(new Task() { Name = "Full stack WEB App. Modeling app structure" });//Section 10
+                tasks.Add(new Task() { Name = "Full stack WEB App. Creating Database" });//Section 10
+                tasks.Add(new Task() { Name = "Full stack WEB App. Data Access, business logic." });//Section 10
+                tasks.Add(new Task() { Name = "Full stack WEB App. Fron-end part in angular" });//Section 10
                 tasks.Add(new Task() { Name = "React. React basics" });
                 tasks.Add(new Task() { Name = "React. Routes, Lifecycle" });
                 tasks.Add(new Task() { Name = "React. Transitions & Typechecking" });
@@ -349,7 +360,7 @@ namespace LearnWithMentorDAL.EF
 
         private static void InitializeSections(LearnWithMentor_DBEntities context)
         {
-            if (!context.PlanTasks.Any())
+            if (!context.Sections.Any())
             {
                 #region List of Sections
 
@@ -404,40 +415,49 @@ namespace LearnWithMentorDAL.EF
                     count = count + 4;
                 }
 
-                //Assigning setion_Id for planTasks
-                //First 10 sections will have first 20 plantasks (1 section for 2 planTask)
-                count = 1;
-                for (int i = 1; i < 11; i++)
-                {
-                    for (int j = count; j < count + 2; j++)
-                    {
-                        planTasks[j].Section_Id = i;
-                    }
-                    count = count + 2;
-
-                }
-                //Next 11 section will have next 4 plantasks
-                count = 1;
-                for (int i = 22; i < 26; i++)
-                {
-                    planTasks[i].Section_Id = 11;
-                }
-                //Last 8 sections will have 16 planTasks (1 section for 2 planTask)
-                count = 1;
-                for (int i = 27; i < planTasks.Count; i++)
-                {
-                    for (int j = count; j < count + 2; j++)
-                    {
-                        planTasks[j].Section_Id = i;
-                    }
-                    count = count + 2;
-
-                }
                 //Assiging ID for planTasks
                 for (int i = 0, j = 1; i < planTasks.Count; i++, j++)
                 {
                     planTasks[i].Id = j;
                 }
+
+                //Assigning setion_Id for planTasks
+                //First section will have first 4 plantasks 
+                for (int i = 1; i < 4; i++)
+                {
+                    planTasks[i].Section_Id = 1;
+                }
+
+
+                //Next 8 sections will have next 2 plantasks each (1 section for 2 planTask)
+                count = 5;
+                for (int i = 2; i < 9; i++)
+                {
+                    for (int j = count; j < count + 2; j++)
+                    {
+                        planTasks[j].Section_Id = i;
+                    }
+                    count = count + 2;
+
+                }
+
+                //Next 10 section will have next 4 plantasks
+                for (int i = 21; i < 24; i++)
+                {
+                    planTasks[i].Section_Id = 11;
+                }
+                //Last 10 sections will have 16 planTasks (1 section for 2 planTask)
+                count = 25;
+                for (int i = 11; i < 20; i++)
+                {
+                    for (int j = count; j < count + 2; j++)
+                    {
+                        planTasks[j].Section_Id = i;
+                    }
+                    count = count + 2;
+
+                }
+                
 
                 context.PlanTasks.AddRange(planTasks);
                 context.SaveChanges();
@@ -451,15 +471,14 @@ namespace LearnWithMentorDAL.EF
                 //Assigning tasks for usertasks
                 //Task will have only first seven students
                 List<UserTask> userTasks = new List<UserTask>();
-                //Assigning Id's for userTasks
-                for (int i = 0, j = 1; i < userTasks.Count; i++, j++)
-                {
-                    userTasks[i].Id = j;
-                }
+                
 
-                for (int i = 11; i <= 17; i++)
+                //Assigning userTasks for students
+                //12...18 Students Id's
+                //1..25 planTasks Id's
+                for (int i = 12; i <= 18; i++)
                 {
-                    for (int j = 1; j < 25; j++)
+                    for (int j = 1; j <= 24; j++)
                     {
                         userTasks.Add(new UserTask()
                         {
@@ -475,22 +494,27 @@ namespace LearnWithMentorDAL.EF
                 {
                     switch (userTask.User_Id)
                     {
-                        case 11:
                         case 12:
+                        case 13:
                             userTask.State = "D";
                             break;
-                        case 13:
                         case 14:
+                        case 15:
                             userTask.State = "P";
                             break;
-                        case 15:
                         case 16:
+                        case 17:
                             userTask.State = "A";
                             break;
-                        case 17:
+                        case 18:
                             userTask.State = "R";
                             break;
                     }
+                }
+                //Assigning Id's for userTasks
+                for (int i = 0, j = 1; i < userTasks.Count; i++, j++)
+                {
+                    userTasks[i].Id = j;
                 }
                 context.UserTasks.AddRange(userTasks);
                 context.SaveChanges();
@@ -539,7 +563,7 @@ namespace LearnWithMentorDAL.EF
 
         private static void InitializeComments(LearnWithMentor_DBEntities context)
         {
-            if (!context.UserTasks.Any())
+            if (!context.Comments.Any())
             {
                 //Creating comments
                 List<Comment> comments = new List<Comment>();
@@ -556,5 +580,12 @@ namespace LearnWithMentorDAL.EF
                 context.SaveChanges();
             }
         }
+
+        private static void InitializePlanSugestion(LearnWithMentor_DBEntities context)
+        {
+            if (!context.UserTasks.Any())
+            {
+
+            }
     }
 }
