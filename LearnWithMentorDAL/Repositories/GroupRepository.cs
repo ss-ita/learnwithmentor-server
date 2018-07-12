@@ -32,6 +32,10 @@ namespace LearnWithMentorDAL.Repositories
         {
             return context.Users.FirstOrDefault(u => u.Id == studentId).Groups;
         }
+        public IEnumerable<Group> GetGroupsByPlan(int planId)
+        {
+            return context.Groups.Where(g => g.Plans.Any(p => p.Id == planId));
+        }
 
         public bool AddPlanToGroup(int planId, int groupId)
         {
