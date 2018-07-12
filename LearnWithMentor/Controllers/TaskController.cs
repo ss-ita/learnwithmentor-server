@@ -111,6 +111,11 @@ namespace LearnWithMentor.Controllers
         {
             try
             {
+                var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
+                var Id = int.Parse(identity.FindFirst("Id").Value);
+                var Role = identity.RoleClaimType;
+                if (!(userId == Id || Role == "Mentor"))
+                    return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
                 var userTask = taskService.GetUserTaskByUserPlanTaskId(userId, planTaskId);
                 if (userTask != null)
                     return Request.CreateResponse(HttpStatusCode.OK, userTask);
@@ -131,6 +136,11 @@ namespace LearnWithMentor.Controllers
         {
             try
             {
+                var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
+                var id = int.Parse(identity.FindFirst("Id").Value);
+                var role = identity.RoleClaimType;
+                if(!(taskService.CheckUserTaskOwner(userTaskId, id) || role == "Mentor"))
+                    return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
                 var messageList = messageService.GetMessages(userTaskId);
                 if (messageList != null)
                     return Request.CreateResponse(HttpStatusCode.OK, messageList);
