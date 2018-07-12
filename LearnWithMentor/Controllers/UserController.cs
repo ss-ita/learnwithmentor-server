@@ -6,14 +6,11 @@ using System.Net.Http;
 using System.Net;
 using LearnWithMentor.Filters;
 using LearnWithMentorBLL.Interfaces;
-using LearnWithMentorBLL.Services;
 using System.Web.Http.Tracing;
-using LearnWithMentor.Log;
 using System.Data.Entity.Core;
 using System.Web;
 using System.IO;
 using System.Linq;
-using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 
 namespace LearnWithMentor.Controllers
