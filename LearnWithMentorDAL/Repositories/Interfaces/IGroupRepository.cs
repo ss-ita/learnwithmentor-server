@@ -14,5 +14,6 @@ namespace LearnWithMentorDAL.Repositories
         void RemoveUserFromGroup(int groupId, int userId);
         void RemovePlanFromGroup(int groupId, int planId);
         IEnumerable<Group> GetStudentGroups(int studentId);
+        IEnumerable<Group> GetGroupsByPlan(int planId);
     }
 }
