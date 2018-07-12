@@ -108,6 +108,19 @@ namespace LearnWithMentorBLL.Services
             }
             return dtosList;
         }
+        public List<int> GetAllPlanTaskids(int planId)
+        {
+            var plan = db.Plans.Get(planId);
+            if (plan == null)
+                return null;
+            var planTaskIds =   db.PlanTasks.GetAll().Where(pt => pt.Plan_Id == planId).Select(pt => pt.Id).ToList();
+            
+            if (!planTaskIds.Any())
+                return null;
+            return planTaskIds;
+        }
+
+
 
         public List<SectionDTO> GetTasksForPlan(int planId)
         {

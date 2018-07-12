@@ -265,7 +265,7 @@ namespace LearnWithMentor.Controllers
         /// <param name="planTaskIds">Array of planTaskId.</param>
         [HttpGet]
         [Route("api/task/state")]
-        public HttpResponseMessage GetAllTasksState(int user_id, int[] planTaskIds)
+        public HttpResponseMessage GetAllTasksState([FromUri]int user_id, [FromUri]int[] planTaskIds)
         {
             try
             {

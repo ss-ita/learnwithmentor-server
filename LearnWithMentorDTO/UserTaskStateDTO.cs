@@ -11,6 +11,7 @@ namespace LearnWithMentorDTO
         }
 
         public int Id { get; set; }
+        public string image { get; set; }
         public string State { set; get; }
     }
 }
