@@ -19,8 +19,8 @@ namespace LearnWithMentor.Controllers
     /// <summary>
     /// Controller for plans.
     /// </summary>
-    //[Authorize]
-    //[JwtAuthentication]
+    [Authorize]
+    [JwtAuthentication]
     public class PlanController : ApiController
     {
         private readonly IPlanService planService;
@@ -231,14 +231,14 @@ namespace LearnWithMentor.Controllers
 
                 if (string.IsNullOrEmpty(sectionId))
                 {
-                    section = 0;
+                    section = null;
                 }
                 else
                     section = int.Parse(sectionId);
 
                 if (string.IsNullOrEmpty(priority))
                 {
-                    priorityNew = 0;
+                    priorityNew = null;
                 }
                 else
                     priorityNew = int.Parse(priority);
