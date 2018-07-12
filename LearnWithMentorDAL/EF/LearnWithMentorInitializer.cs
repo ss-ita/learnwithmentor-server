@@ -43,6 +43,7 @@ namespace LearnWithMentorDAL.EF
                 InitializeUserTasks(context);
                 InitializeMessages(context);
                 InitializeComments(context);
+                InitializePlanSugestion(context);
             }
         }
 
@@ -457,7 +458,7 @@ namespace LearnWithMentorDAL.EF
                     count = count + 2;
 
                 }
-                
+
 
                 context.PlanTasks.AddRange(planTasks);
                 context.SaveChanges();
@@ -471,7 +472,7 @@ namespace LearnWithMentorDAL.EF
                 //Assigning tasks for usertasks
                 //Task will have only first seven students
                 List<UserTask> userTasks = new List<UserTask>();
-                
+
 
                 //Assigning userTasks for students
                 //12...18 Students Id's
@@ -525,31 +526,23 @@ namespace LearnWithMentorDAL.EF
         {
             if (!context.Messages.Any())
             {
+                string[] messagesTemplates = new[] { "Sorry, i've got cold.", "Hello. I've done this task. Can you review?", "I have problem with this task. Can you help me?", "There some bugs in my code." };
+                Random rnd = new Random();
                 //Creating messages
                 List<Message> messages = new List<Message>();
-                messages.Add(new Message() { UserTask_Id = 1, User_Id = 11, Text = "Sorry, i've got cold." });
-                messages.Add(
-                    new Message()
-                    {
-                        UserTask_Id = 25,
-                        User_Id = 12,
-                        Text = "Hello. I've done this task. Can you review?"
-                    });
-                messages.Add(
-                    new Message()
-                    {
-                        UserTask_Id = 50,
-                        User_Id = 13,
-                        Text = "I have problem with this task. Can you help me?"
-                    });
-                messages.Add(new Message() { UserTask_Id = 101, User_Id = 14, Text = "There some bugs in my code." });
-                messages.Add(new Message()
-                {
-                    UserTask_Id = 1,
-                    User_Id = 1,
-                    Text = "Here you have new info about your task."
-                });
 
+                int count = 1;
+                for (int i = 12; i < 18; i++)
+                {
+                    for (int j = count; j < count + 24; j++)
+                    {
+                        for (int k = 1; k <= 2; k++)
+                        {
+                            messages.Add(new Message() { User_Id = i, UserTask_Id = j, Text = messagesTemplates[rnd.Next(messagesTemplates.Length - 1)] });
+                        }
+                    }
+                    count = count + 24;
+                }
                 //Assigning Id's for messages
                 for (int i = 0, j = 1; i < messages.Count; i++, j++)
                 {
@@ -583,9 +576,36 @@ namespace LearnWithMentorDAL.EF
 
         private static void InitializePlanSugestion(LearnWithMentor_DBEntities context)
         {
-            if (!context.UserTasks.Any())
+            if (!context.PlanSuggestion.Any())
             {
+                //Creating PlanSuggestion
+                List<PlanSuggestion> planSuggestions = new List<PlanSuggestion>();
 
+                for (int j = 12; j < 30; j = j + 3)
+                {
+                    for (int k = 1; k < 6; k++)
+                    {
+                        planSuggestions.Add(new PlanSuggestion() { Mentor_Id = 1, Plan_Id = k, User_Id = j, Text = "Suggest you to increase number of tasks." });
+                    }
+                }
+                for (int j = 13; j < 30; j = j + 3)
+                {
+                    for (int k = 1; k < 6; k++)
+                    {
+                        planSuggestions.Add(new PlanSuggestion() { Mentor_Id = 2, Plan_Id = k, User_Id = j, Text = "Sugest you to set more time for task completion." });
+                    }
+                }
+                for (int j = 14; j < 30; j = j + 3)
+                {
+                    for (int k = 1; k < 6; k++)
+                    {
+                        planSuggestions.Add(new PlanSuggestion() { Mentor_Id = 3, Plan_Id = k, User_Id = j, Text = "Suggest you to make task more interesting" });
+                    }
+                }
+
+                context.PlanSuggestion.AddRange(planSuggestions);
+                context.SaveChanges();
             }
+        }
     }
 }
