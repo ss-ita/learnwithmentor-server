@@ -74,8 +74,7 @@ namespace LearnWithMentorDTO
         public bool Private { get; set; }
         [Required]
         public int CreatorId { get; set; }
-        public string CreatorName { get; set; }
-        [Required]
+        public string CreatorName { get; set; }      
         public int? ModifierId { get; set; }
         public string ModifierName { get; set; }
         public DateTime? CreateDate { get; set; }
