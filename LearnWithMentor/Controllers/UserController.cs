@@ -13,6 +13,8 @@ using System.Data.Entity.Core;
 using System.Web;
 using System.IO;
 using System.Linq;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 
 namespace LearnWithMentor.Controllers
 {
@@ -42,6 +44,7 @@ namespace LearnWithMentor.Controllers
         /// Returns all users of the system.
         /// </summary>
         [JwtAuthentication]
+        [Authorize(Roles = "Admin, Mentor")]
         [HttpGet]
         [Route("api/user")]
         public HttpResponseMessage Get()
@@ -60,6 +63,7 @@ namespace LearnWithMentor.Controllers
         /// </summary>
         /// <param name="role_id"> Id of the role. </param>
         [JwtAuthentication]
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("api/user/inrole/{role_id}")]
         public HttpResponseMessage GetUsersbyRole(int role_id)
@@ -87,6 +91,7 @@ namespace LearnWithMentor.Controllers
         /// </summary>
         /// <param name="state"> Specifies value of Blocked property of user. </param>
         [JwtAuthentication]
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("api/user/instate/{state}")]
         public HttpResponseMessage GetUsersbyState(bool state)
@@ -101,15 +106,16 @@ namespace LearnWithMentor.Controllers
         }
 
         /// <summary>
-        /// Returns specific user by id.
+        /// Returns specific user by id in token.
         /// </summary>
-        /// <param name="id"> Id of the user. </param>
         [JwtAuthentication]
         [HttpGet]
-        [Route("api/user/{id}")]
-        public HttpResponseMessage Get(int id)
+        [Route("api/userinfo")]
+        public HttpResponseMessage GetSingle()
         {
-            UserDTO user = userService.Get(id);
+            var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
+            var Id = int.Parse(identity.FindFirst("Id").Value);
+            UserDTO user = userService.Get(Id);
             if (user != null)
             {
                 return Request.CreateResponse(HttpStatusCode.OK, user);
@@ -295,6 +301,7 @@ namespace LearnWithMentor.Controllers
         /// </summary>
         /// <param name="id"> Id of the user. </param>
         [JwtAuthentication]
+        [Authorize(Roles = "Admin")]
         [HttpDelete]
         [Route("api/user/{id}")]
         public HttpResponseMessage Delete(int id)
@@ -325,6 +332,7 @@ namespace LearnWithMentor.Controllers
         /// <param name="q"> String to match. </param>
         /// <param name="role"> Role criteria. </param>
         [JwtAuthentication]
+        [Authorize(Roles = "Admin, Mentor")]
         [HttpGet]
         [Route("api/user/search")]
         public HttpResponseMessage Search(string q, string role)
@@ -356,12 +364,14 @@ namespace LearnWithMentor.Controllers
         /// <returns></returns>
         [JwtAuthentication]
         [HttpPut]
-        [Route("api/user/{id}/newpassword")]
-        public HttpResponseMessage Post(int id, [FromBody]string value)
+        [Route("api/user/newpassword")]
+        public HttpResponseMessage Post([FromBody]string value)
         {
             try
             {
-                bool success = userService.UpdatePassword(id, value);
+                var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
+                var Id = int.Parse(identity.FindFirst("Id").Value);
+                bool success = userService.UpdatePassword(Id, value);
                 if (success)
                 {
                     var okMessage = $"Succesfully updated password.";
@@ -383,6 +393,7 @@ namespace LearnWithMentor.Controllers
         /// </summary>
         [JwtAuthentication]
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         [Route("api/user/roles")]
         public HttpResponseMessage GetRoles()
         {
