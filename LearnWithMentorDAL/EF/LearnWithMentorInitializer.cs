@@ -234,10 +234,10 @@ namespace LearnWithMentorDAL.EF
                 List<Group> groups = new List<Group>();
                 groups.Add(new Group() { Name = "Lv-319.Net" });
                 groups.Add(new Group() { Name = "Lv-320.Net" });
-                groups.Add(new Group() { Name = "Lv-321.Web" });
+                groups.Add(new Group() { Name = "Lv-321.Net" });
                 groups.Add(new Group() { Name = "Lv-322.Web" });
                 groups.Add(new Group() { Name = "Lv-323.SQL" });
-                groups.Add(new Group() { Name = "Lv-324.Net" });
+                groups.Add(new Group() { Name = "Lv-324.Web" });
                 groups.Add(new Group() { Name = "Lv-325.Web" });
                 groups.Add(new Group() { Name = "Lv-326.Java" });
                 groups.Add(new Group() { Name = "Lv-327.Web" });
@@ -256,7 +256,15 @@ namespace LearnWithMentorDAL.EF
                     group.Mentor_Id = group.Id;
                 }
 
+                var netFullStackPlans = context.Plans.Where(p => p.Id >= 1 && p.Id <=6);
+
                 var students319 = context.Users.Where(user => user.Id >= 12 && user.Id <= 18);
+                foreach (var netFullStackPlan in netFullStackPlans)
+                {
+                    groups[0].Plans.Add(netFullStackPlan);
+                    groups[1].Plans.Add(netFullStackPlan);
+                    groups[2].Plans.Add(netFullStackPlan);
+                }
                 foreach (var student319 in students319)
                 {
                     groups[0].Users.Add(student319);
@@ -559,10 +567,18 @@ namespace LearnWithMentorDAL.EF
             if (!context.Comments.Any())
             {
                 //Creating comments
+                Random rnd = new Random();
                 List<Comment> comments = new List<Comment>();
-                comments.Add(new Comment() { PlanTask_Id = 3, Create_Id = 11, Text = "Nice task" });
-                comments.Add(new Comment() { PlanTask_Id = 2, Create_Id = 12, Text = "Easy task" });
-                comments.Add(new Comment() { PlanTask_Id = 1, Create_Id = 13, Text = "Hard task" });
+                string[] commentTemplates = new[] { "Nice task", "Easy task", "Hard task", "Interesting task", "I was needed help for this task"};
+                
+                for (int i = 1; i < 24; i++)
+                {
+                    comments.Add(new Comment() { PlanTask_Id = i, Create_Id = rnd.Next(12, 18), Text = commentTemplates[rnd.Next(commentTemplates.Length - 1)] });
+                    comments.Add(new Comment() { PlanTask_Id = i, Create_Id = rnd.Next(12, 18), Text = commentTemplates[rnd.Next(commentTemplates.Length - 1)] });
+                    comments.Add(new Comment() { PlanTask_Id = i, Create_Id = rnd.Next(12, 18), Text = commentTemplates[rnd.Next(commentTemplates.Length - 1)] });
+                }
+                
+               
                 //Assigning Id's for comments
                 for (int i = 0, j = 1; i < comments.Count; i++, j++)
                 {
