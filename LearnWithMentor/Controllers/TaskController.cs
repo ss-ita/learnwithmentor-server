@@ -121,6 +121,26 @@ namespace LearnWithMentor.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("api/task/usertasks")]
+        public HttpResponseMessage GetUserTasks(int[] planTaskId, int userId)
+        {
+            try
+            {
+                var userTasks = taskService.GetUserTasksList(userId, planTaskId);
+                if (userTasks != null)
+                    return Request.CreateResponse(HttpStatusCode.OK, userTasks);
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, "Task for this user does not exist in database.");
+            }
+            catch (EntityException e)
+            {
+                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
+        }
+
+
+
         /// <summary>Returns messages for UserTask by its id.</summary>
         /// <param name="userTaskId">Id of the usertask.</param>
         [HttpGet]

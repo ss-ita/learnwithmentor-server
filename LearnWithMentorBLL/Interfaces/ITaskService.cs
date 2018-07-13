@@ -9,6 +9,7 @@ namespace LearnWithMentorBLL.Interfaces
         TaskDTO GetTaskById(int id);
         TaskDTO GetTaskForPlan(int taskId, int planId);
         TaskDTO GetTaskForPlan(int planTaskId);
+        List<UserTaskDTO> GetUserTasksList(int userId, int[] planTaskId);
         UserTaskDTO GetUserTaskByUserPlanTaskId(int userId, int planTaskId);
         bool CreateTask(TaskDTO dto);
         bool CreateUserTask(UserTaskDTO utDTO);

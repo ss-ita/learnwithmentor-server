@@ -254,6 +254,30 @@ namespace LearnWithMentorBLL.Services
             return userTaskDto;
         }
 
+        public List<UserTaskDTO> GetUserTasksList(int userId, int[] planTaskId)
+        {
+            List<UserTask> userTasks = new List<UserTask>();
+            List<UserTaskDTO> userTasksDTO = new List<UserTaskDTO>();
+            foreach(var pt in planTaskId)
+            {
+                userTasks.Add(db.UserTasks.GetByPlanTaskForUser(pt, userId));
+            }
+            if (userTasks == null)
+                return null;
+            foreach(var ut in userTasks)
+            {
+                userTasksDTO.Add(new UserTaskDTO(ut.Id,
+                                      ut.User_Id,
+                                      ut.PlanTask_Id,
+                                      ut.End_Date,
+                                      ut.Propose_End_Date,
+                                      ut.Mentor_Id,
+                                      ut.State,
+                                      ut.Result));
+            }
+            return userTasksDTO;
+        }
+
         public bool UpdateUserTaskStatus(int userTaskId, string newStatus)
         {
             if (!Regex.IsMatch(newStatus, ValidationRules.USERTASK_STATE))
