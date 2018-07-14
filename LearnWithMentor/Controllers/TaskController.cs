@@ -123,7 +123,7 @@ namespace LearnWithMentor.Controllers
 
         [HttpGet]
         [Route("api/task/usertasks")]
-        public HttpResponseMessage GetUserTasks(int[] planTaskId, int userId)
+        public HttpResponseMessage GetUserTasks(int userId, [FromUri]int[] planTaskId)
         {
             try
             {
@@ -272,58 +272,6 @@ namespace LearnWithMentor.Controllers
                 }
                 tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on updating user task result");
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax or usertask does not exist.");
-            }
-            catch (EntityException e)
-            {
-                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
-            }
-        }
-
-        /// <summary>Returns tasks states for array of  planTaskId.</summary>
-        /// <param name="user_id">Id of the user.</param>
-        /// <param name="planTaskIds">Array of planTaskId.</param>
-        [HttpGet]
-        [Route("api/task/state")]
-        public HttpResponseMessage GetAllTasksState([FromUri]int user_id, [FromUri]int[] planTaskIds)
-        {
-            try
-            {
-                List<UserTaskStateDTO> userTaskStateList = taskService.GetTaskStatesForUser(planTaskIds, user_id);
-                if (userTaskStateList == null || userTaskStateList.Count == 0)
-                {
-                    return Request.CreateErrorResponse(HttpStatusCode.NoContent, "There are no created usertasks.");
-                }
-                return Request.CreateResponse(HttpStatusCode.OK, userTaskStateList);
-            }
-            catch (EntityException e)
-            {
-                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
-            }
-        }
-
-        /// <summary>Returns array of arrays tasks states and user ids for array of  planTaskId and for array of userid.</summary>
-        /// <param name="userIds"> Array  of the user.</param>
-        /// <param name="planTaskIds">Array of planTaskId.</param>
-        [HttpGet]
-        [Route("api/task/state/all")]
-        public HttpResponseMessage GetAllTasksStateForAllGroupUsers([FromUri]int[] userIds, [FromUri]int[] planTaskIds)
-        {
-            try
-            {
-                List<GroupUsersTaskState> groupUsersTaskStateList= new List<GroupUsersTaskState>();
-
-                for (int i=0;i< userIds.Length;i++)
-                {
-                    List<UserTaskStateDTO> userTaskStateList = taskService.GetTaskStatesForUser(planTaskIds, userIds[i]);
-                    if (userTaskStateList == null || userTaskStateList.Count == 0)
-                    {
-                        return Request.CreateErrorResponse(HttpStatusCode.NoContent, "There are no created usertasks. for user with id: "+userIds[i]);
-                    }
-                    groupUsersTaskStateList.Add(new GroupUsersTaskState(){UserId = userIds[i], Tasks= userTaskStateList });
-                }
-                return Request.CreateResponse(HttpStatusCode.OK, groupUsersTaskStateList);
             }
             catch (EntityException e)
             {
