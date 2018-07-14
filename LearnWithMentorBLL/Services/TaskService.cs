@@ -278,5 +278,10 @@ namespace LearnWithMentorBLL.Services
             db.Save();
             return true;
         }
+        public bool CheckUserTaskOwner(int userTaskId, int userId)
+        {
+            var userTask = db.UserTasks.Get(userTaskId);
+            return userTask.User_Id == userId;
+        }
     }
 }

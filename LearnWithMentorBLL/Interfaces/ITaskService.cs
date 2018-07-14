@@ -20,5 +20,6 @@ namespace LearnWithMentorBLL.Interfaces
         IEnumerable<TaskDTO> Search(string[] str, int planId);
         IEnumerable<TaskDTO> Search(string[] str);
         StatisticsDTO GetUserStatistics(int userId);
+        bool CheckUserTaskOwner(int userTaskId, int userId);
     }
 }
