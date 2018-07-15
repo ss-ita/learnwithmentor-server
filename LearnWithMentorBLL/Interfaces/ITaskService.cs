@@ -9,6 +9,7 @@ namespace LearnWithMentorBLL.Interfaces
         TaskDTO GetTaskById(int id);
         TaskDTO GetTaskForPlan(int taskId, int planId);
         TaskDTO GetTaskForPlan(int planTaskId);
+        List<UserTaskDTO> GetUserTasksList(int userId, int[] planTaskId);
         UserTaskDTO GetUserTaskByUserPlanTaskId(int userId, int planTaskId);
         bool CreateTask(TaskDTO dto);
         bool CreateUserTask(UserTaskDTO utDTO);
@@ -16,7 +17,6 @@ namespace LearnWithMentorBLL.Interfaces
         bool UpdateUserTaskResult(int userTaskId, string newResult);
         bool UpdateTaskById(int taskId,TaskDTO dto);
         bool RemoveTaskById(int id);
-        List<UserTaskStateDTO> GetTaskStatesForUser(int[] planTaskIds, int userId);
         IEnumerable<TaskDTO> Search(string[] str, int planId);
         IEnumerable<TaskDTO> Search(string[] str);
         StatisticsDTO GetUserStatistics(int userId);

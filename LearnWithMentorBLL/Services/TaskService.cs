@@ -226,14 +226,14 @@ namespace LearnWithMentorBLL.Services
             }
             return false;
         }
-        public List<UserTaskStateDTO> GetTaskStatesForUser(int[] planTaskIds, int userId)
+        public List<UserTaskDTO> GetTaskStatesForUser(int[] planTaskIds, int userId)
         {
-            List<UserTaskStateDTO> dtoList = new List<UserTaskStateDTO>();
+            List<UserTaskDTO> dtoList = new List<UserTaskDTO>();
             foreach (int planTaskId in planTaskIds)
             {
                 UserTask userTask = db.UserTasks.GetByPlanTaskForUser(planTaskId, userId);
                 if (userTask != null)
-                    dtoList.Add(new UserTaskStateDTO(planTaskId, userTask.State));
+                    dtoList.Add(new UserTaskDTO(userTask.Id, userTask.User_Id, userTask.PlanTask_Id, userTask.End_Date, userTask.Propose_End_Date, userTask.Mentor_Id, userTask.State, userTask.Result));
             }
             return dtoList;
         }
@@ -252,6 +252,30 @@ namespace LearnWithMentorBLL.Services
                                       userTask.State,
                                       userTask.Result);
             return userTaskDto;
+        }
+
+        public List<UserTaskDTO> GetUserTasksList(int userId, int[] planTaskId)
+        {
+            List<UserTask> userTasks = new List<UserTask>();
+            List<UserTaskDTO> userTasksDTO = new List<UserTaskDTO>();
+            foreach(var pt in planTaskId)
+            {
+                userTasks.Add(db.UserTasks.GetByPlanTaskForUser(pt, userId));
+            }
+            if (userTasks == null)
+                return null;
+            foreach(var ut in userTasks)
+            {
+                userTasksDTO.Add(new UserTaskDTO(ut.Id,
+                                      ut.User_Id,
+                                      ut.PlanTask_Id,
+                                      ut.End_Date,
+                                      ut.Propose_End_Date,
+                                      ut.Mentor_Id,
+                                      ut.State,
+                                      ut.Result));
+            }
+            return userTasksDTO;
         }
 
         public bool UpdateUserTaskStatus(int userTaskId, string newStatus)

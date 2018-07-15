@@ -70,6 +70,20 @@ namespace LearnWithMentor.Controllers
             return Request.CreateResponse<PlanDTO>(HttpStatusCode.OK, plan);
         }
 
+
+        [HttpGet]
+        [Route("api/plan/{id}/test")]
+        public HttpResponseMessage GetTasksForPlan(int id)
+        {
+            var sections = planService.GetTasksForPlan(id);
+            if (sections == null)
+            {
+                var message = "Plan does not exist in database.";
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
+            }
+            return Request.CreateResponse<List<SectionDTO>>(HttpStatusCode.OK, sections);
+        }
+
         /// <summary>
         /// Gets some number of plans on page. 
         /// </summary>
