@@ -11,6 +11,8 @@ using LearnWithMentor.Filters;
 using System.Web.Http.Tracing;
 using LearnWithMentor.Log;
 using System.Data.Entity.Core;
+using System.Web;
+using System.Security.Claims;
 
 namespace LearnWithMentor.Controllers
 {
@@ -109,6 +111,11 @@ namespace LearnWithMentor.Controllers
         {
             try
             {
+                var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
+                var Id = int.Parse(identity.FindFirst("Id").Value);
+                var Role = identity.RoleClaimType;
+                if (!(userId == Id || Role == "Mentor"))
+                    return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
                 var userTask = taskService.GetUserTaskByUserPlanTaskId(userId, planTaskId);
                 if (userTask != null)
                     return Request.CreateResponse(HttpStatusCode.OK, userTask);
@@ -149,6 +156,11 @@ namespace LearnWithMentor.Controllers
         {
             try
             {
+                var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
+                var id = int.Parse(identity.FindFirst("Id").Value);
+                var role = identity.RoleClaimType;
+                if(!(taskService.CheckUserTaskOwner(userTaskId, id) || role == "Mentor"))
+                    return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
                 var messageList = messageService.GetMessages(userTaskId);
                 if (messageList != null)
                     return Request.CreateResponse(HttpStatusCode.OK, messageList);
@@ -252,7 +264,7 @@ namespace LearnWithMentor.Controllers
 
         /// <summary> Changes UserTask result by usertask id. </summary>
         /// <param name="userTaskId">Id of the userTask status to be changed</param>
-        /// <param name="value">>New userTask result</param>
+        /// <param name="newMessage">>New userTask result</param>
         /// <returns></returns>
         [HttpPut]
         [Route("api/task/usertask/result")]
@@ -335,6 +347,7 @@ namespace LearnWithMentor.Controllers
         /// Creates new task
         /// </summary>
         /// <param name="newTask">Task object for creation.</param>
+        [Authorize(Roles = "Mentor")]
         [HttpPost]
         [Route("api/task")]
         public HttpResponseMessage Post([FromBody]TaskDTO newTask)
@@ -366,6 +379,7 @@ namespace LearnWithMentor.Controllers
         /// </summary>
         /// <param name="taskId">Task Id for update.</param>
         /// <param name="task">Modified task object for update.</param>
+        [Authorize(Roles = "Mentor")]
         [HttpPut]
         [Route("api/task/{taskId}")]
         public HttpResponseMessage Put(int taskId, [FromBody]TaskDTO task)
@@ -395,6 +409,7 @@ namespace LearnWithMentor.Controllers
         /// Deletes task by Id
         /// </summary>
         /// <param name="taskId">Task Id for delete.</param>
+        [Authorize(Roles = "Mentor")]
         [HttpDelete]
         [Route("api/task/{id}")]
         public HttpResponseMessage Delete(int taskId)

@@ -141,6 +141,7 @@ namespace LearnWithMentor.Controllers
         /// Creates new plan.
         /// </summary>
         /// <param name="value"> New plan to be created. </param>
+        [Authorize(Roles = "Mentor")]
         [HttpPost]
         [Route("api/plan")]
         public HttpResponseMessage Post([FromBody]PlanDTO value)
@@ -170,6 +171,7 @@ namespace LearnWithMentor.Controllers
         /// Creates new plan and returns id of the created plan.
         /// </summary>
         /// <param name="value"> New plan to be created. </param>
+        [Authorize(Roles = "Mentor")]
         [HttpPost]
         [Route("api/plan/return")]
         public HttpResponseMessage PostAndReturnId([FromBody]PlanDTO value)
@@ -200,6 +202,7 @@ namespace LearnWithMentor.Controllers
         /// </summary>
         /// <param name="id"> Id of plan to be updated. </param>
         /// <param name="value"> Plan info to be updated. </param>
+        [Authorize(Roles = "Mentor")]
         [HttpPut]
         [Route("api/plan")]
         public HttpResponseMessage Put(int id, [FromBody]PlanDTO value)
@@ -225,7 +228,6 @@ namespace LearnWithMentor.Controllers
             return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
         }
 
-      
         /// <summary>
         /// 
         /// </summary>
@@ -234,6 +236,7 @@ namespace LearnWithMentor.Controllers
         /// <param name="sectionId"></param>
         /// <param name="priority"></param>
         /// <returns></returns>            
+        [Authorize(Roles = "Mentor")]
         [HttpPut]
         [Route("api/plan/{id}/task/{taskId}")]
         public HttpResponseMessage PutTaskToPlan(int id,  int taskId,string sectionId, string priority)
@@ -280,6 +283,7 @@ namespace LearnWithMentor.Controllers
         /// Sets image for plan by plan id.
         /// </summary>
         /// <param name="id"> Id of the plan. </param>
+        [Authorize(Roles = "Mentor")]
         [HttpPost]
         [Route("api/plan/{id}/image")]
         public HttpResponseMessage PostImage(int id)
