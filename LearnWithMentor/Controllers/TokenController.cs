@@ -36,7 +36,10 @@ namespace LearnWithMentor.Controllers
         {
 
             user = userService.GetByEmail(email);
-            if (user == null || user.Blocked== true) return false;
+            if (user == null || user.Blocked == true)
+            {
+                return false;
+            }
             var result = BCrypt.Net.BCrypt.Verify(password, user.Password);
             return result;
         }

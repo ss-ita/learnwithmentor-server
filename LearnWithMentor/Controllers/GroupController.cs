@@ -163,7 +163,9 @@ namespace LearnWithMentor.Controllers
             try
             {
                 if (!ModelState.IsValid)
+                {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                }
                 bool success = groupService.AddGroup(group);
                 if (success)
                 {
@@ -198,7 +200,9 @@ namespace LearnWithMentor.Controllers
                 var currentUserId = int.Parse(identity.FindFirst("Id").Value);
                 var mentorId = groupService.GetMentorIdByGroup(id);
                 if (mentorId != currentUserId)
+                {
                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
+                }
                 bool success = groupService.AddUsersToGroup(userId, id);
                 if (success)
                 {
@@ -233,7 +237,9 @@ namespace LearnWithMentor.Controllers
                 var userId = int.Parse(identity.FindFirst("Id").Value);
                 var mentorId = groupService.GetMentorIdByGroup(id);
                 if (mentorId != userId)
+                {
                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
+                }
                 bool success = groupService.AddPlansToGroup(planId, id);
                 if (success)
                 {
@@ -278,7 +284,9 @@ namespace LearnWithMentor.Controllers
                 string[] lines = searchKey.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 var plansList = groupService.SearchPlansNotUsedInGroup(lines, groupId);
                 if (plansList == null)
+                {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, "This plan does not exist.");
+                }
                 return Request.CreateResponse(HttpStatusCode.OK, plansList);
             }
             catch (EntityException e)
@@ -306,7 +314,9 @@ namespace LearnWithMentor.Controllers
                 string[] lines = searchKey.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 var usersList = groupService.SearchUserNotInGroup(lines, groupId);
                 if (usersList == null)
+                {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, "This user does not exist.");
+                }
                 return Request.CreateResponse(HttpStatusCode.OK, usersList);
             }
             catch (EntityException e)
@@ -332,7 +342,9 @@ namespace LearnWithMentor.Controllers
                 var id = int.Parse(identity.FindFirst("Id").Value);
                 var mentorId = groupService.GetMentorIdByGroup(groupId);
                 if (mentorId != id)
+                {
                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
+                }
                 bool successfullyRemoved = groupService.RemoveUserFromGroup(groupId, userToRemoveId);
                 if (successfullyRemoved)
                 {
@@ -394,12 +406,18 @@ namespace LearnWithMentor.Controllers
                 var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
                 var userId = int.Parse(identity.FindFirst("Id").Value);
                 if (!userService.ContainsId(userId))
+                {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"There are no users with id = {userId}");
+                }
                 if (groupService.GroupsCount() == 0)
+                {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"There are no groups in database.");
+                }
                 var groups = groupService.GetUserGroups(userId);
                 if (groups == null)
+                {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, $"There are no groups for this user");
+                }
                 return Request.CreateResponse(HttpStatusCode.OK, groups);
             }
             catch (EntityException e)
