@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LearnWithMentorBLL.Interfaces;
-using LearnWithMentorDTO;
+﻿using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDAL.UnitOfWork;
 using LearnWithMentorDAL.Entities;
 
@@ -21,5 +15,6 @@ namespace LearnWithMentorBLL.Services
         {
             db.Dispose();
         }
+
     }
 }
