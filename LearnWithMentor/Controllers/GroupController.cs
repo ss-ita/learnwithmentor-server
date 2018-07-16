@@ -9,6 +9,8 @@ using LearnWithMentorBLL.Services;
 using System.Web.Http.Tracing;
 using LearnWithMentor.Log;
 using System.Data.Entity.Core;
+using System.Web;
+using System.Security.Claims;
 
 namespace LearnWithMentor.Controllers
 {
@@ -118,6 +120,7 @@ namespace LearnWithMentor.Controllers
         /// </summary>
         /// <param name="groupId"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Mentor")]
         [HttpGet]
         [Route("api/group/{groupId}/users/notingroup")]
         public HttpResponseMessage GetUsersNotInCurrentGroup(int groupId)
@@ -132,6 +135,7 @@ namespace LearnWithMentor.Controllers
         /// <summary>
         /// Returns all plans not used in current group.
         /// </summary>
+        [Authorize(Roles = "Mentor")]
         [HttpGet]
         [Route("api/plan/notingroup/{groupId}")]
         public HttpResponseMessage GetPlansNotUsedInCurrentGroup(int groupId)
@@ -190,6 +194,11 @@ namespace LearnWithMentor.Controllers
         {
             try
             {
+                var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
+                var currentUserId = int.Parse(identity.FindFirst("Id").Value);
+                var mentorId = groupService.GetMentorIdByGroup(id);
+                if (mentorId != currentUserId)
+                    return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
                 bool success = groupService.AddUsersToGroup(userId, id);
                 if (success)
                 {
@@ -220,6 +229,11 @@ namespace LearnWithMentor.Controllers
         {
             try
             {
+                var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
+                var userId = int.Parse(identity.FindFirst("Id").Value);
+                var mentorId = groupService.GetMentorIdByGroup(id);
+                if (mentorId != userId)
+                    return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
                 bool success = groupService.AddPlansToGroup(planId, id);
                 if (success)
                 {
@@ -314,6 +328,11 @@ namespace LearnWithMentor.Controllers
         {
             try
             {
+                var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
+                var id = int.Parse(identity.FindFirst("Id").Value);
+                var mentorId = groupService.GetMentorIdByGroup(groupId);
+                if (mentorId != id)
+                    return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
                 bool successfullyRemoved = groupService.RemoveUserFromGroup(groupId, userToRemoveId);
                 if (successfullyRemoved)
                 {
@@ -367,11 +386,13 @@ namespace LearnWithMentor.Controllers
         /// <param name="userId"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("api/group/user/{userId}/groups")]
-        public HttpResponseMessage GetUserGroups(int userId)
+        [Route("api/group/mygroups")]
+        public HttpResponseMessage GetUserGroups()
         {
             try
             {
+                var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
+                var userId = int.Parse(identity.FindFirst("Id").Value);
                 if (!userService.ContainsId(userId))
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"There are no users with id = {userId}");
                 if (groupService.GroupsCount() == 0)
