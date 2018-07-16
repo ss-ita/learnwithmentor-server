@@ -19,7 +19,9 @@ namespace LearnWithMentorBLL.Services
             List<TaskDTO> taskDTO = new List<TaskDTO>();
             var tasks = db.Tasks.GetAll();
             if (tasks == null)
+            {
                 return null;
+            }
             foreach (var t in tasks)
             {
                 taskDTO.Add(new TaskDTO(t.Id,
@@ -43,7 +45,9 @@ namespace LearnWithMentorBLL.Services
         {
             Task taks = db.Tasks.Get(taskId);
             if (taks == null)
+            {
                 return null;
+            }
             return new TaskDTO(taks.Id,
                                 taks.Name,
                                 taks.Description,
@@ -63,10 +67,14 @@ namespace LearnWithMentorBLL.Services
         {
             Task task = db.Tasks.Get(taskId);
             if (task == null)
+            {
                 return null;
+            }
             var planTask = db.PlanTasks.Get(taskId, planId);
-            if (planTask==null)
+            if (planTask == null)
+            {
                 return null;
+            }
             return GetTaskForPlan(planTask.Id);
         }
 
@@ -74,7 +82,9 @@ namespace LearnWithMentorBLL.Services
         {
             PlanTask planTask = db.PlanTasks.Get(planTaskId);
             if (planTask == null)
+            {
                 return null;
+            }
             Task task = planTask.Tasks;
             var taskDTO = new TaskDTO(task.Id,
                                     task.Name,
@@ -110,7 +120,9 @@ namespace LearnWithMentorBLL.Services
         public IEnumerable<TaskDTO> Search(string[] keys, int planId)
         {
             if (!db.Plans.ContainsId(planId))
+            {
                 return null;
+            }
             List<TaskDTO> taskList = new List<TaskDTO>();
             foreach (var task in db.Tasks.Search(keys, planId))
             {
@@ -172,9 +184,13 @@ namespace LearnWithMentorBLL.Services
         {
             var planTask = db.PlanTasks.Get(userTaskDTO.PlanTaskId);
             if (planTask == null)
+            {
                 return false;
+            }
             if (db.Users.Get(userTaskDTO.UserId) == null)
+            {
                 return false;
+            }
             UserTask userTask = new UserTask()
             {
                 User_Id = userTaskDTO.UserId,
@@ -233,7 +249,9 @@ namespace LearnWithMentorBLL.Services
             {
                 UserTask userTask = db.UserTasks.GetByPlanTaskForUser(planTaskId, userId);
                 if (userTask != null)
+                {
                     dtoList.Add(new UserTaskStateDTO(planTaskId, userTask.State));
+                }
             }
             return dtoList;
         }
@@ -242,7 +260,9 @@ namespace LearnWithMentorBLL.Services
         {
             UserTask userTask = db.UserTasks.GetByPlanTaskForUser(planTaskId, userId);
             if (userTask == null)
+            {
                 return null;
+            }
             var userTaskDto = new UserTaskDTO(userTask.Id,
                                       userTask.User_Id,
                                       userTask.PlanTask_Id,
@@ -257,10 +277,14 @@ namespace LearnWithMentorBLL.Services
         public bool UpdateUserTaskStatus(int userTaskId, string newStatus)
         {
             if (!Regex.IsMatch(newStatus, ValidationRules.USERTASK_STATE))
+            {
                 return false;
+            }
             var userTask= db.UserTasks.Get(userTaskId);
             if (userTask == null)
+            {
                 return false;
+            }
             userTask.State = newStatus;
             db.UserTasks.Update(userTask);
             db.Save();
@@ -269,10 +293,14 @@ namespace LearnWithMentorBLL.Services
         public bool UpdateUserTaskResult(int userTaskId, string newResult)
         {
             if (newResult == null)
+            {
                 return false;
+            }
             var userTask = db.UserTasks.Get(userTaskId);
             if (userTask == null)
+            {
                 return false;
+            }
             userTask.Result = newResult;
             db.UserTasks.Update(userTask);
             db.Save();

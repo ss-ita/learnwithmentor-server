@@ -44,9 +44,13 @@ namespace LearnWithMentor.Controllers
         {
             var allGroups = groupService.GetGroupsByMentor(id);
             if (allGroups != null)
+            {
                 return Request.CreateResponse(HttpStatusCode.OK, allGroups);
+            }
             else
+            {
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"No groups for the mentor in database. (mentorId = {id})");
+            }
         }
 
         /// <summary>
@@ -60,9 +64,13 @@ namespace LearnWithMentor.Controllers
         {
             var group = groupService.GetGroupById(id);
             if (group != null)
+            {
                 return Request.CreateResponse(HttpStatusCode.OK, group);
+            }
             else
+            {
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"There isn't group with id = {id}");
+            }
         }
 
         /// <summary>
@@ -78,9 +86,13 @@ namespace LearnWithMentor.Controllers
             {
                 var group = groupService.GetPlans(id);
                 if (group != null)
+                {
                     return Request.CreateResponse(HttpStatusCode.OK, group);
+                }
                 else
+                {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"There no plans in this group.");
+                }
             }
             catch (EntityException e)
             {
@@ -102,9 +114,13 @@ namespace LearnWithMentor.Controllers
             {
                 var group = groupService.GetUsers(id);
                 if (group != null)
+                {
                     return Request.CreateResponse(HttpStatusCode.OK, group);
+                }
                 else
+                {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"There are no users in the group.");
+                }
             }
             catch (EntityException e)
             {
@@ -124,9 +140,13 @@ namespace LearnWithMentor.Controllers
         {
             var group = groupService.GetUsersNotInGroup(groupId);
             if (group != null)
+            {
                 return Request.CreateResponse(HttpStatusCode.OK, group);
+            }
             else
+            {
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"There isn't users outside of the group id = {groupId}");
+            }
         }
 
         /// <summary>
@@ -159,7 +179,9 @@ namespace LearnWithMentor.Controllers
             try
             {
                 if (!ModelState.IsValid)
+                {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                }
                 bool success = groupService.AddGroup(group);
                 if (success)
                 {
@@ -264,7 +286,9 @@ namespace LearnWithMentor.Controllers
                 string[] lines = searchKey.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 var plansList = groupService.SearchPlansNotUsedInGroup(lines, groupId);
                 if (plansList == null)
+                {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, "This plan does not exist.");
+                }
                 return Request.CreateResponse(HttpStatusCode.OK, plansList);
             }
             catch (EntityException e)
@@ -292,7 +316,9 @@ namespace LearnWithMentor.Controllers
                 string[] lines = searchKey.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 var usersList = groupService.SearchUserNotInGroup(lines, groupId);
                 if (usersList == null)
+                {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, "This user does not exist.");
+                }
                 return Request.CreateResponse(HttpStatusCode.OK, usersList);
             }
             catch (EntityException e)
@@ -373,12 +399,18 @@ namespace LearnWithMentor.Controllers
             try
             {
                 if (!userService.ContainsId(userId))
+                {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"There are no users with id = {userId}");
+                }
                 if (groupService.GroupsCount() == 0)
+                {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"There are no groups in database.");
+                }
                 var groups = groupService.GetUserGroups(userId);
                 if (groups == null)
+                {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, $"There are no groups for this user");
+                }
                 return Request.CreateResponse(HttpStatusCode.OK, groups);
             }
             catch (EntityException e)
