@@ -347,9 +347,9 @@ namespace LearnWithMentor.Controllers
                 bool successfullyRemoved = groupService.RemovePlanFromGroup(groupId, planToRemoveId);
                 if (successfullyRemoved)
                 {
-                    var log = $"Plan succesfully removed.";
+                    var log = $"Succesfully removed plan with id = {planToRemoveId} from group with id = {groupId}";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
-                    return Request.CreateResponse(HttpStatusCode.OK, $"Plan succesfully removed from group ({groupId}).");
+                    return Request.CreateResponse(HttpStatusCode.OK, $"Plan succesfully removed from group.");
                 }
                 tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on removing plan from the group");
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax: plan or group does not exist.");
