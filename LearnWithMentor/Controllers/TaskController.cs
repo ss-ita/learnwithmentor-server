@@ -67,11 +67,15 @@ namespace LearnWithMentor.Controllers
         public HttpResponseMessage GetTasksNotInCurrentPlan(int planId)
         {
             var task = taskService.GetTasksNotInPlan(planId);
-                
+
             if (task != null)
+            {
                 return Request.CreateResponse(HttpStatusCode.OK, task);
+            }
             else
+            {
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"There isn't tasks outside of the plan id = {planId}");
+            }
         }
 
         /// <summary>

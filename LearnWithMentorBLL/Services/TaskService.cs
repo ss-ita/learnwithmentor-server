@@ -242,10 +242,14 @@ namespace LearnWithMentorBLL.Services
         {
             var plan = db.Plans.Get(planId);
             if (plan == null)
+            {
                 return null;
+            }
             var tasksNotUsedInPlan= db.Tasks.GetTasksNotInPlan(planId);
             if (tasksNotUsedInPlan == null)
+            {
                 return null;
+            }
             List<TaskDTO> tasksNotUsedInPlanList = new List<TaskDTO>();
             foreach (var task in tasksNotUsedInPlan)
             {
@@ -266,7 +270,9 @@ namespace LearnWithMentorBLL.Services
                                 null);
 
                 if (!tasksNotUsedInPlanList.Contains(taskDto))
+                {
                     tasksNotUsedInPlanList.Add(taskDto);
+                }
             }
             return tasksNotUsedInPlanList;
         }
