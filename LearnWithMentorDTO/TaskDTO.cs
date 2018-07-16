@@ -41,6 +41,7 @@ namespace LearnWithMentorDTO
                 bool privateness,
                 int createId,
                 string creatorName,
+                string description1,
                 int? modId,
                 string modifierName,
                 DateTime? createDate,

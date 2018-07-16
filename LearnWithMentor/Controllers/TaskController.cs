@@ -17,8 +17,8 @@ using System.Security.Claims;
 namespace LearnWithMentor.Controllers
 {
     /// <summary> Controller for working with tasks </summary>
-    [Authorize]
-    [JwtAuthentication]
+    //[Authorize]
+    //[JwtAuthentication]
     public class TaskController : ApiController
     {
         /// <summary> Services for work with different DB parts </summary>
@@ -55,6 +55,23 @@ namespace LearnWithMentor.Controllers
                 tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
+        }
+
+        /// <summary>
+        /// Returns a list of all tasks not used in current plan.
+        /// </summary>
+        /// <param name="planId"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/plan/{planId}/tasks/notinplan")]
+        public HttpResponseMessage GetTasksNotInCurrentPlan(int planId)
+        {
+            var task = taskService.GetTasksNotInPlan(planId);
+                
+            if (task != null)
+                return Request.CreateResponse(HttpStatusCode.OK, task);
+            else
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"There isn't tasks outside of the plan id = {planId}");
         }
 
         /// <summary>

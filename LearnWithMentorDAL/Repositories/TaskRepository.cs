@@ -55,5 +55,12 @@ namespace LearnWithMentorDAL.Repositories
             }
             return result;
         }
+
+
+        public IEnumerable<Task> GetTasksNotInPlan(int planId)
+        {
+            var usedTasks = context.PlanTasks.Where(pt => pt.Plan_Id == planId).Select(pt => pt.Task_Id);
+            return context.Tasks.Where(tasks => !usedTasks.Contains(tasks.Id));
+        }
     }
 }
