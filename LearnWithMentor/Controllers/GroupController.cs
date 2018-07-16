@@ -135,6 +135,7 @@ namespace LearnWithMentor.Controllers
         /// </summary>
         /// <param name="group"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Mentor")]
         [HttpPost]
         [Route("api/group")]
         public HttpResponseMessage Post([FromBody]GroupDTO group)
@@ -166,6 +167,7 @@ namespace LearnWithMentor.Controllers
         /// <param name="id"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Mentor")]
         [HttpPut]
         [Route("api/group/{id}/user")]
         public HttpResponseMessage PutUsersToGroup(int id, [FromBody] int[] userId)
@@ -195,6 +197,7 @@ namespace LearnWithMentor.Controllers
         /// <param name="id"></param>
         /// <param name="planId"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Mentor")]
         [HttpPut]
         [Route("api/group/{id}/plan")]
         public HttpResponseMessage PutPlansToGroup(int id, [FromBody] int[] planId)
@@ -288,6 +291,7 @@ namespace LearnWithMentor.Controllers
         /// </summary>
         /// <param name="groupId">Group ID where user should be removed.</param>
         /// <param name="userId">Id of the user to remove.</param>
+        [Authorize(Roles = "Mentor")]
         [HttpDelete]
         [Route("api/group/removeUserFromGroup")]
         public HttpResponseMessage RemoveUserFromCurrentGroup(int groupId, int userToRemoveId)
@@ -317,6 +321,7 @@ namespace LearnWithMentor.Controllers
         /// </summary>
         /// <param name="groupId">Group ID where user should be removed.</param>
         /// <param name="planId">Id of the plan to remove.</param>
+        [Authorize(Roles = "Mentor")]
         [HttpDelete]
         [Route("api/group/removePlanFromGroup")]
         public HttpResponseMessage RemovePlanFromCurrentGroup(int groupId, int planToRemoveId)
