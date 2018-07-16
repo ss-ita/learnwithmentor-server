@@ -11,6 +11,64 @@ namespace LearnWithMentorBLL.Services
         public GroupService(IUnitOfWork db) : base(db)
         {
         }
+
+        private UserTask CreateDefaultUserTask(int userId, int planTaskId, int mentorId)
+        {
+            return new UserTask()
+            {
+                User_Id = userId,
+                PlanTask_Id = planTaskId,
+                Mentor_Id = mentorId,
+                Result = "",
+                State = "P"
+            };
+        }
+
+        private void SetUserTasksByAddingUser(int userId, int groupId)
+        {
+            var plans = db.Plans.GetPlansForGroup(groupId);
+            var group = db.Groups.Get(groupId);
+            if(plans == null || group == null)
+            {
+                return;
+            }
+            List<PlanTask> planTasks = new List<PlanTask>();
+            foreach(var plan in plans)
+            {
+                planTasks.AddRange(plan.PlanTasks);
+            }
+            foreach(var planTask in planTasks)
+            {
+                if(db.UserTasks.GetByPlanTaskForUser(planTask.Id, userId) == null)
+                {
+                    db.UserTasks.Add(CreateDefaultUserTask(userId, planTask.Id, group.Mentor_Id.Value));
+                }
+            }
+        }
+
+        private void SetUserTasksByAddingPlan(int planId, int groupId)
+        {
+            var users = db.Users.GetUsersByGroup(groupId);
+            var group = db.Groups.Get(groupId);
+            var plan = db.Plans.Get(planId);
+            if (users == null || group == null || plan == null)
+            {
+                return;
+            }
+            var planTasks = plan.PlanTasks;
+            foreach(var user in users)
+            {
+                foreach( var planTask in planTasks)
+                {
+                    if (db.UserTasks.GetByPlanTaskForUser(planTask.Id, user.Id) == null)
+                    {
+                        db.UserTasks.Add(CreateDefaultUserTask(user.Id, planTask.Id, group.Mentor_Id.Value));
+                    }
+                }
+            }
+           
+        }
+
         public bool AddGroup(GroupDTO group)
         {
             if (string.IsNullOrEmpty(group.Name) || db.Groups.GroupNameExists(group.Name))
@@ -36,13 +94,19 @@ namespace LearnWithMentorBLL.Services
                                group.Mentor_Id,
                                db.Users.ExtractFullName(group.Mentor_Id));
         }
+
+        public int? GetMentorIdByGroup(int groupId)
+        {
+            return GetGroupById(groupId)?.MentorId;
+        }
+
         public int GroupsCount()
         {
             return db.Groups.Count();
         }
         public IEnumerable<PlanDTO> GetPlans(int groupId)
         {
-            var group = db.Groups.GetGroupsByMentor(groupId);
+            var group = db.Groups.Get(groupId);
             var plans = db.Plans.GetPlansForGroup(groupId);
             if (group == null)
                 return null;
@@ -115,9 +179,9 @@ namespace LearnWithMentorBLL.Services
             if (user == null)
                 return null;
             IEnumerable<Group> groups;
-            if (user.Role_Id == 0)
+            if (user.Roles.Name == "Mentor")
                 groups = db.Groups.GetGroupsByMentor(userId);
-            else if (user.Role_Id == 1)
+            else if (user.Roles.Name == "Student")
                 groups = db.Groups.GetStudentGroups(userId);
             else
                 groups = db.Groups.GetAll();
@@ -148,6 +212,10 @@ namespace LearnWithMentorBLL.Services
                 if (addUser != null)
                 {
                     added = db.Groups.AddUserToGroup(userId, groupId);
+                    if(added)
+                    {
+                        SetUserTasksByAddingUser(userId, groupId);
+                    }
                     db.Save();
                 }
             }
@@ -166,6 +234,10 @@ namespace LearnWithMentorBLL.Services
                 if (addPlan != null)
                 {
                     added = db.Groups.AddPlanToGroup(planId, groupId);
+                    if(added)
+                    {
+                        SetUserTasksByAddingPlan(planId, groupId);
+                    }
                     db.Save();
                 }
             }

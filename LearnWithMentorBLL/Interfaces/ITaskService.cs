@@ -22,5 +22,6 @@ namespace LearnWithMentorBLL.Interfaces
         StatisticsDTO GetUserStatistics(int userId);
         PagedListDTO<TaskDTO> GetTasks(int pageSize, int pageNumber = 1);
 
+        bool CheckUserTaskOwner(int userTaskId, int userId);
     }
 }

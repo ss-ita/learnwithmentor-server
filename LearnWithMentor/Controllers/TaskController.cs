@@ -11,6 +11,8 @@ using LearnWithMentor.Filters;
 using System.Web.Http.Tracing;
 using LearnWithMentor.Log;
 using System.Data.Entity.Core;
+using System.Web;
+using System.Security.Claims;
 
 namespace LearnWithMentor.Controllers
 {
@@ -89,7 +91,9 @@ namespace LearnWithMentor.Controllers
             {
                 TaskDTO task = taskService.GetTaskById(taskId);
                 if (task == null)
+                {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, "This task does not exist in database.");
+                }
                 return Request.CreateResponse(HttpStatusCode.OK, task);
             }
             catch (EntityException e)
@@ -111,7 +115,9 @@ namespace LearnWithMentor.Controllers
             {
                 var task = taskService.GetTaskForPlan(planTaskId);
                 if (task != null)
+                {
                     return Request.CreateResponse(HttpStatusCode.OK, task);
+                }
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, "This task does not exist in database.");
             }
             catch (EntityException e)
@@ -132,9 +138,18 @@ namespace LearnWithMentor.Controllers
         {
             try
             {
+                var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
+                var Id = int.Parse(identity.FindFirst("Id").Value);
+                var Role = identity.RoleClaimType;
+                if (!(userId == Id || Role == "Mentor"))
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
+                }
                 var userTask = taskService.GetUserTaskByUserPlanTaskId(userId, planTaskId);
                 if (userTask != null)
+                {
                     return Request.CreateResponse(HttpStatusCode.OK, userTask);
+                }
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, "Task for this user does not exist in database.");
             }
             catch (EntityException e)
@@ -152,9 +167,18 @@ namespace LearnWithMentor.Controllers
         {
             try
             {
+                var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
+                var id = int.Parse(identity.FindFirst("Id").Value);
+                var role = identity.RoleClaimType;
+                if (!(taskService.CheckUserTaskOwner(userTaskId, id) || role == "Mentor"))
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
+                }
                 var messageList = messageService.GetMessages(userTaskId);
                 if (messageList != null)
+                {
                     return Request.CreateResponse(HttpStatusCode.OK, messageList);
+                }
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, "Messages for this user does not exist in database.");
             }
             catch (EntityException e)
@@ -176,7 +200,9 @@ namespace LearnWithMentor.Controllers
             try
             {
                 if (!ModelState.IsValid)
+                {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                }
                 newMessage.UserTaskId = userTaskId;
                 // todo: logic for sender id if needed
                 bool success = messageService.SendMessage(newMessage);
@@ -207,7 +233,9 @@ namespace LearnWithMentor.Controllers
             try
             {
                 if (!ModelState.IsValid)
+                {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                }
                 bool success = taskService.CreateUserTask(newUserTask);
                 if (success)
                 {
@@ -235,7 +263,9 @@ namespace LearnWithMentor.Controllers
             try
             {
                 if (!Regex.IsMatch(newStatus, ValidationRules.USERTASK_STATE))
+                {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "New Status not valid");
+                }
                 bool success = taskService.UpdateUserTaskStatus(userTaskId, newStatus);
                 if (success)
                 {
@@ -255,7 +285,7 @@ namespace LearnWithMentor.Controllers
 
         /// <summary> Changes UserTask result by usertask id. </summary>
         /// <param name="userTaskId">Id of the userTask status to be changed</param>
-        /// <param name="value">>New userTask result</param>
+        /// <param name="newMessage">>New userTask result</param>
         /// <returns></returns>
         [HttpPut]
         [Route("api/task/usertask/result")]
@@ -265,7 +295,9 @@ namespace LearnWithMentor.Controllers
             {
                 string value = newMessage.Content.ReadAsStringAsync().Result;
                 if (value.Length >= ValidationRules.MAX_USERTASK_RESULT_LENGTH)
+                {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "New Result is too long");
+                }
                 bool success = taskService.UpdateUserTaskResult(userTaskId, value);
                 if (success)
                 {
@@ -361,6 +393,7 @@ namespace LearnWithMentor.Controllers
         /// Creates new task
         /// </summary>
         /// <param name="newTask">Task object for creation.</param>
+        [Authorize(Roles = "Mentor")]
         [HttpPost]
         [Route("api/task")]
         public HttpResponseMessage Post([FromBody]TaskDTO newTask)
@@ -368,7 +401,9 @@ namespace LearnWithMentor.Controllers
             try
             {
                 if (!ModelState.IsValid)
+                {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                }
                 bool success = taskService.CreateTask(newTask);
                 if (success)
                 {
@@ -392,6 +427,7 @@ namespace LearnWithMentor.Controllers
         /// </summary>
         /// <param name="taskId">Task Id for update.</param>
         /// <param name="task">Modified task object for update.</param>
+        [Authorize(Roles = "Mentor")]
         [HttpPut]
         [Route("api/task/{taskId}")]
         public HttpResponseMessage Put(int taskId, [FromBody]TaskDTO task)
@@ -399,7 +435,9 @@ namespace LearnWithMentor.Controllers
             try
             {
                 if (!ModelState.IsValid)
+                {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                }
                 bool success = taskService.UpdateTaskById(taskId, task);
                 if (success)
                 {
@@ -421,6 +459,7 @@ namespace LearnWithMentor.Controllers
         /// Deletes task by Id
         /// </summary>
         /// <param name="taskId">Task Id for delete.</param>
+        [Authorize(Roles = "Mentor")]
         [HttpDelete]
         [Route("api/task/{id}")]
         public HttpResponseMessage Delete(int taskId)

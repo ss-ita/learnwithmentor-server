@@ -177,6 +177,35 @@ namespace LearnWithMentorBLL.Services
             return modified;
         }
 
+        private void CreateUserTasksForAllLearningByPlan(int planId, int taskId)
+        {
+            int? planTaskId = db.PlanTasks.GetIdByTaskAndPlan(taskId, planId);
+            var plan = db.Plans.Get(planId);
+            var groups = db.Groups.GetGroupsByPlan(planId);
+            if (plan == null || groups == null || groups.Count() == 0 || planTaskId == null)
+            {
+                return;
+            }
+            foreach(var group in groups)
+            {
+                foreach (var user in group.Users)
+                {
+                    if(db.UserTasks.GetByPlanTaskForUser(planTaskId.Value, user.Id) == null)
+                    {
+                        UserTask toInsert = new UserTask()
+                        {
+                            User_Id = user.Id,
+                            PlanTask_Id = planTaskId.Value,
+                            State = "P",
+                            Mentor_Id = group.Mentor_Id.Value,
+                            Result = ""
+                        };
+                        db.UserTasks.Add(toInsert);
+                    }
+                }
+            }
+            
+        }
 
         public bool AddTaskToPlan(int planId, int taskId, int? sectionId, int? priority)
         {
@@ -186,7 +215,8 @@ namespace LearnWithMentorBLL.Services
             var task = db.Tasks.Get(taskId);
             if (task == null)
                 return false;
-            db.Plans.AddTaskToPlan(planId, taskId, sectionId, priority);            
+            db.Plans.AddTaskToPlan(planId, taskId, sectionId, priority);
+            CreateUserTasksForAllLearningByPlan(planId, taskId);
             db.Save();             
             
             return true;
