@@ -107,7 +107,7 @@ namespace LearnWithMentor.Controllers
         /// </summary>
         [JwtAuthentication]
         [HttpGet]
-        [Route("api/userinfo")]
+        [Route("api/user/profile")]
         public HttpResponseMessage GetSingle()
         {
             var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
@@ -157,12 +157,13 @@ namespace LearnWithMentor.Controllers
         /// <summary>
         /// Returns statistics dto with number of tasks in different states for one user.
         /// </summary>
-        /// <param name="id"> Id of the user. </param>
         [JwtAuthentication]
         [HttpGet]
-        [Route("api/user/{id}/statistics")]
-        public HttpResponseMessage GetStatistics(int id)
+        [Route("api/user/statistics")]
+        public HttpResponseMessage GetStatistics()
         {
+            var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
+            var id = int.Parse(identity.FindFirst("Id").Value);
             var statsDTO = taskService.GetUserStatistics(id);
             if (statsDTO == null)
             {
@@ -335,14 +336,20 @@ namespace LearnWithMentor.Controllers
         public HttpResponseMessage Search(string q, string role)
         {
             if (q == null)
+            {
                 q = "";
+            }
             RoleDTO criteria = roleService.GetByName(role);
             string[] lines = q.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             int? searchParametr = null;
             if (role == "blocked")
+            {
                 searchParametr = -1;
+            }
             if (lines.Length > 2)
+            {
                 lines = lines.Take(2).ToArray();
+            }
             List<UserDTO> users = criteria != null ? userService.Search(lines, criteria.Id) :
                 userService.Search(lines, searchParametr);
             if (users.Count != 0)

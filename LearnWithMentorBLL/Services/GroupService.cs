@@ -94,6 +94,12 @@ namespace LearnWithMentorBLL.Services
                                group.Mentor_Id,
                                db.Users.ExtractFullName(group.Mentor_Id));
         }
+
+        public int? GetMentorIdByGroup(int groupId)
+        {
+            return GetGroupById(groupId)?.MentorId;
+        }
+
         public int GroupsCount()
         {
             return db.Groups.Count();
@@ -173,9 +179,9 @@ namespace LearnWithMentorBLL.Services
             if (user == null)
                 return null;
             IEnumerable<Group> groups;
-            if (user.Role_Id == 0)
+            if (user.Roles.Name == "Mentor")
                 groups = db.Groups.GetGroupsByMentor(userId);
-            else if (user.Role_Id == 1)
+            else if (user.Roles.Name == "Student")
                 groups = db.Groups.GetStudentGroups(userId);
             else
                 groups = db.Groups.GetAll();

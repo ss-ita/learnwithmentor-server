@@ -214,24 +214,23 @@ namespace LearnWithMentor.Controllers
             {
                 int? section;
                 int? priorityNew;
-
                 if (string.IsNullOrEmpty(sectionId))
                 {
                     section = null;
                 }
                 else
+                {
                     section = int.Parse(sectionId);
-
+                }
                 if (string.IsNullOrEmpty(priority))
                 {
                     priorityNew = null;
                 }
                 else
+                {
                     priorityNew = int.Parse(priority);
-
-
+                }
                 bool success = planService.AddTaskToPlan(id, taskId, section, priorityNew);
-                    
                 if (success)
                 {
                     var log = $"Succesfully add task with id {taskId} to plan with id = {id}";
