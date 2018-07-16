@@ -94,6 +94,12 @@ namespace LearnWithMentorBLL.Services
                                group.Mentor_Id,
                                db.Users.ExtractFullName(group.Mentor_Id));
         }
+
+        public int? GetMentorIdByGroup(int groupId)
+        {
+            return GetGroupById(groupId)?.MentorId;
+        }
+
         public int GroupsCount()
         {
             return db.Groups.Count();

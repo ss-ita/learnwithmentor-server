@@ -7,6 +7,7 @@ namespace LearnWithMentorBLL.Interfaces
     {
         GroupDTO GetGroupById(int id);
         int GroupsCount();
+        int? GetMentorIdByGroup(int groupId);
         IEnumerable<GroupDTO> GetGroupsByMentor(int mentorId);
         IEnumerable<UserIdentityDTO> GetUsers(int groupId);
         IEnumerable<PlanDTO> GetPlans(int groupId);
