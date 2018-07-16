@@ -1,14 +1,14 @@
-﻿using LearnWithMentorDAL.Entities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using LearnWithMentorDAL.Entities;
 
-namespace LearnWithMentorDAL.Repositories
+namespace LearnWithMentorDAL.Repositories.Interfaces
 {
     public interface IGroupRepository: IRepository<Group>
     {
         Group Get(int id);
         int Count();
         bool GroupNameExists(string groupName);
-        IEnumerable<Group> GetGroupsByMentor(int mentor_id);
+        IEnumerable<Group> GetGroupsByMentor(int mentorId);
         bool AddUserToGroup(int userId, int groupId);
         bool AddPlanToGroup(int planId, int groupId);
         void RemoveUserFromGroup(int groupId, int userId);
