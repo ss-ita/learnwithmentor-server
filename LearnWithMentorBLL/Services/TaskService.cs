@@ -226,6 +226,7 @@ namespace LearnWithMentorBLL.Services
             }
             return false;
         }
+
         public List<UserTaskStateDTO> GetTaskStatesForUser(int[] planTaskIds, int userId)
         {
             List<UserTaskStateDTO> dtoList = new List<UserTaskStateDTO>();
@@ -276,8 +277,7 @@ namespace LearnWithMentorBLL.Services
             }
             return tasksNotUsedInPlanList;
         }
-
-
+        
         public UserTaskDTO GetUserTaskByUserPlanTaskId(int userId, int planTaskId)
         {
             UserTask userTask = db.UserTasks.GetByPlanTaskForUser(planTaskId, userId);
@@ -306,6 +306,7 @@ namespace LearnWithMentorBLL.Services
             db.Save();
             return true;
         }
+
         public bool UpdateUserTaskResult(int userTaskId, string newResult)
         {
             if (newResult == null)
@@ -318,6 +319,7 @@ namespace LearnWithMentorBLL.Services
             db.Save();
             return true;
         }
+
         public bool CheckUserTaskOwner(int userTaskId, int userId)
         {
             var userTask = db.UserTasks.Get(userTaskId);

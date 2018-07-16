@@ -9,14 +9,17 @@ namespace LearnWithMentorDAL.Repositories
         public TaskRepository(LearnWithMentor_DBEntities context) : base(context)
         {
         }
+
         public Task Get(int id)
         {
             return context.Tasks.FirstOrDefault(t => t.Id == id);
         }
+
         public bool IsRemovable(int id)
         {
             return (!context.PlanTasks.Any(pt=>pt.Task_Id==id));
         }
+
         public IEnumerable<Task> Search(string[] str, int planId)
         {
             if (!context.Plans.Any(p => p.Id == planId))
@@ -38,6 +41,7 @@ namespace LearnWithMentorDAL.Repositories
             }
             return result;
         }
+
         public IEnumerable<Task> Search(string[] str)
         {
             List<Task> result = new List<Task>();
@@ -55,7 +59,6 @@ namespace LearnWithMentorDAL.Repositories
             }
             return result;
         }
-
 
         public IEnumerable<Task> GetTasksNotInPlan(int planId)
         {
