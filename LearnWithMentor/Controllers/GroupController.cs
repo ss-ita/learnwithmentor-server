@@ -5,9 +5,7 @@ using System.Web.Http;
 using LearnWithMentor.Filters;
 using LearnWithMentorDTO;
 using LearnWithMentorBLL.Interfaces;
-using LearnWithMentorBLL.Services;
 using System.Web.Http.Tracing;
-using LearnWithMentor.Log;
 using System.Data.Entity.Core;
 using System.Web;
 using System.Security.Claims;
@@ -281,7 +279,7 @@ namespace LearnWithMentor.Controllers
                 {
                     return GetPlansNotUsedInCurrentGroup(groupId);
                 }
-                string[] lines = searchKey.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] lines = searchKey.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 var plansList = groupService.SearchPlansNotUsedInGroup(lines, groupId);
                 if (plansList == null)
                 {
@@ -311,7 +309,7 @@ namespace LearnWithMentor.Controllers
                 {
                     return GetUsersNotInCurrentGroup(groupId);
                 }
-                string[] lines = searchKey.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] lines = searchKey.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 var usersList = groupService.SearchUserNotInGroup(lines, groupId);
                 if (usersList == null)
                 {
@@ -395,7 +393,6 @@ namespace LearnWithMentor.Controllers
         /// <summary>
         /// If user: strudent - returns its learning groups, if mentor - returns mentored groups, if admin - returns all groups."
         /// </summary>
-        /// <param name="userId"></param>
         /// <returns></returns>
         [HttpGet]
         [Route("api/group/mygroups")]

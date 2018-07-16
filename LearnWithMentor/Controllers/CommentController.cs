@@ -4,9 +4,7 @@ using System.Net.Http;
 using LearnWithMentor.Filters;
 using LearnWithMentorDTO;
 using LearnWithMentorBLL.Interfaces;
-using LearnWithMentorBLL.Services;
 using System.Web.Http.Tracing;
-using LearnWithMentor.Log;
 using System.Data.Entity.Core;
 
 namespace LearnWithMentor.Controllers

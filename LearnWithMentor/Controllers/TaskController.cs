@@ -5,11 +5,9 @@ using System.Net;
 using System.Net.Http;
 using LearnWithMentorDTO;
 using LearnWithMentorBLL.Interfaces;
-using LearnWithMentorBLL.Services;
 using System.Text.RegularExpressions;
 using LearnWithMentor.Filters;
 using System.Web.Http.Tracing;
-using LearnWithMentor.Log;
 using System.Data.Entity.Core;
 using System.Web;
 using System.Security.Claims;
@@ -112,9 +110,9 @@ namespace LearnWithMentor.Controllers
             try
             {
                 var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
-                var Id = int.Parse(identity.FindFirst("Id").Value);
-                var Role = identity.RoleClaimType;
-                if (!(userId == Id || Role == "Mentor"))
+                var currentId = int.Parse(identity.FindFirst("Id").Value);
+                var currentRole = identity.RoleClaimType;
+                if (!(userId == currentId || currentRole == "Mentor"))
                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
                 var userTask = taskService.GetUserTaskByUserPlanTaskId(userId, planTaskId);
                 if (userTask != null)
@@ -137,9 +135,9 @@ namespace LearnWithMentor.Controllers
             try
             {
                 var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
-                var id = int.Parse(identity.FindFirst("Id").Value);
-                var role = identity.RoleClaimType;
-                if(!(taskService.CheckUserTaskOwner(userTaskId, id) || role == "Mentor"))
+                var currentId = int.Parse(identity.FindFirst("Id").Value);
+                var currentRole = identity.RoleClaimType;
+                if(!(taskService.CheckUserTaskOwner(userTaskId, currentId) || currentRole == "Mentor"))
                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
                 var messageList = messageService.GetMessages(userTaskId);
                 if (messageList != null)
@@ -307,7 +305,7 @@ namespace LearnWithMentor.Controllers
                 {
                     return GetAllTasks();
                 }
-                string[] lines = key.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] lines = key.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 var taskList = taskService.Search(lines);
                 return Request.CreateResponse(HttpStatusCode.OK, taskList);
             }
@@ -333,7 +331,7 @@ namespace LearnWithMentor.Controllers
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax.");
                 }
-                string[] lines = key.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] lines = key.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 var taskList = taskService.Search(lines, planId);
                 if (taskList == null)
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, "This plan does not exist.");
