@@ -289,50 +289,50 @@ namespace LearnWithMentorDAL.EF
 
             #region List of Tasks
             List<Task> tasks = new List<Task>();
-            tasks.Add(new Task() { Name = "C#. Installing Visual Studio." });//Section 1 [1]
-            tasks.Add(new Task() { Name = "C#. Variables, Loops." });//Section 1 [2]
-            tasks.Add(new Task() { Name = "C#. Array." });//Section 1 [3]
-            tasks.Add(new Task() { Name = "C#. Class, Method, Exception." });//Section 1 [4]
-            tasks.Add(new Task() { Name = "ASP NET Controllers." });//Section 2 [5]
-            tasks.Add(new Task() { Name = "ASP.NET Routes." });//Section 2 [6]
-            tasks.Add(new Task() { Name = "ASP.NET View." });//Section 3  [7]
-            tasks.Add(new Task() { Name = "ASP.NET Making App." });//Section 3 [8]
-            tasks.Add(new Task() { Name = "Angular. Installing Atom." });//Section 4 [9]
-            tasks.Add(new Task() { Name = "Angular. App component." });//Section 4 [10]
-            tasks.Add(new Task() { Name = "Angular. Services." });//Section 5 [11]
-            tasks.Add(new Task() { Name = "Angular. Observables." });//Section 5 [12]
-            tasks.Add(new Task() { Name = "Angular Material. Installing Angular material" });//Section 6 [13]
-            tasks.Add(new Task() { Name = "Angular Material. Adding NavBar" });//Section 6 [14]
-            tasks.Add(new Task() { Name = "Angular Material. Working on welcome screen" });//Section 7 [15]
-            tasks.Add(new Task() { Name = "Angular Material. Working with Data " });//Section 7 [16]
-            tasks.Add(new Task() { Name = "SQL. Installing SQL Server and Management studio" });//Section 8 [17]
-            tasks.Add(new Task() { Name = "SQL. Creating databases and tables." });//Section 8 [18]
-            tasks.Add(new Task() { Name = "SQL. Data insertion and manipulation." });//Section 9 [19]
-            tasks.Add(new Task() { Name = "SQL. JOIN" });//Section 9 [20]
-            tasks.Add(new Task() { Name = "Full stack WEB App. Modeling app structure" });//Section 10
-            tasks.Add(new Task() { Name = "Full stack WEB App. Creating Database" });//Section 10
-            tasks.Add(new Task() { Name = "Full stack WEB App. Data Access, business logic." });//Section 10
-            tasks.Add(new Task() { Name = "Full stack WEB App. Fron-end part in angular" });//Section 10
-            tasks.Add(new Task() { Name = "React. React basics" });
-            tasks.Add(new Task() { Name = "React. Routes, Lifecycle" });
-            tasks.Add(new Task() { Name = "React. Transitions & Typechecking" });
-            tasks.Add(new Task() { Name = "React. Working with forms" });
-            tasks.Add(new Task() { Name = "Java. Getting Started. " });
-            tasks.Add(new Task() { Name = "Java. Working with Variables." });
-            tasks.Add(new Task() { Name = "Java. Working with Objects." });
-            tasks.Add(new Task() { Name = "Java. Exception Handling and Debugging." });
-            tasks.Add(new Task() { Name = "JavaScript. Language Basics" });
-            tasks.Add(new Task() { Name = "JavaScript. Works Behind the Scenes" });
-            tasks.Add(new Task() { Name = "JavaScript. DOM Manipulation and Events" });
-            tasks.Add(new Task() { Name = "JavaScript. Objects and Functions" });
-            tasks.Add(new Task() { Name = "C++. Basic Syntax. " });
-            tasks.Add(new Task() { Name = "C++. Defining Functions" });
-            tasks.Add(new Task() { Name = "C++. The Preprocessor" });
-            tasks.Add(new Task() { Name = "C++. Classes and Objects" });
-            tasks.Add(new Task() { Name = "Python. Programming Basics" });
-            tasks.Add(new Task() { Name = "Python. Advanced Concepts" });
-            tasks.Add(new Task() { Name = "Python. RPG Battle Script" });
-            tasks.Add(new Task() { Name = "Python. Web Scraper" });
+            tasks.Add(new Task() { Name = "C#. Installing Visual Studio.", Description = "Installing IDE Microsoft Visual Studio for further work in plan."});//Section 1 [1]
+            tasks.Add(new Task() { Name = "C#. Variables, Loops.", Description = "Declaring variables. Difference between value types and reference types. Looping program flow."});//Section 1 [2]
+            tasks.Add(new Task() { Name = "C#. Array.", Description = "Grouping varialbes in arrays"});//Section 1 [3]
+            tasks.Add(new Task() { Name = "C#. Class, Method, Exception.", Description = "Declaring custom types, creating methods and catching exceptions during execution."});//Section 1 [4]
+            tasks.Add(new Task() { Name = "ASP NET Controllers.", Description = "Explores the topic of ASP.NET MVC controllers, controller actions, and action results. " });//Section 2 [5]
+            tasks.Add(new Task() { Name = "ASP.NET Routes.", Description = "The ASP.NET Routing module is responsible for mapping incoming browser requests to particular MVC controller actions." });//Section 2 [6]
+            tasks.Add(new Task() { Name = "ASP.NET View.", Description = "Razor-based view templates have a .cshtml file extension, and provide an elegant way to create HTML output using C#." });//Section 3  [7]
+            tasks.Add(new Task() { Name = "ASP.NET Making App.", Description = "Making close to real small project." });//Section 3 [8]
+            tasks.Add(new Task() { Name = "Angular. Installing Atom.", Description = "Installing code editor for further work in plan" });//Section 4 [9]
+            tasks.Add(new Task() { Name = "Angular. App structure.", Description = "Structure of angular appliication." });//Section 4 [10]
+            tasks.Add(new Task() { Name = "Angular. Services.", Description = "Services are a great way to share information among classes that don't know each other." });//Section 5 [11]
+            tasks.Add(new Task() { Name = "Angular. Observables.", Description = "Observables provide support for passing messages between publishers and subscribers in your application." });//Section 5 [12]
+            tasks.Add(new Task() { Name = "Angular Material. Installing Angular material", Description = "Angular material installation ways." });//Section 6 [13]
+            tasks.Add(new Task() { Name = "Angular Material. Adding NavBar", Description = "Adding material navigation bar for our application." });//Section 6 [14]
+            tasks.Add(new Task() { Name = "Angular Material. Working on main page", Description = "Creating main page using angular material components." });//Section 7 [15]
+            tasks.Add(new Task() { Name = "Angular Material. Working with Data ", Description = "Learning how to connect data with angular material components. " });//Section 7 [16]
+            tasks.Add(new Task() { Name = "SQL. Installing SQL Server and Management studio", Description = "Installing DBMS Microsoft SQL Management Studio for further work in plan." });//Section 8 [17]
+            tasks.Add(new Task() { Name = "SQL. Creating databases and tables.", Description = "Making queries for creation relational databases and tables within them." });//Section 8 [18]
+            tasks.Add(new Task() { Name = "SQL. Data insertion and manipulation.", Description = "Inserting raw data in tables and making manipulation with. " });//Section 9 [19]
+            tasks.Add(new Task() { Name = "SQL. JOIN", Description = "Learning types of JOIN's" });//Section 9 [20]
+            tasks.Add(new Task() { Name = "Full stack WEB App. Modeling app structure", Description = "Getting started with project architectures. " });//Section 10
+            tasks.Add(new Task() { Name = "Full stack WEB App. Creating Database", Description = "Approaches to data base creation. Data-first, code-first." });//Section 10
+            tasks.Add(new Task() { Name = "Full stack WEB App. Data Access, business logic.", Description = "Using different patterns in DAL BLL" });//Section 10
+            tasks.Add(new Task() { Name = "Full stack WEB App. Fron-end part in angular", Description = "Creating user interface using fron-end frameworks. " });//Section 10
+            tasks.Add(new Task() { Name = "React. React basics", Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" });
+            tasks.Add(new Task() { Name = "React. Routes, Lifecycle", Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" });
+            tasks.Add(new Task() { Name = "React. Transitions & Typechecking", Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" });
+            tasks.Add(new Task() { Name = "React. Working with forms", Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" });
+            tasks.Add(new Task() { Name = "Java. Getting Started. ", Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" });
+            tasks.Add(new Task() { Name = "Java. Working with Variables.", Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" });
+            tasks.Add(new Task() { Name = "Java. Working with Objects.", Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" });
+            tasks.Add(new Task() { Name = "Java. Exception Handling and Debugging.", Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" });
+            tasks.Add(new Task() { Name = "JavaScript. Language Basics", Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" });
+            tasks.Add(new Task() { Name = "JavaScript. Works Behind the Scenes", Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" });
+            tasks.Add(new Task() { Name = "JavaScript. DOM Manipulation and Events", Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" });
+            tasks.Add(new Task() { Name = "JavaScript. Objects and Functions", Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" });
+            tasks.Add(new Task() { Name = "C++. Basic Syntax. ", Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" });
+            tasks.Add(new Task() { Name = "C++. Defining Functions", Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" });
+            tasks.Add(new Task() { Name = "C++. The Preprocessor", Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" });
+            tasks.Add(new Task() { Name = "C++. Classes and Objects", Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" });
+            tasks.Add(new Task() { Name = "Python. Programming Basics", Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" });
+            tasks.Add(new Task() { Name = "Python. Advanced Concepts", Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" });
+            tasks.Add(new Task() { Name = "Python. RPG Battle Script", Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" });
+            tasks.Add(new Task() { Name = "Python. Web Scraper", Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" });
             #endregion
 
             //Assigning Id's for tasks
@@ -424,15 +424,15 @@ namespace LearnWithMentorDAL.EF
 
             //Assigning setion_Id for planTasks
             //First section will have first 4 plantasks 
-            for (int i = 1; i < 4; i++)
+            for (int i = 0; i <= 3; i++)
             {
                 planTasks[i].Section_Id = 1;
             }
 
 
             //Next 8 sections will have next 2 plantasks each (1 section for 2 planTask)
-            count = 5;
-            for (int i = 2; i < 9; i++)
+            count = 4;
+            for (int i = 2; i <= 10; i++)
             {
                 for (int j = count; j < count + 2; j++)
                 {
@@ -443,13 +443,13 @@ namespace LearnWithMentorDAL.EF
             }
 
             //Next 10 section will have next 4 plantasks
-            for (int i = 21; i < 24; i++)
+            for (int j = 20; j <= 23; j++)
             {
-                planTasks[i].Section_Id = 11;
+                planTasks[j].Section_Id = 10;
             }
             //Last 10 sections will have 16 planTasks (1 section for 2 planTask)
-            count = 25;
-            for (int i = 11; i < 20; i++)
+            count = 24;
+            for (int i = 11; i <= 20; i++)
             {
                 for (int j = count; j < count + 2; j++)
                 {
