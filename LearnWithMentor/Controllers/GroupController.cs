@@ -74,11 +74,19 @@ namespace LearnWithMentor.Controllers
         [Route("api/group/{id}/plans")]
         public HttpResponseMessage GetPlans(int id)
         {
-            var group = groupService.GetPlans(id);
-            if (group != null)
-                return Request.CreateResponse(HttpStatusCode.OK, group);
-            else
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"There isn't plans for the group id = {id}");
+            try
+            {
+                var group = groupService.GetPlans(id);
+                if (group != null)
+                    return Request.CreateResponse(HttpStatusCode.OK, group);
+                else
+                    return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"There no plans in this group.");
+            }
+            catch (EntityException e)
+            {
+                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
         }
 
         /// <summary>
@@ -90,11 +98,19 @@ namespace LearnWithMentor.Controllers
         [Route("api/group/{id}/users")]
         public HttpResponseMessage GetUsers(int id)
         {
-            var group = groupService.GetUsers(id);
-            if (group != null)
-                return Request.CreateResponse(HttpStatusCode.OK, group);
-            else
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"There isn't users in the group id = {id}");
+            try
+            {
+                var group = groupService.GetUsers(id);
+                if (group != null)
+                    return Request.CreateResponse(HttpStatusCode.OK, group);
+                else
+                    return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"There are no users in the group.");
+            }
+            catch (EntityException e)
+            {
+                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
         }
 
         /// <summary>
@@ -287,7 +303,7 @@ namespace LearnWithMentor.Controllers
         /// Removes user from current group.
         /// </summary>
         /// <param name="groupId">Group ID where user should be removed.</param>
-        /// <param name="userId">Id of the user to remove.</param>
+        /// <param name="userToRemoveId">Id of the user to remove.</param>
         [HttpDelete]
         [Route("api/group/removeUserFromGroup")]
         public HttpResponseMessage RemoveUserFromCurrentGroup(int groupId, int userToRemoveId)
@@ -297,12 +313,12 @@ namespace LearnWithMentor.Controllers
                 bool successfullyRemoved = groupService.RemoveUserFromGroup(groupId, userToRemoveId);
                 if (successfullyRemoved)
                 {
-                    var log = $"Succesfully removed user with id = {userToRemoveId} to group with id = {groupId}";
+                    var log = $"Succesfully removed user with id = {userToRemoveId} from group with id = {groupId}";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
-                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully removed user from group ({groupId}).");
+                    return Request.CreateResponse(HttpStatusCode.OK, $"User succesfully removed.");
                 }
                 tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on removing user from the group");
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax or user or group does not exist.");
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, "Incorrect request syntax: user or group does not exist.");
             }
             catch (EntityException e)
             {
@@ -316,7 +332,7 @@ namespace LearnWithMentor.Controllers
         /// Removes plan from current group.
         /// </summary>
         /// <param name="groupId">Group ID where user should be removed.</param>
-        /// <param name="planId">Id of the plan to remove.</param>
+        /// <param name="planToRemoveId">Id of the plan to remove.</param>
         [HttpDelete]
         [Route("api/group/removePlanFromGroup")]
         public HttpResponseMessage RemovePlanFromCurrentGroup(int groupId, int planToRemoveId)
@@ -326,12 +342,12 @@ namespace LearnWithMentor.Controllers
                 bool successfullyRemoved = groupService.RemovePlanFromGroup(groupId, planToRemoveId);
                 if (successfullyRemoved)
                 {
-                    var log = $"Succesfully removed plan with id = {planToRemoveId} to group with id = {groupId}";
+                    var log = $"Plan succesfully removed.";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
-                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully removed plan from group ({groupId}).");
+                    return Request.CreateResponse(HttpStatusCode.OK, $"Plan succesfully removed from group ({groupId}).");
                 }
-                tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on removing user from the group");
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax or plan or group does not exist.");
+                tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on removing plan from the group");
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax: plan or group does not exist.");
             }
             catch (EntityException e)
             {
@@ -357,7 +373,7 @@ namespace LearnWithMentor.Controllers
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"There are no groups in database.");
                 var groups = groupService.GetUserGroups(userId);
                 if (groups == null)
-                    return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"There are no groups for this user");
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, $"There are no groups for this user");
                 return Request.CreateResponse(HttpStatusCode.OK, groups);
             }
             catch (EntityException e)
