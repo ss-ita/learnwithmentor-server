@@ -5,6 +5,7 @@ using LearnWithMentorDTO;
 using LearnWithMentorDAL.Entities;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDAL.UnitOfWork;
+using LearnWithMentorDTO.Infrastructure;
 
 namespace LearnWithMentorBLL.Services
 {
@@ -96,8 +97,8 @@ namespace LearnWithMentorBLL.Services
                                     db.Users.ExtractFullName(task.Mod_Id),
                                     task.Create_Date,
                                     task.Mod_Date,
-                                    planTask?.Priority,
-                                    planTask?.Section_Id,
+                                    planTask.Priority,
+                                    planTask.Section_Id,
                                     planTask.Id);
             return taskDTO;
         }
@@ -136,9 +137,9 @@ namespace LearnWithMentorBLL.Services
                                     db.Users.ExtractFullName(task.Mod_Id),
                                     task.Create_Date,
                                     task.Mod_Date,
-                                    task.PlanTasks.Where(pt => pt.Task_Id == task.Id && pt.Plan_Id == planId).FirstOrDefault()?.Priority,
-                                    task.PlanTasks.Where(pt => pt.Task_Id == task.Id && pt.Plan_Id == planId).FirstOrDefault()?.Section_Id,
-                                    task.PlanTasks.Where(pt => pt.Task_Id == task.Id && pt.Plan_Id == planId).FirstOrDefault()?.Id));
+                                    task.PlanTasks.FirstOrDefault(pt => pt.Task_Id == task.Id && pt.Plan_Id == planId)?.Priority,
+                                    task.PlanTasks.FirstOrDefault(pt => pt.Task_Id == task.Id && pt.Plan_Id == planId)?.Section_Id,
+                                    task.PlanTasks.FirstOrDefault(pt => pt.Task_Id == task.Id && pt.Plan_Id == planId)?.Id));
             }
             return taskList;
         }
@@ -242,6 +243,7 @@ namespace LearnWithMentorBLL.Services
             }
             return false;
         }
+
         public List<UserTaskStateDTO> GetTaskStatesForUser(int[] planTaskIds, int userId)
         {
             List<UserTaskStateDTO> dtoList = new List<UserTaskStateDTO>();
@@ -290,6 +292,7 @@ namespace LearnWithMentorBLL.Services
             db.Save();
             return true;
         }
+
         public bool UpdateUserTaskResult(int userTaskId, string newResult)
         {
             if (newResult == null)
@@ -306,6 +309,7 @@ namespace LearnWithMentorBLL.Services
             db.Save();
             return true;
         }
+
         public bool CheckUserTaskOwner(int userTaskId, int userId)
         {
             var userTask = db.UserTasks.Get(userTaskId);

@@ -377,7 +377,7 @@ namespace LearnWithMentor.Controllers
                 bool success = userService.UpdatePassword(id, value);
                 if (success)
                 {
-                    var okMessage = $"Succesfully updated password.";
+                    var okMessage = "Succesfully updated password.";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, okMessage);
                     return Request.CreateResponse(HttpStatusCode.OK, okMessage);
                 }

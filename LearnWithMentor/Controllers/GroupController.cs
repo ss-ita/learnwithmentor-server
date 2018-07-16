@@ -91,7 +91,7 @@ namespace LearnWithMentor.Controllers
                 }
                 else
                 {
-                    return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"There no plans in this group.");
+                    return Request.CreateErrorResponse(HttpStatusCode.NoContent, "There no plans in this group.");
                 }
             }
             catch (EntityException e)
@@ -119,7 +119,7 @@ namespace LearnWithMentor.Controllers
                 }
                 else
                 {
-                    return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"There are no users in the group.");
+                    return Request.CreateErrorResponse(HttpStatusCode.NoContent, "There are no users in the group.");
                 }
             }
             catch (EntityException e)
@@ -187,7 +187,7 @@ namespace LearnWithMentor.Controllers
                 bool success = groupService.AddGroup(group);
                 if (success)
                 {
-                    var log = $"Group succesfully created.";
+                    var log = "Group succesfully created.";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
                     return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully created group: {group.Name}.");
                 }
@@ -368,7 +368,7 @@ namespace LearnWithMentor.Controllers
                 {
                     var log = $"Succesfully removed user with id = {userToRemoveId} from group with id = {groupId}";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
-                    return Request.CreateResponse(HttpStatusCode.OK, $"User succesfully removed.");
+                    return Request.CreateResponse(HttpStatusCode.OK, "User succesfully removed.");
                 }
                 tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on removing user from the group");
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, "Incorrect request syntax: user or group does not exist.");
@@ -398,7 +398,7 @@ namespace LearnWithMentor.Controllers
                 {
                     var log = $"Succesfully removed plan with id = {planToRemoveId} from group with id = {groupId}";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
-                    return Request.CreateResponse(HttpStatusCode.OK, $"Plan succesfully removed from group.");
+                    return Request.CreateResponse(HttpStatusCode.OK, "Plan succesfully removed from group.");
                 }
                 tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on removing plan from the group");
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax: plan or group does not exist.");
@@ -428,12 +428,12 @@ namespace LearnWithMentor.Controllers
                 }
                 if (groupService.GroupsCount() == 0)
                 {
-                    return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"There are no groups in database.");
+                    return Request.CreateErrorResponse(HttpStatusCode.NoContent, "There are no groups in database.");
                 }
                 var groups = groupService.GetUserGroups(userId);
                 if (groups == null)
                 {
-                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, $"There are no groups for this user");
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "There are no groups for this user");
                 }
                 return Request.CreateResponse(HttpStatusCode.OK, groups);
             }

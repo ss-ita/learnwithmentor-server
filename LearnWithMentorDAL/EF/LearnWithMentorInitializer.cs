@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity.Core.Common.CommandTrees;
 using System.Linq;
 using LearnWithMentorDAL.Entities;
 
@@ -9,11 +8,6 @@ namespace LearnWithMentorDAL.EF
 {
     public class LearnWithMentorInitializer
     {
-        public LearnWithMentorInitializer()
-        {
-
-        }
-
         static LearnWithMentorInitializer()
         {
             Initialize();
