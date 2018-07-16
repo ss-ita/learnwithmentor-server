@@ -18,5 +18,6 @@ namespace LearnWithMentorBLL.Interfaces
         ImageDTO GetImage(int id);
         bool ContainsId(int id);
         bool UpdatePassword(int userId, string password);
+        PagedListDTO<UserDTO> GetUsers(int pageSize, int pageNumber = 1);
     }
 }
