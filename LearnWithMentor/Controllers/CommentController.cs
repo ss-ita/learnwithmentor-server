@@ -41,7 +41,9 @@ namespace LearnWithMentor.Controllers
             {
                 CommentDTO comment = commentService.GetComment(id);
                 if (comment == null)
+                {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, "Comment with this Id does not exist in database.");
+                }
                 return Request.CreateResponse(HttpStatusCode.OK, comment);
             }
             catch (EntityException e)
@@ -61,7 +63,9 @@ namespace LearnWithMentor.Controllers
             {
                 var comments = commentService.GetCommentsForPlanTask(planTaskId);
                 if (comments == null)
+                {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, "There are no comments for this task in that plan");
+                }
                 return Request.CreateResponse(HttpStatusCode.OK, comments);
             }
             catch (EntityException e)

@@ -44,9 +44,13 @@ namespace LearnWithMentor.Controllers
         {
             var allGroups = groupService.GetGroupsByMentor(id);
             if (allGroups != null)
+            {
                 return Request.CreateResponse(HttpStatusCode.OK, allGroups);
+            }
             else
+            {
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"No groups for the mentor in database. (mentorId = {id})");
+            }
         }
 
         /// <summary>
@@ -60,9 +64,13 @@ namespace LearnWithMentor.Controllers
         {
             var group = groupService.GetGroupById(id);
             if (group != null)
+            {
                 return Request.CreateResponse(HttpStatusCode.OK, group);
+            }
             else
+            {
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"There isn't group with id = {id}");
+            }
         }
 
         /// <summary>
@@ -78,9 +86,13 @@ namespace LearnWithMentor.Controllers
             {
                 var group = groupService.GetPlans(id);
                 if (group != null)
+                {
                     return Request.CreateResponse(HttpStatusCode.OK, group);
+                }
                 else
+                {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"There no plans in this group.");
+                }
             }
             catch (EntityException e)
             {
@@ -102,9 +114,13 @@ namespace LearnWithMentor.Controllers
             {
                 var group = groupService.GetUsers(id);
                 if (group != null)
+                {
                     return Request.CreateResponse(HttpStatusCode.OK, group);
+                }
                 else
+                {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"There are no users in the group.");
+                }
             }
             catch (EntityException e)
             {
@@ -125,9 +141,13 @@ namespace LearnWithMentor.Controllers
         {
             var group = groupService.GetUsersNotInGroup(groupId);
             if (group != null)
+            {
                 return Request.CreateResponse(HttpStatusCode.OK, group);
+            }
             else
+            {
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"There isn't users outside of the group id = {groupId}");
+            }
         }
 
         /// <summary>
