@@ -270,7 +270,7 @@ namespace LearnWithMentor.Controllers
                 var postedFile = HttpContext.Current.Request.Files[0];
                 if (postedFile.ContentLength > 0)
                 {
-                    List<string> allowedFileExtensions = new List<string> { ".jpeg", ".jpg", ".png" };
+                    List<string> allowedFileExtensions = new List<string>(Constants.ImageRestrictions.Extensions);
 
                     var extension = postedFile.FileName.Substring(postedFile.FileName.LastIndexOf('.')).ToLower();
                     if (!allowedFileExtensions.Contains(extension))
@@ -279,7 +279,7 @@ namespace LearnWithMentor.Controllers
                         return Request.CreateResponse(HttpStatusCode.BadRequest, errorMessage);
                     }
 
-                    int maxContentLength = 1024 * 1024 * 1; //Size = 1 MB  
+                    int maxContentLength = Constants.ImageRestrictions.MaxSize;
                     if (postedFile.ContentLength > maxContentLength)
                     {
                         string errorMessage = "Please Upload a file upto 1 mb.";

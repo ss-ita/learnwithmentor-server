@@ -65,7 +65,7 @@ namespace LearnWithMentor.Controllers
         [Route("api/user/inrole/{role_id}")]
         public HttpResponseMessage GetUsersbyRole(int roleId)
         {
-            if (roleId != -1)
+            if (roleId != Constants.Roles.BlockedIndex)
             {
                 var role = roleService.Get(roleId);
                 if (role == null)
@@ -199,7 +199,7 @@ namespace LearnWithMentor.Controllers
                 var postedFile = HttpContext.Current.Request.Files[0];
                 if (postedFile.ContentLength > 0)
                 {
-                    List<string> allowedFileExtensions = new List<string> { ".jpeg", ".jpg", ".png" };
+                    List<string> allowedFileExtensions = new List<string>(Constants.ImageRestrictions.Extensions);
 
                     var extension = postedFile.FileName.Substring(postedFile.FileName.LastIndexOf('.')).ToLower();
                     if (!allowedFileExtensions.Contains(extension))
@@ -208,7 +208,7 @@ namespace LearnWithMentor.Controllers
                         return Request.CreateResponse(HttpStatusCode.BadRequest, errorMessage);
                     }
 
-                    int maxContentLength = 1024 * 1024 * 1; //Size = 1 MB  
+                    int maxContentLength = Constants.ImageRestrictions.MaxSize; 
                     if (postedFile.ContentLength > maxContentLength)
                     {
                         string errorMessage = "Please Upload a file upto 1 mb.";
@@ -342,9 +342,9 @@ namespace LearnWithMentor.Controllers
             RoleDTO criteria = roleService.GetByName(role);
             string[] lines = q.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             int? searchParametr = null;
-            if (role == "blocked")
+            if (role == Constants.Roles.Blocked)
             {
-                searchParametr = -1;
+                searchParametr = Constants.Roles.BlockedIndex;
             }
             if (lines.Length > 2)
             {
