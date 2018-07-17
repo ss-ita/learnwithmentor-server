@@ -21,6 +21,12 @@ namespace LearnWithMentorDAL.Repositories
             return (!Context.PlanTasks.Any(pt=>pt.Task_Id==id));
         }
 
+        public Task AddAndReturnElement(Task task)
+        {
+            Context.Tasks.Add(task);
+            return task;
+        }
+
         public IEnumerable<Task> Search(string[] str, int planId)
         {
             if (!Context.Plans.Any(p => p.Id == planId))

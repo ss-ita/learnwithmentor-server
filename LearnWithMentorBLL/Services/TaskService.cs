@@ -64,6 +64,23 @@ namespace LearnWithMentorBLL.Services
                                 null);   
         }
 
+        public int? AddAndGetId(TaskDTO taskDTO)
+        {
+            if (!db.Users.ContainsId(taskDTO.CreatorId))
+                return null;
+            var task = new Task
+            {
+                Name = taskDTO.Name,
+                Description = taskDTO.Description,
+                Private = taskDTO.Private,
+                Create_Id = taskDTO.CreatorId,
+                Mod_Id = taskDTO.ModifierId
+            };
+            var createdTask = db.Tasks.AddAndReturnElement(task);
+            db.Save();
+            return createdTask?.Id;
+        }
+
         public TaskDTO GetTaskForPlan(int taskId, int planId)
         {
             Task task = db.Tasks.Get(taskId);

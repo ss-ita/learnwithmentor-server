@@ -144,6 +144,10 @@ namespace LearnWithMentor.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                }
                 var result = planService.AddAndGetId(value);
                 if (result != null)
                 {

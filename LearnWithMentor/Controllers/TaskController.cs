@@ -422,6 +422,39 @@ namespace LearnWithMentor.Controllers
         }
 
         /// <summary>
+        /// Creates new task and returns id of the created task.
+        /// </summary>
+        /// <param name="value"> New plan to be created. </param>
+        [Authorize(Roles = "Mentor")]
+        [HttpPost]
+        [Route("api/task/return")]
+        public HttpResponseMessage PostAndReturnId([FromBody]TaskDTO value)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                }
+                var result = taskService.AddAndGetId(value);
+                if (result != null)
+                {
+                    var log = $"Succesfully created task {value.Name} with id = {result} by user with id = {value.CreatorId}";
+                    tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
+                    return Request.CreateResponse(HttpStatusCode.OK, result);
+                }
+            }
+            catch (EntityException e)
+            {
+                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
+            tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on creating task");
+            var message = "Incorrect request syntax.";
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
+        }
+
+        /// <summary>
         /// Updates task by Id
         /// </summary>
         /// <param name="taskId">Task Id for update.</param>
