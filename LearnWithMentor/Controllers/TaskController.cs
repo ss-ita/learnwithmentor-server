@@ -162,12 +162,13 @@ namespace LearnWithMentor.Controllers
         {
             try
             {
-                List<List<UserTaskDTO>> allUserTasks = new List<List<UserTaskDTO>>();
+                List<ListUserTasksDTO> allUserTasks = new List<ListUserTasksDTO>();
                 foreach (var userid in userId)
                 {
                     var userTasks = taskService.GetTaskStatesForUser(planTaskId, userid);
-                    if (userTasks == null) return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"Task for this user with id: {userid}  does not exist in database.");
-                    allUserTasks.Add(userTasks);
+                    if (userTasks == null)
+                        return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"Task for this user with id: {userid}  does not exist in database.");
+                    allUserTasks.Add( new ListUserTasksDTO(){ UserTasks = userTasks});
                 }
                 return Request.CreateResponse(HttpStatusCode.OK, allUserTasks);
             }

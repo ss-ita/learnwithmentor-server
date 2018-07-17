@@ -46,6 +46,7 @@
     <Compile Include="GroupDTO.cs" />
     <Compile Include="GroupUsersTaskState.cs" />
     <Compile Include="ImageDTO.cs" />
+    <Compile Include="ListUserTasksDTO.cs" />
     <Compile Include="MessageDTO.cs" />
     <Compile Include="PlanDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
