@@ -149,8 +149,7 @@ namespace LearnWithMentor.Controllers
                 {
                     var log = $"Succesfully created plan {value.Name} with id = {result} by user with id = {value.CreatorId}";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
-                    var okMessage = $"Succesfully created plan: {value.Name}";
-                    return Request.CreateResponse(HttpStatusCode.OK, result, okMessage);
+                    return Request.CreateResponse(HttpStatusCode.OK, result);
                 }
             }
             catch (EntityException e)
