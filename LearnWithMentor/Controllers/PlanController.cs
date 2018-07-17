@@ -81,7 +81,7 @@ namespace LearnWithMentor.Controllers
                 var message = "Plan does not exist in database.";
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
             }
-            return Request.CreateResponse<List<SectionDTO>>(HttpStatusCode.OK, sections);
+            return Request.CreateResponse<IEnumerable<SectionDTO>>(HttpStatusCode.OK, sections);
         }
 
         /// <summary>
