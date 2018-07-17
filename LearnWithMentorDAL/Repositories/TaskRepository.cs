@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using LearnWithMentorDAL.Entities;
+using LearnWithMentorDAL.Repositories.Interfaces;
 
 namespace LearnWithMentorDAL.Repositories
 {
@@ -12,23 +13,22 @@ namespace LearnWithMentorDAL.Repositories
 
         public Task Get(int id)
         {
-            return context.Tasks.FirstOrDefault(t => t.Id == id);
+            return Context.Tasks.FirstOrDefault(t => t.Id == id);
         }
 
         public bool IsRemovable(int id)
         {
-            return (!context.PlanTasks.Any(pt=>pt.Task_Id==id));
+            return (!Context.PlanTasks.Any(pt=>pt.Task_Id==id));
         }
 
         public IEnumerable<Task> Search(string[] str, int planId)
         {
-            if (!context.Plans.Any(p => p.Id == planId))
+            if (!Context.Plans.Any(p => p.Id == planId))
                 return null;
             List<Task> result = new List<Task>();
             foreach (var s in str)
             {
-                IQueryable<Task> found;
-                found = context.PlanTasks.Where(p => p.Plan_Id == planId)
+                IQueryable<Task> found = Context.PlanTasks.Where(p => p.Plan_Id == planId)
                                              .Select(t => t.Tasks)
                                              .Where(t => t.Name.Contains(s));
                 foreach (var f in found)
@@ -47,8 +47,7 @@ namespace LearnWithMentorDAL.Repositories
             List<Task> result = new List<Task>();
             foreach (var s in str)
             {
-                IQueryable<Task> found;
-                found = context.Tasks.Where(t => t.Name.Contains(s));
+                IQueryable<Task> found = Context.Tasks.Where(t => t.Name.Contains(s));
                 foreach (var f in found)
                 {
                     if (!result.Contains(f))
@@ -62,8 +61,8 @@ namespace LearnWithMentorDAL.Repositories
 
         public IEnumerable<Task> GetTasksNotInPlan(int planId)
         {
-            var usedTasks = context.PlanTasks.Where(pt => pt.Plan_Id == planId).Select(pt => pt.Task_Id);
-            return context.Tasks.Where(tasks => !usedTasks.Contains(tasks.Id));
+            var usedTasks = Context.PlanTasks.Where(pt => pt.Plan_Id == planId).Select(pt => pt.Task_Id);
+            return Context.Tasks.Where(tasks => !usedTasks.Contains(tasks.Id));
         }
     }
 }

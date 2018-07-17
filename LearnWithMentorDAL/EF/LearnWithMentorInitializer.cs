@@ -11,6 +11,10 @@ namespace LearnWithMentorDAL.EF
 {
     public class LearnWithMentorInitializer
     {
+        static LearnWithMentorInitializer()
+        {
+            Initialize();
+        }
         public static void Initialize()
         {
             using (var context = new LearnWithMentor_DBEntities())

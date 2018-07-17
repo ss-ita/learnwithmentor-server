@@ -8,8 +8,6 @@ namespace LearnWithMentor.Models
 {
     public class JwtManager
     {
-
-
         /// <summary>
         /// Use the below code to generate symmetric Secret Key
         ///     var hmac = new HMACSHA256();

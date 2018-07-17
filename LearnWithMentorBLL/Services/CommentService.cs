@@ -49,6 +49,7 @@ namespace LearnWithMentorBLL.Services
             db.Save();
             return true;
         }
+
         public bool AddCommentToPlanTask(int planId, int taskId, CommentDTO comment)
         {
             var planTaskId = db.PlanTasks.GetIdByTaskAndPlan(taskId, planId);
@@ -103,11 +104,7 @@ namespace LearnWithMentorBLL.Services
         {
             List<CommentDTO> commentsList = new List<CommentDTO>();
             var planTask = db.PlanTasks.Get(planTaskId);
-            if (planTask == null)
-            {
-                return null;
-            }
-            var comments = planTask.Comments;
+            var comments = planTask?.Comments;
             if (comments == null)
             {
                 return null;
@@ -136,4 +133,3 @@ namespace LearnWithMentorBLL.Services
         }
     }
 }
-

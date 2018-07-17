@@ -1,5 +1,4 @@
-﻿using System.Net.Http;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using LearnWithMentor.Filters;
 
 namespace LearnWithMentor.Controllers
