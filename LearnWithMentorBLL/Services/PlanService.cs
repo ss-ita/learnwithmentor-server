@@ -261,7 +261,7 @@ namespace LearnWithMentorBLL.Services
         }
         public int? AddAndGetId(PlanDTO dto)
         {
-            if (!ContainsId(dto.CreatorId))
+            if (!db.Users.ContainsId(dto.CreatorId))
                 return null;
             var plan = new Plan
             {
