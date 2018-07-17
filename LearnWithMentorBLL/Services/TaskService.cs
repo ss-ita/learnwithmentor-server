@@ -244,16 +244,14 @@ namespace LearnWithMentorBLL.Services
             return false;
         }
 
-        public List<UserTaskStateDTO> GetTaskStatesForUser(int[] planTaskIds, int userId)
+        public List<UserTaskDTO> GetTaskStatesForUser(int[] planTaskIds, int userId)
         {
-            List<UserTaskStateDTO> dtoList = new List<UserTaskStateDTO>();
+            List<UserTaskDTO> dtoList = new List<UserTaskDTO>();
             foreach (int planTaskId in planTaskIds)
             {
                 UserTask userTask = db.UserTasks.GetByPlanTaskForUser(planTaskId, userId);
                 if (userTask != null)
-                {
-                    dtoList.Add(new UserTaskStateDTO(planTaskId, userTask.State));
-                }
+                    dtoList.Add(new UserTaskDTO(userTask.Id, userTask.User_Id, userTask.PlanTask_Id, userTask.End_Date, userTask.Propose_End_Date, userTask.Mentor_Id, userTask.State, userTask.Result));
             }
             return dtoList;
         }

@@ -162,7 +162,7 @@ namespace LearnWithMentor.Controllers
         {
             try
             {
-                var userTasks = taskService.GetUserTasksList(userId, planTaskId);
+                var userTasks = taskService.GetTaskStatesForUser(planTaskId, userId);
                 if (userTasks != null)
                     return Request.CreateResponse(HttpStatusCode.OK, userTasks);
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, "Task for this user does not exist in database.");
