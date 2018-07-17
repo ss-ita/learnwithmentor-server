@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using LearnWithMentorDAL.Entities;
 using System.Collections.Generic;
+using LearnWithMentorDAL.Repositories.Interfaces;
 
 namespace LearnWithMentorDAL.Repositories
 {
@@ -11,57 +12,56 @@ namespace LearnWithMentorDAL.Repositories
         }
         public Group Get(int id)
         {
-            return context.Groups.FirstOrDefault(group => group.Id == id);
+            return Context.Groups.FirstOrDefault(group => group.Id == id);
         }
 
         public bool GroupNameExists(string groupName)
         {
-            return context.Groups.Any(g => g.Name.Equals(groupName));
+            return Context.Groups.Any(g => g.Name.Equals(groupName));
         }
 
         public int Count()
         {
-            return context.Groups.Count();
+            return Context.Groups.Count();
         }
 
         public IEnumerable<Group> GetGroupsByMentor(int mentorId)
         {
-            return context.Groups.Where(group => group.Mentor_Id == mentorId);
+            return Context.Groups.Where(group => group.Mentor_Id == mentorId);
         }
         public IEnumerable<Group> GetStudentGroups(int studentId)
         {
-            return context.Users.FirstOrDefault(u => u.Id == studentId).Groups;
+            return Context.Users.FirstOrDefault(u => u.Id == studentId)?.Groups;
         }
         public IEnumerable<Group> GetGroupsByPlan(int planId)
         {
-            return context.Groups.Where(g => g.Plans.Any(p => p.Id == planId));
+            return Context.Groups.Where(g => g.Plans.Any(p => p.Id == planId));
         }
 
         public bool AddPlanToGroup(int planId, int groupId)
         {
-            var planAdd = context.Plans.FirstOrDefault(plan => plan.Id == planId);
-            context.Groups.FirstOrDefault(group => group.Id == groupId).Plans.Add(planAdd);
+            var planAdd = Context.Plans.FirstOrDefault(plan => plan.Id == planId);
+            Context.Groups.FirstOrDefault(group => group.Id == groupId)?.Plans.Add(planAdd);
             return true;
         }
         public bool AddUserToGroup(int userId, int groupId)
         {
-            var userAdd = context.Users.FirstOrDefault(user => user.Id == userId);
-           
-            context.Groups.FirstOrDefault(group => group.Id == groupId).Users.Add(userAdd);
+            var userAdd = Context.Users.FirstOrDefault(user => user.Id == userId);   
+            Context.Groups.FirstOrDefault(group => group.Id == groupId)?.Users.Add(userAdd);
             return true;
         }
 
         public void RemoveUserFromGroup(int groupId, int userId)
         {
             var group = Get(groupId);
-            var userToRemove = context.Users.FirstOrDefault(user => user.Id == userId);
+            var userToRemove = Context.Users.FirstOrDefault(user => user.Id == userId);
             group.Users.Remove(userToRemove);
         }
 
         public void RemovePlanFromGroup(int groupId, int planId)
         {
             var group = Get(groupId);
-            var planToRemove = context.Plans.FirstOrDefault(plan => plan.Id == planId);
+            var planToRemove = Context.Plans.FirstOrDefault(plan => plan.Id == planId);
             group.Plans.Remove(planToRemove);
         }
     }

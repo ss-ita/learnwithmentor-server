@@ -9,6 +9,10 @@ namespace LearnWithMentorDAL.EF
 {
     public class LearnWithMentorInitializer
     {
+        static LearnWithMentorInitializer()
+        {
+            Initialize();
+        }
         public static void Initialize()
         {
             using (LearnWithMentor_DBEntities context = new LearnWithMentor_DBEntities())
@@ -142,7 +146,7 @@ namespace LearnWithMentorDAL.EF
             {
                 users[i].Role_Id = 3;
                 users[i].Image_Name = readedImages[2].Name;
-                users[i].Image = readedImages[2].ImageEncoded; ;
+                users[i].Image = readedImages[2].ImageEncoded; 
             }
             context.Users.AddRange(users);
             context.SaveChanges();

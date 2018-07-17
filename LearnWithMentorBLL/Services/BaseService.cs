@@ -1,6 +1,5 @@
 ﻿using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDAL.UnitOfWork;
-using LearnWithMentorDAL.Entities;
 
 namespace LearnWithMentorBLL.Services
 {
@@ -15,6 +14,5 @@ namespace LearnWithMentorBLL.Services
         {
             db.Dispose();
         }
-
     }
 }
