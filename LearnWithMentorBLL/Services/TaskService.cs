@@ -17,7 +17,7 @@ namespace LearnWithMentorBLL.Services
           
         public IEnumerable<TaskDTO> GetAllTasks()
         {
-            List<TaskDTO> taskDTO = new List<TaskDTO>();
+            var taskDTO = new List<TaskDTO>();
             var tasks = db.Tasks.GetAll();
             if (tasks == null)
             {
@@ -44,7 +44,7 @@ namespace LearnWithMentorBLL.Services
 
         public TaskDTO GetTaskById(int taskId)
         {
-            Task taks = db.Tasks.Get(taskId);
+            var taks = db.Tasks.Get(taskId);
             if (taks == null)
             {
                 return null;
@@ -66,7 +66,7 @@ namespace LearnWithMentorBLL.Services
 
         public TaskDTO GetTaskForPlan(int taskId, int planId)
         {
-            Task task = db.Tasks.Get(taskId);
+            var task = db.Tasks.Get(taskId);
             if (task == null)
             {
                 return null;
@@ -81,12 +81,12 @@ namespace LearnWithMentorBLL.Services
 
         public TaskDTO GetTaskForPlan(int planTaskId)
         {
-            PlanTask planTask = db.PlanTasks.Get(planTaskId);
+            var planTask = db.PlanTasks.Get(planTaskId);
             if (planTask == null)
             {
                 return null;
             }
-            Task task = planTask.Tasks;
+            var task = planTask.Tasks;
             var taskDTO = new TaskDTO(task.Id,
                                     task.Name,
                                     task.Description,
@@ -124,7 +124,7 @@ namespace LearnWithMentorBLL.Services
             {
                 return null;
             }
-            List<TaskDTO> taskList = new List<TaskDTO>();
+            var taskList = new List<TaskDTO>();
             foreach (var task in db.Tasks.Search(keys, planId))
             {
                 taskList.Add(new TaskDTO(task.Id,
@@ -146,7 +146,7 @@ namespace LearnWithMentorBLL.Services
 
         public IEnumerable<TaskDTO> Search(string[] keys)
         {
-            List<TaskDTO> taskList = new List<TaskDTO>();
+            var taskList = new List<TaskDTO>();
             foreach ( var t in db.Tasks.Search(keys))
             {
                 taskList.Add(new TaskDTO(t.Id,
@@ -168,7 +168,7 @@ namespace LearnWithMentorBLL.Services
 
         public bool CreateTask(TaskDTO taskDTO)
         {
-            Task task = new Task()
+            var task = new Task()
             {
                 Name = taskDTO.Name,
                 Description = taskDTO.Description,
@@ -192,7 +192,7 @@ namespace LearnWithMentorBLL.Services
             {
                 return false;
             }
-            UserTask userTask = new UserTask()
+            var userTask = new UserTask()
             {
                 User_Id = userTaskDTO.UserId,
                 PlanTask_Id = userTaskDTO.PlanTaskId,
@@ -210,26 +210,26 @@ namespace LearnWithMentorBLL.Services
         public bool UpdateTaskById(int taskId, TaskDTO taskDTO)
         {
             var item = db.Tasks.Get(taskId);
-            if (item != null)
+            if (item == null)
             {
-                if (!string.IsNullOrEmpty(taskDTO.Name))
-                {
-                    item.Name = taskDTO.Name;
-                }
-                if (!string.IsNullOrEmpty(taskDTO.Description))
-                {
-                    item.Description = taskDTO.Description;
-                }
-                item.Private = taskDTO.Private;
-                if (taskDTO.ModifierId != null)
-                {
-                    item.Mod_Id = taskDTO.ModifierId;
-                }
-                db.Tasks.Update(item);
-                db.Save();
-                return true;
+                return false;
             }
-            return false;
+            if (!string.IsNullOrEmpty(taskDTO.Name))
+            {
+                item.Name = taskDTO.Name;
+            }
+            if (!string.IsNullOrEmpty(taskDTO.Description))
+            {
+                item.Description = taskDTO.Description;
+            }
+            item.Private = taskDTO.Private;
+            if (taskDTO.ModifierId != null)
+            {
+                item.Mod_Id = taskDTO.ModifierId;
+            }
+            db.Tasks.Update(item);
+            db.Save();
+            return true;
         }
 
         public bool RemoveTaskById(int taskId)
@@ -246,10 +246,10 @@ namespace LearnWithMentorBLL.Services
 
         public List<UserTaskStateDTO> GetTaskStatesForUser(int[] planTaskIds, int userId)
         {
-            List<UserTaskStateDTO> dtoList = new List<UserTaskStateDTO>();
-            foreach (int planTaskId in planTaskIds)
+            var dtoList = new List<UserTaskStateDTO>();
+            foreach (var planTaskId in planTaskIds)
             {
-                UserTask userTask = db.UserTasks.GetByPlanTaskForUser(planTaskId, userId);
+                var userTask = db.UserTasks.GetByPlanTaskForUser(planTaskId, userId);
                 if (userTask != null)
                 {
                     dtoList.Add(new UserTaskStateDTO(planTaskId, userTask.State));
@@ -270,10 +270,10 @@ namespace LearnWithMentorBLL.Services
             {
                 return null;
             }
-            List<TaskDTO> tasksNotUsedInPlanList = new List<TaskDTO>();
+            var tasksNotUsedInPlanList = new List<TaskDTO>();
             foreach (var task in tasksNotUsedInPlan)
             {
-                TaskDTO taskDto = new TaskDTO
+                var taskDto = new TaskDTO
                 (
                     task.Id,
                                 task.Name,
@@ -299,7 +299,7 @@ namespace LearnWithMentorBLL.Services
         
         public UserTaskDTO GetUserTaskByUserPlanTaskId(int userId, int planTaskId)
         {
-            UserTask userTask = db.UserTasks.GetByPlanTaskForUser(planTaskId, userId);
+            var userTask = db.UserTasks.GetByPlanTaskForUser(planTaskId, userId);
             if (userTask == null)
             {
                 return null;

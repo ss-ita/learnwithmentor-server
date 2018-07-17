@@ -33,7 +33,7 @@ namespace LearnWithMentorBLL.Services
             {
                 return;
             }
-            List<PlanTask> planTasks = new List<PlanTask>();
+            var planTasks = new List<PlanTask>();
             foreach(var plan in plans)
             {
                 planTasks.AddRange(plan.PlanTasks);
@@ -93,7 +93,7 @@ namespace LearnWithMentorBLL.Services
 
         public GroupDTO GetGroupById(int id)
         {
-            Group group = db.Groups.Get(id);
+            var group = db.Groups.Get(id);
             if (group == null)
                 return null;
             return new GroupDTO(group.Id,
@@ -119,7 +119,7 @@ namespace LearnWithMentorBLL.Services
                 return null;
             if (plans == null)
                 return null;
-            List<PlanDTO> planList = new List<PlanDTO>();
+            var planList = new List<PlanDTO>();
             foreach (var plan in plans)
             {
                 planList.Add(new PlanDTO(plan.Id,
@@ -147,7 +147,7 @@ namespace LearnWithMentorBLL.Services
                 return null;
             if (users == null)
                 return null;
-            List<UserIdentityDTO> userList = new List<UserIdentityDTO>();
+            var userList = new List<UserIdentityDTO>();
             foreach (var user in users)
             {
                 userList.Add(new UserIdentityDTO(user.Email,
@@ -169,7 +169,7 @@ namespace LearnWithMentorBLL.Services
             var groups = db.Groups.GetGroupsByMentor(mentorId);
             if (groups == null)
                 return null;
-            List<GroupDTO> groupList = new List<GroupDTO>();
+            var groupList = new List<GroupDTO>();
             foreach (var group in groups)
             {
                 groupList.Add(new GroupDTO(group.Id,
@@ -194,7 +194,7 @@ namespace LearnWithMentorBLL.Services
                 groups = db.Groups.GetAll();
             if (groups == null)
                 return null;
-            List<GroupDTO> groupList = new List<GroupDTO>();
+            var groupList = new List<GroupDTO>();
             foreach (var group in groups)
             {
                 groupList.Add(new GroupDTO(group.Id,
@@ -212,8 +212,8 @@ namespace LearnWithMentorBLL.Services
             var groups = db.Groups.Get(groupId);
             if (groups == null)
                 return false;
-            bool added = false;
-            foreach (int userId in allUsersId)
+            var added = false;
+            foreach (var userId in allUsersId)
             {
                 var addUser = db.Users.Get(userId);
                 if (addUser != null)
@@ -234,8 +234,8 @@ namespace LearnWithMentorBLL.Services
             var groups = db.Groups.Get(groupId);
             if (groups == null)
                 return false;
-            bool added = false;
-            foreach (int planId in allPlansId)
+            var added = false;
+            foreach (var planId in allPlansId)
             {
                 var addPlan = db.Plans.Get(planId);
                 if (addPlan != null)
@@ -259,10 +259,10 @@ namespace LearnWithMentorBLL.Services
             var usersNotInGroup = db.Users.GetUsersNotInGroup(groupId);
             if (usersNotInGroup == null)
                 return null;
-            List<UserIdentityDTO> usersNotInGroupList = new List<UserIdentityDTO>();
+            var usersNotInGroupList = new List<UserIdentityDTO>();
             foreach (var user in usersNotInGroup)
             {
-                UserIdentityDTO rdDto = new UserIdentityDTO(user.Email,
+                var rdDto = new UserIdentityDTO(user.Email,
                     null,
                     user.Id,
                     user.FirstName,
@@ -278,7 +278,7 @@ namespace LearnWithMentorBLL.Services
         public IEnumerable<UserIdentityDTO> SearchUserNotInGroup(string[] searchCases, int groupId)
         {
             var usersNotInGroup = GetUsersNotInGroup(groupId).ToList();
-            List<UserIdentityDTO> usersNotInGroupdto = new List<UserIdentityDTO>();
+            var usersNotInGroupdto = new List<UserIdentityDTO>();
             foreach (var searchCase in searchCases)
             {
                 foreach (var user in usersNotInGroup)
@@ -301,10 +301,10 @@ namespace LearnWithMentorBLL.Services
             var plansNotUsedInGroup = db.Plans.GetPlansNotUsedInGroup(groupId);
             if (plansNotUsedInGroup == null)
                 return null;
-            List<PlanDTO> plansNotUsedInGroupList = new List<PlanDTO>();
+            var plansNotUsedInGroupList = new List<PlanDTO>();
             foreach (var plan in plansNotUsedInGroup)
             {
-                PlanDTO planDto = new PlanDTO
+                var planDto = new PlanDTO
                 (plan.Id,
                     plan.Name,
                     plan.Description,
@@ -327,7 +327,7 @@ namespace LearnWithMentorBLL.Services
         public IEnumerable<PlanDTO> SearchPlansNotUsedInGroup(string[] searchCases, int groupId)
         {
             var plansNotInGroup = GetPlansNotUsedInGroup(groupId).ToList();
-            List<PlanDTO> plansNotInGroupdto = new List<PlanDTO>();
+            var plansNotInGroupdto = new List<PlanDTO>();
             foreach (var searchCase in searchCases)
             {
                 foreach (var plan in plansNotInGroup)
@@ -345,25 +345,25 @@ namespace LearnWithMentorBLL.Services
         private void RemoveMessagesForUserTask(int userTaskId)
         {
             var messages = db.Messages.GetByUserTaskId(userTaskId).ToList();
-            if (messages.Any())
+            if (!messages.Any())
             {
-                foreach (var message in messages)
-                {
-                    db.Messages.Remove(message);
-                }
+                return;
+            }
+            foreach (var message in messages)
+            {
+                db.Messages.Remove(message);
             }
         }
 
         private bool IsSamePlanAndUserInOtherGroup(Plan plan, User user)
         {
-            int matchNumber = 0;
+            var matchNumber = 0;
             foreach (var group in db.Groups.GetAll())
             {
-                if (group.Users.Contains(user))
-                    if(group.Plans.Contains(plan))
-                    {
-                        ++matchNumber;
-                    }
+                if (group.Users.Contains(user) && group.Plans.Contains(plan))
+                {
+                    ++matchNumber;
+                }
             }
             return matchNumber > 1;
         }

@@ -93,16 +93,12 @@ namespace LearnWithMentorBLL.Services
         public IEnumerable<CommentDTO> GetCommentsForPlanTask(int taskId, int planId)
         {
             var planTaskId = db.PlanTasks.GetIdByTaskAndPlan(taskId, planId);
-            if (planTaskId == null)
-            {
-                return null;
-            }
-            return GetCommentsForPlanTask(planTaskId.Value);
+            return planTaskId == null ? null : GetCommentsForPlanTask(planTaskId.Value);
         }
 
         public IEnumerable<CommentDTO> GetCommentsForPlanTask(int planTaskId)
         {
-            List<CommentDTO> commentsList = new List<CommentDTO>();
+            var commentsList = new List<CommentDTO>();
             var planTask = db.PlanTasks.Get(planTaskId);
             var comments = planTask?.Comments;
             if (comments == null)
