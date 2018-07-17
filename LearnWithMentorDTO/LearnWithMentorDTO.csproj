@@ -60,6 +60,7 @@
     <Compile Include="UserLoginDTO.cs" />
     <Compile Include="UserTaskDTO.cs" />
     <Compile Include="Infrastructure\ValidationRules.cs" />
+    <Compile Include="UserWithImageDTO.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
