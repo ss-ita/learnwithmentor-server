@@ -5,14 +5,13 @@ using System.Net;
 using System.Net.Http;
 using LearnWithMentorDTO;
 using LearnWithMentorBLL.Interfaces;
-using LearnWithMentorBLL.Services;
 using System.Text.RegularExpressions;
 using LearnWithMentor.Filters;
 using System.Web.Http.Tracing;
-using LearnWithMentor.Log;
 using System.Data.Entity.Core;
 using System.Web;
 using System.Security.Claims;
+using LearnWithMentorDTO.Infrastructure;
 
 namespace LearnWithMentor.Controllers
 {
@@ -58,6 +57,27 @@ namespace LearnWithMentor.Controllers
         }
 
         /// <summary>
+        /// Returns a list of all tasks not used in current plan.
+        /// </summary>
+        /// <param name="planId">Id of the plan.</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/plan/{planId}/tasks/notinplan")]
+        public HttpResponseMessage GetTasksNotInCurrentPlan(int planId)
+        {
+            var task = taskService.GetTasksNotInPlan(planId);
+
+            if (task != null)
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, task);
+            }
+            else
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"There isn't tasks outside of the plan id = {planId}");
+            }
+        }
+
+        /// <summary>
         /// Returns task by Id.
         /// </summary>
         [HttpGet]
@@ -68,7 +88,9 @@ namespace LearnWithMentor.Controllers
             {
                 TaskDTO task = taskService.GetTaskById(taskId);
                 if (task == null)
+                {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, "This task does not exist in database.");
+                }
                 return Request.CreateResponse(HttpStatusCode.OK, task);
             }
             catch (EntityException e)
@@ -90,7 +112,9 @@ namespace LearnWithMentor.Controllers
             {
                 var task = taskService.GetTaskForPlan(planTaskId);
                 if (task != null)
+                {
                     return Request.CreateResponse(HttpStatusCode.OK, task);
+                }
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, "This task does not exist in database.");
             }
             catch (EntityException e)
@@ -112,13 +136,17 @@ namespace LearnWithMentor.Controllers
             try
             {
                 var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
-                var Id = int.Parse(identity.FindFirst("Id").Value);
-                var Role = identity.RoleClaimType;
-                if (!(userId == Id || Role == "Mentor"))
+                var currentId = int.Parse(identity.FindFirst("Id").Value);
+                var currentRole = identity.RoleClaimType;
+                if (!(userId == currentId || currentRole == Constants.Roles.Mentor))
+                {
                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
+                }
                 var userTask = taskService.GetUserTaskByUserPlanTaskId(userId, planTaskId);
                 if (userTask != null)
+                {
                     return Request.CreateResponse(HttpStatusCode.OK, userTask);
+                }
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, "Task for this user does not exist in database.");
             }
             catch (EntityException e)
@@ -157,13 +185,17 @@ namespace LearnWithMentor.Controllers
             try
             {
                 var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
-                var id = int.Parse(identity.FindFirst("Id").Value);
-                var role = identity.RoleClaimType;
-                if(!(taskService.CheckUserTaskOwner(userTaskId, id) || role == "Mentor"))
+                var currentId = int.Parse(identity.FindFirst("Id").Value);
+                var currentRole = identity.RoleClaimType;
+                if(!(taskService.CheckUserTaskOwner(userTaskId, currentId) || currentRole == Constants.Roles.Mentor))
+                {
                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
+                }
                 var messageList = messageService.GetMessages(userTaskId);
                 if (messageList != null)
+                {
                     return Request.CreateResponse(HttpStatusCode.OK, messageList);
+                }
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, "Messages for this user does not exist in database.");
             }
             catch (EntityException e)
@@ -185,15 +217,19 @@ namespace LearnWithMentor.Controllers
             try
             {
                 if (!ModelState.IsValid)
+                {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                }
                 newMessage.UserTaskId = userTaskId;
-                // todo: logic for sender id if needed
+                var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
+                var currentId = int.Parse(identity.FindFirst("Id").Value);
+                newMessage.SenderId = currentId;
                 bool success = messageService.SendMessage(newMessage);
                 if (success)
                 {
                     var message = $"Succesfully created message with id = {newMessage.Id} by user with id = {newMessage.SenderId}";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, message);
-                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully created message");
+                    return Request.CreateResponse(HttpStatusCode.OK, "Succesfully created message");
                 }
                 tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on message creating");
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Creation error.");
@@ -216,13 +252,15 @@ namespace LearnWithMentor.Controllers
             try
             {
                 if (!ModelState.IsValid)
+                {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                }
                 bool success = taskService.CreateUserTask(newUserTask);
                 if (success)
                 {
                     var message = $"Succesfully created task with id = {newUserTask.Id} for user with id = {newUserTask.UserId}";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, message);
-                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully created task for user.");
+                    return Request.CreateResponse(HttpStatusCode.OK, "Succesfully created task for user.");
                 }
                 tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on user task creating");
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, "There is no user or task in database");
@@ -244,13 +282,15 @@ namespace LearnWithMentor.Controllers
             try
             {
                 if (!Regex.IsMatch(newStatus, ValidationRules.USERTASK_STATE))
+                {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "New Status not valid");
+                }
                 bool success = taskService.UpdateUserTaskStatus(userTaskId, newStatus);
                 if (success)
                 {
                     var message = $"Succesfully updated user task with id = {userTaskId} on status {newStatus}";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, message);
-                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully updated task for user.");
+                    return Request.CreateResponse(HttpStatusCode.OK, "Succesfully updated task for user.");
                 }
                 tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on updating task status");
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax or usertask does not exist.");
@@ -274,13 +314,15 @@ namespace LearnWithMentor.Controllers
             {
                 string value = newMessage.Content.ReadAsStringAsync().Result;
                 if (value.Length >= ValidationRules.MAX_USERTASK_RESULT_LENGTH)
+                {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "New Result is too long");
+                }
                 bool success = taskService.UpdateUserTaskResult(userTaskId, value);
                 if (success)
                 {
                     var message = $"Succesfully updated user task with id = {userTaskId} on result {value}";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, message);
-                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully updated user task result.");
+                    return Request.CreateResponse(HttpStatusCode.OK, "Succesfully updated user task result.");
                 }
                 tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on updating user task result");
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax or usertask does not exist.");
@@ -304,7 +346,7 @@ namespace LearnWithMentor.Controllers
                 {
                     return GetAllTasks();
                 }
-                string[] lines = key.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] lines = key.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 var taskList = taskService.Search(lines);
                 return Request.CreateResponse(HttpStatusCode.OK, taskList);
             }
@@ -330,7 +372,7 @@ namespace LearnWithMentor.Controllers
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax.");
                 }
-                string[] lines = key.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] lines = key.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 var taskList = taskService.Search(lines, planId);
                 if (taskList == null)
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, "This plan does not exist.");
@@ -355,13 +397,15 @@ namespace LearnWithMentor.Controllers
             try
             {
                 if (!ModelState.IsValid)
+                {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                }
                 bool success = taskService.CreateTask(newTask);
                 if (success)
                 {
                     var message = $"Succesfully created task with id = {newTask.Id} by user with id = {newTask.CreatorId}";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, message);
-                    return Request.CreateResponse(HttpStatusCode.OK, $"Task succesfully created");
+                    return Request.CreateResponse(HttpStatusCode.OK, "Task succesfully created");
                 }
                 tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on creating task");
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Creation error.");
@@ -387,7 +431,9 @@ namespace LearnWithMentor.Controllers
             try
             {
                 if (!ModelState.IsValid)
+                {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                }
                 bool success = taskService.UpdateTaskById(taskId, task);
                 if (success)
                 {

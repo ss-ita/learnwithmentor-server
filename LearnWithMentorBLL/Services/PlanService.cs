@@ -4,8 +4,6 @@ using System.Linq;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDTO;
 using LearnWithMentorDAL.Entities;
-using System.Drawing;
-using System.IO;
 using LearnWithMentorDAL.UnitOfWork;
 
 namespace LearnWithMentorBLL.Services
@@ -36,7 +34,7 @@ namespace LearnWithMentorBLL.Services
         public List<PlanDTO> GetAll()
         {
             var allPlans = db.Plans.GetAll();
-            if (!allPlans.Any())
+            if (allPlans == null)
                 return null;
             List<PlanDTO> dtosList = new List<PlanDTO>();
             foreach (var plan in allPlans)
@@ -59,7 +57,7 @@ namespace LearnWithMentorBLL.Services
         public List<PlanDTO> GetSomeAmount(int prevAmount, int amount)
         {
             var somePlans = db.Plans.GetSomePlans(prevAmount, amount);
-            if (!somePlans.Any())
+            if (somePlans == null)
                 return null;
             List<PlanDTO> dtosList = new List<PlanDTO>();
             foreach(var plan in somePlans)
@@ -195,7 +193,7 @@ namespace LearnWithMentorBLL.Services
             int? planTaskId = db.PlanTasks.GetIdByTaskAndPlan(taskId, planId);
             var plan = db.Plans.Get(planId);
             var groups = db.Groups.GetGroupsByPlan(planId);
-            if (plan == null || groups == null || groups.Count() == 0 || planTaskId == null)
+            if (plan == null || groups == null || groups.Any() || planTaskId == null)
             {
                 return;
             }
@@ -250,7 +248,7 @@ namespace LearnWithMentorBLL.Services
         public ImageDTO GetImage(int id)
         {
             Plan toGetImage = db.Plans.Get(id);
-            if (toGetImage == null || toGetImage.Image == null || toGetImage.Image_Name == null)
+            if (toGetImage?.Image == null || toGetImage.Image_Name == null)
                 return null;
             return new ImageDTO()
             {
@@ -287,8 +285,6 @@ namespace LearnWithMentorBLL.Services
             };
             var createdPlan = db.Plans.AddAndReturnElement(plan);
             db.Save();
-            if (createdPlan == null)
-                return null;
             return createdPlan?.Id;
         }
         public List<PlanDTO> Search(string[] searchString)

@@ -1,7 +1,4 @@
-﻿using LearnWithMentorBLL.Interfaces;
-using LearnWithMentorDAL.UnitOfWork;
-
-namespace LearnWithMentorBLL.Services
+﻿namespace LearnWithMentorBLL.Services
 {
     public class DataBaseService
     {

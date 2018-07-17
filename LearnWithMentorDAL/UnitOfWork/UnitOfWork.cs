@@ -1,12 +1,13 @@
 ﻿using System;
 using LearnWithMentorDAL.Entities;
 using LearnWithMentorDAL.Repositories;
+using LearnWithMentorDAL.Repositories.Interfaces;
 
 namespace LearnWithMentorDAL.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private LearnWithMentor_DBEntities context;
+        private readonly LearnWithMentor_DBEntities context;
         private bool disposed;
         private ICommentRepository comments;
         private IGroupPlanTaskViewRepository groupPlanTaskView;
@@ -22,155 +23,37 @@ namespace LearnWithMentorDAL.UnitOfWork
         private IUserRoleViewRepository userRoleView;
         private IUserTaskRepository userTasks;
 
-        public UnitOfWork(LearnWithMentor_DBEntities _context)
+        public UnitOfWork(LearnWithMentor_DBEntities context)
         {
-            context = _context;
+            this.context = context;
             disposed = false;
         }
 
-        public ICommentRepository Comments
-        {
-            get
-            {
-                if (comments == null)
-                {
-                    comments = new CommentRepository(context);
-                }
-                return comments;
-            }
-        }
-        public IGroupPlanTaskViewRepository GroupPlanTaskView
-        {
-            get
-            {
-                if (groupPlanTaskView == null)
-                {
-                    groupPlanTaskView = new GroupPlanTaskViewRepository(context);
-                }
-                return groupPlanTaskView;
-            }
-        }
-        public IGroupRepository Groups
-        {
-            get
-            {
-                if (groups == null)
-                {
-                    groups = new GroupRepository(context);
-                }
-                return groups;
-            }
-        }
-        public IMessageRepository Messages
-        {
-            get
-            {
-                if (messages == null)
-                {
-                    messages = new MessageRepository(context);
-                }
-                return messages;
-            }
-        }
-        public IPlanRepository Plans
-        {
-            get
-            {
-                if (plans == null)
-                {
-                    plans = new PlanRepository(context);
-                }
-                return plans;
-            }
-        }
-        public IPlanSuggestionRepository PlanSuggestions
-        {
-            get
-            {
-                if (planSuggestions == null)
-                {
-                    planSuggestions = new PlanSuggestionRepository(context);
-                }
-                return planSuggestions;
-            }
-        }
-        public IPlanTaskRepository PlanTasks
-        {
-            get
-            {
-                if (planTasks == null)
-                {
-                    planTasks = new PlanTaskRepository(context);
-                }
-                return planTasks;
-            }
-        }
-        public IRoleRepository Roles
-        {
-            get
-            {
-                if (roles == null)
-                {
-                    roles = new RoleRepository(context);
-                }
-                return roles;
-            }
-        }
-        public ISectionRepository Sections
-        {
-            get
-            {
-                if (sections == null)
-                {
-                    sections = new SectionRepository(context);
-                }
-                return sections;
-            }
-        }
-        public ITaskRepository Tasks
-        {
-            get
-            {
-                if (tasks == null)
-                {
-                    tasks = new TaskRepository(context);
-                }
-                return tasks;
-            }
-        }
-        public IUserRepository Users
-        {
-            get
-            {
-                if (users == null)
-                {
-                    users = new UserRepository(context);
-                }
-                return users;
-            }
-        }
-        public IUserRoleViewRepository UserRoleView
-        {
-            get
-            {
-                if (userRoleView == null)
-                {
-                    userRoleView = new UserRoleViewRepository(context);
-                }
-                return userRoleView;
-            }
-        }
-        public IUserTaskRepository UserTasks
-        {
-            get
-            {
-                if (userTasks == null)
-                {
-                    userTasks = new UserTaskRepository(context);
-                }
-                return userTasks;
-            }
-        }
+        public ICommentRepository Comments => comments ?? (comments = new CommentRepository(context));
+
+        public IGroupPlanTaskViewRepository GroupPlanTaskView => groupPlanTaskView ?? (groupPlanTaskView = new GroupPlanTaskViewRepository(context));
+
+        public IGroupRepository Groups => groups ?? (groups = new GroupRepository(context));
+
+        public IMessageRepository Messages => messages ?? (messages = new MessageRepository(context));
+
+        public IPlanRepository Plans => plans ?? (plans = new PlanRepository(context));
+
+        public IPlanSuggestionRepository PlanSuggestions => planSuggestions ?? (planSuggestions = new PlanSuggestionRepository(context));
+
+        public IPlanTaskRepository PlanTasks => planTasks ?? (planTasks = new PlanTaskRepository(context));
+
+        public IRoleRepository Roles => roles ?? (roles = new RoleRepository(context));
+
+        public ISectionRepository Sections => sections ?? (sections = new SectionRepository(context));
+
+        public ITaskRepository Tasks => tasks ?? (tasks = new TaskRepository(context));
+
+        public IUserRepository Users => users ?? (users = new UserRepository(context));
+
+        public IUserRoleViewRepository UserRoleView => userRoleView ?? (userRoleView = new UserRoleViewRepository(context));
+
+        public IUserTaskRepository UserTasks => userTasks ?? (userTasks = new UserTaskRepository(context));
 
         public void Save()
         {
@@ -179,13 +62,13 @@ namespace LearnWithMentorDAL.UnitOfWork
 
         public virtual void Dispose(bool disposing)
         {
-            if (!this.disposed)
+            if (!disposed)
             {
                 if (disposing)
                 {
                     context.Dispose();
                 }
-                this.disposed = true;
+                disposed = true;
             }
         }
 

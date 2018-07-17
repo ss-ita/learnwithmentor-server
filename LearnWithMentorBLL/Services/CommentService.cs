@@ -16,7 +16,9 @@ namespace LearnWithMentorBLL.Services
         {
             var comment = db.Comments.Get(commentId);
             if (comment == null)
+            {
                 return null;
+            }
             var commentDTO = new CommentDTO(comment.Id,
                                    comment.Text,
                                    comment.Create_Id,
@@ -30,9 +32,13 @@ namespace LearnWithMentorBLL.Services
         {
             var plantask = db.PlanTasks.Get(planTaskId);
             if (plantask == null)
+            {
                 return false;
+            }
             if (db.Users.Get(comment.CreatorId) == null)
+            {
                 return false;
+            }
             var newComment = new Comment()
             {
                 Text = comment.Text,
@@ -43,21 +49,28 @@ namespace LearnWithMentorBLL.Services
             db.Save();
             return true;
         }
+
         public bool AddCommentToPlanTask(int planId, int taskId, CommentDTO comment)
         {
             var planTaskId = db.PlanTasks.GetIdByTaskAndPlan(taskId, planId);
             if (planTaskId == null)
+            {
                 return false;
+            }
             return AddCommentToPlanTask(planTaskId.Value, comment);
         }
 
         public bool UpdateCommentIdText(int commentId, string text)
         {
             if (text == null || text.Equals(string.Empty))
+            {
                 return false;
+            }
             var comment = db.Comments.Get(commentId);
             if (comment == null)
+            {
                 return false;
+            }
             comment.Text = text;
             db.Comments.Update(comment);
             db.Save();
@@ -67,9 +80,13 @@ namespace LearnWithMentorBLL.Services
         public bool UpdateComment(int commentId, CommentDTO commentDTO)
         {
             if (commentDTO == null)
+            {
                 return false;
+            }
             if (!db.Comments.ContainsId(commentId))
+            {
                 return false;
+            }
             return UpdateCommentIdText(commentId, commentDTO.Text);
         }
 
@@ -77,7 +94,9 @@ namespace LearnWithMentorBLL.Services
         {
             var planTaskId = db.PlanTasks.GetIdByTaskAndPlan(taskId, planId);
             if (planTaskId == null)
+            {
                 return null;
+            }
             return GetCommentsForPlanTask(planTaskId.Value);
         }
 
@@ -85,11 +104,11 @@ namespace LearnWithMentorBLL.Services
         {
             List<CommentDTO> commentsList = new List<CommentDTO>();
             var planTask = db.PlanTasks.Get(planTaskId);
-            if (planTask == null)
-                return null;
-            var comments = planTask.Comments;
+            var comments = planTask?.Comments;
             if (comments == null)
+            {
                 return null;
+            }
             foreach (var c in comments)
             {
                 commentsList.Add(new CommentDTO(c.Id,
@@ -105,11 +124,12 @@ namespace LearnWithMentorBLL.Services
         public bool RemoveById(int commentId)
         {
             if (!db.Comments.ContainsId(commentId))
+            {
                 return false;
+            }
             db.Comments.RemoveById(commentId);
             db.Save();
             return true;
         }
     }
 }
-

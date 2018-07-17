@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using LearnWithMentorDAL.Entities;
 
-namespace LearnWithMentorDAL.Repositories
+namespace LearnWithMentorDAL.Repositories.Interfaces
 {
     public interface ITaskRepository: IRepository<Task>
     {
@@ -9,5 +9,6 @@ namespace LearnWithMentorDAL.Repositories
         bool IsRemovable(int id);
         IEnumerable<Task> Search(string[] str, int planId);
         IEnumerable<Task> Search(string[] str);
+        IEnumerable<Task> GetTasksNotInPlan(int planId);
     }
 }

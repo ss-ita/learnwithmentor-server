@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using LearnWithMentorDTO.Infrastructure;
 
 namespace LearnWithMentorDTO
 {
@@ -40,7 +41,7 @@ namespace LearnWithMentorDTO
                 string description,
                 bool privateness,
                 int createId,
-                string creatorName,
+                string creatorName,               
                 int? modId,
                 string modifierName,
                 DateTime? createDate,
