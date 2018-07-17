@@ -156,6 +156,11 @@ namespace LearnWithMentor.Controllers
             }
         }
 
+        /// <summary>
+        /// Returns all UserTasks for array of user`s ids for specific plan tasks .
+        /// </summary>
+        /// <param name="planTaskId">array of the planTask`s ids.</param>
+        /// <param name="userId">array of the user`s ids.</param>
         [HttpGet]
         [Route("api/task/usertasks")]
         public HttpResponseMessage GetUsersTasks([FromUri]int[] userId, [FromUri]int[] planTaskId)

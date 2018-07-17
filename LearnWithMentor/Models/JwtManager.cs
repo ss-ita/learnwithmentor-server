@@ -8,17 +8,10 @@ namespace LearnWithMentor.Models
 {
     public class JwtManager
     {
-        /// <summary>
-        /// Use the below code to generate symmetric Secret Key
-        ///     var hmac = new HMACSHA256();
-        ///     var key = Convert.ToBase64String(hmac.Key);
-        /// </summary>
         private const string Secret = "db3OIsj+BXE9NZDy0t8W3TcNekrF+2d/1sFnWG4HnV8TZY30iTOdtVWJG8abWvB1GlOgJuQZdcF2Luqm/hccMw==";
 
         public static string GenerateToken(UserIdentityDTO user, int expireDays = 1)
         {
-
-
             var symmetricKey = Convert.FromBase64String(Secret);
             var tokenHandler = new JwtSecurityTokenHandler();
 
@@ -29,7 +22,7 @@ namespace LearnWithMentor.Models
                         {
                             new Claim("Id",user.Id.ToString()  ),
                             new Claim(ClaimTypes.Email, user.Email),
-                            new Claim(ClaimTypes.Name, user.FirstName +" "+user.LastName ),
+                            new Claim(ClaimTypes.Name, user.FirstName + " " + user.LastName ),
                             new Claim(ClaimTypes.Role, user.Role)
                         }),
 
@@ -78,7 +71,6 @@ namespace LearnWithMentor.Models
 
                 return principal;
             }
-
             catch (Exception )
             {
                 return null;
