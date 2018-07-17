@@ -1,31 +1,32 @@
 ﻿using System.Collections.Generic;
 using LearnWithMentorDAL.Entities;
 using System.Data.Entity;
+using LearnWithMentorDAL.Repositories.Interfaces;
 
 namespace LearnWithMentorDAL.Repositories
 {
     public class BaseRepository<T>: IRepository<T> where T : class
     {
-        protected readonly LearnWithMentor_DBEntities context;
-        public BaseRepository(LearnWithMentor_DBEntities _context)
+        protected readonly LearnWithMentor_DBEntities Context;
+        public BaseRepository(LearnWithMentor_DBEntities context)
         {
-            context = _context;
+            Context = context;
         }
         public IEnumerable<T> GetAll()
         {
-            return context.Set<T>();
+            return Context.Set<T>();
         }
         public void Add(T item)
         {
-            context.Set<T>().Add(item);
+            Context.Set<T>().Add(item);
         }
         public void Update(T item)
         {
-            context.Entry(item).State = EntityState.Modified;
+            Context.Entry(item).State = EntityState.Modified;
         }
         public void Remove(T item)
         {
-            context.Set<T>().Remove(item);
+            Context.Set<T>().Remove(item);
         }
     }
 }

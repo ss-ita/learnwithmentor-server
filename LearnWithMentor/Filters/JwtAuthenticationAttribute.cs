@@ -62,7 +62,7 @@ namespace LearnWithMentor.Filters
             email = useremailClaim?.Value;
             var userroleClaim = identity.FindFirst(ClaimTypes.Role);
             userrole = userroleClaim?.Value;
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(userroleClaim.Value))
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(userroleClaim?.Value))
                 return false;
 
             //todo More validate to check whether username exists in system

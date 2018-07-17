@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using LearnWithMentorDAL.Entities;
+using LearnWithMentorDAL.Repositories.Interfaces;
 
 namespace LearnWithMentorDAL.Repositories
 {
@@ -9,8 +10,7 @@ namespace LearnWithMentorDAL.Repositories
 
         public Section Get(int id)
         {
-            return context.Sections.FirstOrDefault(t => t.Id == id);
+            return Context.Sections.FirstOrDefault(t => t.Id == id);
         }
-
     }
 }

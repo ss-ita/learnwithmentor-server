@@ -14,10 +14,10 @@ namespace LearnWithMentorDTO
 
         public GroupDTO(int id, string name, int? mentorId, string mentorName)
         {
-            this.Id = id;
-            this.Name = name;
-            this.MentorId = mentorId;
-            this.MentorName = mentorName;
+            Id = id;
+            Name = name;
+            MentorId = mentorId;
+            MentorName = mentorName;
         }
 
     }

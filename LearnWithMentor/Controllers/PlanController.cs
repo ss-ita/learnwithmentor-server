@@ -6,13 +6,10 @@ using System.Web.Http;
 using LearnWithMentor.Filters;
 using LearnWithMentorDTO;
 using LearnWithMentorBLL.Interfaces;
-using LearnWithMentorBLL.Services;
 using System.Web.Http.Tracing;
-using LearnWithMentor.Log;
 using System.Data.Entity.Core;
 using System.Web;
 using System.IO;
-using System.Drawing;
 
 namespace LearnWithMentor.Controllers
 {
@@ -67,7 +64,7 @@ namespace LearnWithMentor.Controllers
                 var message = "Plan does not exist in database.";
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
             }
-            return Request.CreateResponse<PlanDTO>(HttpStatusCode.OK, plan);
+            return Request.CreateResponse(HttpStatusCode.OK, plan);
         }
 
         /// <summary>
@@ -92,12 +89,12 @@ namespace LearnWithMentor.Controllers
         /// <summary>
         /// Gets all tasks assigned to plan.
         /// </summary>
-        /// <param name="plan_id"> Id of plan. </param>
+        /// <param name="planId"> Id of plan. </param>
         [HttpGet]
-        [Route("api/plan/{plan_id}/tasks")]
-        public HttpResponseMessage GetAllTasks(int plan_id)
+        [Route("api/plan/{planId}/tasks")]
+        public HttpResponseMessage GetAllTasks(int planId)
         {
-            List<TaskDTO> dtosList = planService.GetAllTasks(plan_id);
+            List<TaskDTO> dtosList = planService.GetAllTasks(planId);
             if (dtosList == null || dtosList.Count == 0)
             {
                 var message = "Plan does not contain any task.";
@@ -153,7 +150,7 @@ namespace LearnWithMentor.Controllers
                     var log = $"Succesfully created plan {value.Name} with id = {result} by user with id = {value.CreatorId}";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
                     var okMessage = $"Succesfully created plan: {value.Name}";
-                    return Request.CreateResponse(HttpStatusCode.OK, result);
+                    return Request.CreateResponse(HttpStatusCode.OK, result, okMessage);
                 }
             }
             catch (EntityException e)
@@ -271,9 +268,9 @@ namespace LearnWithMentor.Controllers
             try
             {
                 var postedFile = HttpContext.Current.Request.Files[0];
-                if (postedFile != null && postedFile.ContentLength > 0)
+                if (postedFile.ContentLength > 0)
                 {
-                    List<string> allowedFileExtensions = new List<string> { ".jpeg", ".jpg", ".png" };
+                    List<string> allowedFileExtensions = new List<string>(Constants.ImageRestrictions.Extensions);
 
                     var extension = postedFile.FileName.Substring(postedFile.FileName.LastIndexOf('.')).ToLower();
                     if (!allowedFileExtensions.Contains(extension))
@@ -282,14 +279,14 @@ namespace LearnWithMentor.Controllers
                         return Request.CreateResponse(HttpStatusCode.BadRequest, errorMessage);
                     }
 
-                    int maxContentLength = 1024 * 1024 * 1; //Size = 1 MB  
+                    int maxContentLength = Constants.ImageRestrictions.MaxSize;
                     if (postedFile.ContentLength > maxContentLength)
                     {
                         string errorMessage = "Please Upload a file upto 1 mb.";
                         return Request.CreateResponse(HttpStatusCode.BadRequest, errorMessage);
                     }
 
-                    byte[] imageData = null;
+                    byte[] imageData;
                     using (var binaryReader = new BinaryReader(postedFile.InputStream))
                     {
                         imageData = binaryReader.ReadBytes(postedFile.ContentLength);
@@ -350,7 +347,7 @@ namespace LearnWithMentor.Controllers
             {
                 return Get();
             }
-            string[] lines = q.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] lines = q.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             var dto = planService.Search(lines);
             if (dto == null || dto.Count == 0)
             {

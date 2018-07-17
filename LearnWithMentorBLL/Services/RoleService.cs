@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDTO;
-using LearnWithMentorDAL.Entities;
 using LearnWithMentorDAL.UnitOfWork;
 
 namespace LearnWithMentorBLL.Services
@@ -21,7 +19,7 @@ namespace LearnWithMentorBLL.Services
         public List<RoleDTO> GetAllRoles()
         {
             var roles = db.Roles.GetAll();
-            if (!roles.Any())
+            if (roles == null)
                 return null;
             List<RoleDTO> dtos = new List<RoleDTO>();
             foreach (var role in roles)
@@ -32,8 +30,7 @@ namespace LearnWithMentorBLL.Services
         }
         public RoleDTO GetByName(string name)
         {
-            Role role;
-            if (!db.Roles.TryGetByName(name, out role))
+            if (!db.Roles.TryGetByName(name, out var role))
                 return null;
             return new RoleDTO(role.Id, role.Name);
         }

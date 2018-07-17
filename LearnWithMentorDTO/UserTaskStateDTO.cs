@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace LearnWithMentorDTO
+﻿namespace LearnWithMentorDTO
 {
     public class UserTaskStateDTO
     {

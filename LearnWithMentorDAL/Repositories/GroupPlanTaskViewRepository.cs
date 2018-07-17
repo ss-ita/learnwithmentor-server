@@ -1,4 +1,5 @@
 ﻿using LearnWithMentorDAL.Entities;
+using LearnWithMentorDAL.Repositories.Interfaces;
 
 namespace LearnWithMentorDAL.Repositories
 {
