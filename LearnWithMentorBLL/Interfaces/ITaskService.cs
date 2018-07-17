@@ -21,6 +21,8 @@ namespace LearnWithMentorBLL.Interfaces
         IEnumerable<TaskDTO> Search(string[] str, int planId);
         IEnumerable<TaskDTO> Search(string[] str);
         StatisticsDTO GetUserStatistics(int userId);
+        PagedListDTO<TaskDTO> GetTasks(int pageSize, int pageNumber = 1);
+
         bool CheckUserTaskOwner(int userTaskId, int userId);
     }
 }

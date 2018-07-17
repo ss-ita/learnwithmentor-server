@@ -196,5 +196,24 @@ namespace LearnWithMentorBLL.Services
             }
             return dtos;
         }
+
+        public PagedListDTO<UserDTO> GetUsers(int pageSize, int pageNumber = 1)
+        {
+            IQueryable<User> query = db.Users.GetAll().AsQueryable();
+            List<UserDTO> users = new List<UserDTO>();
+            foreach (var user in query)
+            {
+                users.Add(UserToUserDTO(user));
+            }
+            return PagedList<UserDTO>.GetDTO(users, pageNumber, pageSize);
+        }
+        private UserDTO UserToUserDTO(User user)
+        {
+            return new UserDTO(user.Id,
+                                     user.FirstName,
+                                     user.LastName,
+                                     user.Roles.Name,
+                                     user.Blocked);
+        }
     }
 }

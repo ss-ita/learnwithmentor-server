@@ -418,5 +418,27 @@ namespace LearnWithMentor.Controllers
             roleService.Dispose();
             base.Dispose(disposing);
         }
+
+        [JwtAuthentication]
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        [Route("api/user/pageSize/{pageSize}/pageNumber/{pageNumber}")]
+        public HttpResponseMessage GetUsers(int pageSize, int pageNumber)
+        {
+            try
+            {
+                var users = userService.GetUsers(pageSize, pageNumber);
+                if (users != null)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, users);
+                }
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, "There are no users in database.");
+            }
+            catch (EntityException e)
+            {
+                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
+        }
     }
 }
