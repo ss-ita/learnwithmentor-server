@@ -16,8 +16,8 @@ using LearnWithMentorDTO.Infrastructure;
 namespace LearnWithMentor.Controllers
 {
     /// <summary> Controller for working with tasks </summary>
-    //[Authorize]
-    //[JwtAuthentication]
+    [Authorize]
+    [JwtAuthentication]
     public class TaskController : ApiController
     {
         /// <summary> Services for work with different DB parts </summary>
