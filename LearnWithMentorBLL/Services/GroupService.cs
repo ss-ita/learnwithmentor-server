@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDAL.Entities;
 using LearnWithMentorDAL.UnitOfWork;
@@ -41,7 +42,10 @@ namespace LearnWithMentorBLL.Services
             {
                 if(db.UserTasks.GetByPlanTaskForUser(planTask.Id, userId) == null)
                 {
-                    db.UserTasks.Add(CreateDefaultUserTask(userId, planTask.Id, group.Mentor_Id.Value));
+                    if (group.Mentor_Id != null)
+                    {
+                        db.UserTasks.Add(CreateDefaultUserTask(userId, planTask.Id, group.Mentor_Id.Value));
+                    }
                 }
             }
         }
@@ -62,7 +66,10 @@ namespace LearnWithMentorBLL.Services
                 {
                     if (db.UserTasks.GetByPlanTaskForUser(planTask.Id, user.Id) == null)
                     {
-                        db.UserTasks.Add(CreateDefaultUserTask(user.Id, planTask.Id, group.Mentor_Id.Value));
+                        if (group.Mentor_Id != null)
+                        {
+                            db.UserTasks.Add(CreateDefaultUserTask(user.Id, planTask.Id, group.Mentor_Id.Value));
+                        }
                     }
                 }
             }
@@ -270,7 +277,7 @@ namespace LearnWithMentorBLL.Services
 
         public IEnumerable<UserIdentityDTO> SearchUserNotInGroup(string[] searchCases, int groupId)
         {
-            var usersNotInGroup = GetUsersNotInGroup(groupId);
+            var usersNotInGroup = GetUsersNotInGroup(groupId).ToList();
             List<UserIdentityDTO> usersNotInGroupdto = new List<UserIdentityDTO>();
             foreach (var searchCase in searchCases)
             {
@@ -319,7 +326,7 @@ namespace LearnWithMentorBLL.Services
 
         public IEnumerable<PlanDTO> SearchPlansNotUsedInGroup(string[] searchCases, int groupId)
         {
-            var plansNotInGroup = GetPlansNotUsedInGroup(groupId);
+            var plansNotInGroup = GetPlansNotUsedInGroup(groupId).ToList();
             List<PlanDTO> plansNotInGroupdto = new List<PlanDTO>();
             foreach (var searchCase in searchCases)
             {
@@ -335,6 +342,63 @@ namespace LearnWithMentorBLL.Services
             return plansNotInGroupdto;
         }
 
+        private void RemoveMessagesForUserTask(int userTaskId)
+        {
+            var messages = db.Messages.GetByUserTaskId(userTaskId).ToList();
+            if (messages.Any())
+            {
+                foreach (var message in messages)
+                {
+                    db.Messages.Remove(message);
+                }
+            }
+        }
+
+        private bool IsSamePlanAndUserInOtherGroup(Plan plan, User user)
+        {
+            int matchNumber = 0;
+            foreach (var group in db.Groups.GetAll())
+            {
+                if (group.Users.Contains(user))
+                    if(group.Plans.Contains(plan))
+                    {
+                        ++matchNumber;
+                    }
+            }
+            return matchNumber > 1;
+        }
+
+        private void DeleteUserTasksOnRemovingUser(int groupId, int userId)
+        {
+            var group = db.Groups.Get(groupId);
+            var user = db.Users.Get(userId);
+            if (group?.Plans == null || user == null)
+            {
+                return;
+            }
+            foreach (var plan in group.Plans)
+            {
+                if (plan?.PlanTasks == null)
+                {
+                    continue;
+                }
+                if (IsSamePlanAndUserInOtherGroup(plan, user))
+                {
+                    continue;
+                }
+                foreach (var planTask in plan.PlanTasks)
+                {
+                    var userTask = db.UserTasks.GetByPlanTaskForUser(planTask.Id, user.Id);
+                    if (userTask == null)
+                    {
+                        continue;
+                    }
+                    RemoveMessagesForUserTask(userTask.Id);
+                    db.UserTasks.Remove(userTask);
+                }
+            }
+        }
+
         public bool RemoveUserFromGroup(int groupId, int userIdToRemove)
         {
             var group = db.Groups.Get(groupId);
@@ -343,9 +407,37 @@ namespace LearnWithMentorBLL.Services
                 return false;
             if (userToRemove == null)
                 return false;
+            DeleteUserTasksOnRemovingUser(groupId, userIdToRemove);
             group.Users.Remove(userToRemove);
             db.Save();
             return true;
+        }
+
+        private void DeleteUserTasksOnRemovingPlan(int groupId, int planId)
+        {
+            var group = db.Groups.Get(groupId);
+            var plan = db.Plans.Get(planId);
+            if (group?.Users == null || plan?.PlanTasks == null)
+            {
+                return;
+            }
+            foreach (var user in group.Users)
+            {
+                if (IsSamePlanAndUserInOtherGroup(plan, user))
+                {
+                    continue;
+                }
+                foreach (var planTask in plan.PlanTasks)
+                {
+                    var userTask = db.UserTasks.GetByPlanTaskForUser(planTask.Id, user.Id);
+                    if (userTask == null)
+                    {
+                        continue;
+                    }
+                    RemoveMessagesForUserTask(userTask.Id);
+                    db.UserTasks.Remove(userTask);
+                }
+            }
         }
 
         public bool RemovePlanFromGroup(int groupId, int planIdToRemove)
@@ -356,6 +448,7 @@ namespace LearnWithMentorBLL.Services
                 return false;
             if (planToRemove == null)
                 return false;
+            DeleteUserTasksOnRemovingPlan(groupId, planIdToRemove);
             group.Plans.Remove(planToRemove);
             db.Save();
             return true;
