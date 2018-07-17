@@ -158,14 +158,18 @@ namespace LearnWithMentor.Controllers
 
         [HttpGet]
         [Route("api/task/usertasks")]
-        public HttpResponseMessage GetUserTasks(int userId, [FromUri]int[] planTaskId)
+        public HttpResponseMessage GetUsersTasks([FromUri]int[] userId, [FromUri]int[] planTaskId)
         {
             try
             {
-                var userTasks = taskService.GetTaskStatesForUser(planTaskId, userId);
-                if (userTasks != null)
-                    return Request.CreateResponse(HttpStatusCode.OK, userTasks);
-                return Request.CreateErrorResponse(HttpStatusCode.NoContent, "Task for this user does not exist in database.");
+                List<List<UserTaskDTO>> allUserTasks = new List<List<UserTaskDTO>>();
+                foreach (var userid in userId)
+                {
+                    var userTasks = taskService.GetTaskStatesForUser(planTaskId, userid);
+                    if (userTasks == null) return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"Task for this user with id: {userid}  does not exist in database.");
+                    allUserTasks.Add(userTasks);
+                }
+                return Request.CreateResponse(HttpStatusCode.OK, allUserTasks);
             }
             catch (EntityException e)
             {

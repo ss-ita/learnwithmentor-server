@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Net;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDAL.Entities;
 using LearnWithMentorDAL.UnitOfWork;
@@ -151,6 +152,35 @@ namespace LearnWithMentorBLL.Services
                                      user.Roles.Name,
                                      user.Blocked
                                     ));
+            }
+            return userList;
+
+        }
+
+        public IEnumerable<UserWithImageDTO> GetUsersWithImage(int groupId)
+        {
+            var group = db.Groups.GetGroupsByMentor(groupId);
+            var users = db.Users.GetUsersByGroup(groupId);
+            if (group == null)
+                return null;
+            if (users == null)
+                return null;
+            List<UserWithImageDTO> userList = new List<UserWithImageDTO>();
+            foreach (var user in users)
+            {
+                var userToGetImage = db.Users.Get(user.Id);
+                userList.Add(new UserWithImageDTO(user.Email,
+                    user.Id,
+                    user.FirstName,
+                    user.LastName,
+                    user.Roles.Name,
+                    user.Blocked,
+                    new ImageDTO()
+                    {
+                        Name = userToGetImage.Image_Name,
+                        Base64Data = userToGetImage.Image
+                    }
+                ));
             }
             return userList;
 
