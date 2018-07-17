@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Drawing;
+using System.Net.Mime;
 using LearnWithMentorDAL.Entities;
 
 
@@ -11,7 +13,7 @@ namespace LearnWithMentorDAL.EF
     {
         public static void Initialize()
         {
-            using (LearnWithMentor_DBEntities context = new LearnWithMentor_DBEntities())
+            using (var context = new LearnWithMentor_DBEntities())
             {
                 context.Database.ExecuteSqlCommand("delete PlanSuggestion;");
                 context.Database.ExecuteSqlCommand("delete Messages;");
@@ -42,87 +44,82 @@ namespace LearnWithMentorDAL.EF
         public static void InitializeRoles(LearnWithMentor_DBEntities context)
         {
             context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('Roles', RESEED, 0)");
-            var roles = new List<Role>();
-            roles.Add(new Role() { Id = 1, Name = "Mentor" });
-            roles.Add(new Role() { Id = 2, Name = "Student" });
-            roles.Add(new Role() { Id = 3, Name = "Admin" });
+            var roles = new List<Role>
+            {
+                new Role() {Id = 1, Name = "Mentor"},
+                new Role() {Id = 2, Name = "Student"},
+                new Role() {Id = 3, Name = "Admin"}
+            };
             context.Roles.AddRange(roles);
             context.SaveChanges();
         }
         private static void InitializeUsers(LearnWithMentor_DBEntities context)
         {
             context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('Users', RESEED, 0)");
-            var users = new List<User>();
-            #region List of Mentors
-            users.Add(new User() { FirstName = "Vyacheslav", LastName = "Koldovsky", Email = "koldovsky@gmail.com" });//1
-            users.Add(new User() { FirstName = "Khrystyna ", LastName = "Romaniv", Email = "romaniv@gmail.com" });//2
-            users.Add(new User() { FirstName = "Orysia", LastName = "Khoroshchak", Email = "khoroshchak@gmail.com" });//3
-            users.Add(new User() { FirstName = "Lesya", LastName = "Klakovych", Email = "klakovych@gmail.com" });//4
-            users.Add(new User() { FirstName = "Viktoria", LastName = "Ryazhska", Email = "ryazhska@gmail.com" });//5
-            users.Add(new User() { FirstName = "Liubomyr", LastName = "Halamaha", Email = "halamaha@gmail.com" });//6
-            users.Add(new User() { FirstName = "Igor", LastName = "Kohut", Email = "kohut@gmail.com" });//7
-            users.Add(new User() { FirstName = "Andriy", LastName = "Korkuna", Email = "korkuna@gmail.com" });//8
-            users.Add(new User() { FirstName = "Yaroslav", LastName = "Harasym", Email = "harasym@gmail.com" });//9
-            users.Add(new User() { FirstName = "Mykhaylo", LastName = "Plesna", Email = "plesna@gmail.com" });//10
-            users.Add(new User() { FirstName = "Maryana", LastName = "Lopatynska", Email = "lopatynska@gmail.com" });//11
-            #endregion
-            #region List of Students
-            users.Add(new User() { FirstName = "Roman", LastName = "Maksymyshyn", Email = "maksymyshyn@gmail.com" });//12
-            users.Add(new User() { FirstName = "Yurii-Stefan", LastName = "Zhydetskyi", Email = "zhydetskyi@gmail.com" });//13
-            users.Add(new User() { FirstName = "Oleksandr", LastName = "Isakov", Email = "isakov@gmail.com" });//14
-            users.Add(new User() { FirstName = "Roman", LastName = "Parobii", Email = "parobii@gmail.com" });//15
-            users.Add(new User() { FirstName = "Andrii", LastName = "Lysyi", Email = "lysyi@gmail.com" });//16
-            users.Add(new User() { FirstName = "Andrii", LastName = "Panchyshyn", Email = "panchyshyn@gmail.com" });//17
-            users.Add(new User() { FirstName = "Yulia", LastName = "Pavlyk", Email = "pavlyk@gmail.com" });//18________
-            users.Add(new User() { FirstName = "Karim", LastName = "Benkhenni", Email = "benkhenni@gmail.com" });//19
-            users.Add(new User() { FirstName = "Pedro", LastName = "Alvares", Email = "alvares@gmail.com" });//20
-            users.Add(new User() { FirstName = "Dmytro", LastName = "Chalyi", Email = "chalyi@gmail.com" });//21
-            users.Add(new User() { FirstName = "Adriana", LastName = "Prudyvus", Email = "prudyvus@gmail.com" });//21
-            users.Add(new User() { FirstName = "Yaromyr", LastName = "Oryshchyn", Email = "oryshchyn@gmail.com" });//22
-            users.Add(new User() { FirstName = "Andrii", LastName = "Danyliuk", Email = "danyliuk@gmail.com" });//23
-            users.Add(new User() { FirstName = "Maksym", LastName = "Prytyka", Email = "prytyka@gmail.com" });//24_____
-            users.Add(new User() { FirstName = "Mykhailo", LastName = "Kyzyma", Email = "kyzyma@gmail.com" });//25
-            users.Add(new User() { FirstName = "Dmytro", LastName = "Khomyk", Email = "khomyk@gmail.com" });//26
-            users.Add(new User() { FirstName = "Pavlo", LastName = "Kruk", Email = "kruk@gmail.com" });//27
-            users.Add(new User() { FirstName = "Kateryna", LastName = "Obrizan", Email = "obrizan@gmail.com" });//28
-            users.Add(new User() { FirstName = "Viktor", LastName = "Levak", Email = "levak@gmail.com" });//29
-            users.Add(new User() { FirstName = "Oleksandr", LastName = "Mykhalchuk", Email = "mykhalchuk@gmail.com" });//30
-            users.Add(new User() { FirstName = "El", LastName = "Admino", Email = "admino@gmail.com" });//31
-            users.Add(new User() { FirstName = "La", LastName = "Admina", Email = "admina@gmail.com" });//32
-            #endregion
+            var users = new List<User>
+            {
+                new User() {FirstName = "Vyacheslav", LastName = "Koldovsky", Email = "koldovsky@gmail.com"},
+                new User() {FirstName = "Khrystyna ", LastName = "Romaniv", Email = "romaniv@gmail.com"},
+                new User() {FirstName = "Orysia", LastName = "Khoroshchak", Email = "khoroshchak@gmail.com"},
+                new User() {FirstName = "Lesya", LastName = "Klakovych", Email = "klakovych@gmail.com"},
+                new User() {FirstName = "Viktoria", LastName = "Ryazhska", Email = "ryazhska@gmail.com"},
+                new User() {FirstName = "Liubomyr", LastName = "Halamaha", Email = "halamaha@gmail.com"},
+                new User() {FirstName = "Igor", LastName = "Kohut", Email = "kohut@gmail.com"},
+                new User() {FirstName = "Andriy", LastName = "Korkuna", Email = "korkuna@gmail.com"},
+                new User() {FirstName = "Yaroslav", LastName = "Harasym", Email = "harasym@gmail.com"},
+                new User() {FirstName = "Mykhaylo", LastName = "Plesna", Email = "plesna@gmail.com"},
+                new User() {FirstName = "Maryana", LastName = "Lopatynska", Email = "lopatynska@gmail.com"},
+
+                new User() {FirstName = "Roman", LastName = "Maksymyshyn", Email = "maksymyshyn@gmail.com"},
+                new User() {FirstName = "Yurii-Stefan", LastName = "Zhydetskyi", Email = "zhydetskyi@gmail.com"},
+                new User() {FirstName = "Oleksandr", LastName = "Isakov", Email = "isakov@gmail.com"},
+                new User() {FirstName = "Roman", LastName = "Parobii", Email = "parobii@gmail.com"},
+                new User() {FirstName = "Andrii", LastName = "Lysyi", Email = "lysyi@gmail.com"},
+                new User() {FirstName = "Andrii", LastName = "Panchyshyn", Email = "panchyshyn@gmail.com"},
+                new User() {FirstName = "Yulia", LastName = "Pavlyk", Email = "pavlyk@gmail.com"},
+                new User() {FirstName = "Karim", LastName = "Benkhenni", Email = "benkhenni@gmail.com"},
+                new User() {FirstName = "Pedro", LastName = "Alvares", Email = "alvares@gmail.com"},
+                new User() {FirstName = "Dmytro", LastName = "Chalyi", Email = "chalyi@gmail.com"},
+                new User() {FirstName = "Adriana", LastName = "Prudyvus", Email = "prudyvus@gmail.com"},
+                new User() {FirstName = "Yaromyr", LastName = "Oryshchyn", Email = "oryshchyn@gmail.com"},
+                new User() {FirstName = "Andrii", LastName = "Danyliuk", Email = "danyliuk@gmail.com"},
+                new User() {FirstName = "Maksym", LastName = "Prytyka", Email = "prytyka@gmail.com"},
+                new User() {FirstName = "Mykhailo", LastName = "Kyzyma", Email = "kyzyma@gmail.com"},
+                new User() {FirstName = "Dmytro", LastName = "Khomyk", Email = "khomyk@gmail.com"},
+                new User() {FirstName = "Pavlo", LastName = "Kruk", Email = "kruk@gmail.com"},
+                new User() {FirstName = "Kateryna", LastName = "Obrizan", Email = "obrizan@gmail.com"},
+                new User() {FirstName = "Viktor", LastName = "Levak", Email = "levak@gmail.com"},
+                new User() {FirstName = "Oleksandr", LastName = "Mykhalchuk", Email = "mykhalchuk@gmail.com"},
+                new User() {FirstName = "El", LastName = "Admino", Email = "admino@gmail.com"},
+                new User() {FirstName = "La", LastName = "Admina", Email = "admina@gmail.com"}
+            };
             foreach (var user in users)
             {
                 user.Password = BCrypt.Net.BCrypt.HashPassword("123");
                 user.Blocked = false;
             }
-            List<ImageReader> readedImages = new List<ImageReader>();
-            string dir = (AppDomain.CurrentDomain.BaseDirectory).Replace("LearnWithMentor", String.Empty);
-            string path = Path.Combine(dir, @"LearnWithMentorDAL\EF\stringImages.txt");
-            using (StreamReader reader = new StreamReader(path))
-            {
-                string record;
-                while ((record = reader.ReadLine()) != null)
-                {
-                    readedImages.Add(ImageReader.Parse(record));
-                }
-            }
-            for (int i = 0; i <= 10; i++)
+            
+            var pathToImagesFolder = Path.Combine((AppDomain.CurrentDomain.BaseDirectory).
+                Replace("LearnWithMentor", string.Empty), 
+                @"LearnWithMentorDAL\EF\images\");
+
+            for (var i = 0; i <= 10; i++)
             {
                 users[i].Role_Id = 1;
-                users[i].Image_Name = readedImages[0].Name;
-                users[i].Image = readedImages[0].ImageEncoded;
+                users[i].Image_Name = "mentorImage";
+                users[i].Image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(pathToImagesFolder, @"mentor.jpg")));
             }
-            for (int i = 11; i <= 29; i++)
+            for (var i = 11; i <= 30; i++)
             {
                 users[i].Role_Id = 2;
-                users[i].Image_Name = readedImages[1].Name;
-                users[i].Image = readedImages[1].ImageEncoded;
+                users[i].Image_Name = "studentImage";
+                users[i].Image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(pathToImagesFolder, @"student.png")));
             }
-            for (int i = 30; i < users.Count; i++)
+            for (var i = 31; i < users.Count; i++)
             {
                 users[i].Role_Id = 3;
-                users[i].Image_Name = readedImages[2].Name;
-                users[i].Image = readedImages[2].ImageEncoded;
+                users[i].Image_Name = "adminImage";
+                users[i].Image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(pathToImagesFolder, @"admin.png")));
             }
             context.Users.AddRange(users);
             context.SaveChanges();
@@ -130,17 +127,11 @@ namespace LearnWithMentorDAL.EF
         private static void InitializePlans(LearnWithMentor_DBEntities context)
         {
             context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('[Plans]', RESEED, 0)");
-            var readedImages = new List<ImageReader>();
-            string dir = (AppDomain.CurrentDomain.BaseDirectory).Replace("LearnWithMentor", String.Empty);
-            string path = Path.Combine(dir, @"LearnWithMentorDAL\EF\stringImages.txt");
-            using (StreamReader reader = new StreamReader(path))
-            {
-                string record;
-                while ((record = reader.ReadLine()) != null)
-                {
-                    readedImages.Add(ImageReader.Parse(record));
-                }
-            }
+
+            var pathToImagesFolder = Path.Combine((AppDomain.CurrentDomain.BaseDirectory).
+                Replace("LearnWithMentor", string.Empty),
+                @"LearnWithMentorDAL\EF\images\");
+
             var plans = new List<Plan>
             {
                 new Plan()
@@ -148,24 +139,24 @@ namespace LearnWithMentorDAL.EF
                     Name = "C# Essential Training",
                     Description =
                     "Takes you through C#'s history, it's core syntax, and the fundamentals of writing strong C# code.",
-                    Image_Name = readedImages[3].Name,
-                    Image = readedImages[3].ImageEncoded
-                },
+                    Image_Name = "CSharp",
+                    Image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(pathToImagesFolder, @"сsharp.png")))
+        },
                 new Plan()
                 {
                     Name = "ASP.NET",
                     Description =
                     "In this practical course, you will learn how to build a line-of-business, enterprise application with ASP.NET Core MVC, including topics such as security, logging, testing, validation, and much more.",
-                    Image_Name = readedImages[4].Name,
-                    Image = readedImages[4].ImageEncoded
+                    Image_Name = "AspNet",
+                    Image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(pathToImagesFolder, @"asp_net.png")))
                 },
                 new Plan()
                 {
                     Name = "Angular Guide",
                     Description =
                     "Use their gained, deep understanding of the Angular 6 fundamentals to quickly establish themselves as frontend developers",
-                    Image_Name = readedImages[5].Name,
-                    Image = readedImages[5].ImageEncoded
+                    Image_Name = "Angular",
+                    Image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(pathToImagesFolder, @"angular.png")))
 
                 },
                 new Plan()
@@ -173,62 +164,62 @@ namespace LearnWithMentorDAL.EF
                     Name = "Angular Material Guide",
                     Description =
                     "We'll build an entire, realistic app which looks absolutely beautiful, uses Google's Material Design and is extremely fast! Thanks to Firebase and Angularfire, we'll add real-time database functionalities and see our updates almost before we make them!",
-                    Image_Name = readedImages[6].Name,
-                    Image = readedImages[6].ImageEncoded
+                    Image_Name = "AngularMaterial",
+                    Image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(pathToImagesFolder, @"angularMaterial.png")))
                 },
                 new Plan()
                 {
                     Name = "SQL & Database Design: Learn MS SQL Server",
                     Description = "In this course you will learn how to create queries in a MS SQL Management Studio",
-                    Image_Name = readedImages[7].Name,
-                    Image = readedImages[7].ImageEncoded
+                    Image_Name = "Sql",
+                    Image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(pathToImagesFolder, @"sql.png")))
                 },
                 new Plan()
                 {
                     Name = "Building Full Stack Applications",
                     Description =
                     "Creating a complete full-stack application requires integrating multiple components.  This plan teaches integration through the perspective of a quiz project, using Angular, ASP.NET Core, and Entity Framework Core to develop a full-stack application.",
-                    Image_Name = readedImages[8].Name,
-                    Image = readedImages[8].ImageEncoded
+                    Image_Name = "FullStack",
+                    Image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(pathToImagesFolder, @"fullStack.png")))
                 },
                 new Plan()
                 {
                     Name = "The complete React course",
                     Description = "You will learn the whole React WebApp building process, from your pc to the server.",
-                    Image_Name = readedImages[9].Name,
-                    Image = readedImages[9].ImageEncoded
+                    Image_Name = "React",
+                    Image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(pathToImagesFolder, @"react.png")))
                 },
                 new Plan()
                 {
                     Name = "Java Essential Training",
                     Description =
                     " This course provides the foundation for learning Java SE (Standard Edition), so you can build your first apps or start exploring the language on your own.",
-                    Image_Name = readedImages[10].Name,
-                    Image = readedImages[10].ImageEncoded
+                    Image_Name = "Java",
+                    Image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(pathToImagesFolder, @"java.png")))
                 },
                 new Plan()
                 {
                     Name = "The Complete JavaScript Course",
                     Description =
                     "JavaScript and programming fundamentals: variables, boolean logic, if/else, loops, functions, arrays, etc. A true understanding of how JavaScript works behind the scenes.",
-                    Image_Name = readedImages[11].Name,
-                    Image = readedImages[11].ImageEncoded
+                    Image_Name = "JavaScript",
+                    Image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(pathToImagesFolder, @"javascript.png")))
                 },
                 new Plan()
                 {
                     Name = "C++ Essential Training",
                     Description =
                     "Widely used for both systems and applications development, the C and C++ programming languages are available for virtually every operating system and are often the best choice for performance-critical applications. In this course, Bill Weinman dissects the anatomy of C and C++, from variables to functions and loops, and explores both the C Standard Library and the C++ Standard Template Library.",
-                    Image_Name = readedImages[12].Name,
-                    Image = readedImages[12].ImageEncoded
+                    Image_Name = "C++",
+                    Image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(pathToImagesFolder, @"c++.png")))
                 },
                 new Plan()
                 {
                     Name = "Python Course: Beginner to Advanced",
                     Description =
                     "This course is designed to fully immerse you in the Python language, so it is great for both beginners and veteran programmers! Learn Python through the basics of programming, advanced Python concepts, coding a calculator, essential modules, web scraping, PyMongo, WebPy development, Django web framework, GUI programming, data visualization, machine learning.",
-                    Image_Name = readedImages[13].Name,
-                    Image = readedImages[13].ImageEncoded
+                    Image_Name = "Python",
+                    Image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(pathToImagesFolder, @"python.png")))
                 }
             };
             for (int i = 0, j = 1; i < plans.Count; i++, j++)
@@ -238,15 +229,10 @@ namespace LearnWithMentorDAL.EF
             foreach (var plan in plans)
             {
                 plan.Create_Date = new DateTime(2018, 7, 3, 23, 59, 59);
-            }
-            foreach (var plan in plans)
-            {
                 plan.Mod_Date = new DateTime(2018, 7, 16, 23, 59, 59);
-            }
-            foreach (var plan in plans)
-            {
                 plan.Create_Id = plan.Id;
                 plan.Mod_Id = plan.Id;
+                plan.Published = true;
             }
             context.Plans.AddRange(plans);
             context.SaveChanges();
@@ -306,33 +292,32 @@ namespace LearnWithMentorDAL.EF
         private static void InitializeTasks(LearnWithMentor_DBEntities context)
         {
             context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('[Tasks]', RESEED, 0)");
-            #region List of Tasks
             var tasks = new List<Task>
             {
-                new Task() { Name = "C#. Installing Visual Studio.", Description = "Installing IDE Microsoft Visual Studio for further work in plan." },//Section 1 [1]
-                new Task() { Name = "C#. Variables, Loops.", Description = "Declaring variables. Difference between value types and reference types. Looping program flow." },//Section 1 [2]
-                new Task() { Name = "C#. Array.", Description = "Grouping varialbes in arrays" },//Section 1 [3]
-                new Task() { Name = "C#. Class, Method, Exception.", Description = "Declaring custom types, creating methods and catching exceptions during execution." },//Section 1 [4]
-                new Task() { Name = "ASP NET Controllers.", Description = "Explores the topic of ASP.NET MVC controllers, controller actions, and action results. " },//Section 2 [5]
-                new Task() { Name = "ASP.NET Routes.", Description = "The ASP.NET Routing module is responsible for mapping incoming browser requests to particular MVC controller actions." },//Section 2 [6]
-                new Task() { Name = "ASP.NET View.", Description = "Razor-based view templates have a .cshtml file extension, and provide an elegant way to create HTML output using C#." },//Section 3  [7]
-                new Task() { Name = "ASP.NET Making App.", Description = "Making close to real small project." },//Section 3 [8]
-                new Task() { Name = "Angular. Installing Atom.", Description = "Installing code editor for further work in plan" },//Section 4 [9]
-                new Task() { Name = "Angular. App structure.", Description = "Structure of angular appliication." },//Section 4 [10]
-                new Task() { Name = "Angular. Services.", Description = "Services are a great way to share information among classes that don't know each other." },//Section 5 [11]
-                new Task() { Name = "Angular. Observables.", Description = "Observables provide support for passing messages between publishers and subscribers in your application." },//Section 5 [12]
-                new Task() { Name = "Angular Material. Installing Angular material", Description = "Angular material installation ways." },//Section 6 [13]
-                new Task() { Name = "Angular Material. Adding NavBar", Description = "Adding material navigation bar for our application." },//Section 6 [14]
-                new Task() { Name = "Angular Material. Working on main page", Description = "Creating main page using angular material components." },//Section 7 [15]
-                new Task() { Name = "Angular Material. Working with Data ", Description = "Learning how to connect data with angular material components. " },//Section 7 [16]
-                new Task() { Name = "SQL. Installing SQL Server and Management studio", Description = "Installing DBMS Microsoft SQL Management Studio for further work in plan." },//Section 8 [17]
-                new Task() { Name = "SQL. Creating databases and tables.", Description = "Making queries for creation relational databases and tables within them." },//Section 8 [18]
-                new Task() { Name = "SQL. Data insertion and manipulation.", Description = "Inserting raw data in tables and making manipulation with. " },//Section 9 [19]
-                new Task() { Name = "SQL. JOIN", Description = "Learning types of JOIN's" },//Section 9 [20]
-                new Task() { Name = "Full stack WEB App. Modeling app structure", Description = "Getting started with project architectures. " },//Section 10
-                new Task() { Name = "Full stack WEB App. Creating Database", Description = "Approaches to data base creation. Data-first, code-first." },//Section 10
-                new Task() { Name = "Full stack WEB App. Data Access, business logic.", Description = "Using different patterns in DAL BLL" },//Section 10
-                new Task() { Name = "Full stack WEB App. Fron-end part in angular", Description = "Creating user interface using fron-end frameworks. " },//Section 10
+                new Task() { Name = "C#. Installing Visual Studio.", Description = "Installing IDE Microsoft Visual Studio for further work in plan." },
+                new Task() { Name = "C#. Variables, Loops.", Description = "Declaring variables. Difference between value types and reference types. Looping program flow." },
+                new Task() { Name = "C#. Array.", Description = "Grouping varialbes in arrays" },
+                new Task() { Name = "C#. Class, Method, Exception.", Description = "Declaring custom types, creating methods and catching exceptions during execution." },
+                new Task() { Name = "ASP NET Controllers.", Description = "Explores the topic of ASP.NET MVC controllers, controller actions, and action results. " },
+                new Task() { Name = "ASP.NET Routes.", Description = "The ASP.NET Routing module is responsible for mapping incoming browser requests to particular MVC controller actions." },
+                new Task() { Name = "ASP.NET View.", Description = "Razor-based view templates have a .cshtml file extension, and provide an elegant way to create HTML output using C#." },
+                new Task() { Name = "ASP.NET Making App.", Description = "Making close to real small project." },
+                new Task() { Name = "Angular. Installing Atom.", Description = "Installing code editor for further work in plan" },
+                new Task() { Name = "Angular. App structure.", Description = "Structure of angular appliication." },
+                new Task() { Name = "Angular. Services.", Description = "Services are a great way to share information among classes that don't know each other." },
+                new Task() { Name = "Angular. Observables.", Description = "Observables provide support for passing messages between publishers and subscribers in your application." },
+                new Task() { Name = "Angular Material. Installing Angular material", Description = "Angular material installation ways." },
+                new Task() { Name = "Angular Material. Adding NavBar", Description = "Adding material navigation bar for our application." },
+                new Task() { Name = "Angular Material. Working on main page", Description = "Creating main page using angular material components." },
+                new Task() { Name = "Angular Material. Working with Data ", Description = "Learning how to connect data with angular material components. " },
+                new Task() { Name = "SQL. Installing SQL Server and Management studio", Description = "Installing DBMS Microsoft SQL Management Studio for further work in plan." },
+                new Task() { Name = "SQL. Creating databases and tables.", Description = "Making queries for creation relational databases and tables within them." },
+                new Task() { Name = "SQL. Data insertion and manipulation.", Description = "Inserting raw data in tables and making manipulation with. " },
+                new Task() { Name = "SQL. JOIN", Description = "Learning types of JOIN's" },
+                new Task() { Name = "Full stack WEB App. Modeling app structure", Description = "Getting started with project architectures. " },
+                new Task() { Name = "Full stack WEB App. Creating Database", Description = "Approaches to data base creation. Data-first, code-first." },
+                new Task() { Name = "Full stack WEB App. Data Access, business logic.", Description = "Using different patterns in DAL BLL" },
+                new Task() { Name = "Full stack WEB App. Fron-end part in angular", Description = "Creating user interface using fron-end frameworks. " },
                 new Task() { Name = "React. React basics", Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" },
                 new Task() { Name = "React. Routes, Lifecycle", Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" },
                 new Task() { Name = "React. Transitions & Typechecking", Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" },
@@ -354,7 +339,6 @@ namespace LearnWithMentorDAL.EF
                 new Task() { Name = "Python. RPG Battle Script", Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" },
                 new Task() { Name = "Python. Web Scraper", Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" }
             };
-            #endregion
             for (int i = 0, j = 1; i < tasks.Count; i++, j++)
             {
                 tasks[i].Id = j;
@@ -364,10 +348,10 @@ namespace LearnWithMentorDAL.EF
                 task.Private = false;
                 task.Mod_Date = new DateTime(2018, 7, 16, 23, 59, 59);
             }
-            int count = 1;
-            for (int i = 1; i <= 11; i++)
+            var count = 1;
+            for (var i = 1; i <= 11; i++)
             {
-                for (int j = count; j < count + 4; j++)
+                for (var j = count; j < count + 4; j++)
                 {
                     tasks[j - 1].Create_Id = i;
                     tasks[j - 1].Mod_Id = i;
@@ -412,15 +396,14 @@ namespace LearnWithMentorDAL.EF
             context.Sections.AddRange(sections);
             context.SaveChanges();
         }
-
         private static void InitializePlanTask(LearnWithMentor_DBEntities context)
         {
             context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('[Plantasks]', RESEED, 0)");
             var planTasks = new List<PlanTask>();
-            int count = 1;
-            for (int i = 1; i <= 11; i++)
+            var count = 1;
+            for (var i = 1; i <= 11; i++)
             {
-                for (int j = count; j < count + 4; j++)
+                for (var j = count; j < count + 4; j++)
                 {
                     planTasks.Add(new PlanTask() { Id = i, Plan_Id = i, Task_Id = j });
                 }
@@ -431,22 +414,22 @@ namespace LearnWithMentorDAL.EF
                 planTasks[i].Section_Id = 1;
             }
             count = 4;
-            for (int i = 2; i <= 10; i++)
+            for (var i = 2; i <= 10; i++)
             {
-                for (int j = count; j < count + 2; j++)
+                for (var j = count; j < count + 2; j++)
                 {
                     planTasks[j].Section_Id = i;
                 }
                 count = count + 2;
             }
-            for (int j = 20; j <= 23; j++)
+            for (var j = 20; j <= 23; j++)
             {
                 planTasks[j].Section_Id = 10;
             }
             count = 24;
-            for (int i = 11; i <= 20; i++)
+            for (var i = 11; i <= 20; i++)
             {
-                for (int j = count; j < count + 2; j++)
+                for (var j = count; j < count + 2; j++)
                 {
                     planTasks[j].Section_Id = i;
                 }
@@ -474,9 +457,9 @@ namespace LearnWithMentorDAL.EF
         {
             context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('[UserTasks]', RESEED, 0)");
             var userTasks = new List<UserTask>();
-            for (int i = 12; i <= 18; i++)
+            for (var i = 12; i <= 18; i++)
             {
-                for (int j = 1; j <= 24; j++)
+                for (var j = 1; j <= 24; j++)
                 {
                     userTasks.Add(new UserTask()
                     {
@@ -524,15 +507,14 @@ namespace LearnWithMentorDAL.EF
         {
             context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('[Messages]', RESEED, 0)");
             var messagesTemplates = new[] { "Sorry, i've got cold.", "Hello. I've done this task. Can you review?", "I have problem with this task. Can you help me?", "There some bugs in my code." };
-            Random rnd = new Random();
+            var rnd = new Random();
             var messages = new List<Message>();
-
-            int count = 1;
-            for (int i = 12; i < 18; i++)
+            var count = 1;
+            for (var i = 12; i < 18; i++)
             {
-                for (int j = count; j < count + 24; j++)
+                for (var j = count; j < count + 24; j++)
                 {
-                    for (int k = 1; k <= 2; k++)
+                    for (var k = 1; k <= 2; k++)
                     {
                         messages.Add(new Message() { User_Id = i, UserTask_Id = j, Text = messagesTemplates[rnd.Next(messagesTemplates.Length - 1)] });
                     }
@@ -551,8 +533,8 @@ namespace LearnWithMentorDAL.EF
             context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('[Comments]', RESEED, 1)");
             var rnd = new Random();
             var comments = new List<Comment>();
-            string[] commentTemplates = new[] { "Nice task", "Easy task", "Hard task", "Interesting task", "I was needed help for this task" };
-            for (int i = 1; i < 24; i++)
+            var commentTemplates = new[] { "Nice task", "Easy task", "Hard task", "Interesting task", "I was needed help for this task" };
+            for (var i = 1; i < 24; i++)
             {
                 comments.Add(new Comment() { PlanTask_Id = i, Create_Id = rnd.Next(12, 18), Text = commentTemplates[rnd.Next(commentTemplates.Length - 1)] });
                 comments.Add(new Comment() { PlanTask_Id = i, Create_Id = rnd.Next(12, 18), Text = commentTemplates[rnd.Next(commentTemplates.Length - 1)] });
@@ -570,23 +552,23 @@ namespace LearnWithMentorDAL.EF
         {
             var planSuggestions = new List<PlanSuggestion>();
 
-            for (int j = 12; j < 30; j = j + 3)
+            for (var j = 12; j < 30; j = j + 3)
             {
-                for (int k = 1; k < 6; k++)
+                for (var k = 1; k < 6; k++)
                 {
                     planSuggestions.Add(new PlanSuggestion() { Mentor_Id = 1, Plan_Id = k, User_Id = j, Text = "Suggest you to increase number of tasks." });
                 }
             }
-            for (int j = 13; j < 30; j = j + 3)
+            for (var j = 13; j < 30; j = j + 3)
             {
-                for (int k = 1; k < 6; k++)
+                for (var k = 1; k < 6; k++)
                 {
                     planSuggestions.Add(new PlanSuggestion() { Mentor_Id = 2, Plan_Id = k, User_Id = j, Text = "Sugest you to set more time for task completion." });
                 }
             }
-            for (int j = 14; j < 30; j = j + 3)
+            for (var j = 14; j < 30; j = j + 3)
             {
-                for (int k = 1; k < 6; k++)
+                for (var k = 1; k < 6; k++)
                 {
                     planSuggestions.Add(new PlanSuggestion() { Mentor_Id = 3, Plan_Id = k, User_Id = j, Text = "Suggest you to make task more interesting" });
                 }
