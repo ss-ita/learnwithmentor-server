@@ -420,7 +420,9 @@ namespace LearnWithMentor.Controllers
             base.Dispose(disposing);
         }
 
+        [JwtAuthentication]
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         [Route("api/user/pageSize/{pageSize}/pageNumber/{pageNumber}")]
         public HttpResponseMessage GetUsers(int pageSize, int pageNumber)
         {
