@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommentDTO.cs" />
+    <Compile Include="ContentDTO.cs" />
     <Compile Include="GroupDTO.cs" />
     <Compile Include="GroupUsersTaskState.cs" />
     <Compile Include="ImageDTO.cs" />
@@ -53,7 +54,6 @@
     <Compile Include="SectionDTO.cs" />
     <Compile Include="StatisticsDTO.cs" />
     <Compile Include="TaskDTO.cs" />
-    <Compile Include="UserWithImageDTO.cs" />
     <Compile Include="UserDTO.cs" />
     <Compile Include="UserIdentityDTO.cs" />
     <Compile Include="UserRegistrationDTO.cs" />

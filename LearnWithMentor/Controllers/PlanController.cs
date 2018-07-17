@@ -69,7 +69,7 @@ namespace LearnWithMentor.Controllers
 
 
         [HttpGet]
-        [Route("api/plan/{id}/test")]
+        [Route("api/plan/{id}/sections")]
         public HttpResponseMessage GetTasksForPlan(int id)
         {
             var sections = planService.GetTasksForPlan(id);

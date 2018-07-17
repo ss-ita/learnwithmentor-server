@@ -77,6 +77,7 @@ namespace LearnWithMentorBLL.Services
             }
             return dtosList;
         }
+
         public List<TaskDTO> GetAllTasks(int planId)
         {
             var plan = db.Plans.Get(planId);
@@ -106,6 +107,7 @@ namespace LearnWithMentorBLL.Services
             }
             return dtosList;
         }
+
         public List<int> GetAllPlanTaskids(int planId)
         {
             var plan = db.Plans.Get(planId);
@@ -117,8 +119,6 @@ namespace LearnWithMentorBLL.Services
                 return null;
             return planTaskIds;
         }
-
-
 
         public List<SectionDTO> GetTasksForPlan(int planId)
         {
@@ -133,6 +133,7 @@ namespace LearnWithMentorBLL.Services
             foreach (var sec in section)
             {
                 List<TaskDTO> taskDTOs = new List<TaskDTO>();
+                ContentDTO contentDTO = new ContentDTO();
                 foreach (var task in sec.Tasks)
                 {
                     TaskDTO toAdd = new TaskDTO(task.Id,
@@ -150,10 +151,12 @@ namespace LearnWithMentorBLL.Services
                         db.PlanTasks.GetIdByTaskAndPlan(task.Id, planId));
                     taskDTOs.Add(toAdd);
                 }
+                contentDTO.Tasks = taskDTOs;
                 SectionDTO sectionDTO = new SectionDTO()
                 {
+                    Id = sec.Id,
                     Name = sec.Name,
-                    Tasks = taskDTOs
+                    Content = contentDTO
                 };
                 sectionDTOs.Add(sectionDTO);
             }
