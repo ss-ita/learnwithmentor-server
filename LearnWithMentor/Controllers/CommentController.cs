@@ -39,7 +39,7 @@ namespace LearnWithMentor.Controllers
         {
             try
             {
-                CommentDTO comment = commentService.GetComment(id);
+                var comment = commentService.GetComment(id);
                 if (comment == null)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, "Comment with this Id does not exist in database.");
