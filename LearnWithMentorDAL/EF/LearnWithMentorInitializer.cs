@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using LearnWithMentorDAL.Entities;
 
@@ -12,7 +13,6 @@ namespace LearnWithMentorDAL.EF
         {
             Initialize();
         }
-
         public static void Initialize()
         {
             using (LearnWithMentor_DBEntities context = new LearnWithMentor_DBEntities())
@@ -98,8 +98,10 @@ namespace LearnWithMentorDAL.EF
             users.Add(new User() { FirstName = "Kateryna", LastName = "Obrizan", Email = "obrizan@gmail.com" });//28
             users.Add(new User() { FirstName = "Viktor", LastName = "Levak", Email = "levak@gmail.com" });//29
             users.Add(new User() { FirstName = "Oleksandr", LastName = "Mykhalchuk", Email = "mykhalchuk@gmail.com" });//30
+            users.Add(new User() { FirstName = "El", LastName = "Admino", Email = "admino@gmail.com" });//31
+            users.Add(new User() { FirstName = "La", LastName = "Admina", Email = "admina@gmail.com" });//32
             #endregion
-            
+
             //Assigning custom passwords and  blocked status "false" for users
             foreach (var user in users)
             {
@@ -107,16 +109,44 @@ namespace LearnWithMentorDAL.EF
                 user.Blocked = false;
             }
 
+            
+            List<ImageReader> readedImages = new List<ImageReader>();
+            string dir = (AppDomain.CurrentDomain.BaseDirectory).Replace("LearnWithMentor", String.Empty);
+            string path = Path.Combine(dir, @"LearnWithMentorDAL\EF\stringImages.txt");
+            using (StreamReader reader = new StreamReader(path))
+            {
+                string record;
+                int count = 0;
+                while ((record = reader.ReadLine()) != null)
+                {
+                    readedImages.Add(ImageReader.Parse(record));
+                }
+            }
+            
+
+
             //Assigning mentor roles for first 11 users
             for (int i = 0; i <= 10; i++)
             {
                 users[i].Role_Id = 1;
+                users[i].Image_Name = readedImages[0].Name;
+                users[i].Image = readedImages[0].ImageEncoded;
             }
 
-            //Assigning student roles for rest of the users
-            for (int i = 11; i < users.Count; i++)
+            //Assigning student roles for next 20 users
+            for (int i = 11; i <= 29; i++)
             {
                 users[i].Role_Id = 2;
+                users[i].Image_Name = readedImages[1].Name;
+                users[i].Image = readedImages[1].ImageEncoded;
+            }
+
+            //Assigning admin roles for rest of the users
+            for (int i = 30; i < users.Count; i++)
+            {
+                users[i].Role_Id = 3;
+                users[i].Image_Name = readedImages[2].Name;
+                users[i].Image = readedImages[2].ImageEncoded; 
             }
             context.Users.AddRange(users);
             context.SaveChanges();
@@ -127,74 +157,110 @@ namespace LearnWithMentorDAL.EF
         {
             context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('[Plans]', RESEED, 0)");
 
+            List<ImageReader> readedImages = new List<ImageReader>();
+            string dir = (AppDomain.CurrentDomain.BaseDirectory).Replace("LearnWithMentor", String.Empty);
+            string path = Path.Combine(dir, @"LearnWithMentorDAL\EF\stringImages.txt");
+            using (StreamReader reader = new StreamReader(path))
+            {
+                string record;
+                int count = 0;
+                while ((record = reader.ReadLine()) != null)
+                {
+                    readedImages.Add(ImageReader.Parse(record));
+                }
+            }
+
             List<Plan> plans = new List<Plan>();
             plans.Add(new Plan()
             {
                 Name = "C# Essential Training",
                 Description =
-                    "Takes you through C#'s history, it's core syntax, and the fundamentals of writing strong C# code."
+                    "Takes you through C#'s history, it's core syntax, and the fundamentals of writing strong C# code.",
+                Image_Name = readedImages[3].Name,
+                Image = readedImages[3].ImageEncoded
             });
             plans.Add(new Plan()
             {
                 Name = "ASP.NET",
                 Description =
-                    "In this practical course, you will learn how to build a line-of-business, enterprise application with ASP.NET Core MVC, including topics such as security, logging, testing, validation, and much more."
+                    "In this practical course, you will learn how to build a line-of-business, enterprise application with ASP.NET Core MVC, including topics such as security, logging, testing, validation, and much more.",
+                Image_Name = readedImages[4].Name,
+                Image = readedImages[4].ImageEncoded
             });
             plans.Add(new Plan()
             {
                 Name = "Angular Guide",
                 Description =
-                    "Use their gained, deep understanding of the Angular 6 fundamentals to quickly establish themselves as frontend developers"
+                    "Use their gained, deep understanding of the Angular 6 fundamentals to quickly establish themselves as frontend developers",
+                Image_Name = readedImages[5].Name,
+                Image = readedImages[5].ImageEncoded
+
             });
             plans.Add(new Plan()
             {
                 Name = "Angular Material Guide",
                 Description =
-                    "We'll build an entire, realistic app which looks absolutely beautiful, uses Google's Material Design and is extremely fast! Thanks to Firebase and Angularfire, we'll add real-time database functionalities and see our updates almost before we make them!"
+                    "We'll build an entire, realistic app which looks absolutely beautiful, uses Google's Material Design and is extremely fast! Thanks to Firebase and Angularfire, we'll add real-time database functionalities and see our updates almost before we make them!",
+                Image_Name = readedImages[6].Name,
+                Image = readedImages[6].ImageEncoded
             });
             plans.Add(new Plan()
             {
                 Name = "SQL & Database Design: Learn MS SQL Server",
-                Description = "In this course you will learn how to create queries in a MS SQL Management Studio"
+                Description = "In this course you will learn how to create queries in a MS SQL Management Studio",
+                Image_Name = readedImages[7].Name,
+                Image = readedImages[7].ImageEncoded
             });
             plans.Add(new Plan()
             {
                 Name = "Building Full Stack Applications",
                 Description =
-                    "Creating a complete full-stack application requires integrating multiple components.  This plan teaches integration through the perspective of a quiz project, using Angular, ASP.NET Core, and Entity Framework Core to develop a full-stack application."
+                    "Creating a complete full-stack application requires integrating multiple components.  This plan teaches integration through the perspective of a quiz project, using Angular, ASP.NET Core, and Entity Framework Core to develop a full-stack application.",
+                Image_Name = readedImages[8].Name,
+                Image = readedImages[8].ImageEncoded
             });
             plans.Add(new Plan()
             {
                 Name = "The complete React course",
-                Description = "You will learn the whole React WebApp building process, from your pc to the server."
+                Description = "You will learn the whole React WebApp building process, from your pc to the server.",
+                Image_Name = readedImages[9].Name,
+                Image = readedImages[9].ImageEncoded
             });
             plans.Add(new Plan()
             {
                 Name = "Java Essential Training",
                 Description =
-                    " This course provides the foundation for learning Java SE (Standard Edition), so you can build your first apps or start exploring the language on your own."
+                    " This course provides the foundation for learning Java SE (Standard Edition), so you can build your first apps or start exploring the language on your own.",
+                Image_Name = readedImages[10].Name,
+                Image = readedImages[10].ImageEncoded
             });
             plans.Add(new Plan()
             {
                 Name = "The Complete JavaScript Course",
                 Description =
-                    "JavaScript and programming fundamentals: variables, boolean logic, if/else, loops, functions, arrays, etc. A true understanding of how JavaScript works behind the scenes."
+                    "JavaScript and programming fundamentals: variables, boolean logic, if/else, loops, functions, arrays, etc. A true understanding of how JavaScript works behind the scenes.",
+                Image_Name = readedImages[11].Name,
+                Image = readedImages[11].ImageEncoded
             });
             plans.Add(new Plan()
             {
                 Name = "C++ Essential Training",
                 Description =
-                    "Widely used for both systems and applications development, the C and C++ programming languages are available for virtually every operating system and are often the best choice for performance-critical applications. In this course, Bill Weinman dissects the anatomy of C and C++, from variables to functions and loops, and explores both the C Standard Library and the C++ Standard Template Library. "
+                    "Widely used for both systems and applications development, the C and C++ programming languages are available for virtually every operating system and are often the best choice for performance-critical applications. In this course, Bill Weinman dissects the anatomy of C and C++, from variables to functions and loops, and explores both the C Standard Library and the C++ Standard Template Library.",
+                Image_Name = readedImages[12].Name,
+                Image = readedImages[12].ImageEncoded
             });
             plans.Add(new Plan()
             {
-                Name = "Python 3 Course: Beginner to Advanced",
+                Name = "Python Course: Beginner to Advanced",
                 Description =
-                    "This course is designed to fully immerse you in the Python language, so it is great for both beginners and veteran programmers! Learn Python through the basics of programming, advanced Python concepts, coding a calculator, essential modules, web scraping, PyMongo, WebPy development, Django web framework, GUI programming, data visualization, machine learning."
+                    "This course is designed to fully immerse you in the Python language, so it is great for both beginners and veteran programmers! Learn Python through the basics of programming, advanced Python concepts, coding a calculator, essential modules, web scraping, PyMongo, WebPy development, Django web framework, GUI programming, data visualization, machine learning.",
+                Image_Name = readedImages[13].Name,
+                Image = readedImages[13].ImageEncoded
             });
 
             //Assigning Id's for plans
-            for (int i = 0, j=1; i < plans.Count; i++, j++)
+            for (int i = 0, j = 1; i < plans.Count; i++, j++)
             {
                 plans[i].Id = j;
             }
@@ -205,10 +271,17 @@ namespace LearnWithMentorDAL.EF
                 plan.Create_Date = new DateTime(2018, 7, 3, 23, 59, 59);
             }
 
+            //Assigning modification date for plans on third of july
+            foreach (var plan in plans)
+            {
+                plan.Mod_Date = new DateTime(2018, 7, 16, 23, 59, 59);
+            }
+
             //Assigning creator of plans on each user by one
             foreach (var plan in plans)
             {
                 plan.Create_Id = plan.Id;
+                plan.Mod_Id = plan.Id;
             }
 
             context.Plans.AddRange(plans);
@@ -283,10 +356,10 @@ namespace LearnWithMentorDAL.EF
 
             #region List of Tasks
             List<Task> tasks = new List<Task>();
-            tasks.Add(new Task() { Name = "C#. Installing Visual Studio.", Description = "Installing IDE Microsoft Visual Studio for further work in plan."});//Section 1 [1]
-            tasks.Add(new Task() { Name = "C#. Variables, Loops.", Description = "Declaring variables. Difference between value types and reference types. Looping program flow."});//Section 1 [2]
-            tasks.Add(new Task() { Name = "C#. Array.", Description = "Grouping varialbes in arrays"});//Section 1 [3]
-            tasks.Add(new Task() { Name = "C#. Class, Method, Exception.", Description = "Declaring custom types, creating methods and catching exceptions during execution."});//Section 1 [4]
+            tasks.Add(new Task() { Name = "C#. Installing Visual Studio.", Description = "Installing IDE Microsoft Visual Studio for further work in plan." });//Section 1 [1]
+            tasks.Add(new Task() { Name = "C#. Variables, Loops.", Description = "Declaring variables. Difference between value types and reference types. Looping program flow." });//Section 1 [2]
+            tasks.Add(new Task() { Name = "C#. Array.", Description = "Grouping varialbes in arrays" });//Section 1 [3]
+            tasks.Add(new Task() { Name = "C#. Class, Method, Exception.", Description = "Declaring custom types, creating methods and catching exceptions during execution." });//Section 1 [4]
             tasks.Add(new Task() { Name = "ASP NET Controllers.", Description = "Explores the topic of ASP.NET MVC controllers, controller actions, and action results. " });//Section 2 [5]
             tasks.Add(new Task() { Name = "ASP.NET Routes.", Description = "The ASP.NET Routing module is responsible for mapping incoming browser requests to particular MVC controller actions." });//Section 2 [6]
             tasks.Add(new Task() { Name = "ASP.NET View.", Description = "Razor-based view templates have a .cshtml file extension, and provide an elegant way to create HTML output using C#." });//Section 3  [7]
@@ -335,10 +408,11 @@ namespace LearnWithMentorDAL.EF
                 tasks[i].Id = j;
             }
 
-            //Setting tasks as public
+            //Setting tasks as public 
             foreach (var task in tasks)
             {
                 task.Private = false;
+                task.Mod_Date = new DateTime(2018, 7, 16, 23, 59, 59);
             }
 
             //Assigning creators of tasks
@@ -349,6 +423,7 @@ namespace LearnWithMentorDAL.EF
                 for (int j = count; j < count + 4; j++)
                 {
                     tasks[j - 1].Create_Id = i;
+                    tasks[j - 1].Mod_Id = i;
                 }
                 count = count + 4;
             }
@@ -453,6 +528,19 @@ namespace LearnWithMentorDAL.EF
 
             }
 
+            //Assigning priorities for plantasks
+            foreach (var planTask in planTasks)
+            {
+                if (planTask.Section_Id == 1 && planTask.Section_Id == 10)
+                {
+                    planTask.Priority = 1;
+                }
+                else
+                {
+                    planTask.Priority = 2;
+                }
+            }
+
             //Assigning Id's for planTasks
             for (int i = 0, j = 1; i < planTasks.Count; i++, j++)
             {
@@ -516,6 +604,12 @@ namespace LearnWithMentorDAL.EF
                         userTask.State = "R";
                         break;
                 }
+            }
+
+            foreach (var userTask in userTasks)
+            {
+                userTask.Propose_End_Date = new DateTime(2018, 9, 1, 23, 59, 59);
+                userTask.Propose_End_Date = new DateTime(2018, 9, 12, 23, 59, 59);
             }
 
             context.UserTasks.AddRange(userTasks);
@@ -610,7 +704,7 @@ namespace LearnWithMentorDAL.EF
                     planSuggestions.Add(new PlanSuggestion() { Mentor_Id = 3, Plan_Id = k, User_Id = j, Text = "Suggest you to make task more interesting" });
                 }
             }
-            
+
             context.PlanSuggestion.AddRange(planSuggestions);
             context.SaveChanges();
         }

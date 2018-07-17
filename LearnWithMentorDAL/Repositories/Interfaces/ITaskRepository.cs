@@ -9,5 +9,6 @@ namespace LearnWithMentorDAL.Repositories.Interfaces
         bool IsRemovable(int id);
         IEnumerable<Task> Search(string[] str, int planId);
         IEnumerable<Task> Search(string[] str);
+        IEnumerable<Task> GetTasksNotInPlan(int planId);
     }
 }

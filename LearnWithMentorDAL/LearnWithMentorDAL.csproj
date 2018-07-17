@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EF\ImageReader.cs" />
     <Compile Include="EF\LearnWithMentorInitializer.cs" />
     <Compile Include="Entities\Comment.cs">
       <DependentUpon>LearnWithMentorContext.tt</DependentUpon>
@@ -158,6 +159,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="EF\stringImages.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Entities\LearnWithMentorContext.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>LearnWithMentorContext.edmx</DependentUpon>

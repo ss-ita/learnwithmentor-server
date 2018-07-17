@@ -57,6 +57,27 @@ namespace LearnWithMentor.Controllers
         }
 
         /// <summary>
+        /// Returns a list of all tasks not used in current plan.
+        /// </summary>
+        /// <param name="planId">Id of the plan.</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/plan/{planId}/tasks/notinplan")]
+        public HttpResponseMessage GetTasksNotInCurrentPlan(int planId)
+        {
+            var task = taskService.GetTasksNotInPlan(planId);
+
+            if (task != null)
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, task);
+            }
+            else
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"There isn't tasks outside of the plan id = {planId}");
+            }
+        }
+
+        /// <summary>
         /// Returns task by Id.
         /// </summary>
         [HttpGet]
