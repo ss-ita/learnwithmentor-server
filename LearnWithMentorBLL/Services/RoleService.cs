@@ -20,8 +20,10 @@ namespace LearnWithMentorBLL.Services
         {
             var roles = db.Roles.GetAll();
             if (roles == null)
+            {
                 return null;
-            List<RoleDTO> dtos = new List<RoleDTO>();
+            }
+            var dtos = new List<RoleDTO>();
             foreach (var role in roles)
             {
                 dtos.Add(new RoleDTO(role.Id, role.Name));
@@ -31,7 +33,9 @@ namespace LearnWithMentorBLL.Services
         public RoleDTO GetByName(string name)
         {
             if (!db.Roles.TryGetByName(name, out var role))
+            {
                 return null;
+            }
             return new RoleDTO(role.Id, role.Name);
         }
     }

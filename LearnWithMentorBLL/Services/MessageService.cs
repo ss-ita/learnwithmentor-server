@@ -16,9 +16,11 @@ namespace LearnWithMentorBLL.Services
         {
             var userTask = db.UserTasks.Get(userTaskId);
             if (userTask == null)
+            {
                 return null;
+            }
             var messages = userTask.Messages;
-            List<MessageDTO> messageDTOs = new List<MessageDTO>();
+            var messageDTOs = new List<MessageDTO>();
             foreach (var message in messages)
             {
                 messageDTOs.Add(new MessageDTO(message.Id,
@@ -33,7 +35,7 @@ namespace LearnWithMentorBLL.Services
 
         public bool SendMessage(MessageDTO messageDTO)
         {
-            Message message = new Message()
+            var message = new Message()
             {
                 User_Id = messageDTO.SenderId,
                 Text = messageDTO.Text,
