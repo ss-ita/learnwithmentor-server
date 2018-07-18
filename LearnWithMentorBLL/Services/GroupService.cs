@@ -325,7 +325,7 @@ namespace LearnWithMentorBLL.Services
             {
                 foreach (var plan in plansNotInGroup)
                 {
-                    if (plan.Name.Contains(searchCase))
+                    if (plan.Name.ToLower().Contains(searchCase.ToLower()))
                     {
                         if (!plansNotInGroupdto.Contains(plan))
                             plansNotInGroupdto.Add(plan);
