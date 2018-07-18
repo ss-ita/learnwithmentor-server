@@ -3,6 +3,7 @@ using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDTO;
 using LearnWithMentorDAL.Entities;
 using System;
+using System.Linq;
 using LearnWithMentorDAL.UnitOfWork;
 
 namespace LearnWithMentorBLL.Services

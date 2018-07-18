@@ -37,7 +37,7 @@ namespace LearnWithMentorBLL.Services
             {
                 return null;
             }
-            return TaskToTaskDTO(task);
+            return TaskToTaskDTO(taks);
         }
 
         public int? AddAndGetId(TaskDTO taskDTO)
