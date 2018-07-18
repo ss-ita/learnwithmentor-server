@@ -67,6 +67,20 @@ namespace LearnWithMentor.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, plan);
         }
 
+
+        [HttpGet]
+        [Route("api/plan/{id}/sections")]
+        public HttpResponseMessage GetTasksForPlan(int id)
+        {
+            var sections = planService.GetTasksForPlan(id);
+            if (sections == null)
+            {
+                var message = "Plan does not exist in database.";
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
+            }
+            return Request.CreateResponse<IEnumerable<SectionDTO>>(HttpStatusCode.OK, sections);
+        }
+
         /// <summary>
         /// Gets some number of plans on page. 
         /// </summary>
@@ -101,6 +115,23 @@ namespace LearnWithMentor.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
             }
             return Request.CreateResponse<IEnumerable<TaskDTO>>(HttpStatusCode.OK, dtosList);
+        }
+
+        /// <summary>
+        /// Gets all Plantask ids of concrete plan.
+        /// </summary>
+        /// <param name="plan_id"> Id of plan. </param>
+        [HttpGet]
+        [Route("api/plan/{plan_id}/plantaskids")]
+        public HttpResponseMessage GetAllPlanTaskIds(int plan_id)
+        {
+            List<int> dtosList = planService.GetAllPlanTaskids(plan_id);
+            if (dtosList == null || dtosList.Count == 0)
+            {
+                var message = "Plan does not contain any plantask.";
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
+            }
+            return Request.CreateResponse<IEnumerable<int>>(HttpStatusCode.OK, dtosList);
         }
 
         /// <summary>

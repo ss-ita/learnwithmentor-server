@@ -17,8 +17,8 @@ namespace LearnWithMentor.Filters
     {
         public string Realm { get; set; }
         public bool AllowMultiple => false;
-        //ToDo: maybe it's possible to add DI to the field
         private readonly IUserService userService = new UserService(new UnitOfWork(new LearnWithMentorDAL.Entities.LearnWithMentor_DBEntities()));
+
         public async Task AuthenticateAsync(HttpAuthenticationContext context, CancellationToken cancellationToken)
         {
             var request = context.Request;
@@ -59,35 +59,26 @@ namespace LearnWithMentor.Filters
                 return false;
 
             var useremailClaim = identity.FindFirst(ClaimTypes.Email);
-            email = useremailClaim?.Value;
+                email = useremailClaim?.Value;
             var userroleClaim = identity.FindFirst(ClaimTypes.Role);
-            userrole = userroleClaim?.Value;
+                userrole = userroleClaim?.Value;
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(userroleClaim?.Value))
                 return false;
-
-            //todo More validate to check whether username exists in system
 
             return true;
         }
 
         protected Task<IPrincipal> AuthenticateJwtToken(string token)
         {
-            string email;
-            string userrole;
-
-            if (ValidateToken(token, out email, out userrole))
+            if (ValidateToken(token, out string email, out string userrole))
             {
                 UserIdentityDTO userDTO = userService.GetByEmail(email);
-                
+
                 var claims = new List<Claim>
                 {
-                   
                     new Claim(ClaimTypes.Role, userrole),
                     new Claim("Id", userDTO.Id.ToString()),
                     new Claim(ClaimTypes.Name, userDTO.FirstName)
-
-
-                    // todo: Add more claims if needed: Roles, ...
                 };
 
                 var identity = new ClaimsIdentity(claims, "Jwt");

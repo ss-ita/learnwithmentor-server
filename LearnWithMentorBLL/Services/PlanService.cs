@@ -77,6 +77,7 @@ namespace LearnWithMentorBLL.Services
             }
             return dtosList;
         }
+
         public List<TaskDTO> GetAllTasks(int planId)
         {
             var plan = db.Plans.Get(planId);
@@ -107,19 +108,33 @@ namespace LearnWithMentorBLL.Services
             return dtosList;
         }
 
+        public List<int> GetAllPlanTaskids(int planId)
+        {
+            var plan = db.Plans.Get(planId);
+            if (plan == null)
+                return null;
+            var planTaskIds =   db.PlanTasks.GetAll().Where(pt => pt.Plan_Id == planId).Select(pt => pt.Id).ToList();
+            
+            if (!planTaskIds.Any())
+                return null;
+            return planTaskIds;
+        }
+
         public List<SectionDTO> GetTasksForPlan(int planId)
         {
             var plan = db.Plans.Get(planId);
             if (plan == null)
             {
                 return null;
-            }
-            var section = db.PlanTasks.GetAll().GroupBy(s => s.Sections).Select(p => new { Id = p.Key.Id,  Name = p.Key.Name, Tasks = p.Key.PlanTasks.Where(pt => pt.Plan_Id == plan.Id).Select(pt => pt.Tasks) }).ToList();
-            var sectionDTOs = new List<SectionDTO>();
+
+            var section = db.PlanTasks.GetAll().Where(pt => pt.Plan_Id == planId).GroupBy(s => s.Sections).Select(p => new { Id = p.Key.Id,  Name = p.Key.Name, Tasks = p.Key.PlanTasks.Select(pt => pt.Tasks) }).ToList();
+
+            List<SectionDTO> sectionDTOs = new List<SectionDTO>();
 
             foreach (var sec in section)
             {
-                var taskDTOs = new List<TaskDTO>();
+                List<TaskDTO> taskDTOs = new List<TaskDTO>();
+                ContentDTO contentDTO = new ContentDTO();
                 foreach (var task in sec.Tasks)
                 {
                     var toAdd = new TaskDTO(task.Id,
@@ -135,12 +150,14 @@ namespace LearnWithMentorBLL.Services
                         db.PlanTasks.GetTaskPriorityInPlan(task.Id, planId),
                         db.PlanTasks.GetTaskSectionIdInPlan(task.Id, planId),
                         db.PlanTasks.GetIdByTaskAndPlan(task.Id, planId));
-                                            taskDTOs.Add(toAdd);
+                    taskDTOs.Add(toAdd);
                 }
-                var sectionDTO = new SectionDTO()
+                contentDTO.Tasks = taskDTOs;
+                SectionDTO sectionDTO = new SectionDTO()
                 {
+                    Id = sec.Id,
                     Name = sec.Name,
-                    Tasks = taskDTOs
+                    Content = contentDTO
                 };
                 sectionDTOs.Add(sectionDTO);
             }

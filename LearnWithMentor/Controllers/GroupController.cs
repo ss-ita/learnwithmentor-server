@@ -118,6 +118,34 @@ namespace LearnWithMentor.Controllers
         }
 
         /// <summary>
+        /// Returns users that belong to group by group Id "api/group/{id}/users"
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/group/{id}/userimages")]
+        public HttpResponseMessage GetUsersWithImage(int id)
+        {
+            try
+            {
+                var group = groupService.GetUsersWithImage(id);
+                if (group != null)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, group);
+                }
+                else
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.NoContent, "There are no users with image in the group.");
+                }
+            }
+            catch (EntityException e)
+            {
+                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
+        }
+
+        /// <summary>
         /// Returns users that is not belong to group by group Id "api/group/{id}/users"
         /// </summary>
         /// <param name="groupId"></param>

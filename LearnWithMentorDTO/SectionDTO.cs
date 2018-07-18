@@ -6,6 +6,6 @@ namespace LearnWithMentorDTO
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public List<TaskDTO> Tasks { get; set; }
+        public ContentDTO Content { get; set; }
     }
 }
