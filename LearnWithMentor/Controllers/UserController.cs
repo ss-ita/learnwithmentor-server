@@ -51,7 +51,7 @@ namespace LearnWithMentor.Controllers
             {
                 return Request.CreateResponse<IEnumerable<UserDTO>>(HttpStatusCode.OK, users);
             }
-            var message = "No users in database.";
+            const string message = "No users in database.";
             return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
         }
 
@@ -70,14 +70,14 @@ namespace LearnWithMentor.Controllers
                 var role = roleService.Get(roleId);
                 if (role == null)
                 {
-                    var roleErorMessage = "No roles with this id  in database.";
+                    const string roleErorMessage = "No roles with this id  in database.";
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, roleErorMessage);
                 }
             }
-            List<UserDTO> users = userService.GetUsersByRole(roleId);
+            var users = userService.GetUsersByRole(roleId);
             if (users.Count == 0)
             {
-                var usersErorMessage = "No users with this role_id  in database.";
+                const string usersErorMessage = "No users with this role_id  in database.";
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, usersErorMessage);
             }
             return Request.CreateResponse<IEnumerable<UserDTO>>(HttpStatusCode.OK, users);
@@ -93,10 +93,10 @@ namespace LearnWithMentor.Controllers
         [Route("api/user/instate/{state}")]
         public HttpResponseMessage GetUsersbyState(bool state)
         {
-            List<UserDTO> users = userService.GetUsersByState(state);
+            var users = userService.GetUsersByState(state);
             if (users.Count == 0)
             {
-                var usersErorMessage = "No users with this state in database.";
+                const string usersErorMessage = "No users with this state in database.";
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, usersErorMessage);
             }
             return Request.CreateResponse<IEnumerable<UserDTO>>(HttpStatusCode.OK, users);
@@ -112,12 +112,12 @@ namespace LearnWithMentor.Controllers
         {
             var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
             var id = int.Parse(identity.FindFirst("Id").Value);
-            UserDTO user = userService.Get(id);
+            var user = userService.Get(id);
             if (user != null)
             {
                 return Request.CreateResponse(HttpStatusCode.OK, user);
             }
-            var message = "User does not exist in database.";
+            const string message = "User does not exist in database.";
             return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
         }
 
@@ -136,7 +136,7 @@ namespace LearnWithMentor.Controllers
             }
             try
             {
-                bool success = userService.Add(value);
+                var success = userService.Add(value);
                 if (success)
                 {
                     var okMessage = $"Succesfully created user: {value.Email}.";
@@ -149,7 +149,7 @@ namespace LearnWithMentor.Controllers
                 tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
-            var message = "Incorrect request syntax.";
+            const string message = "Incorrect request syntax.";
             tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, message);
             return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
         }
@@ -167,7 +167,7 @@ namespace LearnWithMentor.Controllers
             var statsDTO = taskService.GetUserStatistics(id);
             if (statsDTO == null)
             {
-                var errorMessage = "No user with this id in database.";
+                const string errorMessage = "No user with this id in database.";
                 return Request.CreateResponse(HttpStatusCode.NoContent, errorMessage);
             }
             return Request.CreateResponse(HttpStatusCode.OK, statsDTO);
@@ -184,13 +184,13 @@ namespace LearnWithMentor.Controllers
         {
             if (!userService.ContainsId(id))
             {
-                var errorMessage = "No user with this id in database.";
+                const string errorMessage = "No user with this id in database.";
                 return Request.CreateResponse(HttpStatusCode.NoContent, errorMessage);
             }
 
             if (HttpContext.Current.Request.Files.Count != 1)
             {
-                var errorMessage = "Only one image can be sent.";
+                const string errorMessage = "Only one image can be sent.";
                 return Request.CreateResponse(HttpStatusCode.BadRequest, errorMessage);
             }
 
@@ -199,19 +199,19 @@ namespace LearnWithMentor.Controllers
                 var postedFile = HttpContext.Current.Request.Files[0];
                 if (postedFile.ContentLength > 0)
                 {
-                    List<string> allowedFileExtensions = new List<string>(Constants.ImageRestrictions.Extensions);
+                    var allowedFileExtensions = new List<string>(Constants.ImageRestrictions.Extensions);
 
                     var extension = postedFile.FileName.Substring(postedFile.FileName.LastIndexOf('.')).ToLower();
                     if (!allowedFileExtensions.Contains(extension))
                     {
-                        string errorMessage = "Types allowed only .jpeg .jpg .png";
+                        const string errorMessage = "Types allowed only .jpeg .jpg .png";
                         return Request.CreateResponse(HttpStatusCode.BadRequest, errorMessage);
                     }
 
-                    int maxContentLength = Constants.ImageRestrictions.MaxSize; 
+                    const int maxContentLength = Constants.ImageRestrictions.MaxSize; 
                     if (postedFile.ContentLength > maxContentLength)
                     {
-                        string errorMessage = "Please Upload a file upto 1 mb.";
+                        const string errorMessage = "Please Upload a file upto 1 mb.";
                         return Request.CreateResponse(HttpStatusCode.BadRequest, errorMessage);
                     }
 
@@ -222,10 +222,10 @@ namespace LearnWithMentor.Controllers
                     }
 
                     userService.SetImage(id, imageData, postedFile.FileName);
-                    var okMessage = "Successfully created image.";
+                    const string okMessage = "Successfully created image.";
                     return Request.CreateResponse(HttpStatusCode.OK, okMessage);
                 }
-                string emptyImageMessage = "Empty image.";
+                const string emptyImageMessage = "Empty image.";
                 return Request.CreateErrorResponse(HttpStatusCode.NotModified, emptyImageMessage);
             }
             catch (EntityException e)
@@ -247,13 +247,13 @@ namespace LearnWithMentor.Controllers
             {
                 if (!userService.ContainsId(id))
                 {
-                    var errorMessage = "No user with this id in database.";
+                    const string errorMessage = "No user with this id in database.";
                     return Request.CreateResponse(HttpStatusCode.NoContent, errorMessage);
                 }
-                ImageDTO dto = userService.GetImage(id);
+                var dto = userService.GetImage(id);
                 if (dto == null)
                 {
-                    var message = "No image for this user in database.";
+                    const string message = "No image for this user in database.";
                     return Request.CreateResponse(HttpStatusCode.NoContent, message);
                 }
                 return Request.CreateResponse(HttpStatusCode.OK, dto);
@@ -276,7 +276,7 @@ namespace LearnWithMentor.Controllers
         {
             try
             {
-                bool success = userService.UpdateById(id, value);
+                var success = userService.UpdateById(id, value);
                 if (success)
                 {
                     var okMessage = $"Succesfully updated user id: {id}.";
@@ -289,7 +289,7 @@ namespace LearnWithMentor.Controllers
                 tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
-            var message = "Incorrect request syntax or user does not exist.";
+            const string message = "Incorrect request syntax or user does not exist.";
             tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, message);
             return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
         }
@@ -306,7 +306,7 @@ namespace LearnWithMentor.Controllers
         {
             try
             {
-                bool success = userService.BlockById(id);
+                var success = userService.BlockById(id);
                 if (success)
                 {
                     var okMessage = $"Succesfully blocked user id: {id}.";
@@ -339,8 +339,8 @@ namespace LearnWithMentor.Controllers
             {
                 q = "";
             }
-            RoleDTO criteria = roleService.GetByName(role);
-            string[] lines = q.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var criteria = roleService.GetByName(role);
+            var lines = q.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             int? searchParametr = null;
             if (role == Constants.Roles.Blocked)
             {
@@ -350,13 +350,13 @@ namespace LearnWithMentor.Controllers
             {
                 lines = lines.Take(2).ToArray();
             }
-            List<UserDTO> users = criteria != null ? userService.Search(lines, criteria.Id) :
+            var users = criteria != null ? userService.Search(lines, criteria.Id) :
                 userService.Search(lines, searchParametr);
             if (users.Count != 0)
             {
                 return Request.CreateResponse<IEnumerable<UserDTO>>(HttpStatusCode.OK, users);
             }
-            var message = "No users found.";
+            const string message = "No users found.";
             return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
         }
 
@@ -374,14 +374,14 @@ namespace LearnWithMentor.Controllers
             {
                 var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
                 var id = int.Parse(identity.FindFirst("Id").Value);
-                bool success = userService.UpdatePassword(id, value);
+                var success = userService.UpdatePassword(id, value);
                 if (success)
                 {
-                    var okMessage = "Succesfully updated password.";
+                    const string okMessage = "Succesfully updated password.";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, okMessage);
                     return Request.CreateResponse(HttpStatusCode.OK, okMessage);
                 }
-                var noUserMessage = "No user with this ID in database.";
+                const string noUserMessage = "No user with this ID in database.";
                 return Request.CreateResponse(HttpStatusCode.NoContent, noUserMessage);
             }
             catch (EntityException e)
@@ -405,7 +405,7 @@ namespace LearnWithMentor.Controllers
             {
                 return Request.CreateResponse<IEnumerable<RoleDTO>>(HttpStatusCode.OK, roles);
             }
-            var message = "No roles in database.";
+            const string message = "No roles in database.";
             return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
         }
 
