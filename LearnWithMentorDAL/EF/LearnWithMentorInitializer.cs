@@ -501,7 +501,7 @@ namespace LearnWithMentorDAL.EF
             }
             foreach (var userTask in userTasks)
             {
-                userTask.Propose_End_Date = new DateTime(2018, 9, 1, 23, 59, 59);
+                userTask.End_Date = new DateTime(2018, 9, 1, 23, 59, 59);
                 userTask.Propose_End_Date = new DateTime(2018, 9, 12, 23, 59, 59);
             }
             context.UserTasks.AddRange(userTasks);
