@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using LearnWithMentorDAL.Entities;
+using LearnWithMentorDAL.Repositories.Interfaces;
 
 namespace LearnWithMentorDAL.Repositories
 {
@@ -12,15 +13,17 @@ namespace LearnWithMentorDAL.Repositories
 
         public User Get(int id)
         {
-            return context.Users.FirstOrDefault(u => u.Id == id);
+            return Context.Users.FirstOrDefault(u => u.Id == id);
         }
+
         public User GetByEmail(string email)
         {
-            return context.Users.FirstOrDefault(u => u.Email == email);
+            return Context.Users.FirstOrDefault(u => u.Email == email);
         }
+
         public IEnumerable<User> GetUsersByGroup(int groupId)
         {
-            return context.Groups.FirstOrDefault(g => g.Id == groupId)?.Users;
+            return Context.Groups.FirstOrDefault(g => g.Id == groupId)?.Users;
         }
 
         public IEnumerable<User> Search(string[] searchString, int? roleId)
@@ -31,15 +34,15 @@ namespace LearnWithMentorDAL.Repositories
             string secondWord = searchString.Length == 2 ? searchString[1] : "";
             if (roleId == null)
             {
-                usersWithCriteria = context.Users;
+                usersWithCriteria = Context.Users;
             }
             else if (roleId == -1)
             {
-                usersWithCriteria = context.Users.Where(u => u.Blocked);
+                usersWithCriteria = Context.Users.Where(u => u.Blocked);
             }
             else
             {
-                usersWithCriteria = context.Users.Where(u => u.Role_Id == roleId);
+                usersWithCriteria = Context.Users.Where(u => u.Role_Id == roleId);
             }
             usersWithCriteria = usersWithCriteria.Where(u =>
                 (u.FirstName.Contains(firstWord) && u.LastName.Contains(secondWord))
@@ -56,29 +59,29 @@ namespace LearnWithMentorDAL.Repositories
 
         public string GetImageBase64(int userId)
         {
-            return context.Users.FirstOrDefault(u => u.Id == userId)?.Image;
+            return Context.Users.FirstOrDefault(u => u.Id == userId)?.Image;
         }
 
         public bool ContainsId(int id)
         {
-            return context.Users.Any(u => u.Id == id);
+            return Context.Users.Any(u => u.Id == id);
         }
 
-        public IEnumerable<User> GetUsersByRole(int role_id)
+        public IEnumerable<User> GetUsersByRole(int roleId)
         {
-            return context.Users.Where(u => u.Role_Id == role_id);
+            return Context.Users.Where(u => u.Role_Id == roleId);
         }
 
         public IEnumerable<User> GetUsersByState(bool state)
         {
-            return context.Users.Where(u => u.Blocked == state);
+            return Context.Users.Where(u => u.Blocked == state);
         }
 
         public string ExtractFullName(int? id)
         {
             if (id == null)
                 return null;
-            User currentUser = context.Users.FirstOrDefault(u => u.Id == id.Value);
+            User currentUser = Context.Users.FirstOrDefault(u => u.Id == id.Value);
             string fullName = null;
             if (currentUser != null)
                 fullName = string.Concat(currentUser.FirstName, " ", currentUser.LastName);
@@ -87,7 +90,7 @@ namespace LearnWithMentorDAL.Repositories
 
         public IEnumerable<User> GetUsersNotInGroup(int groupId)
         {
-            return context.Users.Where(u => !u.Groups.Select(g => g.Id).Contains(groupId));
+            return Context.Users.Where(u => !u.Groups.Select(g => g.Id).Contains(groupId)).Where(u => !u.Blocked && u.Roles.Name == "Student");
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using LearnWithMentorDAL.Entities;
 
-namespace LearnWithMentorDAL.Repositories
+namespace LearnWithMentorDAL.Repositories.Interfaces
 {
     public interface ISectionRepository: IRepository<Section>
     {

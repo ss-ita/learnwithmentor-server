@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using LearnWithMentorDAL;
-using LearnWithMentorDAL.Entities;
+﻿using System.Collections.Generic;
 using LearnWithMentorDTO;
 
 namespace LearnWithMentorBLL.Interfaces
@@ -13,8 +10,8 @@ namespace LearnWithMentorBLL.Interfaces
         IEnumerable<CommentDTO> GetCommentsForPlanTask(int planTaskId);
         bool AddCommentToPlanTask(int planTaskId, CommentDTO c);
         bool AddCommentToPlanTask(int planId, int taskId, CommentDTO c);
-        bool UpdateCommentIdText(int Id, string text);
-        bool UpdateComment(int Id, CommentDTO c);
+        bool UpdateCommentIdText(int id, string text);
+        bool UpdateComment(int id, CommentDTO c);
         bool RemoveById(int id);
     }
 }

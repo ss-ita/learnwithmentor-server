@@ -1,5 +1,5 @@
 ﻿using System;
-using LearnWithMentorDAL.Repositories;
+using LearnWithMentorDAL.Repositories.Interfaces;
 
 namespace LearnWithMentorDAL.UnitOfWork
 {

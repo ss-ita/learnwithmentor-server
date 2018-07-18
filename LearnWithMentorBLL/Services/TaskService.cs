@@ -5,6 +5,7 @@ using LearnWithMentorDTO;
 using LearnWithMentorDAL.Entities;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDAL.UnitOfWork;
+using LearnWithMentorDTO.Infrastructure;
 
 namespace LearnWithMentorBLL.Services
 {
@@ -35,6 +36,23 @@ namespace LearnWithMentorBLL.Services
             if (task == null)
                 return null;
             return TaskToTaskDTO(task);
+        }
+
+        public int? AddAndGetId(TaskDTO taskDTO)
+        {
+            if (!db.Users.ContainsId(taskDTO.CreatorId))
+                return null;
+            var task = new Task
+            {
+                Name = taskDTO.Name,
+                Description = taskDTO.Description,
+                Private = taskDTO.Private,
+                Create_Id = taskDTO.CreatorId,
+                Mod_Id = taskDTO.ModifierId
+            };
+            var createdTask = db.Tasks.AddAndReturnElement(task);
+            db.Save();
+            return createdTask?.Id;
         }
 
         public TaskDTO GetTaskForPlan(int taskId, int planId)
@@ -70,8 +88,8 @@ namespace LearnWithMentorBLL.Services
                                     db.Users.ExtractFullName(task.Mod_Id),
                                     task.Create_Date,
                                     task.Mod_Date,
-                                    planTask?.Priority,
-                                    planTask?.Section_Id,
+                                    planTask.Priority,
+                                    planTask.Section_Id,
                                     planTask.Id);
             return taskDTO;
         }
@@ -110,9 +128,9 @@ namespace LearnWithMentorBLL.Services
                                     db.Users.ExtractFullName(task.Mod_Id),
                                     task.Create_Date,
                                     task.Mod_Date,
-                                    task.PlanTasks.Where(pt => pt.Task_Id == task.Id && pt.Plan_Id == planId).FirstOrDefault()?.Priority,
-                                    task.PlanTasks.Where(pt => pt.Task_Id == task.Id && pt.Plan_Id == planId).FirstOrDefault()?.Section_Id,
-                                    task.PlanTasks.Where(pt => pt.Task_Id == task.Id && pt.Plan_Id == planId).FirstOrDefault()?.Id));
+                                    task.PlanTasks.FirstOrDefault(pt => pt.Task_Id == task.Id && pt.Plan_Id == planId)?.Priority,
+                                    task.PlanTasks.FirstOrDefault(pt => pt.Task_Id == task.Id && pt.Plan_Id == planId)?.Section_Id,
+                                    task.PlanTasks.FirstOrDefault(pt => pt.Task_Id == task.Id && pt.Plan_Id == planId)?.Id));
             }
             return taskList;
         }
@@ -204,6 +222,7 @@ namespace LearnWithMentorBLL.Services
             }
             return false;
         }
+
         public List<UserTaskStateDTO> GetTaskStatesForUser(int[] planTaskIds, int userId)
         {
             List<UserTaskStateDTO> dtoList = new List<UserTaskStateDTO>();
@@ -216,6 +235,45 @@ namespace LearnWithMentorBLL.Services
                 }
             }
             return dtoList;
+        }
+
+        public IEnumerable<TaskDTO> GetTasksNotInPlan(int planId)
+        {
+            var plan = db.Plans.Get(planId);
+            if (plan == null)
+            {
+                return null;
+            }
+            var tasksNotUsedInPlan= db.Tasks.GetTasksNotInPlan(planId);
+            if (tasksNotUsedInPlan == null)
+            {
+                return null;
+            }
+            List<TaskDTO> tasksNotUsedInPlanList = new List<TaskDTO>();
+            foreach (var task in tasksNotUsedInPlan)
+            {
+                TaskDTO taskDto = new TaskDTO
+                (
+                    task.Id,
+                                task.Name,
+                                task.Description,
+                                task.Private,
+                                task.Create_Id,
+                                db.Users.ExtractFullName(task.Create_Id),
+                                task.Mod_Id,
+                                db.Users.ExtractFullName(task.Mod_Id),
+                                task.Create_Date,
+                                task.Mod_Date,
+                                null,
+                                null,
+                                null);
+
+                if (!tasksNotUsedInPlanList.Contains(taskDto))
+                {
+                    tasksNotUsedInPlanList.Add(taskDto);
+                }
+            }
+            return tasksNotUsedInPlanList;
         }
         
         public UserTaskDTO GetUserTaskByUserPlanTaskId(int userId, int planTaskId)
@@ -252,6 +310,7 @@ namespace LearnWithMentorBLL.Services
             db.Save();
             return true;
         }
+
         public bool UpdateUserTaskResult(int userTaskId, string newResult)
         {
             if (newResult == null)

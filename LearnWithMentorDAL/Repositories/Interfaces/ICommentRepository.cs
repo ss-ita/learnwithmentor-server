@@ -1,8 +1,7 @@
-﻿using LearnWithMentorDAL.Entities;
-using LearnWithMentorDTO;
-using System.Linq;
+﻿using System.Linq;
+using LearnWithMentorDAL.Entities;
 
-namespace LearnWithMentorDAL.Repositories
+namespace LearnWithMentorDAL.Repositories.Interfaces
 {
     public interface ICommentRepository: IRepository<Comment>
     {

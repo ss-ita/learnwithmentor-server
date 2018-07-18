@@ -10,7 +10,7 @@ namespace LearnWithMentorDTO
     {
         public static PagedListDTO<T> GetDTO (List<T> source, int pageNumber, int pageSize)
         {
-            int maxPageSize = ValidationRules.MAX_PAGE_SIZE;            
+            int maxPageSize = Infrastructure.ValidationRules.MAX_PAGE_SIZE;            
             pageSize = (pageSize > maxPageSize) ? maxPageSize : (pageSize < 1) ? 1 : pageSize;
             int totalCount = source.Count();
             int totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);

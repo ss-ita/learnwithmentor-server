@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using LearnWithMentorDAL;
-using LearnWithMentorDAL.Entities;
+﻿using System.Collections.Generic;
 using LearnWithMentorDTO;
 
 namespace LearnWithMentorBLL.Interfaces

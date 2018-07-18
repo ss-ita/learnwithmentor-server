@@ -76,23 +76,23 @@ namespace LearnWithMentor.Controllers
         /// <summary>
         /// Returns all users with specified role.
         /// </summary>
-        /// <param name="role_id"> Id of the role. </param>
+        /// <param name="roleId"> Id of the role. </param>
         [JwtAuthentication]
         [Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("api/user/inrole/{role_id}")]
-        public HttpResponseMessage GetUsersbyRole(int role_id)
+        public HttpResponseMessage GetUsersbyRole(int roleId)
         {
-            if (role_id != -1)
+            if (roleId != Constants.Roles.BlockedIndex)
             {
-                var role = roleService.Get(role_id);
+                var role = roleService.Get(roleId);
                 if (role == null)
                 {
                     var roleErorMessage = "No roles with this id  in database.";
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, roleErorMessage);
                 }
             }
-            List<UserDTO> users = userService.GetUsersByRole(role_id);
+            List<UserDTO> users = userService.GetUsersByRole(roleId);
             if (users.Count == 0)
             {
                 var usersErorMessage = "No users with this role_id  in database.";
@@ -169,8 +169,8 @@ namespace LearnWithMentor.Controllers
         public HttpResponseMessage GetSingle()
         {
             var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
-            var Id = int.Parse(identity.FindFirst("Id").Value);
-            UserDTO user = userService.Get(Id);
+            var id = int.Parse(identity.FindFirst("Id").Value);
+            UserDTO user = userService.Get(id);
             if (user != null)
             {
                 return Request.CreateResponse(HttpStatusCode.OK, user);
@@ -255,9 +255,9 @@ namespace LearnWithMentor.Controllers
             try
             {
                 var postedFile = HttpContext.Current.Request.Files[0];
-                if (postedFile != null && postedFile.ContentLength > 0)
+                if (postedFile.ContentLength > 0)
                 {
-                    List<string> allowedFileExtensions = new List<string> { ".jpeg", ".jpg", ".png" };
+                    List<string> allowedFileExtensions = new List<string>(Constants.ImageRestrictions.Extensions);
 
                     var extension = postedFile.FileName.Substring(postedFile.FileName.LastIndexOf('.')).ToLower();
                     if (!allowedFileExtensions.Contains(extension))
@@ -266,14 +266,14 @@ namespace LearnWithMentor.Controllers
                         return Request.CreateResponse(HttpStatusCode.BadRequest, errorMessage);
                     }
 
-                    int maxContentLength = 1024 * 1024 * 1; //Size = 1 MB  
+                    int maxContentLength = Constants.ImageRestrictions.MaxSize; 
                     if (postedFile.ContentLength > maxContentLength)
                     {
                         string errorMessage = "Please Upload a file upto 1 mb.";
                         return Request.CreateResponse(HttpStatusCode.BadRequest, errorMessage);
                     }
 
-                    byte[] imageData = null;
+                    byte[] imageData;
                     using (var binaryReader = new BinaryReader(postedFile.InputStream))
                     {
                         imageData = binaryReader.ReadBytes(postedFile.ContentLength);
@@ -398,11 +398,11 @@ namespace LearnWithMentor.Controllers
                 q = "";
             }
             RoleDTO criteria = roleService.GetByName(role);
-            string[] lines = q.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] lines = q.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             int? searchParametr = null;
-            if (role == "blocked")
+            if (role == Constants.Roles.Blocked)
             {
-                searchParametr = -1;
+                searchParametr = Constants.Roles.BlockedIndex;
             }
             if (lines.Length > 2)
             {
@@ -454,7 +454,6 @@ namespace LearnWithMentor.Controllers
         /// <summary>
         /// Updates user password.
         /// </summary>
-        /// <param name="id"> Id of the user. </param>
         /// <param name="value"> New password value. </param>
         /// <returns></returns>
         [JwtAuthentication]
@@ -465,11 +464,11 @@ namespace LearnWithMentor.Controllers
             try
             {
                 var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
-                var Id = int.Parse(identity.FindFirst("Id").Value);
-                bool success = userService.UpdatePassword(Id, value);
+                var id = int.Parse(identity.FindFirst("Id").Value);
+                bool success = userService.UpdatePassword(id, value);
                 if (success)
                 {
-                    var okMessage = $"Succesfully updated password.";
+                    var okMessage = "Succesfully updated password.";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, okMessage);
                     return Request.CreateResponse(HttpStatusCode.OK, okMessage);
                 }

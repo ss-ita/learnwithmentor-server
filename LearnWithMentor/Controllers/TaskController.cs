@@ -5,14 +5,13 @@ using System.Net;
 using System.Net.Http;
 using LearnWithMentorDTO;
 using LearnWithMentorBLL.Interfaces;
-using LearnWithMentorBLL.Services;
 using System.Text.RegularExpressions;
 using LearnWithMentor.Filters;
 using System.Web.Http.Tracing;
-using LearnWithMentor.Log;
 using System.Data.Entity.Core;
 using System.Web;
 using System.Security.Claims;
+using LearnWithMentorDTO.Infrastructure;
 
 namespace LearnWithMentor.Controllers
 {
@@ -79,6 +78,25 @@ namespace LearnWithMentor.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
         }
+        /// Returns a list of all tasks not used in current plan.
+        /// </summary>
+        /// <param name="planId">Id of the plan.</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/plan/{planId}/tasks/notinplan")]
+        public HttpResponseMessage GetTasksNotInCurrentPlan(int planId)
+        {
+            var task = taskService.GetTasksNotInPlan(planId);
+
+            if (task != null)
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, task);
+            }
+            else
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"There isn't tasks outside of the plan id = {planId}");
+            }
+        }
 
         /// <summary>
         /// Returns task by Id.
@@ -139,9 +157,9 @@ namespace LearnWithMentor.Controllers
             try
             {
                 var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
-                var Id = int.Parse(identity.FindFirst("Id").Value);
-                var Role = identity.RoleClaimType;
-                if (!(userId == Id || Role == "Mentor"))
+                var currentId = int.Parse(identity.FindFirst("Id").Value);
+                var currentRole = identity.RoleClaimType;
+                if (!(userId == currentId || currentRole == Constants.Roles.Mentor))
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
                 }
@@ -168,9 +186,9 @@ namespace LearnWithMentor.Controllers
             try
             {
                 var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
-                var id = int.Parse(identity.FindFirst("Id").Value);
-                var role = identity.RoleClaimType;
-                if (!(taskService.CheckUserTaskOwner(userTaskId, id) || role == "Mentor"))
+                var currentId = int.Parse(identity.FindFirst("Id").Value);
+                var currentRole = identity.RoleClaimType;
+                if(!(taskService.CheckUserTaskOwner(userTaskId, currentId) || currentRole == Constants.Roles.Mentor))
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
                 }
@@ -204,13 +222,15 @@ namespace LearnWithMentor.Controllers
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
                 }
                 newMessage.UserTaskId = userTaskId;
-                // todo: logic for sender id if needed
+                var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
+                var currentId = int.Parse(identity.FindFirst("Id").Value);
+                newMessage.SenderId = currentId;
                 bool success = messageService.SendMessage(newMessage);
                 if (success)
                 {
                     var message = $"Succesfully created message with id = {newMessage.Id} by user with id = {newMessage.SenderId}";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, message);
-                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully created message");
+                    return Request.CreateResponse(HttpStatusCode.OK, "Succesfully created message");
                 }
                 tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on message creating");
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Creation error.");
@@ -241,7 +261,7 @@ namespace LearnWithMentor.Controllers
                 {
                     var message = $"Succesfully created task with id = {newUserTask.Id} for user with id = {newUserTask.UserId}";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, message);
-                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully created task for user.");
+                    return Request.CreateResponse(HttpStatusCode.OK, "Succesfully created task for user.");
                 }
                 tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on user task creating");
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, "There is no user or task in database");
@@ -271,7 +291,7 @@ namespace LearnWithMentor.Controllers
                 {
                     var message = $"Succesfully updated user task with id = {userTaskId} on status {newStatus}";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, message);
-                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully updated task for user.");
+                    return Request.CreateResponse(HttpStatusCode.OK, "Succesfully updated task for user.");
                 }
                 tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on updating task status");
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax or usertask does not exist.");
@@ -303,7 +323,7 @@ namespace LearnWithMentor.Controllers
                 {
                     var message = $"Succesfully updated user task with id = {userTaskId} on result {value}";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, message);
-                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully updated user task result.");
+                    return Request.CreateResponse(HttpStatusCode.OK, "Succesfully updated user task result.");
                 }
                 tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on updating user task result");
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax or usertask does not exist.");
@@ -350,7 +370,7 @@ namespace LearnWithMentor.Controllers
                 {
                     return GetAllTasks();
                 }
-                string[] lines = key.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] lines = key.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 var taskList = taskService.Search(lines);
                 return Request.CreateResponse(HttpStatusCode.OK, taskList);
             }
@@ -376,7 +396,7 @@ namespace LearnWithMentor.Controllers
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax.");
                 }
-                string[] lines = key.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] lines = key.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 var taskList = taskService.Search(lines, planId);
                 if (taskList == null)
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, "This plan does not exist.");
@@ -409,7 +429,7 @@ namespace LearnWithMentor.Controllers
                 {
                     var message = $"Succesfully created task with id = {newTask.Id} by user with id = {newTask.CreatorId}";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, message);
-                    return Request.CreateResponse(HttpStatusCode.OK, $"Task succesfully created");
+                    return Request.CreateResponse(HttpStatusCode.OK, "Task succesfully created");
                 }
                 tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on creating task");
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Creation error.");
@@ -420,6 +440,39 @@ namespace LearnWithMentor.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
 
+        }
+
+        /// <summary>
+        /// Creates new task and returns id of the created task.
+        /// </summary>
+        /// <param name="value"> New plan to be created. </param>
+        [Authorize(Roles = "Mentor")]
+        [HttpPost]
+        [Route("api/task/return")]
+        public HttpResponseMessage PostAndReturnId([FromBody]TaskDTO value)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                }
+                var result = taskService.AddAndGetId(value);
+                if (result != null)
+                {
+                    var log = $"Succesfully created task {value.Name} with id = {result} by user with id = {value.CreatorId}";
+                    tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
+                    return Request.CreateResponse(HttpStatusCode.OK, result);
+                }
+            }
+            catch (EntityException e)
+            {
+                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
+            tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on creating task");
+            var message = "Incorrect request syntax.";
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
         }
 
         /// <summary>

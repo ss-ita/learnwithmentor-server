@@ -35,7 +35,7 @@ namespace LearnWithMentorBLL.Services
         public List<UserDTO> GetAllUsers()
         {
             var users = db.Users.GetAll();
-            if (!users.Any())
+            if (users == null)
                 return null;
             List<UserDTO> dtos = new List<UserDTO>();
             foreach (var user in users)
@@ -87,8 +87,7 @@ namespace LearnWithMentorBLL.Services
                     item.Blocked = user.Blocked.Value;
                     modified = true;
                 }
-                Role updatedRole;
-                if (db.Roles.TryGetByName(user.Role, out updatedRole))
+                if (db.Roles.TryGetByName(user.Role, out var updatedRole))
                 {
                     item.Role_Id = updatedRole.Id;
                     modified = true;
@@ -100,11 +99,12 @@ namespace LearnWithMentorBLL.Services
         }
         public bool Add(UserRegistrationDTO userLoginDTO)
         {
-            User toAdd = new User();
-            toAdd.Email = userLoginDTO.Email;
-            toAdd.Password = BCrypt.Net.BCrypt.HashPassword(userLoginDTO.Password);
-            Role studentRole;
-            db.Roles.TryGetByName("Student", out studentRole);
+            User toAdd = new User
+            {
+                Email = userLoginDTO.Email,
+                Password = BCrypt.Net.BCrypt.HashPassword(userLoginDTO.Password)
+            };
+            db.Roles.TryGetByName("Student", out var studentRole);
             toAdd.Role_Id = studentRole.Id;
             toAdd.FirstName = userLoginDTO.FirstName;
             toAdd.LastName = userLoginDTO.LastName;
@@ -142,9 +142,9 @@ namespace LearnWithMentorBLL.Services
             }
             return PagedList<UserDTO>.GetDTO(users, pageNumber, pageSize);
         }        
-        public List<UserDTO> GetUsersByRole(int role_id)
+        public List<UserDTO> GetUsersByRole(int roleId)
         {
-            var users = db.Users.GetUsersByRole(role_id);
+            var users = db.Users.GetUsersByRole(roleId);
             if (users == null)
                 return null;
             List<UserDTO> dtos = new List<UserDTO>();
@@ -180,7 +180,7 @@ namespace LearnWithMentorBLL.Services
         public ImageDTO GetImage(int id)
         {
             var userToGetImage = db.Users.Get(id);
-            if (userToGetImage == null || userToGetImage.Image == null || userToGetImage.Image_Name == null)
+            if (userToGetImage?.Image == null || userToGetImage.Image_Name == null)
                 return null;
             return new ImageDTO()
             {
