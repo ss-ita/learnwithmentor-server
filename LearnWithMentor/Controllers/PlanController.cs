@@ -204,7 +204,7 @@ namespace LearnWithMentor.Controllers
         /// <param name="value"> Plan info to be updated. </param>
         [Authorize(Roles = "Mentor")]
         [HttpPut]
-        [Route("api/plan")]
+        [Route("api/plan/{id}")]
         public HttpResponseMessage Put(int id, [FromBody]PlanDTO value)
         {
             try

@@ -187,7 +187,6 @@ namespace LearnWithMentorBLL.Services
                 toUpdate.Mod_Id = plan.Modid;
                 modified = true;
             }
-            modified = !modified && toUpdate.Published != plan.Published;
             toUpdate.Published = plan.Published;
             db.Plans.Update(toUpdate);
             db.Save();
