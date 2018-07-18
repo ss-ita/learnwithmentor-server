@@ -25,19 +25,7 @@ namespace LearnWithMentorBLL.Services
             }
             foreach (var t in tasks)
             {
-                taskDTO.Add(new TaskDTO(t.Id,
-                                    t.Name,
-                                    t.Description,
-                                    t.Private,
-                                    t.Create_Id,
-                                    db.Users.ExtractFullName(t.Create_Id),
-                                    t.Mod_Id,
-                                    db.Users.ExtractFullName(t.Mod_Id),
-                                    t.Create_Date,
-                                    t.Mod_Date,
-                                    null,
-                                    null,
-                                    null));
+                taskDTO.Add(TaskToTaskDTO(t));
             }
             return taskDTO;
         }
@@ -49,19 +37,7 @@ namespace LearnWithMentorBLL.Services
             {
                 return null;
             }
-            return new TaskDTO(taks.Id,
-                                taks.Name,
-                                taks.Description,
-                                taks.Private,
-                                taks.Create_Id,
-                                db.Users.ExtractFullName(taks.Create_Id),
-                                taks.Mod_Id,
-                                db.Users.ExtractFullName(taks.Mod_Id),
-                                taks.Create_Date,
-                                taks.Mod_Date,
-                                null,
-                                null,
-                                null);   
+            return TaskToTaskDTO(task);
         }
 
         public int? AddAndGetId(TaskDTO taskDTO)
@@ -166,19 +142,7 @@ namespace LearnWithMentorBLL.Services
             var taskList = new List<TaskDTO>();
             foreach ( var t in db.Tasks.Search(keys))
             {
-                taskList.Add(new TaskDTO(t.Id,
-                                    t.Name,
-                                    t.Description,
-                                    t.Private,
-                                    t.Create_Id,
-                                    db.Users.ExtractFullName(t.Create_Id),
-                                    t.Mod_Id,
-                                    db.Users.ExtractFullName(t.Mod_Id),
-                                    t.Create_Date,
-                                    t.Mod_Date,
-                                    null,
-                                    null,
-                                    null));
+                taskList.Add(TaskToTaskDTO(t));
             }
             return taskList;
         }
@@ -365,7 +329,32 @@ namespace LearnWithMentorBLL.Services
             db.Save();
             return true;
         }
-
+        public PagedListDTO<TaskDTO> GetTasks(int pageSize, int pageNumber = 1)
+        {
+            IQueryable<Task> query = db.Tasks.GetAll().AsQueryable();
+            List<TaskDTO> tasks = new List<TaskDTO>();
+            foreach(var task in query)
+            {
+                tasks.Add(TaskToTaskDTO(task));
+            }
+            return PagedList<TaskDTO>.GetDTO(tasks, pageNumber, pageSize);
+        }
+        private TaskDTO TaskToTaskDTO(Task task)
+        {
+            return new TaskDTO(task.Id,
+                                task.Name,
+                                task.Description,
+                                task.Private,
+                                task.Create_Id,
+                                db.Users.ExtractFullName(task.Create_Id),
+                                task.Mod_Id,
+                                db.Users.ExtractFullName(task.Mod_Id),
+                                task.Create_Date,
+                                task.Mod_Date,
+                                null,
+                                null,
+                                null);
+        }
         public bool CheckUserTaskOwner(int userTaskId, int userId)
         {
             var userTask = db.UserTasks.Get(userTaskId);

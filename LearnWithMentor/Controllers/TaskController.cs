@@ -57,6 +57,27 @@ namespace LearnWithMentor.Controllers
         }
 
         /// <summary>
+        /// Returns a list of all tasks in database.
+        /// </summary>
+        [HttpGet]
+        [Route("api/task/pageSize/{pageSize}/pageNumber/{pageNumber}")]
+        public HttpResponseMessage GetTasks(int pageSize, int pageNumber)
+        {
+            try
+            {
+                var tasks = taskService.GetTasks(pageSize, pageNumber);
+                if (tasks != null)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, tasks);
+                }
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, "There are no tasks in database.");
+            }
+            catch (EntityException e)
+            {
+                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
+        }
         /// Returns a list of all tasks not used in current plan.
         /// </summary>
         /// <param name="planId">Id of the plan.</param>
