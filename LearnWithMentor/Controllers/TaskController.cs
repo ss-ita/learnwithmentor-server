@@ -184,7 +184,30 @@ namespace LearnWithMentor.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Returns all UserTasks for array of user`s ids for specific plan tasks .
+        /// </summary>
+        /// <param name="planTaskId">array of the planTask`s ids.</param>
+        /// <param name="userId">array of the user`s ids.</param>
+        [HttpGet]
+        [Route("api/task/usertasks")]
+        public HttpResponseMessage GetUserTasks( int userId, [FromUri]int[] planTaskId )
+        {
+            try
+            {
+                var userTasks = taskService.GetTaskStatesForUser(planTaskId, userId);
+                if (userTasks == null)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"Task for this user with id: {userId}  does not exist in database.");
+                }
+                return Request.CreateResponse(HttpStatusCode.OK, userTasks);
+            }
+            catch (EntityException e)
+            {
+                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
+        }
 
         /// <summary>Returns messages for UserTask by its id.</summary>
         /// <param name="userTaskId">Id of the usertask.</param>
