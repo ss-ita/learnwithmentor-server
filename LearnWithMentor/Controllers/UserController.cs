@@ -25,7 +25,6 @@ namespace LearnWithMentor.Controllers
         private readonly IRoleService roleService;
         private readonly ITaskService taskService;
         private readonly ITraceWriter tracer;
-
         /// <summary>
         /// Creates an instance of UserController.
         /// </summary>
@@ -36,7 +35,6 @@ namespace LearnWithMentor.Controllers
             this.taskService = taskService;
             this.tracer = tracer;
         }
-
         /// <summary>
         /// Returns all users of the system.
         /// </summary>
@@ -53,6 +51,26 @@ namespace LearnWithMentor.Controllers
             }
             var message = "No users in database.";
             return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
+        }
+        /// <summary>
+        /// Returns one page of users
+        /// </summary>
+        [JwtAuthentication]
+        [Authorize(Roles = "Admin, Mentor")]
+        [HttpGet]
+        [Route("api/user")]
+        public HttpResponseMessage Get([FromUri]int pageSize, [FromUri]int pageNumber)
+        {
+            try
+            {
+                var users = userService.GetUsers(pageSize, pageNumber);
+                return Request.CreateResponse(HttpStatusCode.OK, users);
+            }
+            catch (EntityException e)
+            {
+                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
         }
 
         /// <summary>
@@ -82,6 +100,30 @@ namespace LearnWithMentor.Controllers
             }
             return Request.CreateResponse<IEnumerable<UserDTO>>(HttpStatusCode.OK, users);
         }
+        /// <summary>
+        /// Returns one page of users with specified role.
+        /// </summary>
+        /// <param name="role_id"> Id of the role. </param>
+        /// <param name="pageSize"> Ammount of users that you want to see on one page</param>
+        /// <param name="pageNumber"> Page number</param>
+        [JwtAuthentication]
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        [Route("api/user/inrole/{role_id}")]
+        public HttpResponseMessage GetUsersbyRole(int role_id, [FromUri]int pageSize, [FromUri]int pageNumber)
+        {
+            if (role_id != -1)
+            {
+                var role = roleService.Get(role_id);
+                if (role == null)
+                {
+                    var roleErorMessage = "No roles with this id  in database.";
+                    return Request.CreateErrorResponse(HttpStatusCode.NoContent, roleErorMessage);
+                }
+            }
+            PagedListDTO<UserDTO> users = userService.GetUsersByRole(role_id, pageSize, pageNumber);
+            return Request.CreateResponse<PagedListDTO<UserDTO>>(HttpStatusCode.OK, users);
+        }
 
         /// <summary>
         /// Returns all blocked/unblocked users.
@@ -100,6 +142,22 @@ namespace LearnWithMentor.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, usersErorMessage);
             }
             return Request.CreateResponse<IEnumerable<UserDTO>>(HttpStatusCode.OK, users);
+        }
+
+        /// <summary>
+        /// Returns one page of blocked/unblocked users.
+        /// </summary>
+        /// <param name="state"> Specifies value of Blocked property of user. </param>
+        /// <param name="pageSize"> Ammount of users that you want to see on one page</param>
+        /// <param name="pageNumber"> Page number</param>
+        [JwtAuthentication]
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        [Route("api/user/instate/{state}")]
+        public HttpResponseMessage GetUsersbyState(bool state, [FromUri]int pageSize, [FromUri]int pageNumber)
+        {
+            PagedListDTO<UserDTO> users = userService.GetUsersByState(state, pageSize, pageNumber);
+            return Request.CreateResponse<PagedListDTO<UserDTO>>(HttpStatusCode.OK, users);
         }
 
         /// <summary>
@@ -361,6 +419,39 @@ namespace LearnWithMentor.Controllers
         }
 
         /// <summary>
+        /// Search for user with match in first or lastname with role criteria.
+        /// </summary>
+        /// <param name="q"> String to match. </param>
+        /// <param name="role"> Role criteria. </param>
+        /// <param name="pageSize"> Ammount of users that you want to see on one page</param>
+        /// <param name="pageNumber"> Page number</param>
+        [JwtAuthentication]
+        [Authorize(Roles = "Admin, Mentor")]
+        [HttpGet]
+        [Route("api/user/search")]
+        public HttpResponseMessage Search(string q, string role, [FromUri]int pageSize, [FromUri]int pageNumber)
+        {
+            if (q == null)
+            {
+                q = "";
+            }
+            RoleDTO criteria = roleService.GetByName(role);
+            string[] lines = q.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            int? searchParametr = null;
+            if (role == "blocked")
+            {
+                searchParametr = -1;
+            }
+            if (lines.Length > 2)
+            {
+                lines = lines.Take(2).ToArray();
+            }
+            PagedListDTO<UserDTO> users = criteria != null ? userService.Search(lines, pageSize, pageNumber, criteria.Id) :
+                userService.Search(lines, pageSize, pageNumber, searchParametr);
+            return Request.CreateResponse<PagedListDTO<UserDTO>>(HttpStatusCode.OK, users);
+        }
+
+        /// <summary>
         /// Updates user password.
         /// </summary>
         /// <param name="id"> Id of the user. </param>
@@ -418,28 +509,6 @@ namespace LearnWithMentor.Controllers
             userService.Dispose();
             roleService.Dispose();
             base.Dispose(disposing);
-        }
-
-        [JwtAuthentication]
-        [HttpGet]
-        [Authorize(Roles = "Admin")]
-        [Route("api/user/pageSize/{pageSize}/pageNumber/{pageNumber}")]
-        public HttpResponseMessage GetUsers(int pageSize, int pageNumber)
-        {
-            try
-            {
-                var users = userService.GetUsers(pageSize, pageNumber);
-                if (users != null)
-                {
-                    return Request.CreateResponse(HttpStatusCode.OK, users);
-                }
-                return Request.CreateErrorResponse(HttpStatusCode.NoContent, "There are no users in database.");
-            }
-            catch (EntityException e)
-            {
-                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
-            }
         }
     }
 }
