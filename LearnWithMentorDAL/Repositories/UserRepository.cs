@@ -90,7 +90,7 @@ namespace LearnWithMentorDAL.Repositories
 
         public IEnumerable<User> GetUsersNotInGroup(int groupId)
         {
-            return Context.Users.Where(u => !u.Groups.Select(g => g.Id).Contains(groupId));
+            return Context.Users.Where(u => !u.Groups.Select(g => g.Id).Contains(groupId)).Where(u => !u.Blocked && u.Roles.Name == "Student");
         }
     }
 }

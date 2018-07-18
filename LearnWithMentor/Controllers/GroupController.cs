@@ -47,10 +47,7 @@ namespace LearnWithMentor.Controllers
             {
                 return Request.CreateResponse(HttpStatusCode.OK, allGroups);
             }
-            else
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"No groups for the mentor in database. (mentorId = {id})");
-            }
+            return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"No groups for the mentor in database. (mentorId = {id})");
         }
 
         /// <summary>
@@ -67,10 +64,7 @@ namespace LearnWithMentor.Controllers
             {
                 return Request.CreateResponse(HttpStatusCode.OK, group);
             }
-            else
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"There isn't group with id = {id}");
-            }
+            return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"There isn't group with id = {id}");
         }
 
         /// <summary>
@@ -89,10 +83,7 @@ namespace LearnWithMentor.Controllers
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, group);
                 }
-                else
-                {
-                    return Request.CreateErrorResponse(HttpStatusCode.NoContent, "There no plans in this group.");
-                }
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, "There no plans in this group.");
             }
             catch (EntityException e)
             {
@@ -117,10 +108,7 @@ namespace LearnWithMentor.Controllers
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, group);
                 }
-                else
-                {
-                    return Request.CreateErrorResponse(HttpStatusCode.NoContent, "There are no users in the group.");
-                }
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, "There are no users in the group.");
             }
             catch (EntityException e)
             {
@@ -172,14 +160,9 @@ namespace LearnWithMentor.Controllers
             {
                 return Request.CreateResponse(HttpStatusCode.OK, group);
             }
-            else
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"There isn't users outside of the group id = {groupId}");
-            }
+            return Request.CreateErrorResponse(HttpStatusCode.NotFound, $"There isn't users outside of the group id = {groupId}");
         }
               
-        
-
         /// <summary>
         /// Returns all plans not used in current group.
         /// </summary>
@@ -191,7 +174,7 @@ namespace LearnWithMentor.Controllers
             var notUsedPlans = groupService.GetPlansNotUsedInGroup(groupId);
             if (notUsedPlans == null)
             {
-                var errorMessage = "No plans in database.";
+                const string errorMessage = "No plans in database.";
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, errorMessage);
             }
             return Request.CreateResponse(HttpStatusCode.OK, notUsedPlans);
@@ -214,10 +197,10 @@ namespace LearnWithMentor.Controllers
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
                 }
-                bool success = groupService.AddGroup(group);
+                var success = groupService.AddGroup(group);
                 if (success)
                 {
-                    var log = "Group succesfully created.";
+                    const string log = "Group succesfully created.";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
                     return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully created group: {group.Name}.");
                 }
@@ -251,7 +234,7 @@ namespace LearnWithMentor.Controllers
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
                 }
-                bool success = groupService.AddUsersToGroup(userId, id);
+                var success = groupService.AddUsersToGroup(userId, id);
                 if (success)
                 {
                     var log = $"Succesfully add user with id {userId} to group with id = {id}";
@@ -288,7 +271,7 @@ namespace LearnWithMentor.Controllers
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
                 }
-                bool success = groupService.AddPlansToGroup(planId, id);
+                var success = groupService.AddPlansToGroup(planId, id);
                 if (success)
                 {
                     var log = $"Succesfully add plan with id = {planId} to group with id = {id}";
@@ -329,7 +312,7 @@ namespace LearnWithMentor.Controllers
                 {
                     return GetPlansNotUsedInCurrentGroup(groupId);
                 }
-                string[] lines = searchKey.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                var lines = searchKey.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 var plansList = groupService.SearchPlansNotUsedInGroup(lines, groupId);
                 if (plansList == null)
                 {
@@ -359,7 +342,7 @@ namespace LearnWithMentor.Controllers
                 {
                     return GetUsersNotInCurrentGroup(groupId);
                 }
-                string[] lines = searchKey.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                var lines = searchKey.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 var usersList = groupService.SearchUserNotInGroup(lines, groupId);
                 if (usersList == null)
                 {
@@ -393,7 +376,7 @@ namespace LearnWithMentor.Controllers
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
                 }
-                bool successfullyRemoved = groupService.RemoveUserFromGroup(groupId, userToRemoveId);
+                var successfullyRemoved = groupService.RemoveUserFromGroup(groupId, userToRemoveId);
                 if (successfullyRemoved)
                 {
                     var log = $"Succesfully removed user with id = {userToRemoveId} from group with id = {groupId}";
@@ -423,7 +406,7 @@ namespace LearnWithMentor.Controllers
         {
             try
             {
-                bool successfullyRemoved = groupService.RemovePlanFromGroup(groupId, planToRemoveId);
+                var successfullyRemoved = groupService.RemovePlanFromGroup(groupId, planToRemoveId);
                 if (successfullyRemoved)
                 {
                     var log = $"Succesfully removed plan with id = {planToRemoveId} from group with id = {groupId}";

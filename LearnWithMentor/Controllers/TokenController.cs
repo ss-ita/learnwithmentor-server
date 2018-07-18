@@ -40,7 +40,7 @@ namespace LearnWithMentor.Controllers
                 }
             }
 
-            string message = " Not valid logination data.";
+            var message = " Not valid logination data.";
             if (user != null && user.Blocked == true) message = "This user is blocked!";
             return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, message);
         }

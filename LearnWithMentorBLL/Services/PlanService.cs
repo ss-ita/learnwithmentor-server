@@ -15,7 +15,7 @@ namespace LearnWithMentorBLL.Services
         }
         public PlanDTO Get(int id)
         {
-            Plan plan = db.Plans.Get(id);
+            var plan = db.Plans.Get(id);
             if (plan == null)
                 return null;
             return new PlanDTO(plan.Id,
@@ -36,7 +36,7 @@ namespace LearnWithMentorBLL.Services
             var allPlans = db.Plans.GetAll();
             if (allPlans == null)
                 return null;
-            List<PlanDTO> dtosList = new List<PlanDTO>();
+            var dtosList = new List<PlanDTO>();
             foreach (var plan in allPlans)
             {
                 dtosList.Add(new PlanDTO(plan.Id,
@@ -59,7 +59,7 @@ namespace LearnWithMentorBLL.Services
             var somePlans = db.Plans.GetSomePlans(prevAmount, amount);
             if (somePlans == null)
                 return null;
-            List<PlanDTO> dtosList = new List<PlanDTO>();
+            var dtosList = new List<PlanDTO>();
             foreach(var plan in somePlans)
             {
                 dtosList.Add(new PlanDTO(plan.Id,
@@ -84,13 +84,13 @@ namespace LearnWithMentorBLL.Services
             if (plan == null)
                 return null;
             var planTaskIds = db.PlanTasks.GetAll().Where(pt => pt.Plan_Id == plan.Id).Select(pt => pt.Task_Id).ToList();
-            var tasksForConcretePlan = db.Tasks.GetAll().Where(t => planTaskIds.Contains(t.Id));
+            var tasksForConcretePlan = db.Tasks.GetAll().Where(t => planTaskIds.Contains(t.Id)).ToList();
             if (!tasksForConcretePlan.Any())
                 return null;
-            List<TaskDTO> dtosList = new List<TaskDTO>();
+            var dtosList = new List<TaskDTO>();
             foreach (var task in tasksForConcretePlan)
             {
-                TaskDTO toAdd = new TaskDTO(task.Id,
+                var toAdd = new TaskDTO(task.Id,
                                          task.Name,
                                          task.Description,
                                          task.Private,
@@ -124,6 +124,7 @@ namespace LearnWithMentorBLL.Services
         {
             var plan = db.Plans.Get(planId);
             if (plan == null)
+            {
                 return null;
 
             var section = db.PlanTasks.GetAll().Where(pt => pt.Plan_Id == planId).GroupBy(s => s.Sections).Select(p => new { Id = p.Key.Id,  Name = p.Key.Name, Tasks = p.Key.PlanTasks.Select(pt => pt.Tasks) }).ToList();
@@ -136,7 +137,7 @@ namespace LearnWithMentorBLL.Services
                 ContentDTO contentDTO = new ContentDTO();
                 foreach (var task in sec.Tasks)
                 {
-                    TaskDTO toAdd = new TaskDTO(task.Id,
+                    var toAdd = new TaskDTO(task.Id,
                         task.Name,
                         task.Description,
                         task.Private,
@@ -167,8 +168,10 @@ namespace LearnWithMentorBLL.Services
         {
             var toUpdate = db.Plans.Get(id);
             if (toUpdate == null)
+            {
                 return false;
-            bool modified = false;
+            }
+            var modified = false;
             if (!string.IsNullOrEmpty(plan.Name))
             {
                 toUpdate.Name = plan.Name;
@@ -193,10 +196,10 @@ namespace LearnWithMentorBLL.Services
 
         private void CreateUserTasksForAllLearningByPlan(int planId, int taskId)
         {
-            int? planTaskId = db.PlanTasks.GetIdByTaskAndPlan(taskId, planId);
+            var planTaskId = db.PlanTasks.GetIdByTaskAndPlan(taskId, planId);
             var plan = db.Plans.Get(planId);
-            var groups = db.Groups.GetGroupsByPlan(planId);
-            if (plan == null || groups == null || groups.Any() || planTaskId == null)
+            var groups = db.Groups.GetGroupsByPlan(planId).ToList();
+            if (plan == null || groups.Any() || planTaskId == null)
             {
                 return;
             }
@@ -206,7 +209,11 @@ namespace LearnWithMentorBLL.Services
                 {
                     if(db.UserTasks.GetByPlanTaskForUser(planTaskId.Value, user.Id) == null)
                     {
-                        UserTask toInsert = new UserTask()
+                        if (group.Mentor_Id == null)
+                        {
+                            continue;
+                        }
+                        var toInsert = new UserTask()
                         {
                             User_Id = user.Id,
                             PlanTask_Id = planTaskId.Value,
@@ -277,7 +284,7 @@ namespace LearnWithMentorBLL.Services
         }
         public int? AddAndGetId(PlanDTO dto)
         {
-            if (!ContainsId(dto.CreatorId))
+            if (!db.Users.ContainsId(dto.CreatorId))
                 return null;
             var plan = new Plan
             {

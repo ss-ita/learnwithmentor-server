@@ -41,10 +41,10 @@ namespace LearnWithMentor.Controllers
         [Route("api/plan")]
         public HttpResponseMessage Get()
         {
-            List<PlanDTO> dtoList = planService.GetAll();
+            var dtoList = planService.GetAll();
             if (dtoList == null || dtoList.Count == 0)
             {
-                var errorMessage = "No plans in database.";
+                const string errorMessage = "No plans in database.";
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, errorMessage);
             }
             return Request.CreateResponse<IEnumerable<PlanDTO>>(HttpStatusCode.OK, dtoList);
@@ -61,7 +61,7 @@ namespace LearnWithMentor.Controllers
             var plan = planService.Get(id);
             if (plan == null)
             {
-                var message = "Plan does not exist in database.";
+                const string message = "Plan does not exist in database.";
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
             }
             return Request.CreateResponse(HttpStatusCode.OK, plan);
@@ -91,10 +91,10 @@ namespace LearnWithMentor.Controllers
         [Route("api/plan/some")]
         public HttpResponseMessage GetSome(int prevAmount, int amount)
         {
-            List<PlanDTO> dtoList = planService.GetSomeAmount(prevAmount, amount);
+            var dtoList = planService.GetSomeAmount(prevAmount, amount);
             if (dtoList == null || dtoList.Count == 0)
             {
-                var errorMessage = "No plans in database.";
+                const string errorMessage = "No plans in database.";
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, errorMessage);
             }
             return Request.CreateResponse<IEnumerable<PlanDTO>>(HttpStatusCode.OK, dtoList);
@@ -108,10 +108,10 @@ namespace LearnWithMentor.Controllers
         [Route("api/plan/{planId}/tasks")]
         public HttpResponseMessage GetAllTasks(int planId)
         {
-            List<TaskDTO> dtosList = planService.GetAllTasks(planId);
+            var dtosList = planService.GetAllTasks(planId);
             if (dtosList == null || dtosList.Count == 0)
             {
-                var message = "Plan does not contain any task.";
+                const string message = "Plan does not contain any task.";
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
             }
             return Request.CreateResponse<IEnumerable<TaskDTO>>(HttpStatusCode.OK, dtosList);
@@ -160,7 +160,7 @@ namespace LearnWithMentor.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
             tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on creating plan");
-            var message = "Incorrect request syntax.";
+            const string message = "Incorrect request syntax.";
             return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
         }
 
@@ -175,13 +175,16 @@ namespace LearnWithMentor.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                }
                 var result = planService.AddAndGetId(value);
                 if (result != null)
                 {
                     var log = $"Succesfully created plan {value.Name} with id = {result} by user with id = {value.CreatorId}";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
-                    var okMessage = $"Succesfully created plan: {value.Name}";
-                    return Request.CreateResponse(HttpStatusCode.OK, result, okMessage);
+                    return Request.CreateResponse(HttpStatusCode.OK, result);
                 }
             }
             catch (EntityException e)
@@ -190,7 +193,7 @@ namespace LearnWithMentor.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
             tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on creating plan");
-            var message = "Incorrect request syntax.";
+            const string message = "Incorrect request syntax.";
             return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
         }
 
@@ -211,7 +214,7 @@ namespace LearnWithMentor.Controllers
                 {
                     var log = $"Succesfully updated plan {value.Name} with id = {value.Id} by user with id = {value.Modid}";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
-                    var okMessage = $"Succesfully updated plan.";
+                    const string okMessage = "Succesfully updated plan.";
                     return Request.CreateResponse(HttpStatusCode.OK, okMessage);
                 }
             }
@@ -221,7 +224,7 @@ namespace LearnWithMentor.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
             tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on updating plan");
-            var message = "Incorrect request syntax or plan does not exist.";
+            const string message = "Incorrect request syntax or plan does not exist.";
             return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
         }
 
@@ -258,7 +261,7 @@ namespace LearnWithMentor.Controllers
                 {
                     priorityNew = int.Parse(priority);
                 }
-                bool success = planService.AddTaskToPlan(id, taskId, section, priorityNew);
+                var success = planService.AddTaskToPlan(id, taskId, section, priorityNew);
                 if (success)
                 {
                     var log = $"Succesfully add task with id {taskId} to plan with id = {id}";
@@ -286,13 +289,13 @@ namespace LearnWithMentor.Controllers
         {
             if (!planService.ContainsId(id))
             {
-                var errorMessage = "No plan with this id in database.";
+                const string errorMessage = "No plan with this id in database.";
                 return Request.CreateResponse(HttpStatusCode.NoContent, errorMessage);
             }
 
             if (HttpContext.Current.Request.Files.Count != 1)
             {
-                var errorMessage = "Only one image can be sent.";
+                const string errorMessage = "Only one image can be sent.";
                 return Request.CreateResponse(HttpStatusCode.BadRequest, errorMessage);
             }
 
@@ -301,19 +304,19 @@ namespace LearnWithMentor.Controllers
                 var postedFile = HttpContext.Current.Request.Files[0];
                 if (postedFile.ContentLength > 0)
                 {
-                    List<string> allowedFileExtensions = new List<string>(Constants.ImageRestrictions.Extensions);
+                    var allowedFileExtensions = new List<string>(Constants.ImageRestrictions.Extensions);
 
                     var extension = postedFile.FileName.Substring(postedFile.FileName.LastIndexOf('.')).ToLower();
                     if (!allowedFileExtensions.Contains(extension))
                     {
-                        string errorMessage = "Types allowed only .jpeg .jpg .png";
+                        const string errorMessage = "Types allowed only .jpeg .jpg .png";
                         return Request.CreateResponse(HttpStatusCode.BadRequest, errorMessage);
                     }
 
-                    int maxContentLength = Constants.ImageRestrictions.MaxSize;
+                    const int maxContentLength = Constants.ImageRestrictions.MaxSize;
                     if (postedFile.ContentLength > maxContentLength)
                     {
-                        string errorMessage = "Please Upload a file upto 1 mb.";
+                        const string errorMessage = "Please Upload a file upto 1 mb.";
                         return Request.CreateResponse(HttpStatusCode.BadRequest, errorMessage);
                     }
 
@@ -324,10 +327,10 @@ namespace LearnWithMentor.Controllers
                     }
 
                     planService.SetImage(id, imageData, postedFile.FileName);
-                    var okMessage = "Successfully created image.";
+                    const string okMessage = "Successfully created image.";
                     return Request.CreateResponse(HttpStatusCode.OK, okMessage);
                 }
-                string emptyImageMessage = "Empty image.";
+                const string emptyImageMessage = "Empty image.";
                 return Request.CreateErrorResponse(HttpStatusCode.NotModified, emptyImageMessage);
             }
             catch (EntityException e)
@@ -349,13 +352,13 @@ namespace LearnWithMentor.Controllers
             {
                 if (!planService.ContainsId(id))
                 {
-                    var errorMessage = "No plan with this id in database.";
+                    const string errorMessage = "No plan with this id in database.";
                     return Request.CreateResponse(HttpStatusCode.NoContent, errorMessage);
                 }
-                ImageDTO dto = planService.GetImage(id);
+                var dto = planService.GetImage(id);
                 if (dto == null)
                 {
-                    var message = "No image for this plan in database.";
+                    const string message = "No image for this plan in database.";
                     return Request.CreateResponse(HttpStatusCode.NoContent, message);
                 }
                 return Request.CreateResponse(HttpStatusCode.OK, dto);
@@ -378,11 +381,11 @@ namespace LearnWithMentor.Controllers
             {
                 return Get();
             }
-            string[] lines = q.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var lines = q.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             var dto = planService.Search(lines);
             if (dto == null || dto.Count == 0)
             {
-                var message = "No plans found.";
+                const string message = "No plans found.";
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
             }
             return Request.CreateResponse<IEnumerable<PlanDTO>>(HttpStatusCode.OK, dto);

@@ -13,5 +13,6 @@
         public const int MAX_MESSAGE_LENGTH = 500;
         public const int MAX_PLAN_NAME_LENGTH = 50;
         public const int MAX_PLAN_DESCRIPTION_LENGTH = 500;
+        public const int MAX_PAGE_SIZE = 20;
     }
 }

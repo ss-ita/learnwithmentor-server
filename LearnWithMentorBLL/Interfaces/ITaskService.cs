@@ -7,6 +7,7 @@ namespace LearnWithMentorBLL.Interfaces
     {
         IEnumerable<TaskDTO> GetAllTasks();
         TaskDTO GetTaskById(int id);
+        int? AddAndGetId(TaskDTO taskDTO);
         TaskDTO GetTaskForPlan(int taskId, int planId);
         TaskDTO GetTaskForPlan(int planTaskId);
         IEnumerable<TaskDTO> GetTasksNotInPlan(int planId);
@@ -21,6 +22,8 @@ namespace LearnWithMentorBLL.Interfaces
         IEnumerable<TaskDTO> Search(string[] str, int planId);
         IEnumerable<TaskDTO> Search(string[] str);
         StatisticsDTO GetUserStatistics(int userId);
+        PagedListDTO<TaskDTO> GetTasks(int pageSize, int pageNumber = 1);
+
         bool CheckUserTaskOwner(int userTaskId, int userId);
     }
 }
