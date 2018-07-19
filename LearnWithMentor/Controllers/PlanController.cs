@@ -67,7 +67,10 @@ namespace LearnWithMentor.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, plan);
         }
 
-
+        /// <summary>
+        /// Returns tasks for concrete plan grouped by sections.
+        /// </summary>
+        /// <param name="id"> Id of the plan. </param>
         [HttpGet]
         [Route("api/plan/{id}/sections")]
         public HttpResponseMessage GetTasksForPlan(int id)

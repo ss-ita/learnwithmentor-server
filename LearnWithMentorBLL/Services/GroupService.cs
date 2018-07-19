@@ -214,16 +214,26 @@ namespace LearnWithMentorBLL.Services
         {
             var user = db.Users.Get(userId);
             if (user == null)
+            {
                 return null;
+            }
             IEnumerable<Group> groups;
             if (user.Roles.Name == "Mentor")
+            { 
                 groups = db.Groups.GetGroupsByMentor(userId);
+            }
             else if (user.Roles.Name == "Student")
+            {
                 groups = db.Groups.GetStudentGroups(userId);
+            }
             else
+            {
                 groups = db.Groups.GetAll();
+            }
             if (groups == null)
+            {
                 return null;
+            }
             var groupList = new List<GroupDTO>();
             foreach (var group in groups)
             {
@@ -232,8 +242,12 @@ namespace LearnWithMentorBLL.Services
                                          group.Mentor_Id,
                                          db.Users.ExtractFullName(group.Mentor_Id)));
             }
+
             if (groupList.Count < 1)
+            {
                 return null;
+            }
+
             return groupList;
         }
 
@@ -241,7 +255,9 @@ namespace LearnWithMentorBLL.Services
         {
             var groups = db.Groups.Get(groupId);
             if (groups == null)
+            {
                 return false;
+            }
             var added = false;
             foreach (var userId in allUsersId)
             {
@@ -263,7 +279,9 @@ namespace LearnWithMentorBLL.Services
         {
             var groups = db.Groups.Get(groupId);
             if (groups == null)
+            {
                 return false;
+            }
             var added = false;
             foreach (var planId in allPlansId)
             {
@@ -285,10 +303,14 @@ namespace LearnWithMentorBLL.Services
         {
             var group = db.Groups.Get(groupId);
             if (group == null)
+            {
                 return null;
+            }
             var usersNotInGroup = db.Users.GetUsersNotInGroup(groupId);
             if (usersNotInGroup == null)
+            {
                 return null;
+            }
             var usersNotInGroupList = new List<UserIdentityDTO>();
             foreach (var user in usersNotInGroup)
             {
@@ -300,7 +322,9 @@ namespace LearnWithMentorBLL.Services
                     user.Roles.Name,
                     user.Blocked);
                 if (!usersNotInGroupList.Contains(rdDto))
+                {
                     usersNotInGroupList.Add(rdDto);
+                }
             }
             return usersNotInGroupList;
         }
@@ -316,7 +340,9 @@ namespace LearnWithMentorBLL.Services
                     if (user.FirstName.Contains(searchCase) || user.LastName.Contains(searchCase))
                     {
                         if (!usersNotInGroupdto.Contains((user)))
+                        {
                             usersNotInGroupdto.Add(user);
+                        }
                     }
                 }
             }
@@ -327,10 +353,14 @@ namespace LearnWithMentorBLL.Services
         {
             var group = db.Groups.Get(groupId);
             if (group == null)
+            {
                 return null;
+            }
             var plansNotUsedInGroup = db.Plans.GetPlansNotUsedInGroup(groupId);
             if (plansNotUsedInGroup == null)
+            {
                 return null;
+            }
             var plansNotUsedInGroupList = new List<PlanDTO>();
             foreach (var plan in plansNotUsedInGroup)
             {
@@ -349,7 +379,9 @@ namespace LearnWithMentorBLL.Services
                     plan.Mod_Date);
 
                 if (!plansNotUsedInGroupList.Contains(planDto))
+                {
                     plansNotUsedInGroupList.Add(planDto);
+                }
             }
             return plansNotUsedInGroupList;
         }
@@ -365,7 +397,9 @@ namespace LearnWithMentorBLL.Services
                     if (plan.Name.ToLower().Contains(searchCase.ToLower()))
                     {
                         if (!plansNotInGroupdto.Contains(plan))
+                        {
                             plansNotInGroupdto.Add(plan);
+                        }
                     }
                 }
             }
@@ -434,9 +468,13 @@ namespace LearnWithMentorBLL.Services
             var group = db.Groups.Get(groupId);
             var userToRemove = db.Users.Get(userIdToRemove);
             if (group == null)
+            {
                 return false;
+            }
             if (userToRemove == null)
+            {
                 return false;
+            }
             DeleteUserTasksOnRemovingUser(groupId, userIdToRemove);
             group.Users.Remove(userToRemove);
             db.Save();
@@ -475,9 +513,13 @@ namespace LearnWithMentorBLL.Services
             var group = db.Groups.Get(groupId);
             var planToRemove = db.Plans.Get(planIdToRemove);
             if (group == null)
+            {
                 return false;
+            }
             if (planToRemove == null)
+            {
                 return false;
+            }
             DeleteUserTasksOnRemovingPlan(groupId, planIdToRemove);
             group.Plans.Remove(planToRemove);
             db.Save();
