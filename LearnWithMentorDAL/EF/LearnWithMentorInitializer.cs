@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Drawing;
-using System.Net.Mime;
 using LearnWithMentorDAL.Entities;
 
 
@@ -45,7 +43,7 @@ namespace LearnWithMentorDAL.EF
                 InitializePlanSugestion(context);
             }
         }
-        public static void InitializeRoles(LearnWithMentor_DBEntities context)
+        private static void InitializeRoles(LearnWithMentor_DBEntities context)
         {
             context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('Roles', RESEED, 0)");
             var roles = new List<Role>
@@ -107,19 +105,22 @@ namespace LearnWithMentorDAL.EF
                 Replace("LearnWithMentor", string.Empty), 
                 @"LearnWithMentorDAL\EF\images\");
 
-            for (var i = 0; i <= 10; i++)
+            const int numOfMentors = 11;
+            const int numOfStudents = 20;
+
+            for (var i = 0; i < numOfMentors; i++)
             {
                 users[i].Role_Id = 1;
                 users[i].Image_Name = "mentorImage";
                 users[i].Image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(pathToImagesFolder, @"mentor.jpg")));
             }
-            for (var i = 11; i <= 30; i++)
+            for (var i = numOfMentors; i < numOfMentors + numOfStudents; i++)
             {
                 users[i].Role_Id = 2;
                 users[i].Image_Name = "studentImage";
                 users[i].Image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(pathToImagesFolder, @"student.png")));
             }
-            for (var i = 31; i < users.Count; i++)
+            for (var i = numOfMentors + numOfStudents -1; i < users.Count; i++)
             {
                 users[i].Role_Id = 3;
                 users[i].Image_Name = "adminImage";
@@ -145,7 +146,7 @@ namespace LearnWithMentorDAL.EF
                     "Takes you through C#'s history, it's core syntax, and the fundamentals of writing strong C# code.",
                     Image_Name = "CSharp",
                     Image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(pathToImagesFolder, @"сsharp.png")))
-        },
+                },
                 new Plan()
                 {
                     Name = "ASP.NET",
@@ -350,17 +351,22 @@ namespace LearnWithMentorDAL.EF
             foreach (var task in tasks)
             {
                 task.Private = false;
+                task.Create_Date = new DateTime(2018, 7, 14, 23, 59, 59);
                 task.Mod_Date = new DateTime(2018, 7, 16, 23, 59, 59);
             }
             var count = 1;
-            for (var i = 1; i <= 11; i++)
+
+            var numOfMentors = Convert.ToInt16(context.Users.Where(user => user.Role_Id == 1));
+            var tasksPerMentor = 4;
+
+            for (var i = 1; i <= numOfMentors; i++)
             {
-                for (var j = count; j < count + 4; j++)
+                for (var j = count; j < count + tasksPerMentor; j++)
                 {
                     tasks[j - 1].Create_Id = i;
                     tasks[j - 1].Mod_Id = i;
                 }
-                count = count + 4;
+                count = count + tasksPerMentor;
             }
             context.Tasks.AddRange(tasks);
             context.SaveChanges();
@@ -405,26 +411,30 @@ namespace LearnWithMentorDAL.EF
             context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('[Plantasks]', RESEED, 0)");
             var planTasks = new List<PlanTask>();
             var count = 1;
-            for (var i = 1; i <= 11; i++)
+
+            for (var i = 1; i < context.Plans.Count(); i++)
             {
                 for (var j = count; j < count + 4; j++)
                 {
-                    planTasks.Add(new PlanTask() { Id = i, Plan_Id = i, Task_Id = j });
+                    planTasks.Add(new PlanTask() { Plan_Id = i, Task_Id = j });
                 }
                 count = count + 4;
             }
-            for (int i = 0; i <= 3; i++)
+
+            var numOfPlanTasksInSmallSection = 2;
+            var numOfPlanTasksInBigSection = 4;
+            for (int i = 0; i <= numOfPlanTasksInBigSection - 1; i++)
             {
                 planTasks[i].Section_Id = 1;
             }
             count = 4;
             for (var i = 2; i <= 10; i++)
             {
-                for (var j = count; j < count + 2; j++)
+                for (var j = count; j < count + numOfPlanTasksInSmallSection; j++)
                 {
                     planTasks[j].Section_Id = i;
                 }
-                count = count + 2;
+                count = count + numOfPlanTasksInSmallSection;
             }
             for (var j = 20; j <= 23; j++)
             {
@@ -437,7 +447,7 @@ namespace LearnWithMentorDAL.EF
                 {
                     planTasks[j].Section_Id = i;
                 }
-                count = count + 2;
+                count = count + numOfPlanTasksInSmallSection;
             }
             foreach (var planTask in planTasks)
             {
