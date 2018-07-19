@@ -43,7 +43,9 @@ namespace LearnWithMentorBLL.Services
         public int? AddAndGetId(TaskDTO taskDTO)
         {
             if (!db.Users.ContainsId(taskDTO.CreatorId))
+            {
                 return null;
+            }
             var task = new Task
             {
                 Name = taskDTO.Name,
@@ -232,7 +234,10 @@ namespace LearnWithMentorBLL.Services
             {
                 var userTask = db.UserTasks.GetByPlanTaskForUser(planTaskId, userId);
                 if (userTask != null)
-                    dtoList.Add(new UserTaskDTO(userTask.Id, userTask.User_Id, userTask.PlanTask_Id, userTask.End_Date, userTask.Propose_End_Date, userTask.Mentor_Id, userTask.State, userTask.Result));
+                {
+                    dtoList.Add(new UserTaskDTO(userTask.Id, userTask.User_Id, userTask.PlanTask_Id, userTask.End_Date,
+                        userTask.Propose_End_Date, userTask.Mentor_Id, userTask.State, userTask.Result));
+                }
             }
             return dtoList;
         }

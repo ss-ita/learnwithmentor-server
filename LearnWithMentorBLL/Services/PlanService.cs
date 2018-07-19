@@ -17,7 +17,9 @@ namespace LearnWithMentorBLL.Services
         {
             var plan = db.Plans.Get(id);
             if (plan == null)
+            {
                 return null;
+            }
             return new PlanDTO(plan.Id,
                                plan.Name,
                                plan.Description,
@@ -35,7 +37,9 @@ namespace LearnWithMentorBLL.Services
         {
             var allPlans = db.Plans.GetAll();
             if (allPlans == null)
+            {
                 return null;
+            }
             var dtosList = new List<PlanDTO>();
             foreach (var plan in allPlans)
             {
@@ -58,7 +62,9 @@ namespace LearnWithMentorBLL.Services
         {
             var somePlans = db.Plans.GetSomePlans(prevAmount, amount);
             if (somePlans == null)
+            {
                 return null;
+            }
             var dtosList = new List<PlanDTO>();
             foreach(var plan in somePlans)
             {
@@ -82,11 +88,15 @@ namespace LearnWithMentorBLL.Services
         {
             var plan = db.Plans.Get(planId);
             if (plan == null)
+            {
                 return null;
+            }
             var planTaskIds = db.PlanTasks.GetAll().Where(pt => pt.Plan_Id == plan.Id).Select(pt => pt.Task_Id).ToList();
             var tasksForConcretePlan = db.Tasks.GetAll().Where(t => planTaskIds.Contains(t.Id)).ToList();
             if (!tasksForConcretePlan.Any())
+            {
                 return null;
+            }
             var dtosList = new List<TaskDTO>();
             foreach (var task in tasksForConcretePlan)
             {
@@ -112,11 +122,15 @@ namespace LearnWithMentorBLL.Services
         {
             var plan = db.Plans.Get(planId);
             if (plan == null)
+            {
                 return null;
+            }
             var planTaskIds =   db.PlanTasks.GetAll().Where(pt => pt.Plan_Id == planId).Select(pt => pt.Id).ToList();
-            
+
             if (!planTaskIds.Any())
+            {
                 return null;
+            }
             return planTaskIds;
         }
 
@@ -232,10 +246,14 @@ namespace LearnWithMentorBLL.Services
         {
             var plan = db.Plans.Get(planId);
             if (plan == null)
+            {
                 return false;
+            }
             var task = db.Tasks.Get(taskId);
             if (task == null)
+            {
                 return false;
+            }
             db.Plans.AddTaskToPlan(planId, taskId, sectionId, priority);
             CreateUserTasksForAllLearningByPlan(planId, taskId);
             db.Save();             
@@ -247,7 +265,9 @@ namespace LearnWithMentorBLL.Services
         {
             Plan toUpdate = db.Plans.Get(id);
             if (toUpdate == null)
+            {
                 return false;
+            }
             string converted = Convert.ToBase64String(image);
             toUpdate.Image = converted;
             toUpdate.Image_Name = imageName;
@@ -259,7 +279,9 @@ namespace LearnWithMentorBLL.Services
         {
             Plan toGetImage = db.Plans.Get(id);
             if (toGetImage?.Image == null || toGetImage.Image_Name == null)
+            {
                 return null;
+            }
             return new ImageDTO()
             {
                 Name = toGetImage.Image_Name,
@@ -270,7 +292,9 @@ namespace LearnWithMentorBLL.Services
         public bool Add(PlanDTO dto)
         {
             if (!ContainsId(dto.CreatorId))
+            {
                 return false;
+            }
             var plan = new Plan
             {
                 Name = dto.Name,
@@ -285,7 +309,9 @@ namespace LearnWithMentorBLL.Services
         public int? AddAndGetId(PlanDTO dto)
         {
             if (!db.Users.ContainsId(dto.CreatorId))
+            {
                 return null;
+            }
             var plan = new Plan
             {
                 Name = dto.Name,
@@ -301,7 +327,9 @@ namespace LearnWithMentorBLL.Services
         {
             var result = db.Plans.Search(searchString);
             if (result == null)
+            {
                 return null;
+            }
             List<PlanDTO> dtosList = new List<PlanDTO>();
             foreach (var plan in result)
             {

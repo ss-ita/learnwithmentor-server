@@ -17,14 +17,18 @@ namespace LearnWithMentorBLL.Services
         {
             var user = db.Users.Get(id);
             if (user == null)
+            {
                 return null;
+            }
             return UserToUserDTO(user);
         }
         public UserIdentityDTO GetByEmail(string email)
         {
             var user = db.Users.GetByEmail(email);
             if (user == null)
+            {
                 return null;
+            }
             return new UserIdentityDTO(user.Email, user.Password, user.Id,
                 user.FirstName,
                 user.LastName,
@@ -36,7 +40,9 @@ namespace LearnWithMentorBLL.Services
         {
             var users = db.Users.GetAll();
             if (users == null)
+            {
                 return null;
+            }
             var dtos = new List<UserDTO>();
             foreach (var user in users)
             {
@@ -115,8 +121,10 @@ namespace LearnWithMentorBLL.Services
         public bool UpdatePassword(int userId, string password)
         {
             var user = db.Users.Get(userId);
-            if(user == null)
+            if (user == null)
+            {
                 return false;
+            }
             user.Password = BCrypt.Net.BCrypt.HashPassword(password);
             db.Users.Update(user);
             db.Save();
@@ -146,7 +154,9 @@ namespace LearnWithMentorBLL.Services
         {
             var users = db.Users.GetUsersByRole(roleId);
             if (users == null)
+            {
                 return null;
+            }
             var dtos = new List<UserDTO>();
             foreach (var user in users)
             {
@@ -169,7 +179,9 @@ namespace LearnWithMentorBLL.Services
         {
             var userToUpdate = db.Users.Get(id);
             if (userToUpdate == null)
+            {
                 return false;
+            }
             var converted = Convert.ToBase64String(image);
             userToUpdate.Image = converted;
             userToUpdate.Image_Name = imageName;
@@ -181,7 +193,9 @@ namespace LearnWithMentorBLL.Services
         {
             var userToGetImage = db.Users.Get(id);
             if (userToGetImage?.Image == null || userToGetImage.Image_Name == null)
+            {
                 return null;
+            }
             return new ImageDTO()
             {
                 Name = userToGetImage.Image_Name,
@@ -198,7 +212,9 @@ namespace LearnWithMentorBLL.Services
         {
             var users = db.Users.GetUsersByState(state);
             if (users == null)
+            {
                 return null;
+            }
             var dtos = new List<UserDTO>();
             foreach (var user in users)
             {
@@ -219,10 +235,10 @@ namespace LearnWithMentorBLL.Services
         private UserDTO UserToUserDTO(User user)
         {
             return new UserDTO(user.Id,
-                                     user.FirstName,
-                                     user.LastName,
-                                     user.Roles.Name,
-                                     user.Blocked);
+                               user.FirstName,
+                               user.LastName,
+                               user.Roles.Name,
+                               user.Blocked);
         }
     }
 }
