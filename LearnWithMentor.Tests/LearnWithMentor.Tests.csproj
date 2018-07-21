@@ -54,6 +54,11 @@
       <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Http, Version=5.2.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="System.Web.Http.Common, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Web.Http.Common.4.0.20126.16343\lib\net40\System.Web.Http.Common.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -70,6 +75,18 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\LearnWithMentorBLL\LearnWithMentorBLL.csproj">
+      <Project>{808edd74-2d6f-4e62-8997-0fc17033b243}</Project>
+      <Name>LearnWithMentorBLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LearnWithMentorDAL\LearnWithMentorDAL.csproj">
+      <Project>{a64146da-5d32-4cf9-bd7a-0918284822e0}</Project>
+      <Name>LearnWithMentorDAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LearnWithMentorDTO\LearnWithMentorDTO.csproj">
+      <Project>{2fc0c932-6883-4d97-b516-3623bde9222b}</Project>
+      <Name>LearnWithMentorDTO</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LearnWithMentor\LearnWithMentor.csproj">
       <Project>{b3457bcc-edfd-45bf-b335-f18456250502}</Project>
       <Name>LearnWithMentor</Name>
