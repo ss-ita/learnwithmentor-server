@@ -356,7 +356,8 @@ namespace LearnWithMentorDAL.EF
             }
             var count = 1;
 
-            var numOfMentors = Convert.ToInt16(context.Users.Where(user => user.Role_Id == 1));
+            //var numOfMentors = Convert.ToInt16(context.Users.Where(user => user.Role_Id == 1));
+            var numOfMentors = context.Users.Count(user => user.Role_Id == 1);
             var tasksPerMentor = 4;
 
             for (var i = 1; i <= numOfMentors; i++)
@@ -443,11 +444,18 @@ namespace LearnWithMentorDAL.EF
             count = 24;
             for (var i = 11; i <= 20; i++)
             {
-                for (var j = count; j < count + 2; j++)
+                try
                 {
-                    planTasks[j].Section_Id = i;
+                    for (var j = count; j < count + 2; j++)
+                    {
+                        planTasks[j].Section_Id = i;
+                    }
+                    count = count + numOfPlanTasksInSmallSection;
                 }
-                count = count + numOfPlanTasksInSmallSection;
+                catch (Exception e)
+                {
+                    throw new Exception();
+                }
             }
             foreach (var planTask in planTasks)
             {
