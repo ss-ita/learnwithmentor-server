@@ -100,9 +100,9 @@ namespace LearnWithMentorDAL.EF
                 user.Password = BCrypt.Net.BCrypt.HashPassword("123");
                 user.Blocked = false;
             }
-            
+
             var pathToImagesFolder = Path.Combine((AppDomain.CurrentDomain.BaseDirectory).
-                Replace("LearnWithMentor", string.Empty), 
+                Replace("LearnWithMentor", string.Empty),
                 @"LearnWithMentorDAL\EF\images\");
 
             const int numOfMentors = 11;
@@ -120,7 +120,7 @@ namespace LearnWithMentorDAL.EF
                 users[i].Image_Name = "studentImage";
                 users[i].Image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(pathToImagesFolder, @"student.png")));
             }
-            for (var i = numOfMentors + numOfStudents -1; i < users.Count; i++)
+            for (var i = numOfMentors + numOfStudents - 1; i < users.Count; i++)
             {
                 users[i].Role_Id = 3;
                 users[i].Image_Name = "adminImage";
@@ -356,7 +356,10 @@ namespace LearnWithMentorDAL.EF
             }
             var count = 1;
 
+<<<<<<< HEAD
             //var numOfMentors = Convert.ToInt16(context.Users.Where(user => user.Role_Id == 1));
+=======
+>>>>>>> d2b775ea83ba72359bc1002b8f30bfa1ab9bf04f
             var numOfMentors = context.Users.Count(user => user.Role_Id == 1);
             var tasksPerMentor = 4;
 
@@ -424,39 +427,42 @@ namespace LearnWithMentorDAL.EF
 
             var numOfPlanTasksInSmallSection = 2;
             var numOfPlanTasksInBigSection = 4;
+
             for (int i = 0; i <= numOfPlanTasksInBigSection - 1; i++)
             {
                 planTasks[i].Section_Id = 1;
             }
-            count = 4;
-            for (var i = 2; i <= 10; i++)
+
+            count = numOfPlanTasksInBigSection;
+            var sectionsBetweenEssentAndFullStack = context.Sections.Where(section => section.Id > 1 && section.Id < 10);
+            foreach (var section in sectionsBetweenEssentAndFullStack)
             {
-                for (var j = count; j < count + numOfPlanTasksInSmallSection; j++)
+                for (int i = count; i < count + 2; i++)
                 {
-                    planTasks[j].Section_Id = i;
+                    planTasks[i].Section_Id = section.Id;
                 }
                 count = count + numOfPlanTasksInSmallSection;
             }
-            for (var j = 20; j <= 23; j++)
+
+            var fullStackSection = context.Sections.Where(section => section.Id == 10);
+            foreach (var section in fullStackSection)
             {
-                planTasks[j].Section_Id = 10;
-            }
-            count = 24;
-            for (var i = 11; i <= 20; i++)
-            {
-                try
+                for (int i = count; i < count + numOfPlanTasksInSmallSection; i++)
                 {
-                    for (var j = count; j < count + 2; j++)
-                    {
-                        planTasks[j].Section_Id = i;
-                    }
-                    count = count + numOfPlanTasksInSmallSection;
-                }
-                catch (Exception e)
-                {
-                    throw new Exception();
+                    planTasks[i].Section_Id = section.Id;
                 }
             }
+
+            var sectionsAfterFullStack = context.Sections.Where(section => section.Id > 10);
+            foreach (var section in sectionsAfterFullStack)
+            {
+                for (int i = count; i < count + 2; i++)
+                {
+                    planTasks[i].Section_Id = section.Id;
+                }
+            }
+
+
             foreach (var planTask in planTasks)
             {
                 if (planTask.Section_Id == 1 && planTask.Section_Id == 10)
