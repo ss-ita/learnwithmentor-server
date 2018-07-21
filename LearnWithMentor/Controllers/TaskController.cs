@@ -78,6 +78,8 @@ namespace LearnWithMentor.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
         }
+
+        /// <summary>
         /// Returns a list of all tasks not used in current plan.
         /// </summary>
         /// <param name="planId">Id of the plan.</param>
