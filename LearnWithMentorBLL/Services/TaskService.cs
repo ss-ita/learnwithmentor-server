@@ -335,12 +335,8 @@ namespace LearnWithMentorBLL.Services
         public PagedListDTO<TaskDTO> GetTasks(int pageSize, int pageNumber = 1)
         {
             IQueryable<Task> query = db.Tasks.GetAll().AsQueryable();
-            List<TaskDTO> tasks = new List<TaskDTO>();
-            foreach(var task in query)
-            {
-                tasks.Add(TaskToTaskDTO(task));
-            }
-            return PagedList<TaskDTO>.GetDTO(tasks, pageNumber, pageSize);
+            query = query.OrderBy(x => x.Id);
+            return PagedList<Task, TaskDTO>.GetDTO(query, pageNumber, pageSize, TaskToTaskDTO);
         }
         private TaskDTO TaskToTaskDTO(Task task)
         {
