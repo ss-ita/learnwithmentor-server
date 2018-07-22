@@ -11,8 +11,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
 {
     [TestFixture]
     public class UserControllerTests
-    {
-       
+    {      
         [Test]
         public void ShouldReturnAllUsers()
         {

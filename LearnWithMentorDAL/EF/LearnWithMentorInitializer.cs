@@ -355,11 +355,6 @@ namespace LearnWithMentorDAL.EF
                 task.Mod_Date = new DateTime(2018, 7, 16, 23, 59, 59);
             }
             var count = 1;
-
-<<<<<<< HEAD
-            //var numOfMentors = Convert.ToInt16(context.Users.Where(user => user.Role_Id == 1));
-=======
->>>>>>> d2b775ea83ba72359bc1002b8f30bfa1ab9bf04f
             var numOfMentors = context.Users.Count(user => user.Role_Id == 1);
             var tasksPerMentor = 4;
 
