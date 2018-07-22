@@ -15,9 +15,6 @@ namespace LearnWithMentor.Tests.Controllers.Tests
 {
     [TestFixture]
     public class UserControllerTests
-<<<<<<< HEAD
-    {      
-=======
     {
         private UserController userController;
         private Mock<IUserService> userServiceMock;
@@ -66,7 +63,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             userServiceMock = null;
             roleServiceMock = null;
         }
->>>>>>> 1cad0627612fabd1a485e016b2844030e3055486
+
         [Test]
         public void GetAllUsersTest()
         {
