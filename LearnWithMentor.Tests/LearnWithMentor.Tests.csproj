@@ -60,11 +60,18 @@
       <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
       <Private>True</Private>
     </Reference>
+<<<<<<< HEAD
     <Reference Include="System.Web.Http, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.6\lib\net45\System.Web.Http.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Http.Tracing, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Tracing.5.2.6\lib\net45\System.Web.Http.Tracing.dll</HintPath>
+=======
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Http, Version=5.2.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="System.Web.Http.Common, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Web.Http.Common.4.0.20126.16343\lib\net40\System.Web.Http.Common.dll</HintPath>
+>>>>>>> 1cad0627612fabd1a485e016b2844030e3055486
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -87,6 +94,13 @@
       <Project>{808edd74-2d6f-4e62-8997-0fc17033b243}</Project>
       <Name>LearnWithMentorBLL</Name>
     </ProjectReference>
+<<<<<<< HEAD
+=======
+    <ProjectReference Include="..\LearnWithMentorDAL\LearnWithMentorDAL.csproj">
+      <Project>{a64146da-5d32-4cf9-bd7a-0918284822e0}</Project>
+      <Name>LearnWithMentorDAL</Name>
+    </ProjectReference>
+>>>>>>> 1cad0627612fabd1a485e016b2844030e3055486
     <ProjectReference Include="..\LearnWithMentorDTO\LearnWithMentorDTO.csproj">
       <Project>{2fc0c932-6883-4d97-b516-3623bde9222b}</Project>
       <Name>LearnWithMentorDTO</Name>

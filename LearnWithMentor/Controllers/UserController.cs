@@ -459,7 +459,7 @@ namespace LearnWithMentor.Controllers
         [JwtAuthentication]
         [HttpPut]
         [Route("api/user/newpassword")]
-        public HttpResponseMessage Post([FromBody]string value)
+        public HttpResponseMessage UpdatePassword([FromBody]string value)
         {
             try
             {
