@@ -7,6 +7,7 @@ using NUnit.Framework;
 using Moq;
 using LearnWithMentor.Controllers;
 using System.Web.Http;
+using System.Web.Http.Controllers;
 using System.Web.Http.Tracing;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDTO;
@@ -19,6 +20,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         private UserController userController;
         private Mock<IUserService> userServiceMock;
         private Mock<IRoleService> roleServiceMock;
+        private Mock<ITraceWriter> traceWriterMock;
 
         [OneTimeSetUp]
         public void SetUp()
@@ -39,9 +41,10 @@ namespace LearnWithMentor.Tests.Controllers.Tests
 
             userServiceMock = new Mock<IUserService>();
             roleServiceMock = new Mock<IRoleService>();
+            traceWriterMock = new Mock<ITraceWriter>();
 
             userServiceMock.Setup(u => u.GetAllUsers()).Returns(users);
-            userServiceMock.Setup(u => u.BlockById(It.IsInRange(1, 4, Range.Exclusive))).Returns(true);
+            userServiceMock.Setup(u => u.BlockById(It.IsInRange(1, 4, Range.Inclusive))).Returns(true);
 
             roleServiceMock.Setup(r => r.GetAllRoles()).Returns(roles);
 
@@ -50,8 +53,9 @@ namespace LearnWithMentor.Tests.Controllers.Tests
                 new Claim(ClaimTypes.Role, "Admin")
             }));
 
-            userController = new UserController(userServiceMock.Object, roleServiceMock.Object, null, null);
+            userController = new UserController(userServiceMock.Object, roleServiceMock.Object, null, traceWriterMock.Object);
             userController.ControllerContext.RequestContext.Principal = userPrincipal;
+            userController.ControllerContext.ControllerDescriptor = new HttpControllerDescriptor(new HttpConfiguration(), "UserController", userController.GetType());
             userController.Request = new HttpRequestMessage();
             userController.Configuration = new HttpConfiguration();
         }
@@ -92,6 +96,16 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             var response = userController.Get();
             response.TryGetContentValue<IEnumerable<UserDTO>>(out var userDTOs);
             var expected = HttpStatusCode.NoContent;
+            var actual = response.StatusCode;
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void BlockUserTest()
+        {
+            var response = userController.Delete(1);
+            var expected = HttpStatusCode.OK;
             var actual = response.StatusCode;
 
             Assert.AreEqual(expected, actual);
