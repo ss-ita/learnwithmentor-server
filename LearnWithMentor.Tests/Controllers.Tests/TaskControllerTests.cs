@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Http;
 using System.Net;
+using System.Web.Http;
+using System.Web.Http.Controllers;
+using System.Security.Claims;
 using System.Net.Http;
 using System.Web.Http.Tracing;
+using System.Data.Entity.Core;
 using NUnit.Framework;
 using Moq;
 using LearnWithMentor.Controllers;
-using LearnWithMentorBLL.Services;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDTO;
 
@@ -19,13 +19,45 @@ namespace LearnWithMentor.Tests.Controllers.Tests
     [TestFixture]
     public class TaskControllerTests
     {
-        public readonly IList<TaskDTO> Tasks;
-        public readonly ITaskService MockTaskService;
-        public readonly IMessageService MockMessageService;
-        public readonly ITraceWriter MockTraceWriter;
-        public TaskControllerTests()
+        private TaskController taskController;
+        private Mock<ITaskService> taskServiceMock;
+        private Mock<IMessageService> messageServiceMock;
+        private Mock<ITraceWriter> traceWriterMock;
+
+        [OneTimeSetUp]
+        public void SetUp()
         {
-            IList<TaskDTO> tasks = new List<TaskDTO>
+            var tasks = GetTestTasks();
+
+            taskServiceMock = new Mock<ITaskService>();
+            messageServiceMock = new Mock<IMessageService>();
+            traceWriterMock = new Mock<ITraceWriter>();
+            
+            var userPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+            {
+                new Claim(ClaimTypes.Role, "Admin")
+            }));
+
+            taskController = new TaskController(taskServiceMock.Object, messageServiceMock.Object, traceWriterMock.Object);
+            taskController.ControllerContext.RequestContext.Principal = userPrincipal;
+            taskController.Request = new HttpRequestMessage();
+            taskController.Configuration = new HttpConfiguration();
+            taskController.ControllerContext.ControllerDescriptor = new HttpControllerDescriptor(
+                taskController.Configuration, "TaskController", taskController.GetType());
+        }
+
+        [OneTimeTearDown]
+        public void TearDown()
+        {
+            taskController.Dispose();
+            taskServiceMock = null;
+            messageServiceMock = null;
+            traceWriterMock = null;
+        }
+
+        private List<TaskDTO> GetTestTasks()
+        {
+            List<TaskDTO> testTasks = new List<TaskDTO>
             {
                 new TaskDTO(1, "Task #1", "Task #1", false, 1, "Task #1 creator", 1,
                             "Task #1 creator", DateTime.Now, DateTime.Now, 1, 1, 1),
@@ -34,56 +66,84 @@ namespace LearnWithMentor.Tests.Controllers.Tests
                 new TaskDTO(3, "Task #3", "Task #3", false, 1, "Task #3 creator", 1,
                             "Task #3 creator", DateTime.Now, DateTime.Now, 1, 1, 1),
             };
-            this.Tasks = tasks;
-            Mock<ITaskService> mockTaskService = new Mock<ITaskService>();
-            Mock<IMessageService> mockMessageService = new Mock<IMessageService>();
-            Mock<ITraceWriter> mockTraceWriter = new Mock<ITraceWriter>();
 
-            mockTaskService.Setup(mtc => mtc.GetAllTasks()).Returns(Tasks);
-            mockTaskService.Setup(mtc => mtc.GetTaskById(
-               It.IsAny<int>())).Returns((int i) => tasks.Where(
-               x => x.Id == i).Single());
-
-            this.MockTaskService = mockTaskService.Object;
-            this.MockMessageService = mockMessageService.Object;
-            this.MockTraceWriter = mockTraceWriter.Object;
+            return testTasks;
         }
-
+        #region GetAllTasks
         [Test]
-        public void GetAllTasksTest()
+        public void GetAllTasksTest_ShouldReturnAllTasks()
         {
-            // Arrange
-            var controller = new TaskController(MockTaskService, MockMessageService, MockTraceWriter);
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            taskServiceMock.Setup(mtc => mtc.GetAllTasks()).Returns(GetTestTasks());
 
-            // Act
-            var response = controller.GetAllTasks();
+            var response = taskController.GetAllTasks();
+            var successfull = response.TryGetContentValue<IEnumerable<TaskDTO>>(out var taskDTOs);
+            var expected = taskServiceMock.Object.GetAllTasks().Count();
+            var actual = taskDTOs.Count();
 
-            // Assert
-            IList<TaskDTO> resultTasks;
-            Assert.IsTrue(response.TryGetContentValue(out resultTasks));
-            Assert.AreEqual(Tasks, resultTasks);
+            Assert.IsTrue(successfull);
+            Assert.AreEqual(expected, actual);
             Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
         }
 
         [Test]
-        public void GetTaskByIdTest()
+        public void GetAllTasksTest_ShouldReturnNoContentResponse()
         {
-            // Arrange
-            var task = Tasks[0];
-            var controller = new TaskController(MockTaskService, MockMessageService, MockTraceWriter);
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            taskServiceMock.Setup(ts => ts.GetAllTasks());
 
-            // Act
-            var response = controller.GetTaskById(task.Id);
+            var response = taskController.GetAllTasks();
 
-            // Assert
-            TaskDTO resultTask;
-            Assert.IsTrue(response.TryGetContentValue(out resultTask));
-            Assert.AreEqual(task, resultTask);
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.NoContent);
+        }
+
+        [Test]
+        public void GetAllTasksTest_ShouldCatchEntityException()
+        {
+            taskServiceMock.Setup(ts => ts.GetAllTasks()).Throws(new EntityException());
+
+            var response = taskController.GetAllTasks();
+
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.InternalServerError);
+        }
+        #endregion
+        #region GetTaskById
+        [Test]
+        public void GetTaskByIdTest_ShouldReturnTask()
+        {
+            taskServiceMock.Setup(mtc => mtc.GetTaskById(It.IsAny<int>())).Returns(
+                (int i) => GetTestTasks().Where(x => x.Id == i).Single());
+
+            var task = GetTestTasks()[0];
+            var response = taskController.GetTaskById(task.Id);
+            var successfull = response.TryGetContentValue<TaskDTO>(out var taskDTO);
+            var expected = taskServiceMock.Object.GetTaskById(task.Id);
+            var actual = taskDTO;
+
+            Assert.IsTrue(successfull);
+            Assert.AreEqual(expected.Id, actual.Id);
             Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
         }
+
+        [Test]
+        public void GetTaskByIdTest_ShouldReturnNoContentResponse()
+        {
+            taskServiceMock.Setup(mtc => mtc.GetTaskById(It.IsAny<int>()));
+
+            var task = GetTestTasks()[0];
+            var response = taskController.GetTaskById(task.Id);
+         
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.NoContent);
+        }
+
+        [Test]
+        public void GetTaskByIdTest_ShouldCatchEntityException()
+        {
+            taskServiceMock.Setup(mtc => mtc.GetTaskById(It.IsAny<int>())).Throws(new EntityException());
+
+            var task = GetTestTasks()[0];
+            var response = taskController.GetTaskById(task.Id);
+
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.InternalServerError);
+        }
+        #endregion
     }
 }
