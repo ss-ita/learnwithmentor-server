@@ -34,6 +34,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             {
                 new RoleDTO(1, "Student"),
                 new RoleDTO(2, "Mentor"),
+
                 new RoleDTO(3, "Admin")
             };
 
@@ -63,6 +64,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             userServiceMock = null;
             roleServiceMock = null;
         }
+
         [Test]
         public void GetAllUsersTest()
         {
