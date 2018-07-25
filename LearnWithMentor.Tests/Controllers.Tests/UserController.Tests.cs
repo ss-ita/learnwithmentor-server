@@ -45,7 +45,8 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             traceWriterMock = new Mock<ITraceWriter>();
 
             userServiceMock.Setup(u => u.GetAllUsers()).Returns(users);
-            userServiceMock.Setup(u => u.BlockById(It.IsInRange(1, 4, Range.Inclusive))).Returns(true);
+            userServiceMock.Setup(u => u.BlockById(It.IsInRange(1, 3, Range.Inclusive))).Returns(true);
+            userServiceMock.Setup(u => u.BlockById(4)).Returns(false);
             userServiceMock.Setup(u => u.GetUsersByRole(It.IsInRange(1,2, Range.Inclusive)))
                 .Returns(users.Where(u => u.Role == "Student").ToList());
             userServiceMock.Setup(u => u.GetUsersByRole(3)).Returns(new List<UserDTO>());
@@ -60,10 +61,12 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             userServiceMock.Setup(u => u.GetImage(4));
             userServiceMock.Setup(u => u.GetImage(6)).Throws(new EntityException());
             userServiceMock.Setup(u => u.ContainsId(It.IsInRange(1, 8, Range.Inclusive))).Returns(true);
+            userServiceMock.Setup(u => u.Search(It.IsAny<string[]>(), It.IsAny<int?>())).Returns(users);
 
             roleServiceMock.Setup(r => r.GetAllRoles()).Returns(roles);
             roleServiceMock.Setup(r => r.Get(It.IsInRange(1, 3, Range.Inclusive))).Returns(roles.First());
             roleServiceMock.Setup(r => r.Get(4));
+            roleServiceMock.Setup(r => r.GetByName(It.IsAny<string>())).Returns(roles.First());
 
 
             var userPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
@@ -88,12 +91,24 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             roleServiceMock = null;
             traceWriterMock = null;
         }
+
         [Test]
         public void GetAllUsersTest()
         {
             var response = userController.Get();
             response.TryGetContentValue<IEnumerable<UserDTO>>(out var userDTOs);
-            var expected = userServiceMock.Object.GetAllUsers().Count();
+            var expected = userServiceMock.Object.GetAllUsers().Count;
+            var actual = userDTOs.Count();
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void SearchUsersTest()
+        {
+            var response = userController.Search("test", "test");
+            response.TryGetContentValue<IEnumerable<UserDTO>>(out var userDTOs);
+            var expected = userServiceMock.Object.Search(new []{"test"}, 1).Count;
             var actual = userDTOs.Count();
 
             Assert.AreEqual(expected, actual);
@@ -104,7 +119,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         {
             var response = userController.GetUsersbyRole(1);
             response.TryGetContentValue<IEnumerable<UserDTO>>(out var userDTOs);
-            var expected = userServiceMock.Object.GetUsersByRole(1).Count();
+            var expected = userServiceMock.Object.GetUsersByRole(1).Count;
             var actual = userDTOs.Count();
 
             Assert.AreEqual(expected, actual);
@@ -115,7 +130,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         {
             var response = userController.GetUsersbyState(false);
             response.TryGetContentValue<IEnumerable<UserDTO>>(out var userDTOs);
-            var expected = userServiceMock.Object.GetUsersByState(false).Count();
+            var expected = userServiceMock.Object.GetUsersByState(false).Count;
             var actual = userDTOs.Count();
 
             Assert.AreEqual(expected, actual);
@@ -126,7 +141,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         {
             var response = userController.GetRoles();
             response.TryGetContentValue<IEnumerable<RoleDTO>>(out var roleDTOs);
-            var expected = roleServiceMock.Object.GetAllRoles().Count();
+            var expected = roleServiceMock.Object.GetAllRoles().Count;
             var actual = roleDTOs.Count();
 
             Assert.AreEqual(expected, actual);
@@ -232,13 +247,23 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public void UpdatePasswordTest()
+        public void NoUserInBlockUserTest()
         {
-            var response = userController.UpdatePassword("newPass");
-            var expected = HttpStatusCode.OK;
+            var response = userController.Delete(4);
+            var expected = HttpStatusCode.NoContent;
             var actual = response.StatusCode;
 
             Assert.AreEqual(expected, actual);
         }
+
+        //[Test]
+        //public void UpdatePasswordTest()
+        //{
+        //    var response = userController.UpdatePassword("newPass");
+        //    var expected = HttpStatusCode.OK;
+        //    var actual = response.StatusCode;
+
+        //    Assert.AreEqual(expected, actual);
+        //}
     }
 }
