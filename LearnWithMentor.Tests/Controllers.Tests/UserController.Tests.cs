@@ -52,6 +52,8 @@ namespace LearnWithMentor.Tests.Controllers.Tests
                 .Returns(users.Where(u => u.Role == "Student").ToList());
             userServiceMock.Setup(u => u.GetUsersByRole(3)).Returns(new List<UserDTO>());
             userServiceMock.Setup(u => u.UpdatePassword(It.IsAny<int>(), It.IsAny<string>())).Returns(true);
+            userServiceMock.Setup(u => u.GetUsersByState(false)).Returns(users);
+            userServiceMock.Setup(u => u.GetUsersByState(true)).Returns(new List<UserDTO>());
 
             roleServiceMock.Setup(r => r.GetAllRoles()).Returns(roles);
             roleServiceMock.Setup(r => r.Get(It.IsInRange(1, 3, Range.Inclusive))).Returns(roles.First());
@@ -97,6 +99,17 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             var response = userController.GetUsersbyRole(1);
             response.TryGetContentValue<IEnumerable<UserDTO>>(out var userDTOs);
             var expected = userServiceMock.Object.GetUsersByRole(1).Count();
+            var actual = userDTOs.Count();
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void GetUsersByStateTest()
+        {
+            var response = userController.GetUsersbyState(false);
+            response.TryGetContentValue<IEnumerable<UserDTO>>(out var userDTOs);
+            var expected = userServiceMock.Object.GetUsersByState(false).Count();
             var actual = userDTOs.Count();
 
             Assert.AreEqual(expected, actual);
@@ -149,6 +162,16 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public void NoUsersInGetUsersByRoleTest()
         {
             var response = userController.GetUsersbyRole(3);
+            var expected = HttpStatusCode.NoContent;
+            var actual = response.StatusCode;
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void NoUsersInGetUsersByStateTest()
+        {
+            var response = userController.GetUsersbyState(true);
             var expected = HttpStatusCode.NoContent;
             var actual = response.StatusCode;
 
