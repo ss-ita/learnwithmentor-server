@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
-using System.Web;
 using NUnit.Framework;
 using Moq;
 using LearnWithMentor.Controllers;
@@ -13,7 +12,6 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Tracing;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDTO;
-using NUnit.Framework.Internal;
 
 namespace LearnWithMentor.Tests.Controllers.Tests
 {
@@ -54,6 +52,14 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             userServiceMock.Setup(u => u.UpdatePassword(It.IsAny<int>(), It.IsAny<string>())).Returns(true);
             userServiceMock.Setup(u => u.GetUsersByState(false)).Returns(users);
             userServiceMock.Setup(u => u.GetUsersByState(true)).Returns(new List<UserDTO>());
+            userServiceMock.Setup(u => u.GetImage(It.IsInRange(1, 3, Range.Inclusive))).Returns(new ImageDTO()
+            {
+                Base64Data = "test",
+                Name = "test"
+            });
+            userServiceMock.Setup(u => u.GetImage(4));
+            userServiceMock.Setup(u => u.GetImage(6)).Throws(new EntityException());
+            userServiceMock.Setup(u => u.ContainsId(It.IsInRange(1, 8, Range.Inclusive))).Returns(true);
 
             roleServiceMock.Setup(r => r.GetAllRoles()).Returns(roles);
             roleServiceMock.Setup(r => r.Get(It.IsInRange(1, 3, Range.Inclusive))).Returns(roles.First());
@@ -127,6 +133,17 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
+        public void GetImageTest()
+        {
+            var response = userController.GetImage(1);
+            response.TryGetContentValue<ImageDTO>(out var imageDTO);
+            var expected = "test";
+            var actual = imageDTO.Name;
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
         public void NoUsersInDatabaseTest()
         {
             roleServiceMock.Setup(r => r.GetAllRoles()).Returns(new List<RoleDTO>());
@@ -176,6 +193,32 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             var actual = response.StatusCode;
 
             Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void NoImageInGetImageTest()
+        {
+            var response = userController.GetImage(4);
+            var expected = HttpStatusCode.NoContent;
+            var actual = response.StatusCode;
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void NoUserInGetImageTest()
+        {
+            var response = userController.GetImage(5);
+            var expected = HttpStatusCode.NoContent;
+            var actual = response.StatusCode;
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ExceptionInGetImageTest()
+        {
+            Assert.Throws(typeof(EntityException), () => userController.GetImage(6));
         }
 
         [Test]
