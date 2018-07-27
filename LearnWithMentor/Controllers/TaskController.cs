@@ -192,7 +192,7 @@ namespace LearnWithMentor.Controllers
                     var userTasks = taskService.GetTaskStatesForUser(planTaskId, userid);
                     if (userTasks == null)
                         return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"Task for this user with id: {userid}  does not exist in database.");
-                    allUserTasks.Add( new ListUserTasksDTO(){ UserTasks = userTasks});
+                    allUserTasks.Add(new ListUserTasksDTO() { UserTasks = userTasks });
                 }
                 return Request.CreateResponse(HttpStatusCode.OK, allUserTasks);
             }
@@ -210,7 +210,7 @@ namespace LearnWithMentor.Controllers
         /// <param name="userId">array of the user`s ids.</param>
         [HttpGet]
         [Route("api/task/usertasks")]
-        public HttpResponseMessage GetUserTasks( int userId, [FromUri]int[] planTaskId )
+        public HttpResponseMessage GetUserTasks(int userId, [FromUri]int[] planTaskId)
         {
             try
             {
@@ -239,7 +239,7 @@ namespace LearnWithMentor.Controllers
                 var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
                 var currentId = int.Parse(identity.FindFirst("Id").Value);
                 var currentRole = identity.FindFirst(identity.RoleClaimType).Value;
-                if(!(taskService.CheckUserTaskOwner(userTaskId, currentId) || currentRole == Constants.Roles.Mentor))
+                if (!(taskService.CheckUserTaskOwner(userTaskId, currentId) || currentRole == Constants.Roles.Mentor))
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
                 }
@@ -423,8 +423,12 @@ namespace LearnWithMentor.Controllers
                 {
                     return GetAllTasks();
                 }
-                var lines = key.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                var lines = key.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 var taskList = taskService.Search(lines);
+                if (taskList == null || taskList.Count == 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.NoContent, "There are no tasks by this key");
+                }
                 return Request.CreateResponse(HttpStatusCode.OK, taskList);
             }
             catch (EntityException e)
@@ -449,7 +453,7 @@ namespace LearnWithMentor.Controllers
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax.");
                 }
-                var lines = key.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                var lines = key.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 var taskList = taskService.Search(lines, planId);
                 if (taskList == null)
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, "This plan does not exist.");
