@@ -20,7 +20,7 @@ namespace LearnWithMentorBLL.Interfaces
         bool RemoveTaskById(int id);
         List<UserTaskDTO> GetTaskStatesForUser(int[] planTaskIds, int userId);
         IEnumerable<TaskDTO> Search(string[] str, int planId);
-        IEnumerable<TaskDTO> Search(string[] str);
+        List<TaskDTO> Search(string[] keys);
         StatisticsDTO GetUserStatistics(int userId);
         PagedListDTO<TaskDTO> GetTasks(int pageSize, int pageNumber = 1);
 

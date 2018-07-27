@@ -50,7 +50,7 @@ namespace LearnWithMentorDAL.Repositories
 
         public IEnumerable<Task> Search(string[] str)
         {
-            List<Task> result = new List<Task>();
+            var result = new List<Task>();
             foreach (var s in str)
             {
                 IQueryable<Task> found = Context.Tasks.Where(t => t.Name.Contains(s));
