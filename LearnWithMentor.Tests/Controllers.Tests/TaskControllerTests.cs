@@ -8,6 +8,7 @@ using System.Security.Claims;
 using System.Net.Http;
 using System.Web.Http.Tracing;
 using System.Data.Entity.Core;
+using System.ComponentModel.DataAnnotations;
 using NUnit.Framework;
 using Moq;
 using LearnWithMentor.Controllers;
@@ -24,7 +25,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         private Mock<IMessageService> messageServiceMock;
         private Mock<ITraceWriter> traceWriterMock;
 
-        [OneTimeSetUp]
+        [SetUp]
         public void SetUp()
         {
             var tasks = GetTestTasks();
@@ -46,7 +47,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
                 taskController.Configuration, "TaskController", taskController.GetType());
         }
 
-        [OneTimeTearDown]
+        [TearDown]
         public void TearDown()
         {
             taskController.Dispose();
@@ -77,6 +78,17 @@ namespace LearnWithMentor.Tests.Controllers.Tests
                 result.AddRange(testTasks.Where(t => t.Name.Contains(line)));
             }
             return result.Distinct().ToList();
+        }
+        public void ValidateViewModel<TModel, TController>(TController controller, TModel ModelToValidate)
+        where TController : ApiController
+        {
+            var validationContext = new ValidationContext(ModelToValidate, null, null);
+            var validationResults = new List<ValidationResult>();
+            Validator.TryValidateObject(ModelToValidate, validationContext, validationResults, true);
+            foreach (var validationResult in validationResults)
+            {
+                controller.ModelState.AddModelError(validationResult.MemberNames.FirstOrDefault() ?? string.Empty, validationResult.ErrorMessage);
+            }
         }
         #region GetAllTasks
         [Test]
@@ -150,6 +162,43 @@ namespace LearnWithMentor.Tests.Controllers.Tests
 
             var task = GetTestTasks()[0];
             var response = taskController.GetTaskById(task.Id);
+
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.InternalServerError);
+        }
+        #endregion
+        #region GetAllTasks
+        [Test]
+        public void GetTaskForPlanTest_ShouldReturnAllTasksForPlan()
+        {
+            taskServiceMock.Setup(mts => mts.GetTaskForPlan(It.IsAny<int>())).Returns(GetTestTasks()[0]);
+
+            var response = taskController.GetTaskForPlan(1);
+            var successfull = response.TryGetContentValue<TaskDTO>(out var taskDTOs);
+            var expected = taskServiceMock.Object.GetTaskForPlan(1);
+            var actual = taskDTOs;
+
+            Assert.IsTrue(successfull);
+            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+        }
+
+        [Test]
+        public void GetTaskForPlanTest_ShouldReturnNoContentResponse()
+        {
+            taskServiceMock.Setup(ts => ts.GetTaskForPlan(It.IsAny<int>()));
+
+            var response = taskController.GetTaskForPlan(1);
+
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.NoContent);
+        }
+
+        [Test]
+        public void GetTaskForPlanTest_ShouldCatchEntityException()
+        {
+            taskServiceMock.Setup(ts => ts.GetTaskForPlan(It.IsAny<int>()))
+                .Throws(new EntityException());
+
+            var response = taskController.GetTaskForPlan(1);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.InternalServerError);
         }
@@ -256,6 +305,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public void PostTaskTest_ShouldSuccessfullyCreateNewTask()
         {
+            
             taskServiceMock.Setup(mts => mts.CreateTask(It.IsAny<TaskDTO>()))
                 .Returns(true);
             var newTask = GetTestTasks()[0];
@@ -271,9 +321,10 @@ namespace LearnWithMentor.Tests.Controllers.Tests
                 .Returns(true);
 
             var newTask = new TaskDTO{ };
+            ValidateViewModel<TaskDTO, TaskController>(taskController, newTask);
             var response = taskController.Post(newTask);
 
-            Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
         [Test]
@@ -283,6 +334,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
                 .Returns(false);
 
             var newTask = GetTestTasks()[0];
+
             var response = taskController.Post(newTask);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
@@ -325,9 +377,10 @@ namespace LearnWithMentor.Tests.Controllers.Tests
                 .Returns(1);
 
             var newTask = new TaskDTO { };
+            ValidateViewModel<TaskDTO, TaskController>(taskController, newTask);
             var response = taskController.PostAndReturnId(newTask);
 
-            Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
         [Test]
