@@ -84,5 +84,20 @@ namespace LearnWithMentorDAL.Repositories
             var usedPlans = Context.Groups.FirstOrDefault(g => g.Id == groupId)?.Plans.Select(p => p.Id);
             return Context.Plans.Where(p => !usedPlans.Contains(p.Id));
         }
+
+        public IEnumerable<PlanSuggestion> GetPlanSuggestionByMentor(int userId)
+        {
+            return Context.PlanSuggestion.Where(pls => pls.Mentor_Id == userId);
+        }
+
+        public IEnumerable<PlanSuggestion> GetPlanSuggestionByPlan(int planId)
+        {
+            return Context.PlanSuggestion.Where(pls => pls.Mentor_Id == planId);
+        }
+
+        public IEnumerable<PlanSuggestion> GetPlanSuggestionByAuthor(int planId)
+        {
+            return Context.PlanSuggestion.Where(pls => pls.Mentor_Id == planId);
+        }
     }
 }

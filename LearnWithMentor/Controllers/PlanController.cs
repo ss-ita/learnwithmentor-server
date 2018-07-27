@@ -121,6 +121,38 @@ namespace LearnWithMentor.Controllers
         }
 
         /// <summary>
+        /// </summary>
+        /// <param name="planId"> Id of plan. </param>
+        [HttpGet]
+        [Route("api/plan/{planId}/plansuggestions")]
+        public HttpResponseMessage GetAllplanSuggestionByPlanId(int planId)
+        {
+            var planSuggestionDtoList = planService.GetPlanSuggestionForPlan(planId);
+            if (planSuggestionDtoList == null || planSuggestionDtoList.Count == 0)
+            {
+                const string message = "Plan does not contain any plan suggestions.";
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
+            }
+            return Request.CreateResponse<IEnumerable<PlanSuggestionDTO>>(HttpStatusCode.OK, planSuggestionDtoList);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="mentorId"> Id of plan. </param>
+        [HttpGet]
+        [Route("api/plan/{planId}/plansuggestions")]
+        public HttpResponseMessage GetAllplanSuggestionByMentorId(int mentorId)
+        {
+            var planSuggestionDtoList = planService.GetPlanSuggestionForMentor(mentorId);
+            if (planSuggestionDtoList == null || planSuggestionDtoList.Count == 0)
+            {
+                const string message = "Plan does not contain any plan suggestions.";
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
+            }
+            return Request.CreateResponse<IEnumerable<PlanSuggestionDTO>>(HttpStatusCode.OK, planSuggestionDtoList);
+        }
+
+        /// <summary>
         /// Gets all Plantask ids of concrete plan.
         /// </summary>
         /// <param name="plan_id"> Id of plan. </param>

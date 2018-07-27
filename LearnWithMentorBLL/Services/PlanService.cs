@@ -352,5 +352,27 @@ namespace LearnWithMentorBLL.Services
         {
             return db.Plans.ContainsId(id);
         }
+
+        public List<PlanSuggestionDTO> GetPlanSuggestionForMentor(int mentorId)
+        {
+            var planSuggestions = db.Plans.GetPlanSuggestionByMentor(mentorId);
+
+            return planSuggestions.Select(planSuggestion => 
+                new PlanSuggestionDTO(planSuggestion.User_Id, 
+                    planSuggestion.Mentor_Id, 
+                    planSuggestion.Plan_Id, 
+                    planSuggestion.Text)).ToList();
+        }
+
+        public List<PlanSuggestionDTO> GetPlanSuggestionForPlan(int planId)
+        {
+            var planSuggestions = db.Plans.GetPlanSuggestionByPlan(planId);
+
+            return planSuggestions?.Select(planSuggestion =>
+                new PlanSuggestionDTO(planSuggestion.User_Id,
+                    planSuggestion.Mentor_Id,
+                    planSuggestion.Plan_Id,
+                    planSuggestion.Text)).ToList();
+        }
     }
 }
