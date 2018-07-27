@@ -9,6 +9,7 @@ using Moq;
 using LearnWithMentor.Controllers;
 using System.Web.Http;
 using System.Web.Http.Controllers;
+using System.Web.Http.Results;
 using System.Web.Http.Tracing;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDTO;
@@ -285,6 +286,32 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             var actual = response.StatusCode;
 
             Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void UpdateUserTest()
+        {
+            userServiceMock.Setup(u => u.UpdateById(It.IsAny<int>(), It.IsAny<UserDTO>())).Returns(true);
+
+            UserDTO reqestValue = new UserDTO(1, "test", "test", "test", false);
+            var response = userController.Put(1, reqestValue);
+            var expectedStatusCode = HttpStatusCode.OK;
+            var actualStatusCode = response.StatusCode;
+
+            Assert.AreEqual(expectedStatusCode, actualStatusCode);
+        }
+
+        [Test]
+        public void NoUserInUpdateUserTest()
+        {
+            userServiceMock.Setup(u => u.UpdateById(It.IsAny<int>(), It.IsAny<UserDTO>())).Returns(false);
+
+            UserDTO reqestValue = new UserDTO(1, "test", "test", "test", false);
+            var response = userController.Put(1, reqestValue);
+            var expectedStatusCode = HttpStatusCode.BadRequest;
+            var actualStatusCode = response.StatusCode;
+
+            Assert.AreEqual(expectedStatusCode, actualStatusCode);
         }
 
         [Test]

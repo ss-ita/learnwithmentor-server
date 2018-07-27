@@ -10,7 +10,6 @@ using LearnWithMentor.Filters;
 using System.Web.Http.Tracing;
 using System.Data.Entity.Core;
 using System.Web;
-using System.Security.Claims;
 using LearnWithMentorDTO.Infrastructure;
 
 namespace LearnWithMentor.Controllers
@@ -23,13 +22,15 @@ namespace LearnWithMentor.Controllers
         /// <summary> Services for work with different DB parts </summary>
         private readonly ITaskService taskService;
         private readonly IMessageService messageService;
+        private readonly IUserIdentityService userIdentityService;
         private readonly ITraceWriter tracer;
 
         /// <summary> Services initiation </summary>
-        public TaskController(ITaskService taskService, IMessageService messageService, ITraceWriter tracer)
+        public TaskController(ITaskService taskService, IMessageService messageService, IUserIdentityService userIdentityService, ITraceWriter tracer)
         {
             this.taskService = taskService;
             this.messageService = messageService;
+            this.userIdentityService = userIdentityService;
             this.tracer = tracer;
         }
 
@@ -154,9 +155,8 @@ namespace LearnWithMentor.Controllers
         {
             try
             {
-                var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
-                var currentId = int.Parse(identity.FindFirst("Id").Value);
-                var currentRole = identity.RoleClaimType;
+                var currentId = userIdentityService.GetUserId();
+                var currentRole = userIdentityService.GetUserRole();
                 if (!(userId == currentId || currentRole == Constants.Roles.Mentor))
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
@@ -236,9 +236,8 @@ namespace LearnWithMentor.Controllers
         {
             try
             {
-                var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
-                var currentId = int.Parse(identity.FindFirst("Id").Value);
-                var currentRole = identity.FindFirst(identity.RoleClaimType).Value;
+                var currentId = userIdentityService.GetUserId();
+                var currentRole = userIdentityService.GetUserRole();
                 if(!(taskService.CheckUserTaskOwner(userTaskId, currentId) || currentRole == Constants.Roles.Mentor))
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
@@ -273,8 +272,7 @@ namespace LearnWithMentor.Controllers
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
                 }
                 newMessage.UserTaskId = userTaskId;
-                var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
-                var currentId = int.Parse(identity.FindFirst("Id").Value);
+                var currentId = userIdentityService.GetUserId();
                 newMessage.SenderId = currentId;
                 var success = messageService.SendMessage(newMessage);
                 if (success)
