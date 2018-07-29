@@ -23,6 +23,8 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         private Mock<IUserService> userServiceMock;
         private Mock<IRoleService> roleServiceMock;
         private Mock<ITraceWriter> traceWriterMock;
+        private Mock<ITaskService> taskServiceMock;
+        private Mock<IUserIdentityService> userIdentityServiceMock;
         private List<UserDTO> users;
         private List<RoleDTO> roles;
 
@@ -46,6 +48,8 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             userServiceMock = new Mock<IUserService>();
             roleServiceMock = new Mock<IRoleService>();
             traceWriterMock = new Mock<ITraceWriter>();
+            taskServiceMock = new Mock<ITaskService>();
+            userIdentityServiceMock = new Mock<IUserIdentityService>();
 
             var userPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
@@ -53,7 +57,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
                 new Claim("Id", "4") 
             }));
             
-            userController = new UserController(userServiceMock.Object, roleServiceMock.Object, null, traceWriterMock.Object);
+            userController = new UserController(userServiceMock.Object, roleServiceMock.Object, taskServiceMock.Object, userIdentityServiceMock.Object, traceWriterMock.Object);
             userController.ControllerContext.RequestContext.Principal = userPrincipal;
 
             userController.ControllerContext.ControllerDescriptor = new HttpControllerDescriptor(new HttpConfiguration(),
@@ -142,6 +146,23 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
+        public void GetSingleTest()
+        {
+            userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(1);
+            userServiceMock.Setup(u => u.Get(1)).Returns(users.First());
+
+            var response = userController.GetSingle();
+            response.TryGetContentValue<UserDTO>(out var userDTO);
+            var expectedUserId = users.First().Id;
+            var actualUserId = userDTO.Id;
+            var expectedStatusCode = HttpStatusCode.OK;
+            var actualStatusCode = response.StatusCode;
+
+            Assert.AreEqual(expectedUserId, actualUserId);
+            Assert.AreEqual(expectedStatusCode, actualStatusCode);
+        }
+
+        [Test]
         public void GetImageTest()
         {
             userServiceMock.Setup(u => u.ContainsId(It.IsInRange(1, 8, Range.Inclusive))).Returns(true);
@@ -157,6 +178,30 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             var actual = imageDTO.Name;
 
             Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void GetStatisticsTest()
+        {
+            var statsDTO = new StatisticsDTO()
+            {
+                ApprovedNumber = 1,
+                DoneNumber = 1,
+                RejectedNumber = 1,
+                InProgressNumber = 1
+            };
+            userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(1);
+            taskServiceMock.Setup(t => t.GetUserStatistics(1)).Returns(statsDTO);
+
+            var response = userController.GetStatistics();
+            response.TryGetContentValue<StatisticsDTO>(out var resultDTO);
+            var expectedNumber = statsDTO.ApprovedNumber;
+            var actualNumber = resultDTO.ApprovedNumber;
+            var expectedStatusCode = HttpStatusCode.OK;
+            var actualStatusCode = response.StatusCode;
+
+            Assert.AreEqual(expectedNumber, actualNumber);
+            Assert.AreEqual(expectedStatusCode, actualStatusCode);
         }
 
         [Test]
@@ -243,6 +288,19 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
+        public void NoUserInGetStatisticsTest()
+        {
+            userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(1);
+            taskServiceMock.Setup(t => t.GetUserStatistics(1));
+
+            var response = userController.GetStatistics();
+            var expectedStatusCode = HttpStatusCode.NoContent;
+            var actualStatusCode = response.StatusCode;
+
+            Assert.AreEqual(expectedStatusCode, actualStatusCode);
+        }
+
+        [Test]
         public void ExceptionInGetImageTest()
         {
             userServiceMock.Setup(u => u.ContainsId(It.IsInRange(1, 8, Range.Inclusive))).Returns(true);
@@ -273,6 +331,19 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             var actual = response.StatusCode;
 
             Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void NoUserGetSingleTest()
+        {
+            userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(1);
+            userServiceMock.Setup(u => u.Get(1));
+
+            var response = userController.GetSingle();
+            var expectedStatusCode = HttpStatusCode.NoContent;
+            var actualStatusCode = response.StatusCode;
+
+            Assert.AreEqual(expectedStatusCode, actualStatusCode);
         }
 
         [Test]
@@ -327,16 +398,17 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             Assert.AreEqual(expected, actual);
         }
 
-        //[Test]
-        //public void UpdatePasswordTest()
-        //{
-        //    userServiceMock.Setup(u => u.UpdatePassword(It.IsAny<int>(), It.IsAny<string>())).Returns(true);
+        [Test]
+        public void UpdatePasswordTest()
+        {
+            userServiceMock.Setup(u => u.UpdatePassword(It.IsAny<int>(), It.IsAny<string>())).Returns(true);
+            userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(1);
 
-        //    var response = userController.UpdatePassword("newPass");
-        //    var expected = HttpStatusCode.OK;
-        //    var actual = response.StatusCode;
+            var response = userController.UpdatePassword("newPass");
+            var expected = HttpStatusCode.OK;
+            var actual = response.StatusCode;
 
-        //    Assert.AreEqual(expected, actual);
-        //}
+            Assert.AreEqual(expected, actual);
+        }
     }
 }

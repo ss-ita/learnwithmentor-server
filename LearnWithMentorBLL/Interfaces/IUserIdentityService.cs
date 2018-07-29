@@ -1,5 +1,4 @@
-﻿using System;
-namespace LearnWithMentorBLL.Interfaces
+﻿namespace LearnWithMentorBLL.Interfaces
 {
     public interface IUserIdentityService
     {
