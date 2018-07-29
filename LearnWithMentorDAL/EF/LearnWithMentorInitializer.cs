@@ -355,7 +355,6 @@ namespace LearnWithMentorDAL.EF
                 task.Mod_Date = new DateTime(2018, 7, 16, 23, 59, 59);
             }
             var count = 1;
-
             var numOfMentors = context.Users.Count(user => user.Role_Id == 1);
             var tasksPerMentor = 4;
 
@@ -456,7 +455,6 @@ namespace LearnWithMentorDAL.EF
                 {
                     planTasks[i].Section_Id = section.Id;
                 }
-                count = count + numOfPlanTasksInSmallSection;
             }
 
 
