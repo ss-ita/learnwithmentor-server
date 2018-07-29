@@ -24,6 +24,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         private Mock<ITaskService> taskServiceMock;
         private Mock<IMessageService> messageServiceMock;
         private Mock<ITraceWriter> traceWriterMock;
+        private Mock<IUserIdentityService> userIdentityServiceMock;
 
         [SetUp]
         public void SetUp()
@@ -33,13 +34,14 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             taskServiceMock = new Mock<ITaskService>();
             messageServiceMock = new Mock<IMessageService>();
             traceWriterMock = new Mock<ITraceWriter>();
+            userIdentityServiceMock = new Mock<IUserIdentityService>();
             
             var userPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
                 new Claim(ClaimTypes.Role, "Admin")
             }));
 
-            taskController = new TaskController(taskServiceMock.Object, messageServiceMock.Object, traceWriterMock.Object);
+            taskController = new TaskController(taskServiceMock.Object, messageServiceMock.Object, userIdentityServiceMock.Object, traceWriterMock.Object);
             taskController.ControllerContext.RequestContext.Principal = userPrincipal;
             taskController.Request = new HttpRequestMessage();
             taskController.Configuration = new HttpConfiguration();
