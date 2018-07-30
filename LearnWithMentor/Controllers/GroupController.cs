@@ -7,8 +7,6 @@ using LearnWithMentorDTO;
 using LearnWithMentorBLL.Interfaces;
 using System.Web.Http.Tracing;
 using System.Data.Entity.Core;
-using System.Web;
-using System.Security.Claims;
 
 namespace LearnWithMentor.Controllers
 {
@@ -22,14 +20,16 @@ namespace LearnWithMentor.Controllers
         private readonly IGroupService groupService;
         private readonly IUserService userService;
         private readonly ITraceWriter tracer;
+        private readonly IUserIdentityService userIdentityService;
 
         /// <summary>
         /// Creates new instance of controller.
         /// </summary>
-        public GroupController(IGroupService groupService, IUserService userService, ITraceWriter tracer)
+        public GroupController(IGroupService groupService, IUserService userService, IUserIdentityService userIdentityService, ITraceWriter tracer)
         {
             this.userService = userService;
             this.groupService = groupService;
+            this.userIdentityService = userIdentityService;
             this.tracer = tracer;
         }
 
@@ -227,8 +227,7 @@ namespace LearnWithMentor.Controllers
         {
             try
             {
-                var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
-                var currentUserId = int.Parse(identity.FindFirst("Id").Value);
+                var currentUserId = userIdentityService.GetUserId();
                 var mentorId = groupService.GetMentorIdByGroup(id);
                 if (mentorId != currentUserId)
                 {
@@ -264,8 +263,7 @@ namespace LearnWithMentor.Controllers
         {
             try
             {
-                var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
-                var userId = int.Parse(identity.FindFirst("Id").Value);
+                var userId = userIdentityService.GetUserId();
                 var mentorId = groupService.GetMentorIdByGroup(id);
                 if (mentorId != userId)
                 {
@@ -369,8 +367,7 @@ namespace LearnWithMentor.Controllers
         {
             try
             {
-                var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
-                var id = int.Parse(identity.FindFirst("Id").Value);
+                var id = userIdentityService.GetUserId();
                 var mentorId = groupService.GetMentorIdByGroup(groupId);
                 if (mentorId != id)
                 {
@@ -433,8 +430,7 @@ namespace LearnWithMentor.Controllers
         {
             try
             {
-                var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
-                var userId = int.Parse(identity.FindFirst("Id").Value);
+                var userId = userIdentityService.GetUserId();
                 if (!userService.ContainsId(userId))
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"There are no users with id = {userId}");

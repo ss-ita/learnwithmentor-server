@@ -11,7 +11,6 @@ using System.Data.Entity.Core;
 using System.Web;
 using System.IO;
 using System.Linq;
-using System.Security.Claims;
 
 namespace LearnWithMentor.Controllers
 {
@@ -24,15 +23,17 @@ namespace LearnWithMentor.Controllers
         private readonly IUserService userService;
         private readonly IRoleService roleService;
         private readonly ITaskService taskService;
+        private readonly IUserIdentityService userIdentityService;
         private readonly ITraceWriter tracer;
         /// <summary>
         /// Creates an instance of UserController.
         /// </summary>
-        public UserController(IUserService userService, IRoleService roleService, ITaskService taskService, ITraceWriter tracer)
+        public UserController(IUserService userService, IRoleService roleService, ITaskService taskService, IUserIdentityService userIdentityService, ITraceWriter tracer)
         {
             this.userService = userService;
             this.roleService = roleService;
             this.taskService = taskService;
+            this.userIdentityService = userIdentityService;
             this.tracer = tracer;
         }
         /// <summary>
@@ -168,8 +169,7 @@ namespace LearnWithMentor.Controllers
         [Route("api/user/profile")]
         public HttpResponseMessage GetSingle()
         {
-            var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
-            var id = int.Parse(identity.FindFirst("Id").Value);
+            var id = userIdentityService.GetUserId();
             var user = userService.Get(id);
             if (user != null)
             {
@@ -220,8 +220,7 @@ namespace LearnWithMentor.Controllers
         [Route("api/user/statistics")]
         public HttpResponseMessage GetStatistics()
         {
-            var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
-            var id = int.Parse(identity.FindFirst("Id").Value);
+            var id = userIdentityService.GetUserId();
             var statsDTO = taskService.GetUserStatistics(id);
             if (statsDTO == null)
             {
@@ -436,7 +435,7 @@ namespace LearnWithMentor.Controllers
                 q = "";
             }
             RoleDTO criteria = roleService.GetByName(role);
-            string[] lines = q.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] lines = q.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             int? searchParametr = null;
             if (role == "blocked")
             {
@@ -463,8 +462,7 @@ namespace LearnWithMentor.Controllers
         {
             try
             {
-                var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
-                var id = int.Parse(identity.FindFirst("Id").Value);
+                var id = userIdentityService.GetUserId();
                 var success = userService.UpdatePassword(id, value);
                 if (success)
                 {

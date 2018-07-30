@@ -139,7 +139,7 @@ namespace LearnWithMentorBLL.Services
             return taskList;
         }
 
-        public IEnumerable<TaskDTO> Search(string[] keys)
+        public List<TaskDTO> Search(string[] keys)
         {
             var taskList = new List<TaskDTO>();
             foreach ( var t in db.Tasks.Search(keys))
