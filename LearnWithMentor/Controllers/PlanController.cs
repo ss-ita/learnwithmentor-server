@@ -16,8 +16,8 @@ namespace LearnWithMentor.Controllers
     /// <summary>
     /// Controller for plans.
     /// </summary>
-    [Authorize]
-    [JwtAuthentication]
+    //[Authorize]
+    //[JwtAuthentication]
     public class PlanController : ApiController
     {
         private readonly IPlanService planService;
@@ -140,7 +140,7 @@ namespace LearnWithMentor.Controllers
         /// </summary>
         /// <param name="mentorId"> Id of plan. </param>
         [HttpGet]
-        [Route("api/plan/{planId}/plansuggestions")]
+        [Route("api/plan/{mentorId}/plansuggestions")]
         public HttpResponseMessage GetAllplanSuggestionByMentorId(int mentorId)
         {
             var planSuggestionDtoList = planService.GetPlanSuggestionForMentor(mentorId);
