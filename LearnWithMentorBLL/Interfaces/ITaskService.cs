@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System;
 using LearnWithMentorDTO;
 
 namespace LearnWithMentorBLL.Interfaces
@@ -18,6 +19,7 @@ namespace LearnWithMentorBLL.Interfaces
         bool UpdateUserTaskResult(int userTaskId, string newResult);
         bool UpdateTaskById(int taskId,TaskDTO dto);
         bool RemoveTaskById(int id);
+        bool UpdateProposeEndDate(int userTaskId, DateTime proposeEndDate);
         List<UserTaskDTO> GetTaskStatesForUser(int[] planTaskIds, int userId);
         IEnumerable<TaskDTO> Search(string[] str, int planId);
         List<TaskDTO> Search(string[] keys);

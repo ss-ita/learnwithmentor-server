@@ -564,6 +564,35 @@ namespace LearnWithMentor.Controllers
         }
 
         /// <summary>
+        /// Updates task by Id
+        /// </summary>
+        /// <param name="userTaskId">UserTask Id for update.</param>
+        /// <param name="proposeEndDate">New proposeEndDate</param>
+        [Authorize]
+        [HttpPut]
+        [Route("api/task/usertask/proposedEndDate")]
+        public HttpResponseMessage Put(int userTaskId, DateTime proposeEndDate)
+        {
+            try
+            {
+                var success = taskService.UpdateProposeEndDate(userTaskId, proposeEndDate);
+                if (success)
+                {
+                    var message = $"Succesfully updated usertask with id = {userTaskId}";
+                    tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, message);
+                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully updated usertask id: {userTaskId}.");
+                }
+                tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on updating task");
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, "Task doesn't exist.");
+            }
+            catch (EntityException e)
+            {
+                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
+        }
+
+        /// <summary>
         /// Deletes task by Id
         /// </summary>
         /// <param name="taskId">Task Id for delete.</param>
