@@ -81,7 +81,7 @@ namespace LearnWithMentor.Controllers
         [JwtAuthentication]
         [Authorize(Roles = "Admin")]
         [HttpGet]
-        [Route("api/user/inrole/{role_id}")]
+        [Route("api/user/inrole/{roleId}")]
         public HttpResponseMessage GetUsersbyRole(int roleId)
         {
             if (roleId != Constants.Roles.BlockedIndex)
@@ -104,26 +104,26 @@ namespace LearnWithMentor.Controllers
         /// <summary>
         /// Returns one page of users with specified role.
         /// </summary>
-        /// <param name="role_id"> Id of the role. </param>
+        /// <param name="roleId"> Id of the role. </param>
         /// <param name="pageSize"> Ammount of users that you want to see on one page</param>
         /// <param name="pageNumber"> Page number</param>
         [JwtAuthentication]
         [Authorize(Roles = "Admin")]
         [HttpGet]
-        [Route("api/user/inrole/{role_id}")]
-        public HttpResponseMessage GetUsersbyRole(int role_id, [FromUri]int pageSize, [FromUri]int pageNumber)
+        [Route("api/user/inrole/{roleId}")]
+        public HttpResponseMessage GetUsersbyRole(int roleId, [FromUri]int pageSize, [FromUri]int pageNumber)
         {
-            if (role_id != -1)
+            if (roleId != Constants.Roles.BlockedIndex)
             {
-                var role = roleService.Get(role_id);
+                var role = roleService.Get(roleId);
                 if (role == null)
                 {
-                    var roleErorMessage = "No roles with this id  in database.";
+                    const string roleErorMessage = "No roles with this id  in database.";
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, roleErorMessage);
                 }
             }
-            PagedListDTO<UserDTO> users = userService.GetUsersByRole(role_id, pageSize, pageNumber);
-            return Request.CreateResponse<PagedListDTO<UserDTO>>(HttpStatusCode.OK, users);
+            var users = userService.GetUsersByRole(roleId, pageSize, pageNumber);
+            return Request.CreateResponse(HttpStatusCode.OK, users);
         }
 
         /// <summary>
@@ -157,8 +157,8 @@ namespace LearnWithMentor.Controllers
         [Route("api/user/instate/{state}")]
         public HttpResponseMessage GetUsersbyState(bool state, [FromUri]int pageSize, [FromUri]int pageNumber)
         {
-            PagedListDTO<UserDTO> users = userService.GetUsersByState(state, pageSize, pageNumber);
-            return Request.CreateResponse<PagedListDTO<UserDTO>>(HttpStatusCode.OK, users);
+            var users = userService.GetUsersByState(state, pageSize, pageNumber);
+            return Request.CreateResponse(HttpStatusCode.OK, users);
         }
 
         /// <summary>
@@ -221,13 +221,13 @@ namespace LearnWithMentor.Controllers
         public HttpResponseMessage GetStatistics()
         {
             var id = userIdentityService.GetUserId();
-            var statsDTO = taskService.GetUserStatistics(id);
-            if (statsDTO == null)
+            var statistics = taskService.GetUserStatistics(id);
+            if (statistics == null)
             {
                 const string errorMessage = "No user with this id in database.";
                 return Request.CreateResponse(HttpStatusCode.NoContent, errorMessage);
             }
-            return Request.CreateResponse(HttpStatusCode.OK, statsDTO);
+            return Request.CreateResponse(HttpStatusCode.OK, statistics);
         }
 
         /// <summary>
@@ -244,40 +244,34 @@ namespace LearnWithMentor.Controllers
                 const string errorMessage = "No user with this id in database.";
                 return Request.CreateResponse(HttpStatusCode.NoContent, errorMessage);
             }
-
             if (HttpContext.Current.Request.Files.Count != 1)
             {
                 const string errorMessage = "Only one image can be sent.";
                 return Request.CreateResponse(HttpStatusCode.BadRequest, errorMessage);
             }
-
             try
             {
                 var postedFile = HttpContext.Current.Request.Files[0];
                 if (postedFile.ContentLength > 0)
                 {
                     var allowedFileExtensions = new List<string>(Constants.ImageRestrictions.Extensions);
-
                     var extension = postedFile.FileName.Substring(postedFile.FileName.LastIndexOf('.')).ToLower();
                     if (!allowedFileExtensions.Contains(extension))
                     {
                         const string errorMessage = "Types allowed only .jpeg .jpg .png";
                         return Request.CreateResponse(HttpStatusCode.BadRequest, errorMessage);
                     }
-
                     const int maxContentLength = Constants.ImageRestrictions.MaxSize; 
                     if (postedFile.ContentLength > maxContentLength)
                     {
                         const string errorMessage = "Please Upload a file upto 1 mb.";
                         return Request.CreateResponse(HttpStatusCode.BadRequest, errorMessage);
                     }
-
                     byte[] imageData;
                     using (var binaryReader = new BinaryReader(postedFile.InputStream))
                     {
                         imageData = binaryReader.ReadBytes(postedFile.ContentLength);
                     }
-
                     userService.SetImage(id, imageData, postedFile.FileName);
                     const string okMessage = "Successfully created image.";
                     return Request.CreateResponse(HttpStatusCode.OK, okMessage);
@@ -384,20 +378,20 @@ namespace LearnWithMentor.Controllers
         /// <summary>
         /// Search for user with match in first or lastname with role criteria.
         /// </summary>
-        /// <param name="q"> String to match. </param>
+        /// <param name="key"> String to match. </param>
         /// <param name="role"> Role criteria. </param>
         [JwtAuthentication]
         [Authorize(Roles = "Admin, Mentor")]
         [HttpGet]
         [Route("api/user/search")]
-        public HttpResponseMessage Search(string q, string role)
+        public HttpResponseMessage Search(string key, string role)
         {
-            if (q == null)
+            if (key == null)
             {
-                q = "";
+                key = "";
             }
             var criteria = roleService.GetByName(role);
-            var lines = q.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var lines = key.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             int? searchParametr = null;
             if (role == Constants.Roles.Blocked)
             {
@@ -420,7 +414,7 @@ namespace LearnWithMentor.Controllers
         /// <summary>
         /// Search for user with match in first or lastname with role criteria.
         /// </summary>
-        /// <param name="q"> String to match. </param>
+        /// <param name="key"> String to match. </param>
         /// <param name="role"> Role criteria. </param>
         /// <param name="pageSize"> Ammount of users that you want to see on one page</param>
         /// <param name="pageNumber"> Page number</param>
@@ -428,26 +422,26 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Admin, Mentor")]
         [HttpGet]
         [Route("api/user/search")]
-        public HttpResponseMessage Search(string q, string role, [FromUri]int pageSize, [FromUri]int pageNumber)
+        public HttpResponseMessage Search(string key, string role, [FromUri]int pageSize, [FromUri]int pageNumber)
         {
-            if (q == null)
+            if (key == null)
             {
-                q = "";
+                key = "";
             }
-            RoleDTO criteria = roleService.GetByName(role);
-            string[] lines = q.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var criteria = roleService.GetByName(role);
+            var lines = key.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             int? searchParametr = null;
-            if (role == "blocked")
+            if (role == Constants.Roles.Blocked)
             {
-                searchParametr = -1;
+                searchParametr = Constants.Roles.BlockedIndex;
             }
             if (lines.Length > 2)
             {
                 lines = lines.Take(2).ToArray();
             }
-            PagedListDTO<UserDTO> users = criteria != null ? userService.Search(lines, pageSize, pageNumber, criteria.Id) :
+            var users = criteria != null ? userService.Search(lines, pageSize, pageNumber, criteria.Id) :
                 userService.Search(lines, pageSize, pageNumber, searchParametr);
-            return Request.CreateResponse<PagedListDTO<UserDTO>>(HttpStatusCode.OK, users);
+            return Request.CreateResponse(HttpStatusCode.OK, users);
         }
 
         /// <summary>

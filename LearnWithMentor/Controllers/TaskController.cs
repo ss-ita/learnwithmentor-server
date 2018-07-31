@@ -9,23 +9,28 @@ using System.Text.RegularExpressions;
 using LearnWithMentor.Filters;
 using System.Web.Http.Tracing;
 using System.Data.Entity.Core;
-using System.Web;
 using LearnWithMentorDTO.Infrastructure;
 
 namespace LearnWithMentor.Controllers
 {
-    /// <summary> Controller for working with tasks </summary>
+    /// <summary>
+    /// Controller for working with tasks.
+    /// </summary>
     [Authorize]
     [JwtAuthentication]
     public class TaskController : ApiController
     {
-        /// <summary> Services for work with different DB parts </summary>
+        /// <summary>
+        /// Services for work with different DB parts.
+        /// </summary>
         private readonly ITaskService taskService;
         private readonly IMessageService messageService;
         private readonly IUserIdentityService userIdentityService;
         private readonly ITraceWriter tracer;
 
-        /// <summary> Services initiation </summary>
+        /// <summary>
+        /// Services initiation.
+        /// </summary>
         public TaskController(ITaskService taskService, IMessageService messageService, IUserIdentityService userIdentityService, ITraceWriter tracer)
         {
             this.taskService = taskService;
@@ -186,12 +191,15 @@ namespace LearnWithMentor.Controllers
         {
             try
             {
-                List<ListUserTasksDTO> allUserTasks = new List<ListUserTasksDTO>();
+                var allUserTasks = new List<ListUserTasksDTO>();
                 foreach (var userid in userId)
                 {
                     var userTasks = taskService.GetTaskStatesForUser(planTaskId, userid);
                     if (userTasks == null)
-                        return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"Task for this user with id: {userid}  does not exist in database.");
+                    {
+                        return Request.CreateErrorResponse(HttpStatusCode.NoContent,
+                            $"Task for this user with id: {userid}  does not exist in database.");
+                    }
                     allUserTasks.Add(new ListUserTasksDTO() { UserTasks = userTasks });
                 }
                 return Request.CreateResponse(HttpStatusCode.OK, allUserTasks);
@@ -238,7 +246,7 @@ namespace LearnWithMentor.Controllers
             {
                 var currentId = userIdentityService.GetUserId();
                 var currentRole = userIdentityService.GetUserRole();
-                if(!(taskService.CheckUserTaskOwner(userTaskId, currentId) || currentRole == Constants.Roles.Mentor))
+                if (!(taskService.CheckUserTaskOwner(userTaskId, currentId) || currentRole == Constants.Roles.Mentor))
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
                 }
@@ -384,31 +392,6 @@ namespace LearnWithMentor.Controllers
             }
         }
 
-
-        /// <summary>Returns tasks states for array of id.</summary>
-        /// <param name="user_id">Id of the user.</param>
-        /// <param name="task_ids">Array of tasks id.</param>
-        [HttpGet]
-        [Route("api/task/state")]
-        public HttpResponseMessage GetAllTasksState(int user_id, int[] task_ids)
-        {
-            try
-            {
-                var userTaskStateList = taskService.GetTaskStatesForUser(task_ids, user_id);
-                if (userTaskStateList == null || userTaskStateList.Count == 0)
-                {
-                    return Request.CreateErrorResponse(HttpStatusCode.NoContent, "There are no created usertasks.");
-                }
-                return Request.CreateResponse(HttpStatusCode.OK, userTaskStateList);
-            }
-            catch (EntityException e)
-            {
-                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
-            }
-        }
-
-
         /// <summary>Returns tasks which name contains string key.</summary>
         /// <param name="key">Key for search.</param>
         [HttpGet]
@@ -417,11 +400,11 @@ namespace LearnWithMentor.Controllers
         {
             try
             {
-                if (key == null)
+                if (string.IsNullOrEmpty(key))
                 {
                     return GetAllTasks();
                 }
-                var lines = key.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                var lines = key.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 var taskList = taskService.Search(lines);
                 if (taskList == null || taskList.Count == 0)
                 {
@@ -447,14 +430,16 @@ namespace LearnWithMentor.Controllers
         {
             try
             {
-                if (key == null)
+                if (string.IsNullOrEmpty(key))
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax.");
                 }
-                var lines = key.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                var lines = key.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 var taskList = taskService.Search(lines, planId);
                 if (taskList == null)
+                {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, "This plan does not exist.");
+                }
                 return Request.CreateResponse(HttpStatusCode.OK, taskList);
             }
             catch (EntityException e)
@@ -526,7 +511,7 @@ namespace LearnWithMentor.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
             tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on creating task");
-            var message = "Incorrect request syntax.";
+            const string message = "Incorrect request syntax.";
             return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
         }
 

@@ -9,7 +9,6 @@ using Moq;
 using LearnWithMentor.Controllers;
 using System.Web.Http;
 using System.Web.Http.Controllers;
-using System.Web.Http.Results;
 using System.Web.Http.Tracing;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDTO;
@@ -42,7 +41,6 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             {
                 new RoleDTO(1, "Student"),
                 new RoleDTO(2, "Mentor"),
-
                 new RoleDTO(3, "Admin")
             };
 
@@ -52,12 +50,12 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             taskServiceMock = new Mock<ITaskService>();
             userIdentityServiceMock = new Mock<IUserIdentityService>();
 
-            var userPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+            var userPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new[]
             {
                 new Claim(ClaimTypes.Role, "Admin"),
-                new Claim("Id", "4") 
+                new Claim("Id", "4")
             }));
-            
+
             userController = new UserController(userServiceMock.Object, roleServiceMock.Object, taskServiceMock.Object, userIdentityServiceMock.Object, traceWriterMock.Object);
             userController.ControllerContext.RequestContext.Principal = userPrincipal;
 
@@ -99,7 +97,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
 
             var response = userController.Search("test", "test");
             response.TryGetContentValue<IEnumerable<UserDTO>>(out var userDTOs);
-            var expected = userServiceMock.Object.Search(new []{"test"}, 1).Count;
+            var expected = userServiceMock.Object.Search(new[] { "test" }, 1).Count;
             var actual = userDTOs.Count();
 
             Assert.AreEqual(expected, actual);
