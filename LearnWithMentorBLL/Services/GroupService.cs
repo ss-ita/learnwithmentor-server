@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Net;
 using System.Linq;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDAL.Entities;
@@ -91,7 +90,6 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-
         public GroupDTO GetGroupById(int id)
         {
             var group = db.Groups.Get(id);
@@ -112,6 +110,7 @@ namespace LearnWithMentorBLL.Services
         {
             return db.Groups.Count();
         }
+
         public IEnumerable<PlanDTO> GetPlans(int groupId)
         {
             var group = db.Groups.Get(groupId);
@@ -145,9 +144,13 @@ namespace LearnWithMentorBLL.Services
             var group = db.Groups.GetGroupsByMentor(groupId);
             var users = db.Users.GetUsersByGroup(groupId);
             if (group == null)
+            {
                 return null;
+            }
             if (users == null)
+            {
                 return null;
+            }
             var userList = new List<UserIdentityDTO>();
             foreach (var user in users)
             {
@@ -161,7 +164,6 @@ namespace LearnWithMentorBLL.Services
                                     ));
             }
             return userList;
-
         }
 
         public IEnumerable<UserWithImageDTO> GetUsersWithImage(int groupId)
@@ -169,10 +171,14 @@ namespace LearnWithMentorBLL.Services
             var group = db.Groups.GetGroupsByMentor(groupId);
             var users = db.Users.GetUsersByGroup(groupId);
             if (group == null)
+            {
                 return null;
+            }
             if (users == null)
+            {
                 return null;
-            List<UserWithImageDTO> userList = new List<UserWithImageDTO>();
+            }
+            var userList = new List<UserWithImageDTO>();
             foreach (var user in users)
             {
                 var userToGetImage = db.Users.Get(user.Id);
@@ -195,10 +201,11 @@ namespace LearnWithMentorBLL.Services
 
         public IEnumerable<GroupDTO> GetGroupsByMentor(int mentorId)
         {
-
             var groups = db.Groups.GetGroupsByMentor(mentorId);
             if (groups == null)
+            {
                 return null;
+            }
             var groupList = new List<GroupDTO>();
             foreach (var group in groups)
             {
@@ -242,12 +249,10 @@ namespace LearnWithMentorBLL.Services
                                          group.Mentor_Id,
                                          db.Users.ExtractFullName(group.Mentor_Id)));
             }
-
             if (groupList.Count < 1)
             {
                 return null;
             }
-
             return groupList;
         }
 
