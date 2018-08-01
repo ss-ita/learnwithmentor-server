@@ -58,6 +58,7 @@
     <Compile Include="SectionDTO.cs" />
     <Compile Include="StatisticsDTO.cs" />
     <Compile Include="TaskDTO.cs" />
+    <Compile Include="TokenDTO.cs" />
     <Compile Include="UserDTO.cs" />
     <Compile Include="UserIdentityDTO.cs" />
     <Compile Include="UserRegistrationDTO.cs" />

@@ -216,23 +216,39 @@ namespace LearnWithMentor.Controllers
         }
 
         /// <summary>
-        /// Resets user's password.
+        /// Verifies reset password token.
         /// </summary>
-        /// <param name="model"> User's email. </param>
+        /// <param name"token"> Users token. </param>
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("api/user/verify-token")]
+        public HttpResponseMessage VerifyToken(string token)
+        {
+            if (JwtAuthenticationAttribute.ValidateToken(token, out string userEmail))
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, userEmail);
+            }
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Token not valid");
+        }
+
+        /// <summary>
+        /// Sends email with link on user's password reset.
+        /// </summary>
+        /// <param name="emailModel"> User's email. </param>
         /// <param name="ResetPasswordLink"> Link on the reset page. </param>
         [AllowAnonymous]
         [HttpPost]
         [Route("api/user/password-reset")]
-        public /*async*/ HttpResponseMessage ResetPassword(ForgotPasswordDTO model, string ResetPasswordLink)
+        public async Task<HttpResponseMessage> SendPasswordResetLink([FromBody] ForgotPasswordDTO emailModel, string ResetPasswordLink)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var user = userService.GetByEmail(model.Email);
+                    var user = userService.GetByEmail(emailModel.Email);
                     if (user == null)
                     {
-                        return Request.CreateErrorResponse(HttpStatusCode.NotFound, "User not found");
+                        return Request.CreateErrorResponse(HttpStatusCode.NoContent, "User not found");
                     }
                     if (user.Blocked == null || user.Blocked.Value)
                     {
@@ -244,8 +260,8 @@ namespace LearnWithMentor.Controllers
                     //}
                     string code = JwtManager.GenerateResetPasswordToken(user);
                     var callbackUrl = ResetPasswordLink + "/" + code;
-                    EmailService.SendEmail(user.Email, "Скидання пароля",
-                        "Для скидання пароля, перейдіть за посиланням: <a href=\"" + callbackUrl + "\">Скинути пароль</a>");
+                    await EmailService.SendEmail(user.Email, "Скидання пароля",
+                        "<h1><b>LearnWithMentor</b></h1> <p>Для скидання пароля, перейдіть за посиланням: <a href=\"" + callbackUrl + "\">Скинути пароль</a></p>");
                     return Request.CreateResponse(HttpStatusCode.OK, "Token successfully sent");
                 }
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Email is not valid");
