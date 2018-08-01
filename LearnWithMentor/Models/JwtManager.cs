@@ -36,6 +36,34 @@ namespace LearnWithMentor.Models
 
             return token;
         }
+
+        public static string GenerateResetPasswordToken(UserIdentityDTO user, int expireHours = 1)
+        {
+            var symmetricKey = Convert.FromBase64String(Secret);
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            var now = DateTime.UtcNow;
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[]
+                        {
+                            new Claim("Id",user.Id.ToString()  ),
+                            new Claim(ClaimTypes.Email, user.Email),
+                            new Claim(ClaimTypes.Name, user.FirstName + " " + user.LastName ),
+                            new Claim(ClaimTypes.Role, user.Role)
+                        }),
+
+                Expires = now.AddHours(expireHours),
+
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(symmetricKey), SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var stoken = tokenHandler.CreateToken(tokenDescriptor);
+            var token = tokenHandler.WriteToken(stoken);
+
+            return token;
+        }
+
         public static bool LifetimeValidator(DateTime? notBefore, DateTime? expires, SecurityToken securityToken, TokenValidationParameters validationParameters)
         {
             if (expires != null)

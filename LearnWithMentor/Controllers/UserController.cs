@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Web.Http;
 using LearnWithMentorDTO;
 using System.Net.Http;
 using System.Net;
 using LearnWithMentor.Filters;
+using LearnWithMentor.Models;
+using LearnWithMentor.Services;
 using LearnWithMentorBLL.Interfaces;
 using System.Web.Http.Tracing;
 using System.Data.Entity.Core;
@@ -210,6 +213,47 @@ namespace LearnWithMentor.Controllers
             const string message = "Incorrect request syntax.";
             tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, message);
             return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
+        }
+
+        /// <summary>
+        /// Resets user's password.
+        /// </summary>
+        /// <param name="model"> User's email. </param>
+        /// <param name="ResetPasswordLink"> Link on the reset page. </param>
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("api/user/password-reset")]
+        public /*async*/ HttpResponseMessage ResetPassword(ForgotPasswordDTO model, string ResetPasswordLink)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var user = userService.GetByEmail(model.Email);
+                    if (user == null)
+                    {
+                        return Request.CreateErrorResponse(HttpStatusCode.NotFound, "User not found");
+                    }
+                    if (user.Blocked == null || user.Blocked.Value)
+                    {
+                        return Request.CreateErrorResponse(HttpStatusCode.Forbidden, "Not allowed because user blocked");
+                    }
+                    //if (!user.EmailConfirmed)
+                    //{
+                    //    return Request.CreateErrorResponse(HttpStatusCode.Forbidden, "Not allowed because email not confirmed");
+                    //}
+                    string code = JwtManager.GenerateResetPasswordToken(user);
+                    var callbackUrl = ResetPasswordLink + "/" + code;
+                    EmailService.SendEmail(user.Email, "Скидання пароля",
+                        "Для скидання пароля, перейдіть за посиланням: <a href=\"" + callbackUrl + "\">Скинути пароль</a>");
+                    return Request.CreateResponse(HttpStatusCode.OK, "Token successfully sent");
+                }
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Email is not valid");
+            }
+            catch (EntityException e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, e);
+            }
         }
 
         /// <summary>
