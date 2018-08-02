@@ -218,7 +218,7 @@ namespace LearnWithMentor.Controllers
         /// <summary>
         /// Verifies reset password token.
         /// </summary>
-        /// <param name"token"> Users token. </param>
+        /// <param name="token"> Users token. </param>
         [AllowAnonymous]
         [HttpGet]
         [Route("api/user/verify-token")]
@@ -254,10 +254,10 @@ namespace LearnWithMentor.Controllers
                     {
                         return Request.CreateErrorResponse(HttpStatusCode.Forbidden, "Not allowed because user blocked");
                     }
-                    //if (!user.EmailConfirmed)
-                    //{
-                    //    return Request.CreateErrorResponse(HttpStatusCode.Forbidden, "Not allowed because email not confirmed");
-                    //}
+                    if (!user.EmailConfirmed)
+                    {
+                        return Request.CreateErrorResponse(HttpStatusCode.Forbidden, "Not allowed because email not confirmed");
+                    }
                     string code = JwtManager.GenerateResetPasswordToken(user);
                     var callbackUrl = ResetPasswordLink + "/" + code;
                     await EmailService.SendEmail(user.Email, "Скидання пароля",

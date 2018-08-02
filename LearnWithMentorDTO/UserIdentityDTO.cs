@@ -5,7 +5,7 @@ namespace LearnWithMentorDTO
 {
     public class UserIdentityDTO
     {
-        public UserIdentityDTO(string email, string password, int id, string firstName, string lastName, string role, bool blocked)
+        public UserIdentityDTO(string email, string password, int id, string firstName, string lastName, string role, bool blocked, bool emailConfirmed = default(bool))
         {
             Email = email;
             Password = password;
@@ -14,6 +14,7 @@ namespace LearnWithMentorDTO
             Id = id;
             Role = role;
             Blocked = blocked;
+            EmailConfirmed = emailConfirmed;
         }
 
         [Required]
@@ -41,5 +42,6 @@ namespace LearnWithMentorDTO
         public bool? Blocked { set; get; }
         [Required]
         public string Password { get; set; }
+        public bool EmailConfirmed { set; get; }
     }
 }

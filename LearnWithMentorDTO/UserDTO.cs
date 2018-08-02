@@ -5,13 +5,14 @@ namespace LearnWithMentorDTO
 {
     public class UserDTO
     {
-        public UserDTO(int id, string firstName, string lastName, string role, bool blocked)
+        public UserDTO(int id, string firstName, string lastName, string role, bool blocked, bool emailConfirmed = default(bool))
         {
             LastName = lastName;
             FirstName = firstName;
             Id = id;
             Role = role;
             Blocked = blocked;
+            EmailConfirmed = emailConfirmed;
         }
 
         [Required]
@@ -33,5 +34,6 @@ namespace LearnWithMentorDTO
         public string Role { set; get; }
 
         public bool? Blocked { set; get; }
+        public bool EmailConfirmed { set; get; }
     }
 }
