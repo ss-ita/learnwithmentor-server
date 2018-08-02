@@ -9,6 +9,7 @@ namespace LearnWithMentorBLL.Interfaces
         UserIdentityDTO GetByEmail(string email);
         List<UserDTO> GetAllUsers();
         bool BlockById(int id);
+        bool ConfirmEmailById(int id);
         bool UpdateById(int id, UserDTO user);
         bool Add(UserRegistrationDTO dto);
         List<UserDTO> Search(string[] str, int? roleId);

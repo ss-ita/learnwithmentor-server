@@ -99,6 +99,20 @@ namespace LearnWithMentorBLL.Services
             }
             return modified;
         }
+
+        public bool ConfirmEmailById(int id)
+        {
+            var user = db.Users.Get(id);
+            if (user != null)
+            {
+                user.Email_Confirmed = true;
+                db.Users.Update(user);
+                db.Save();
+                return true;
+            }
+            return false;
+        }
+
         public bool Add(UserRegistrationDTO userLoginDTO)
         {
             var toAdd = new User

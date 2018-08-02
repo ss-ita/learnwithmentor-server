@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace LearnWithMentorDTO
 {
-    public class ForgotPasswordDTO
+    public class EmailDTO
     {
         [Required]
         [EmailAddress]

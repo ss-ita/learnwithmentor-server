@@ -37,7 +37,7 @@ namespace LearnWithMentor.Models
             return token;
         }
 
-        public static string GenerateResetPasswordToken(UserIdentityDTO user, int expireHours = 1)
+        public static string GenerateShortUserToken(UserIdentityDTO user, int expireHours = 1)
         {
             var symmetricKey = Convert.FromBase64String(Secret);
             var tokenHandler = new JwtSecurityTokenHandler();
