@@ -33,7 +33,8 @@ namespace LearnWithMentorBLL.Services
                 user.FirstName,
                 user.LastName,
                 user.Roles.Name,
-                user.Blocked);
+                user.Blocked,
+                user.Email_Confirmed);
         }
 
         public List<UserDTO> GetAllUsers()
@@ -236,7 +237,8 @@ namespace LearnWithMentorBLL.Services
                                user.FirstName,
                                user.LastName,
                                user.Roles.Name,
-                               user.Blocked);
+                               user.Blocked,
+                               user.Email_Confirmed);
         }
     }
 }
