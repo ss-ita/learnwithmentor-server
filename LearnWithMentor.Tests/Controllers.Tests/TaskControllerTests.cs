@@ -29,8 +29,6 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [SetUp]
         public void SetUp()
         {
-            var tasks = GetTestTasks();
-
             taskServiceMock = new Mock<ITaskService>();
             messageServiceMock = new Mock<IMessageService>();
             traceWriterMock = new Mock<ITraceWriter>();

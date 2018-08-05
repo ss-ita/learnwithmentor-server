@@ -235,7 +235,7 @@ namespace LearnWithMentor.Controllers
                     }
                     return Request.CreateResponse(HttpStatusCode.OK, user.Id);
                 }
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Token not valid");
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Token no longer valid");
             }
             catch (EntityException e)
             {
@@ -267,7 +267,7 @@ namespace LearnWithMentor.Controllers
                     }
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Confirmation error");
                 }
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Token not valid");
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Token no longer valid");
             }
             catch (EntityException e)
             {
@@ -298,10 +298,10 @@ namespace LearnWithMentor.Controllers
                     {
                         return Request.CreateErrorResponse(HttpStatusCode.NoContent, "User not found");
                     }
-                    if (user.Blocked == null || user.Blocked.Value)
-                    {
-                        return Request.CreateErrorResponse(HttpStatusCode.Forbidden, "Not allowed because user blocked");
-                    }
+                    //if (user.Blocked == null || user.Blocked.Value)
+                    //{
+                    //    return Request.CreateErrorResponse(HttpStatusCode.Forbidden, "Not allowed because user blocked");
+                    //}
                     if (!user.EmailConfirmed)
                     {
                         return Request.CreateErrorResponse(HttpStatusCode.Forbidden, "Not allowed because email not confirmed");
@@ -599,17 +599,17 @@ namespace LearnWithMentor.Controllers
         /// <summary>
         /// Updates user password by id.
         /// </summary>
-        /// <param name="value"> New password value. </param>
+        /// <param name="password"> New password value. </param>
         /// <param name="id"> Users Id. </param>
         /// <returns></returns>
         [AllowAnonymous]
         [HttpPut]
         [Route("api/user/resetpasswotd")]
-        public HttpResponseMessage ResetPassword([FromBody]string value, int id)
+        public HttpResponseMessage ResetPassword([FromBody]string password, int id)
         {
             try
             {
-                var success = userService.UpdatePassword(id, value);
+                var success = userService.UpdatePassword(id, password);
                 if (success)
                 {
                     const string okMessage = "Succesfully updated password.";
