@@ -201,6 +201,27 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
+        public bool SetNewEndDate(int userTaskId)
+        {
+            var userTask = db.UserTasks.Get(userTaskId);
+            if (userTask == null) return false;
+            userTask.End_Date = userTask.Propose_End_Date;
+            userTask.Propose_End_Date = null;
+            db.UserTasks.Update(userTask);
+            db.Save();
+            return true;
+        }
+
+        public bool DeleteProposeEndDate(int userTaskId)
+        {
+            var userTask = db.UserTasks.Get(userTaskId);
+            if (userTask == null) return false;
+            userTask.Propose_End_Date = null;
+            db.UserTasks.Update(userTask);
+            db.Save();
+            return true;
+        }
+
         public bool UpdateTaskById(int taskId, TaskDTO taskDTO)
         {
             var item = db.Tasks.Get(taskId);
