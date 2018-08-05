@@ -564,7 +564,7 @@ namespace LearnWithMentor.Controllers
         }
 
         /// <summary>
-        /// Updates task by Id
+        /// Updates proposeEndDate by userTask Id
         /// </summary>
         /// <param name="userTaskId">UserTask Id for update.</param>
         /// <param name="proposeEndDate">New proposeEndDate</param>
@@ -582,8 +582,64 @@ namespace LearnWithMentor.Controllers
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, message);
                     return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully updated usertask id: {userTaskId}.");
                 }
-                tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on updating task");
-                return Request.CreateErrorResponse(HttpStatusCode.NoContent, "Task doesn't exist.");
+                tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on updating usertask");
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, "Usertask doesn't exist.");
+            }
+            catch (EntityException e)
+            {
+                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
+        }
+
+        /// <summary>
+        /// Delete proposeEndDate for userTask
+        /// </summary>
+        /// <param name="userTaskId">UserTask Id for update.</param>
+        [Authorize(Roles = "Mentor")]
+        [HttpDelete]
+        [Route("api/task/usertask/proposedEndDate")]
+        public HttpResponseMessage DeleteProposeEndDate(int userTaskId)
+        {
+            try
+            {
+                var success = taskService.DeleteProposeEndDate(userTaskId);
+                if (success)
+                {
+                    var message = $"Succesfully deleted proposeEndDate for usertask with id = {userTaskId}";
+                    tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, message);
+                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully deleted proposeEndDate for usertask id: {userTaskId}.");
+                }
+                tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on deleting proposeEndDate");
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, "Usertask doesn't exist.");
+            }
+            catch (EntityException e)
+            {
+                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
+        }
+
+        /// <summary>
+        /// Set new endDate for userTask
+        /// </summary>
+        /// <param name="userTaskId">UserTask Id for update.</param>
+        [Authorize(Roles = "Mentor")]
+        [HttpPut]
+        [Route("api/task/usertask/endDate")]
+        public HttpResponseMessage SetNewEndDate(int userTaskId)
+        {
+            try
+            {
+                var success = taskService.SetNewEndDate(userTaskId);
+                if (success)
+                {
+                    var message = $"Succesfully changing endDate for usertask with id = {userTaskId}";
+                    tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, message);
+                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully  changing endDate for usertask id: {userTaskId}.");
+                }
+                tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on changing endDate");
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, "Usertask doesn't exist.");
             }
             catch (EntityException e)
             {

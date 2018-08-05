@@ -25,7 +25,8 @@ namespace LearnWithMentorBLL.Interfaces
         List<TaskDTO> Search(string[] keys);
         StatisticsDTO GetUserStatistics(int userId);
         PagedListDTO<TaskDTO> GetTasks(int pageSize, int pageNumber = 1);
-
+        bool DeleteProposeEndDate(int userTaskId);
+        bool SetNewEndDate(int userTaskId);
         bool CheckUserTaskOwner(int userTaskId, int userId);
     }
 }
