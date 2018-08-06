@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Web.Http.Tracing;
 using System.Data.Entity.Core;
 using System.ComponentModel.DataAnnotations;
+using System.Text;
 using NUnit.Framework;
 using Moq;
 using LearnWithMentor.Controllers;
@@ -36,7 +37,8 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             
             var userPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
-                new Claim(ClaimTypes.Role, "Admin")
+                new Claim(ClaimTypes.Role, "Admin"),
+                new Claim("Id", "1")
             }));
 
             taskController = new TaskController(taskServiceMock.Object, messageServiceMock.Object, userIdentityServiceMock.Object, traceWriterMock.Object);
@@ -68,6 +70,20 @@ namespace LearnWithMentor.Tests.Controllers.Tests
                             "Task #3 creator", DateTime.Now, DateTime.Now, 1, 1, 1),
             };
             return testTasks;
+        }
+
+        private List<UserTaskDTO> GetTestUserTasks()
+        {
+            var testUserTasks = new List<UserTaskDTO>
+            {
+                new UserTaskDTO(1, 1 , 1, DateTime.Now, DateTime.Now, 1),
+                new UserTaskDTO(2, 1 , 2, DateTime.Now, DateTime.Now, 1),
+                new UserTaskDTO(3, 1 , 3, DateTime.Now, DateTime.Now, 1),
+                new UserTaskDTO(4, 2 , 1, DateTime.Now, DateTime.Now, 1),
+                new UserTaskDTO(5, 2 , 2, DateTime.Now, DateTime.Now, 1),
+                new UserTaskDTO(6, 2 , 3, DateTime.Now, DateTime.Now, 1)
+            };
+            return testUserTasks;
         }
         private List<TaskDTO> GetTestTasksSearch(string[] lines)
         {
@@ -438,6 +454,283 @@ namespace LearnWithMentor.Tests.Controllers.Tests
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.InternalServerError);
         }
+        #endregion
+
+        #region DeleteProposeEndDate
+        [Test]
+        public void DeleteProposeEndDateTest_ShouldSuccessfullyDeleteProposeEndDate()
+        {
+            taskServiceMock.Setup(mts => mts.DeleteProposeEndDate(It.IsAny<int>()))
+                .Returns(true);
+
+            var response = taskController.DeleteProposeEndDate(1);
+
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+        }
+
+        [Test]
+        public void DeleteProposeEndDateTest_ShouldReturnNoContent()
+        {
+            taskServiceMock.Setup(mts => mts.DeleteProposeEndDate(It.IsAny<int>()))
+                .Returns(false);
+
+            var response = taskController.DeleteProposeEndDate(1);
+
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.NoContent);
+        }
+
+        [Test]
+        public void DeleteProposeEndDateTest_ShouldCatchEntityException()
+        {
+            taskServiceMock.Setup(mts => mts.DeleteProposeEndDate(It.IsAny<int>()))
+                .Throws(new EntityException());
+
+            var response = taskController.DeleteProposeEndDate(1);
+
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.InternalServerError);
+        }
+
+
+        #endregion
+        #region GetUsersTasks
+        [Test]
+        public void GetUsersTasksTest_ShouldReturnAllUserTasks()
+        {
+            taskServiceMock.Setup(mts => mts.GetTaskStatesForUser(It.IsAny<int[]>(), It.IsAny<int>())).Returns(
+                (int[] i, int user) => GetTestUserTasks().Where( x => x.UserId == user ).ToList());
+
+            var task = GetTestUserTasks()[0];
+            var response = taskController.GetUsersTasks(new []{task.PlanTaskId}, new[]{ task.UserId });
+            var successfull = response.TryGetContentValue<List<ListUserTasksDTO>>(out var taskDTO);
+            var expected = taskServiceMock.Object.GetTaskStatesForUser(new[] { task.PlanTaskId }, task.UserId);
+            var actual = taskDTO;
+
+            Assert.IsTrue(successfull);
+            Assert.AreEqual(expected[0].Id, actual[0].UserTasks[0].Id);
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+        }
+
+        [Test]
+        public void GetUsersTasksTest_ShouldReturnNoContentResponse()
+        {
+            taskServiceMock.Setup(mts => mts.GetTaskStatesForUser(It.IsAny<int[]>(), It.IsAny<int>()));
+
+            var usertask = GetTestUserTasks()[0];
+            var response = taskController.GetUsersTasks(new[] { usertask.PlanTaskId}, new[] { usertask.UserId});
+
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.NoContent);
+        }
+
+        [Test]
+        public void GetUsersTasksTest_ShouldCatchEntityException()
+        {
+            taskServiceMock.Setup(mts => mts.GetTaskStatesForUser(It.IsAny<int[]>(), It.IsAny<int>())).Throws(new EntityException());
+
+            var usertask = GetTestUserTasks()[0];
+            var response = taskController.GetUsersTasks(new[] { usertask.PlanTaskId }, new[] { usertask.UserId });
+
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.InternalServerError);
+        }
+
+
+        #endregion
+        #region GetAllTasksState
+        [Test]
+        public void GetAllTasksStateTest_ShouldReturnUserTasks()
+        {
+            taskServiceMock.Setup(mts => mts.GetTaskStatesForUser(It.IsAny<int[]>(), It.IsAny<int>())).Returns(
+                (int[] i, int user) => GetTestUserTasks().Where(x => x.UserId == user).ToList());
+
+            var usertask = GetTestUserTasks()[0];
+            var response = taskController.GetAllTasksState( usertask.UserId, new[] { usertask.PlanTaskId });
+            var successfull = response.TryGetContentValue<List<UserTaskDTO>>(out var taskDTO);
+            var expected = taskServiceMock.Object.GetTaskStatesForUser(new[] { usertask.PlanTaskId }, usertask.UserId);
+            var actual = taskDTO;
+
+            Assert.IsTrue(successfull);
+            Assert.AreEqual(expected[0].Id, actual[0].Id);
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+        }
+
+        [Test]
+        public void GetAllTasksStateTest_ShouldReturnNoContentResponse()
+        {
+            taskServiceMock.Setup(mts => mts.GetTaskStatesForUser(It.IsAny<int[]>(), It.IsAny<int>()));
+
+            var usertask = GetTestUserTasks()[0];
+            var response = taskController.GetAllTasksState(usertask.UserId, new[] { usertask.PlanTaskId });
+
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.NoContent);
+        }
+
+        [Test]
+        public void GetAllTasksStateTest_ShouldCatchEntityException()
+        {
+            taskServiceMock.Setup(mts => mts.GetTaskStatesForUser(It.IsAny<int[]>(), It.IsAny<int>())).Throws(new EntityException());
+
+            var usertask = GetTestUserTasks()[0];
+            var response = taskController.GetAllTasksState(usertask.UserId, new[] { usertask.PlanTaskId });
+
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.InternalServerError);
+        }
+
+
+        #endregion
+        #region GetUserTask
+
+        [Test]
+        public void GetUserTaskTest_ShouldReturnTask()
+        {
+            userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(1);
+            userIdentityServiceMock.Setup(u => u.GetUserRole()).Returns("Mentor");
+            taskServiceMock.Setup(mts => mts.GetUserTaskByUserPlanTaskId(It.IsAny<int>(), It.IsAny<int>())).Returns(
+                (int user, int plantask) => GetTestUserTasks().Single(x => x.UserId == user && x.PlanTaskId == plantask));
+
+            var usertask = GetTestUserTasks()[0];
+            var response = taskController.GetUserTask(usertask.PlanTaskId,usertask.UserId);
+            var successfull = response.TryGetContentValue<UserTaskDTO>(out var usertaskDTO);
+            var expected = taskServiceMock.Object.GetUserTaskByUserPlanTaskId(usertask.UserId, usertask.PlanTaskId);
+            var actual = usertaskDTO;
+
+            Assert.IsTrue(successfull);
+            Assert.AreEqual(expected.Id, actual.Id);
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+        }
+
+        [Test]
+        public void GetUserTaskTest_ShouldReturnNoContentResponse()
+        {
+            userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(1);
+            userIdentityServiceMock.Setup(u => u.GetUserRole()).Returns("Mentor");
+            taskServiceMock.Setup(mts => mts.GetUserTaskByUserPlanTaskId(It.IsAny<int>(), It.IsAny<int>()));
+
+            var usertask = GetTestUserTasks()[0];
+            var response = taskController.GetUserTask(usertask.PlanTaskId, usertask.UserId);
+
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.NoContent);
+        }
+
+        [Test]
+        public void GetUserTaskTest_ShouldReturnUnauthorized()
+        {
+            userIdentityServiceMock.Setup(u => u.GetUserId());
+            userIdentityServiceMock.Setup(u => u.GetUserRole());
+            taskServiceMock.Setup(mts => mts.GetUserTaskByUserPlanTaskId(It.IsAny<int>(), It.IsAny<int>()));
+
+            var usertask = GetTestUserTasks()[0];
+            var response = taskController.GetUserTask(usertask.PlanTaskId, usertask.UserId);
+
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.Unauthorized);
+        }
+
+        [Test]
+        public void GetUserTaskTest_ShouldCatchEntityException()
+        {
+            userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(1);
+            userIdentityServiceMock.Setup(u => u.GetUserRole()).Returns("Mentor");
+            taskServiceMock.Setup(mts => mts.GetUserTaskByUserPlanTaskId(It.IsAny<int>(), It.IsAny<int>())).Throws(new EntityException());
+
+            var usertask = GetTestUserTasks()[0];
+            var response = taskController.GetUserTask(usertask.PlanTaskId, usertask.UserId);
+
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.InternalServerError);
+        }
+
+
+        #endregion
+        #region SetNewEndDate
+        [Test]
+        public void SetNewEndDateTest_ShouldSuccesFullyChangingEndDate()
+        {
+            taskServiceMock.Setup(mts => mts.SetNewEndDate(It.IsAny<int>()))
+                .Returns(true);
+
+            var response = taskController.SetNewEndDate(1);
+
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+        }
+
+        [Test]
+        public void SetNewEndDateTest_ShouldReturnNoContent()
+        {
+            taskServiceMock.Setup(mts => mts.SetNewEndDate(It.IsAny<int>()))
+                .Returns(false);
+
+            var response = taskController.SetNewEndDate(1);
+
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.NoContent);
+        }
+
+        [Test]
+        public void SetNewEndDateTest_ShouldCatchEntityException()
+        {
+            taskServiceMock.Setup(mts => mts.SetNewEndDate(It.IsAny<int>()))
+                .Throws(new EntityException());
+
+            var response = taskController.SetNewEndDate(1);
+
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.InternalServerError);
+        }
+
+
+
+        #endregion
+
+        #region PutNewUserTaskResult
+        [Test]
+        public void PutNewUserTaskResultTest_ShouldSuccessfullyPutNewResult()
+        {
+            taskServiceMock.Setup(mts => mts.UpdateUserTaskResult(It.IsAny<int>(), It.IsAny<string>()))
+                .Returns(true);
+            var httpRequestMessage = new HttpRequestMessage();
+            httpRequestMessage.Content =
+                new StringContent("Do not touch this ****", Encoding.UTF8, "application/json");
+            var response = taskController.PutNewUserTaskResult(0, httpRequestMessage);
+
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+        }
+
+        [Test]
+        public void PutNewUserTaskResultTest_ShouldCheckNotValidStateParameterAndReturnBadRequestResponse()
+        {
+            var message = new string('*', 5000);
+            var httpRequestMessage = new HttpRequestMessage();
+            httpRequestMessage.Content =
+                new StringContent(message, Encoding.UTF8, "application/json");
+            var response = taskController.PutNewUserTaskResult(0, httpRequestMessage);
+
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
+        }
+
+        [Test]
+        public void PutNewUserTaskResultTest_ShouldCheckNotSuccessfullUpdateTryAndReturnBadRequestResponse()
+        {
+            taskServiceMock.Setup(mts => mts.UpdateUserTaskResult(It.IsAny<int>(), It.IsAny<string>()))
+                .Returns(false);
+
+            var httpRequestMessage = new HttpRequestMessage();
+            httpRequestMessage.Content =
+                new StringContent("Do not touch this ****", Encoding.UTF8, "application/json");
+            var response = taskController.PutNewUserTaskResult(0, httpRequestMessage);
+
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
+        }
+
+        [Test]
+        public void PutNewUserTaskResultTest_ShouldCatchEntityException()
+        {
+            taskServiceMock.Setup(mts => mts.UpdateUserTaskResult(It.IsAny<int>(), It.IsAny<string>()))
+                .Throws(new EntityException());
+
+            var httpRequestMessage = new HttpRequestMessage();
+            httpRequestMessage.Content =
+                new StringContent("Do not touch this ****", Encoding.UTF8, "application/json");
+            var response = taskController.PutNewUserTaskResult(0, httpRequestMessage);
+
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.InternalServerError);
+        }
+
+
         #endregion
     }
 }
