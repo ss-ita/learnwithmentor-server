@@ -9,7 +9,6 @@ using LearnWithMentor.Models;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorBLL.Services;
 using LearnWithMentorDAL.UnitOfWork;
-using LearnWithMentorDTO;
 
 namespace LearnWithMentor.Filters
 {

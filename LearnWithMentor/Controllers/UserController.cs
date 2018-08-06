@@ -298,10 +298,6 @@ namespace LearnWithMentor.Controllers
                     {
                         return Request.CreateErrorResponse(HttpStatusCode.NoContent, "User not found");
                     }
-                    //if (user.Blocked == null || user.Blocked.Value)
-                    //{
-                    //    return Request.CreateErrorResponse(HttpStatusCode.Forbidden, "Not allowed because user blocked");
-                    //}
                     if (!user.EmailConfirmed)
                     {
                         return Request.CreateErrorResponse(HttpStatusCode.Forbidden, "Not allowed because email not confirmed");
@@ -407,7 +403,7 @@ namespace LearnWithMentor.Controllers
                         const string errorMessage = "Types allowed only .jpeg .jpg .png";
                         return Request.CreateResponse(HttpStatusCode.BadRequest, errorMessage);
                     }
-                    const int maxContentLength = Constants.ImageRestrictions.MaxSize; 
+                    const int maxContentLength = Constants.ImageRestrictions.MaxSize;
                     if (postedFile.ContentLength > maxContentLength)
                     {
                         const string errorMessage = "Please Upload a file upto 1 mb.";
@@ -537,7 +533,7 @@ namespace LearnWithMentor.Controllers
                 key = "";
             }
             var criteria = roleService.GetByName(role);
-            var lines = key.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var lines = key.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             int? searchParametr = null;
             if (role == Constants.Roles.Blocked)
             {
@@ -575,7 +571,7 @@ namespace LearnWithMentor.Controllers
                 key = "";
             }
             var criteria = roleService.GetByName(role);
-            var lines = key.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var lines = key.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             int? searchParametr = null;
             if (role == Constants.Roles.Blocked)
             {
