@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-
 namespace LearnWithMentorDTO
 {
     public class GroupDTO

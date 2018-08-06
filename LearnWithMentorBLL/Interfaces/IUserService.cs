@@ -21,7 +21,7 @@ namespace LearnWithMentorBLL.Interfaces
         bool UpdatePassword(int userId, string password);
         PagedListDTO<UserDTO> GetUsers(int pageSize, int pageNumber = 1);
         PagedListDTO<UserDTO> Search(string[] str, int pageSize, int pageNumber, int? roleId);
-        PagedListDTO<UserDTO> GetUsersByRole(int role_id, int pageSize, int pageNumber);
+        PagedListDTO<UserDTO> GetUsersByRole(int roleId, int pageSize, int pageNumber);
         PagedListDTO<UserDTO> GetUsersByState(bool state, int pageSize, int pageNumber);
     }
 }

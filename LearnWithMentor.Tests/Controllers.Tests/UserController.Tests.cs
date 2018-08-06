@@ -9,7 +9,6 @@ using Moq;
 using LearnWithMentor.Controllers;
 using System.Web.Http;
 using System.Web.Http.Controllers;
-using System.Web.Http.Results;
 using System.Web.Http.Tracing;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDTO;
@@ -33,16 +32,15 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         {
             users = new List<UserDTO>()
             {
-                new UserDTO(1, "test1", "test1", "Student", false,true),
-                new UserDTO(2, "test2", "test2", "Student", false,true),
-                new UserDTO(3, "test3", "test3", "Mentor", false,true),
-                new UserDTO(4, "test4", "test4", "Admin", false,true)
+                new UserDTO(1, "test1", "test1", "Student", false, true),
+                new UserDTO(2, "test2", "test2", "Student", false, true),
+                new UserDTO(3, "test3", "test3", "Mentor", false, true),
+                new UserDTO(4, "test4", "test4", "Admin", false, true)
             };
             roles = new List<RoleDTO>()
             {
                 new RoleDTO(1, "Student"),
                 new RoleDTO(2, "Mentor"),
-
                 new RoleDTO(3, "Admin")
             };
 
@@ -52,12 +50,12 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             taskServiceMock = new Mock<ITaskService>();
             userIdentityServiceMock = new Mock<IUserIdentityService>();
 
-            var userPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+            var userPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new[]
             {
                 new Claim(ClaimTypes.Role, "Admin"),
-                new Claim("Id", "4") 
+                new Claim("Id", "4")
             }));
-            
+
             userController = new UserController(userServiceMock.Object, roleServiceMock.Object, taskServiceMock.Object, userIdentityServiceMock.Object, traceWriterMock.Object);
             userController.ControllerContext.RequestContext.Principal = userPrincipal;
 
@@ -99,7 +97,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
 
             var response = userController.Search("test", "test");
             response.TryGetContentValue<IEnumerable<UserDTO>>(out var userDTOs);
-            var expected = userServiceMock.Object.Search(new []{"test"}, 1).Count;
+            var expected = userServiceMock.Object.Search(new[] { "test" }, 1).Count;
             var actual = userDTOs.Count();
 
             Assert.AreEqual(expected, actual);

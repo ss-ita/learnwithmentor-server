@@ -68,8 +68,7 @@ namespace LearnWithMentor.Models
                     IssuerSigningKey = new SymmetricSecurityKey(symmetricKey)
                 };
 
-                SecurityToken securityToken;
-                var principal = tokenHandler.ValidateToken(token, validationParameters, out securityToken);
+                var principal = tokenHandler.ValidateToken(token, validationParameters, out var securityToken);
 
                 return principal;
             }

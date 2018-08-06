@@ -9,18 +9,17 @@ using System.Data.Entity.Core;
 using LearnWithMentor.Controllers;
 using System.Web.Http;
 using System.Web.Http.Controllers;
-using System.Web.Http.Results;
 using System.Web.Http.Tracing;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDTO;
 using System.ComponentModel.DataAnnotations;
+
 
 namespace LearnWithMentor.Tests.Controllers.Tests
 {
     [TestFixture]
     public class GroupControllerTests
     {
-
         private GroupController groupController;
         private Mock<IGroupService> groupServiceMock;
         private List<GroupDTO> groups;
@@ -45,7 +44,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             userServiceMock = new Mock<IUserService>();
             userIdentityServiceMock = new Mock<IUserIdentityService>();
 
-            var userPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+            var userPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new[]
             {
                 new Claim(ClaimTypes.Role, "Admin")
             }));
@@ -55,7 +54,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             groupController.Request = new HttpRequestMessage();
             groupController.Configuration = new HttpConfiguration();
             groupController.ControllerContext.ControllerDescriptor = new HttpControllerDescriptor(
-                groupController.Configuration, "GroupController", groupController.GetType());
+            groupController.Configuration, "GroupController", groupController.GetType());
         }
 
         public void ValidateViewModel<TModel, TController>(TController controller, TModel ModelToValidate)
@@ -95,7 +94,6 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             Assert.IsTrue(successfull);
             Assert.AreEqual(expected.Id, actual.Id);
             Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
-
         }
 
         [Test]
@@ -124,7 +122,6 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             Assert.IsTrue(successfull);
             Assert.AreEqual(expected, actual);
             Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
-
         }
 
         [Test]
@@ -369,7 +366,6 @@ namespace LearnWithMentor.Tests.Controllers.Tests
 
             Assert.AreEqual(expected, actual);
         }
-
         [Test]
         public void PutPlansToGroupShouldReturnUnauthorized()
         {
