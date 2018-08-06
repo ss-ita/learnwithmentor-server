@@ -15,8 +15,6 @@ namespace LearnWithMentorDTO
         [RegularExpression(ValidationRules.EMAIL_REGEX,
             ErrorMessage = "Email not valid")]
         public string Email { set; get; }
-
-
         [Required]
         public string Password { get; set; }
     }

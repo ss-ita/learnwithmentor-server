@@ -27,11 +27,8 @@ namespace LearnWithMentorDTO
         [RegularExpression(ValidationRules.ONLY_LETTERS_AND_NUMBERS,
             ErrorMessage = "FirstName not valid")]
         public string FirstName { set; get; }
-
         public int Id { set; get; }
-
         public string Role { set; get; }
-
         public bool? Blocked { set; get; }
     }
 }

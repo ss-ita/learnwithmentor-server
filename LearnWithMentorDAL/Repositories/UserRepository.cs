@@ -28,10 +28,10 @@ namespace LearnWithMentorDAL.Repositories
 
         public IEnumerable<User> Search(string[] searchString, int? roleId)
         {
-            List<User> result = new List<User>();
+            var result = new List<User>();
             IQueryable<User> usersWithCriteria;
-            string firstWord = searchString.Length >= 1 ? searchString[0] : "";
-            string secondWord = searchString.Length == 2 ? searchString[1] : "";
+            var firstWord = searchString.Length >= 1 ? searchString[0] : "";
+            var secondWord = searchString.Length == 2 ? searchString[1] : "";
             if (roleId == null)
             {
                 usersWithCriteria = Context.Users;
@@ -81,7 +81,7 @@ namespace LearnWithMentorDAL.Repositories
         {
             if (id == null)
                 return null;
-            User currentUser = Context.Users.FirstOrDefault(u => u.Id == id.Value);
+            var currentUser = Context.Users.FirstOrDefault(u => u.Id == id.Value);
             string fullName = null;
             if (currentUser != null)
                 fullName = string.Concat(currentUser.FirstName, " ", currentUser.LastName);
@@ -90,7 +90,8 @@ namespace LearnWithMentorDAL.Repositories
 
         public IEnumerable<User> GetUsersNotInGroup(int groupId)
         {
-            return Context.Users.Where(u => !u.Groups.Select(g => g.Id).Contains(groupId)).Where(u => !u.Blocked && u.Roles.Name == "Student");
+            return Context.Users.Where(u => !u.Groups.Select(g => g.Id).Contains(groupId))
+                .Where(u => !u.Blocked && u.Roles.Name == "Student");
         }
     }
 }
