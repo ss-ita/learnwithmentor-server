@@ -127,6 +127,41 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             Assert.AreEqual(response.StatusCode, HttpStatusCode.NoContent);
         }
 
+        [Test]
+        public void PostPlanTest_ShouldSuccessfullyCreateNewPlan()
+        {
 
+            planServiceMock.Setup(mts => mts.Add(It.IsAny<PlanDTO>())).Returns(true);
+            var newPlan = plans[0];
+            var response = planController.Post(newPlan);
+
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+        }
+
+        [Test]
+        public void PostPlanTest_ShouldCheckNotSuccessfullPostTryAndReturnBadRequestResponse()
+        {
+            planServiceMock.Setup(mts => mts.Add(It.IsAny<PlanDTO>()))
+                .Returns(false);
+
+            var newPlan = plans[0];
+
+            var response = planController.Post(newPlan);
+
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
+        }
+        
+        [Test]
+        public void PostPlanTestAndReturnId_ShouldSuccessfullyCreateNewPlanAndReturnId()
+        {
+
+            planServiceMock.Setup(mts => mts.AddAndGetId(It.IsAny<PlanDTO>())).Returns(1);
+            var newPlan = plans[0];
+            var response = planController.PostAndReturnId(newPlan);
+
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+        }
+
+      
     }
 }
