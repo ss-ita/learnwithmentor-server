@@ -6,6 +6,7 @@ using LearnWithMentorDAL.Entities;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDAL.UnitOfWork;
 using LearnWithMentorDTO.Infrastructure;
+using System;
 
 namespace LearnWithMentorBLL.Services
 {
@@ -186,6 +187,37 @@ namespace LearnWithMentorBLL.Services
                 Mentor_Id = userTaskDTO.MentorId
             };
             db.UserTasks.Add(userTask);
+            db.Save();
+            return true;
+        }
+
+        public bool UpdateProposeEndDate(int userTaskId, DateTime proposeEndDate)
+        {
+            var userTask = db.UserTasks.Get(userTaskId);
+            if (userTask == null) return false;
+            userTask.Propose_End_Date = proposeEndDate;
+            db.UserTasks.Update(userTask);
+            db.Save();
+            return true;
+        }
+
+        public bool SetNewEndDate(int userTaskId)
+        {
+            var userTask = db.UserTasks.Get(userTaskId);
+            if (userTask == null) return false;
+            userTask.End_Date = userTask.Propose_End_Date;
+            userTask.Propose_End_Date = null;
+            db.UserTasks.Update(userTask);
+            db.Save();
+            return true;
+        }
+
+        public bool DeleteProposeEndDate(int userTaskId)
+        {
+            var userTask = db.UserTasks.Get(userTaskId);
+            if (userTask == null) return false;
+            userTask.Propose_End_Date = null;
+            db.UserTasks.Update(userTask);
             db.Save();
             return true;
         }
