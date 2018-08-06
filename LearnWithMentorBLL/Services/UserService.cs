@@ -33,7 +33,8 @@ namespace LearnWithMentorBLL.Services
                 user.FirstName,
                 user.LastName,
                 user.Roles.Name,
-                user.Blocked);
+                user.Blocked,
+                user.Email_Confirmed);
         }
 
         public List<UserDTO> GetAllUsers()
@@ -99,6 +100,20 @@ namespace LearnWithMentorBLL.Services
             }
             return modified;
         }
+
+        public bool ConfirmEmailById(int id)
+        {
+            var user = db.Users.Get(id);
+            if (user != null)
+            {
+                user.Email_Confirmed = true;
+                db.Users.Update(user);
+                db.Save();
+                return true;
+            }
+            return false;
+        }
+
         public bool Add(UserRegistrationDTO userLoginDTO)
         {
             var toAdd = new User
@@ -222,7 +237,8 @@ namespace LearnWithMentorBLL.Services
                                user.FirstName,
                                user.LastName,
                                user.Roles.Name,
-                               user.Blocked);
+                               user.Blocked,
+                               user.Email_Confirmed);
         }
     }
 }

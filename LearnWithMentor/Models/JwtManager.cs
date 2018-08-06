@@ -10,7 +10,7 @@ namespace LearnWithMentor.Models
     {
         private const string Secret = "db3OIsj+BXE9NZDy0t8W3TcNekrF+2d/1sFnWG4HnV8TZY30iTOdtVWJG8abWvB1GlOgJuQZdcF2Luqm/hccMw==";
 
-        public static string GenerateToken(UserIdentityDTO user, int expireDays = 1)
+        public static string GenerateToken(UserIdentityDTO user, int expireDays = 1, int expireHours = 0)
         {
             var symmetricKey = Convert.FromBase64String(Secret);
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -26,7 +26,7 @@ namespace LearnWithMentor.Models
                             new Claim(ClaimTypes.Role, user.Role)
                         }),
 
-                Expires = now.AddDays(expireDays),
+                Expires = now.AddDays(expireDays).AddHours(expireHours),
 
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(symmetricKey), SecurityAlgorithms.HmacSha256Signature)
             };
@@ -36,6 +36,7 @@ namespace LearnWithMentor.Models
 
             return token;
         }
+
         public static bool LifetimeValidator(DateTime? notBefore, DateTime? expires, SecurityToken securityToken, TokenValidationParameters validationParameters)
         {
             if (expires != null)

@@ -270,6 +270,7 @@
     <Compile Include="Log\NLogger.cs" />
     <Compile Include="Models\JwtManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\EmailService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />

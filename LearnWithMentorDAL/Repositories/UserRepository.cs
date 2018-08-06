@@ -66,7 +66,7 @@ namespace LearnWithMentorDAL.Repositories
         {
             return Context.Users.Any(u => u.Id == id);
         }
-
+        
         public IEnumerable<User> GetUsersByRole(int roleId)
         {
             return Context.Users.Where(u => u.Role_Id == roleId);

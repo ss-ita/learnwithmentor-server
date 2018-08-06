@@ -72,7 +72,7 @@ namespace LearnWithMentorDAL.EF
                 new User() {FirstName = "Mykhaylo", LastName = "Plesna", Email = "plesna@gmail.com"},
                 new User() {FirstName = "Maryana", LastName = "Lopatynska", Email = "lopatynska@gmail.com"},
 
-                new User() {FirstName = "Roman", LastName = "Maksymyshyn", Email = "maksymyshyn@gmail.com"},
+                new User() {FirstName = "Roman", LastName = "Maksymyshyn", Email = "maksymyshyn.roman@gmail.com"},
                 new User() {FirstName = "Yurii-Stefan", LastName = "Zhydetskyi", Email = "zhydetskyi@gmail.com"},
                 new User() {FirstName = "Oleksandr", LastName = "Isakov", Email = "isakov@gmail.com"},
                 new User() {FirstName = "Roman", LastName = "Parobii", Email = "parobii@gmail.com"},
@@ -99,6 +99,7 @@ namespace LearnWithMentorDAL.EF
             {
                 user.Password = BCrypt.Net.BCrypt.HashPassword("123");
                 user.Blocked = false;
+                user.Email_Confirmed = true;
             }
 
             var pathToImagesFolder = Path.Combine((AppDomain.CurrentDomain.BaseDirectory).

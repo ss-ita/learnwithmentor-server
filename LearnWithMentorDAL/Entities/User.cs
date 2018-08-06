@@ -40,6 +40,7 @@ namespace LearnWithMentorDAL.Entities
         public bool Blocked { get; set; }
         public string Image { get; set; }
         public string Image_Name { get; set; }
+        public bool Email_Confirmed { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Comment> Comments { get; set; }
