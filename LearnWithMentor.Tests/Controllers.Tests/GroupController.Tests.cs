@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
 using NUnit.Framework;
 using Moq;
+using System.Data.Entity.Core;
 using LearnWithMentor.Controllers;
 using System.Web.Http;
 using System.Web.Http.Controllers;
@@ -13,7 +13,7 @@ using System.Web.Http.Results;
 using System.Web.Http.Tracing;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDTO;
-
+using System.ComponentModel.DataAnnotations;
 
 namespace LearnWithMentor.Tests.Controllers.Tests
 {
@@ -27,7 +27,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         private Mock<ITraceWriter> traceWriterMock;
         private Mock<IUserService> userServiceMock;
         private Mock<IUserIdentityService> userIdentityServiceMock;
-       
+
 
         [OneTimeSetUp]
         public void SetUp()
@@ -50,12 +50,24 @@ namespace LearnWithMentor.Tests.Controllers.Tests
                 new Claim(ClaimTypes.Role, "Admin")
             }));
 
-            groupController = new GroupController( groupServiceMock.Object, userServiceMock.Object, userIdentityServiceMock.Object, traceWriterMock.Object);
+            groupController = new GroupController(groupServiceMock.Object, userServiceMock.Object, userIdentityServiceMock.Object, traceWriterMock.Object);
             groupController.ControllerContext.RequestContext.Principal = userPrincipal;
             groupController.Request = new HttpRequestMessage();
             groupController.Configuration = new HttpConfiguration();
             groupController.ControllerContext.ControllerDescriptor = new HttpControllerDescriptor(
                 groupController.Configuration, "GroupController", groupController.GetType());
+        }
+
+        public void ValidateViewModel<TModel, TController>(TController controller, TModel ModelToValidate)
+        where TController : ApiController
+        {
+            var validationContext = new ValidationContext(ModelToValidate, null, null);
+            var validationResults = new List<ValidationResult>();
+            Validator.TryValidateObject(ModelToValidate, validationContext, validationResults, true);
+            foreach (var validationResult in validationResults)
+            {
+                controller.ModelState.AddModelError(validationResult.MemberNames.FirstOrDefault() ?? string.Empty, validationResult.ErrorMessage);
+            }
         }
 
         [OneTimeTearDown]
@@ -72,18 +84,18 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public void GetGroupByIdTest_ShouldReturnTask()
         {
-           groupServiceMock.Setup(u => u.GetGroupById(It.IsAny<int>())).Returns(
-                (int i) => groups.Where(x => x.Id == i).Single());
-            
+            groupServiceMock.Setup(u => u.GetGroupById(It.IsAny<int>())).Returns(
+                 (int i) => groups.Where(x => x.Id == i).Single());
+
             var response = groupController.GetById(3);
             var successfull = response.TryGetContentValue<GroupDTO>(out var groupDTO);
-            var expected = groupServiceMock.Object.GetGroupById(3);               
+            var expected = groupServiceMock.Object.GetGroupById(3);
             var actual = groupDTO;
 
             Assert.IsTrue(successfull);
             Assert.AreEqual(expected.Id, actual.Id);
             Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
-           
+
         }
 
         [Test]
@@ -103,7 +115,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         {
             groupServiceMock.Setup(g => g.GetGroupsByMentor(It.IsAny<int>())).Returns(new List<GroupDTO>());
 
-            var response = groupController.GetByMentor(2);               
+            var response = groupController.GetByMentor(2);
             var successfull = response.TryGetContentValue<List<GroupDTO>>(out var groupDTOs);
             var expected = groupServiceMock.Object.GetGroupsByMentor(2);
             var actual = groupDTOs;
@@ -117,26 +129,231 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public void GetGroupByMentor_ShouldReturnNotFoundResponse()
         {
-            groupServiceMock.Setup(u => u.GetGroupsByMentor(It.IsAny<int>()));           
+            groupServiceMock.Setup(u => u.GetGroupsByMentor(It.IsAny<int>()));
 
             var response = groupController.GetByMentor(6);
             var expected = HttpStatusCode.NotFound;
             var actual = response.StatusCode;
             Assert.AreEqual(expected, actual);
         }
-        
-        [Test]
-        public void CreateGroupTest()
-        {
-            groupServiceMock.Setup(u => u.AddGroup(It.IsAny<GroupDTO>())).Returns(true);
 
-            GroupDTO requestValue = new GroupDTO(5,"newName", 2, "newMentorName");            
-            var response = groupController.Post(requestValue);
+        #region GetAllPlansByGroupId
+        [Test]
+        public void GetAllPlansByGroupId_ShouldReturnOk()
+        {
+            groupServiceMock.Setup(p => p.GetPlans(It.IsAny<int>())).Returns(new List<PlanDTO>());
+
+            var response = groupController.GetPlans(4);
             var expected = HttpStatusCode.OK;
             var actual = response.StatusCode;
 
             Assert.AreEqual(expected, actual);
-        }      
-        
-     }
+        }
+
+        [Test]
+        public void GetAllPlansByGroupId_ShouldReturnNoContent()
+        {
+            groupServiceMock.Setup(p => p.GetPlans(It.IsAny<int>())).Returns(() => null);
+
+            var response = groupController.GetPlans(99);
+            var expected = HttpStatusCode.NoContent;
+            var actual = response.StatusCode;
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void GetAllPlansByGroupId_ShouldReturInternalServerError()
+        {
+            groupServiceMock.Setup(p => p.GetPlans(It.IsAny<int>())).Throws(new EntityException());
+
+            var response = groupController.GetPlans(99);
+            var expected = HttpStatusCode.InternalServerError;
+            var actual = response.StatusCode;
+
+            Assert.AreEqual(expected, actual);
+        }
+        #endregion
+        #region GetUsersWithImage
+        [Test]
+        public void GetUsersWithImage_ShouldReturnOk()
+        {
+            groupServiceMock.Setup(p => p.GetUsersWithImage(It.IsAny<int>())).Returns(new List<UserWithImageDTO>());
+
+            var response = groupController.GetUsersWithImage(4);
+            var expected = HttpStatusCode.OK;
+            var actual = response.StatusCode;
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void GetUsersWithImage_ShouldReturnNoContent()
+        {
+            groupServiceMock.Setup(p => p.GetUsersWithImage(It.IsAny<int>())).Returns(() => null);
+
+            var response = groupController.GetUsersWithImage(4);
+            var expected = HttpStatusCode.NoContent;
+            var actual = response.StatusCode;
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void GetUsersWithImage_ShouldReturnInternalServerError()
+        {
+            groupServiceMock.Setup(p => p.GetUsersWithImage(It.IsAny<int>())).Throws(new EntityException());
+
+            var response = groupController.GetUsersWithImage(99);
+            var expected = HttpStatusCode.InternalServerError;
+            var actual = response.StatusCode;
+
+            Assert.AreEqual(expected, actual);
+        }
+        #endregion
+        #region GetUsersNotInCurrentGroup
+        [Test]
+        public void GetUsersNotInCurrentGroupShouldReturnOk()
+        {
+            groupServiceMock.Setup(u => u.GetUsersNotInGroup(It.IsAny<int>())).Returns(new List<UserIdentityDTO>());
+            var response = groupController.GetUsersNotInCurrentGroup(4);
+            var expected = HttpStatusCode.OK;
+            var actual = response.StatusCode;
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void GetUsersNotInCurrentGroupShouldReturnNotFound()
+        {
+            groupServiceMock.Setup(u => u.GetUsersNotInGroup(It.IsAny<int>())).Returns(() => null);
+            var response = groupController.GetUsersNotInCurrentGroup(4);
+            var expected = HttpStatusCode.NotFound;
+            var actual = response.StatusCode;
+
+            Assert.AreEqual(expected, actual);
+        }
+        #endregion
+        #region GetPlansNotUsedInCurrentGroup
+        [Test]
+        public void GetPlansNotUsedInCurrentGroupShouldReturnOk()
+        {
+            groupServiceMock.Setup(u => u.GetPlansNotUsedInGroup(It.IsAny<int>())).Returns(new List<PlanDTO>());
+            var response = groupController.GetPlansNotUsedInCurrentGroup(4);
+            var expected = HttpStatusCode.OK;
+            var actual = response.StatusCode;
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void GetPlansNotUsedInCurrentGroupShouldReturnNoContent()
+        {
+            groupServiceMock.Setup(u => u.GetPlansNotUsedInGroup(It.IsAny<int>())).Returns(() => null);
+            var response = groupController.GetPlansNotUsedInCurrentGroup(4);
+            var expected = HttpStatusCode.NoContent;
+            var actual = response.StatusCode;
+
+            Assert.AreEqual(expected, actual);
+        }
+        #endregion
+        #region AddNewGroup
+        [Test]
+        public void AddNewGroupShouldReturnOk()
+        {
+            groupServiceMock.Setup(u => u.AddGroup(It.IsAny<GroupDTO>())).Returns(true);
+            var response = groupController.Post(groups[0]);
+            var expected = HttpStatusCode.OK;
+            var actual = response.StatusCode;
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void AddNewGroupShouldReturnBadRequestValid()
+        {
+            groupServiceMock.Setup(u => u.AddGroup(It.IsAny<GroupDTO>())).Returns(false);
+            var response = groupController.Post(groups[0]);
+            var expected = HttpStatusCode.BadRequest;
+            var actual = response.StatusCode;
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void AddNewGroupShouldReturnBadRequestInValid()
+        {
+            groupServiceMock.Setup(u => u.AddGroup(It.IsAny<GroupDTO>())).Returns(true);
+            var newGroup = new GroupDTO { };
+            ValidateViewModel<GroupDTO, GroupController>(groupController, newGroup);
+            var response = groupController.Post(groups[0]);
+            var expected = HttpStatusCode.BadRequest;
+            var actual = response.StatusCode;
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void AddNewGroupShouldReturnInternalServerError()
+        {
+            groupServiceMock.Setup(u => u.AddGroup(It.IsAny<GroupDTO>())).Throws(new EntityException());
+            var response = groupController.Post(groups[0]);
+            var expected = HttpStatusCode.InternalServerError;
+            var actual = response.StatusCode;
+
+            Assert.AreEqual(expected, actual);
+        }
+        #endregion
+        #region PutUsersToGroup
+        [Test]
+        public void PutUsersToGroupShouldReturnOk()
+        {
+            groupServiceMock.Setup(u => u.AddUsersToGroup(It.IsAny<int[]>(), It.IsAny<int>())).Returns(true);
+            userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(new int());
+            groupServiceMock.Setup(u => u.GetMentorIdByGroup(It.IsAny<int>())).Returns(new int());
+            var response = groupController.PutUsersToGroup(5, new int[] { 1, 2, 3 });
+            var expected = HttpStatusCode.OK;
+            var actual = response.StatusCode;
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void PutUsersToGroupShouldReturnUnauthorized()
+        {
+            groupServiceMock.Setup(u => u.AddUsersToGroup(It.IsAny<int[]>(), It.IsAny<int>())).Returns(true);
+            userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(new int());
+            groupServiceMock.Setup(u => u.GetMentorIdByGroup(It.IsAny<int>())).Returns(() => null);
+            var response = groupController.PutUsersToGroup(5, new int[] { 1, 2, 3 });
+            var expected = HttpStatusCode.Unauthorized;
+            var actual = response.StatusCode;
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        public void PutUsersToGroupShouldReturnBadRequest()
+        {
+            groupServiceMock.Setup(u => u.AddUsersToGroup(It.IsAny<int[]>(), It.IsAny<int>())).Returns(false);
+            userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(new int());
+            groupServiceMock.Setup(u => u.GetMentorIdByGroup(It.IsAny<int>())).Returns(new int());
+            var response = groupController.PutUsersToGroup(5, new int[] { 1, 2, 3 });
+            var expected = HttpStatusCode.BadRequest;
+            var actual = response.StatusCode;
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        public void PutUsersToGroupShouldReturnInternalServerError()
+        {
+            groupServiceMock.Setup(u => u.AddUsersToGroup(It.IsAny<int[]>(), It.IsAny<int>())).Throws(new EntityException());
+            userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(new int());
+            groupServiceMock.Setup(u => u.GetMentorIdByGroup(It.IsAny<int>())).Returns(new int());
+            var response = groupController.PutUsersToGroup(5, new int[] { 1, 2, 3 });
+            var expected = HttpStatusCode.InternalServerError;
+            var actual = response.StatusCode;
+
+            Assert.AreEqual(expected, actual);
+        }
+        #endregion
+    }
 }
