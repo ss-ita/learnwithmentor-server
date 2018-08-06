@@ -91,8 +91,12 @@ namespace LearnWithMentorBLL.Services
             {
                 return null;
             }
-            var planTaskIds = db.PlanTasks.GetAll().Where(pt => pt.Plan_Id == plan.Id).Select(pt => pt.Task_Id).ToList();
-            var tasksForConcretePlan = db.Tasks.GetAll().Where(t => planTaskIds.Contains(t.Id)).ToList();
+            var planTaskIds = db.PlanTasks.GetAll()
+                .Where(pt => pt.Plan_Id == plan.Id)
+                .Select(pt => pt.Task_Id).ToList();
+            var tasksForConcretePlan = db.Tasks.GetAll()
+                .Where(t => planTaskIds.Contains(t.Id))
+                .ToList();
             if (!tasksForConcretePlan.Any())
             {
                 return null;
@@ -125,8 +129,9 @@ namespace LearnWithMentorBLL.Services
             {
                 return null;
             }
-            var planTaskIds =   db.PlanTasks.GetAll().Where(pt => pt.Plan_Id == planId).Select(pt => pt.Id).ToList();
-
+            var planTaskIds =   db.PlanTasks.GetAll()
+                .Where(pt => pt.Plan_Id == planId)
+                .Select(pt => pt.Id).ToList();
             if (!planTaskIds.Any())
             {
                 return null;
@@ -142,7 +147,17 @@ namespace LearnWithMentorBLL.Services
                 return null;
             }
 
-            var section = db.PlanTasks.GetAll().Where(pt => pt.Plan_Id == planId).GroupBy(s => s.Sections).Select(p => new { Id = p.Key.Id,  Name = p.Key.Name, Tasks = p.Key.PlanTasks.Where(pt => pt.Plan_Id == planId).Select(pt => pt.Tasks) }).ToList();
+            var section = db.PlanTasks.GetAll()
+                .Where(pt => pt.Plan_Id == planId)
+                .GroupBy(s => s.Sections)
+                .Select(p => new
+                {
+                    Id = p.Key.Id,
+                    Name = p.Key.Name,
+                    Tasks = p.Key.PlanTasks
+                        .Where(pt => pt.Plan_Id == planId)
+                        .Select(pt => pt.Tasks)
+                }).ToList();
 
             List<SectionDTO> sectionDTOs = new List<SectionDTO>();
 
@@ -257,18 +272,17 @@ namespace LearnWithMentorBLL.Services
             db.Plans.AddTaskToPlan(planId, taskId, sectionId, priority);
             CreateUserTasksForAllLearningByPlan(planId, taskId);
             db.Save();             
-            
             return true;
         }
 
         public bool SetImage(int id, byte[] image, string imageName)
         {
-            Plan toUpdate = db.Plans.Get(id);
+            var toUpdate = db.Plans.Get(id);
             if (toUpdate == null)
             {
                 return false;
             }
-            string converted = Convert.ToBase64String(image);
+            var converted = Convert.ToBase64String(image);
             toUpdate.Image = converted;
             toUpdate.Image_Name = imageName;
             db.Save();
@@ -277,7 +291,7 @@ namespace LearnWithMentorBLL.Services
 
         public ImageDTO GetImage(int id)
         {
-            Plan toGetImage = db.Plans.Get(id);
+            var toGetImage = db.Plans.Get(id);
             if (toGetImage?.Image == null || toGetImage.Image_Name == null)
             {
                 return null;
@@ -330,7 +344,7 @@ namespace LearnWithMentorBLL.Services
             {
                 return null;
             }
-            List<PlanDTO> dtosList = new List<PlanDTO>();
+            var dtosList = new List<PlanDTO>();
             foreach (var plan in result)
             {
                 dtosList.Add(new PlanDTO(plan.Id,

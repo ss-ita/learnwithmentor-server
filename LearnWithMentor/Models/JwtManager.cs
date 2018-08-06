@@ -20,7 +20,8 @@ namespace LearnWithMentor.Models
             {
                 Subject = new ClaimsIdentity(new[]
                         {
-                            new Claim("Id",user.Id.ToString()  ),
+                            new Claim("Id",user.Id.ToString()),
+                            new Claim("EmailConfirmed",user.EmailConfirmed.ToString()),
                             new Claim(ClaimTypes.Email, user.Email),
                             new Claim(ClaimTypes.Name, user.FirstName + " " + user.LastName ),
                             new Claim(ClaimTypes.Role, user.Role)
@@ -67,8 +68,7 @@ namespace LearnWithMentor.Models
                     IssuerSigningKey = new SymmetricSecurityKey(symmetricKey)
                 };
 
-                SecurityToken securityToken;
-                var principal = tokenHandler.ValidateToken(token, validationParameters, out securityToken);
+                var principal = tokenHandler.ValidateToken(token, validationParameters, out var securityToken);
 
                 return principal;
             }
