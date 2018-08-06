@@ -13,9 +13,6 @@ namespace LearnWithMentor.Services
     {
         public static Task SendEmail(string destination, string subject, string body)
         {
-            //var from = "mr.dev.needs.acc@gmail.com";
-            //var pass = "maksymyshynDDR";
-
             var from = "learnwithmentor@gmail.com";
             var pass = "learnwithmentor2018";
 
