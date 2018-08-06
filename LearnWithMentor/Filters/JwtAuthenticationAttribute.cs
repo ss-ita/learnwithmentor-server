@@ -45,8 +45,19 @@ namespace LearnWithMentor.Filters
                 context.Principal = principal;
             }
         }
+        
+        public static bool ValidateToken(string token, out string userEmail)
+        {
+            if (ValidateToken(token, out string email, out string userrole))
+            {
+                userEmail = email;
+                return true;
+            }
+            userEmail = null;
+            return false;
+        }
 
-        private static bool ValidateToken(string token, out string email, out string userrole)
+        private static bool ValidateToken(string token, out string email,out string userrole)
         {
             email = null;
             userrole = null;

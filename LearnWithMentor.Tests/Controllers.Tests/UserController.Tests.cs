@@ -32,10 +32,10 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         {
             users = new List<UserDTO>()
             {
-                new UserDTO(1, "test1", "test1", "Student", false),
-                new UserDTO(2, "test2", "test2", "Student", false),
-                new UserDTO(3, "test3", "test3", "Mentor", false),
-                new UserDTO(4, "test4", "test4", "Admin", false)
+                new UserDTO(1, "test1", "test1", "Student", false, true),
+                new UserDTO(2, "test2", "test2", "Student", false, true),
+                new UserDTO(3, "test3", "test3", "Mentor", false, true),
+                new UserDTO(4, "test4", "test4", "Admin", false, true)
             };
             roles = new List<RoleDTO>()
             {
@@ -363,7 +363,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         {
             userServiceMock.Setup(u => u.UpdateById(It.IsAny<int>(), It.IsAny<UserDTO>())).Returns(true);
 
-            UserDTO reqestValue = new UserDTO(1, "test", "test", "test", false);
+            UserDTO reqestValue = new UserDTO(1, "test", "test", "test", false, true);
             var response = userController.Put(1, reqestValue);
             var expectedStatusCode = HttpStatusCode.OK;
             var actualStatusCode = response.StatusCode;
@@ -376,7 +376,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         {
             userServiceMock.Setup(u => u.UpdateById(It.IsAny<int>(), It.IsAny<UserDTO>())).Returns(false);
 
-            UserDTO reqestValue = new UserDTO(1, "test", "test", "test", false);
+            UserDTO reqestValue = new UserDTO(1, "test", "test", "test", false, true);
             var response = userController.Put(1, reqestValue);
             var expectedStatusCode = HttpStatusCode.BadRequest;
             var actualStatusCode = response.StatusCode;

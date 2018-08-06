@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Web.Http;
 using LearnWithMentorDTO;
 using System.Net.Http;
 using System.Net;
 using LearnWithMentor.Filters;
+using LearnWithMentor.Models;
+using LearnWithMentor.Services;
 using LearnWithMentorBLL.Interfaces;
 using System.Web.Http.Tracing;
 using System.Data.Entity.Core;
@@ -210,6 +213,149 @@ namespace LearnWithMentor.Controllers
             const string message = "Incorrect request syntax.";
             tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, message);
             return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
+        }
+
+        /// <summary>
+        /// Verifies reset password token.
+        /// </summary>
+        /// <param name="token"> Users token. </param>
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("api/user/verify-token")]
+        public HttpResponseMessage VerifyToken(string token)
+        {
+            try
+            {
+                if (JwtAuthenticationAttribute.ValidateToken(token, out string userEmail))
+                {
+                    var user = userService.GetByEmail(userEmail);
+                    if (user == null)
+                    {
+                        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "User not found");
+                    }
+                    return Request.CreateResponse(HttpStatusCode.OK, user.Id);
+                }
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Token no longer valid");
+            }
+            catch (EntityException e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
+        }
+
+        /// <summary>
+        /// Confirms user email by token.
+        /// </summary>
+        /// <param name="token"> Users token. </param>
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("api/user/confirm-email")]
+        public HttpResponseMessage ConfirmEmail(string token)
+        {
+            try
+            {
+                if (JwtAuthenticationAttribute.ValidateToken(token, out string userEmail))
+                {
+                    var user = userService.GetByEmail(userEmail);
+                    if (user == null)
+                    {
+                        return Request.CreateErrorResponse(HttpStatusCode.NoContent, "User not found");
+                    }
+                    if (userService.ConfirmEmailById(user.Id))
+                    {
+                        return Request.CreateResponse(HttpStatusCode.OK, "Email confirmed");
+                    }
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Confirmation error");
+                }
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Token no longer valid");
+            }
+            catch (EntityException e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
+        }
+
+        /// <summary>
+        /// Sends email with link for user's password reset.
+        /// </summary>
+        /// <param name="emailModel"> User's email. </param>
+        /// <param name="resetPasswordLink"> Link on the reset page. </param>
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("api/user/password-reset")]
+        public async Task<HttpResponseMessage> SendPasswordResetLink([FromBody] EmailDTO emailModel, string resetPasswordLink)
+        {
+            try
+            {
+                if (resetPasswordLink == null)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Password reset link not found");
+                }
+                if (ModelState.IsValid)
+                {
+                    var user = userService.GetByEmail(emailModel.Email);
+                    if (user == null)
+                    {
+                        return Request.CreateErrorResponse(HttpStatusCode.NoContent, "User not found");
+                    }
+                    //if (user.Blocked == null || user.Blocked.Value)
+                    //{
+                    //    return Request.CreateErrorResponse(HttpStatusCode.Forbidden, "Not allowed because user blocked");
+                    //}
+                    if (!user.EmailConfirmed)
+                    {
+                        return Request.CreateErrorResponse(HttpStatusCode.Forbidden, "Not allowed because email not confirmed");
+                    }
+                    string token = JwtManager.GenerateToken(user, 0, 1);
+                    await EmailService.SendPasswordResetEmail(user.Email, token, resetPasswordLink);
+
+                    return Request.CreateResponse(HttpStatusCode.OK, "Token successfully sent");
+                }
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Email is not valid");
+            }
+            catch (EntityException e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, e);
+            }
+        }
+
+        /// <summary>
+        /// Sends email with link for user's email confirmation.
+        /// </summary>
+        /// <param name="emailModel"> User's email. </param>
+        /// <param name="emailConfirmLink"> Link on the email confirm page. </param>
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("api/user/confirm-email")]
+        public async Task<HttpResponseMessage> SendEmailConfirmLink([FromBody] EmailDTO emailModel, string emailConfirmLink)
+        {
+            try
+            {
+                if (emailConfirmLink == null)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Email confirmation link not found");
+                }
+                if (ModelState.IsValid)
+                {
+                    var user = userService.GetByEmail(emailModel.Email);
+                    if (user == null)
+                    {
+                        return Request.CreateErrorResponse(HttpStatusCode.NoContent, "User not found");
+                    }
+                    if (user.EmailConfirmed)
+                    {
+                        return Request.CreateErrorResponse(HttpStatusCode.Forbidden, "Email already confirmed");
+                    }
+                    string token = JwtManager.GenerateToken(user, 0, 1);
+                    await EmailService.SendConfirmPasswordEmail(user.Email, token, emailConfirmLink);
+                    return Request.CreateResponse(HttpStatusCode.OK, "Token successfully sent");
+                }
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Email is not valid");
+            }
+            catch (EntityException e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, e);
+            }
         }
 
         /// <summary>
@@ -445,19 +591,19 @@ namespace LearnWithMentor.Controllers
         }
 
         /// <summary>
-        /// Updates user password.
+        /// Updates user password by id.
         /// </summary>
-        /// <param name="value"> New password value. </param>
+        /// <param name="password"> New password value. </param>
+        /// <param name="id"> Users Id. </param>
         /// <returns></returns>
-        [JwtAuthentication]
+        [AllowAnonymous]
         [HttpPut]
-        [Route("api/user/newpassword")]
-        public HttpResponseMessage UpdatePassword([FromBody]string value)
+        [Route("api/user/resetpasswotd")]
+        public HttpResponseMessage ResetPassword([FromBody]string password, int id)
         {
             try
             {
-                var id = userIdentityService.GetUserId();
-                var success = userService.UpdatePassword(id, value);
+                var success = userService.UpdatePassword(id, password);
                 if (success)
                 {
                     const string okMessage = "Succesfully updated password.";
@@ -472,6 +618,20 @@ namespace LearnWithMentor.Controllers
                 tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
+        }
+
+        /// <summary>
+        /// Updates current user password.
+        /// </summary>
+        /// <param name="value"> New password value. </param>
+        /// <returns></returns>
+        [JwtAuthentication]
+        [HttpPut]
+        [Route("api/user/newpassword")]
+        public HttpResponseMessage UpdatePassword([FromBody]string value)
+        {
+            var id = userIdentityService.GetUserId();
+            return ResetPassword(value, id);
         }
 
         /// <summary>
