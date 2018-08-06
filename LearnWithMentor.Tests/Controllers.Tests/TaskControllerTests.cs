@@ -534,48 +534,6 @@ namespace LearnWithMentor.Tests.Controllers.Tests
 
 
         #endregion
-        #region GetAllTasksState
-        [Test]
-        public void GetAllTasksStateTest_ShouldReturnUserTasks()
-        {
-            taskServiceMock.Setup(mts => mts.GetTaskStatesForUser(It.IsAny<int[]>(), It.IsAny<int>())).Returns(
-                (int[] i, int user) => GetTestUserTasks().Where(x => x.UserId == user).ToList());
-
-            var usertask = GetTestUserTasks()[0];
-            var response = taskController.GetAllTasksState( usertask.UserId, new[] { usertask.PlanTaskId });
-            var successfull = response.TryGetContentValue<List<UserTaskDTO>>(out var taskDTO);
-            var expected = taskServiceMock.Object.GetTaskStatesForUser(new[] { usertask.PlanTaskId }, usertask.UserId);
-            var actual = taskDTO;
-
-            Assert.IsTrue(successfull);
-            Assert.AreEqual(expected[0].Id, actual[0].Id);
-            Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
-        }
-
-        [Test]
-        public void GetAllTasksStateTest_ShouldReturnNoContentResponse()
-        {
-            taskServiceMock.Setup(mts => mts.GetTaskStatesForUser(It.IsAny<int[]>(), It.IsAny<int>()));
-
-            var usertask = GetTestUserTasks()[0];
-            var response = taskController.GetAllTasksState(usertask.UserId, new[] { usertask.PlanTaskId });
-
-            Assert.AreEqual(response.StatusCode, HttpStatusCode.NoContent);
-        }
-
-        [Test]
-        public void GetAllTasksStateTest_ShouldCatchEntityException()
-        {
-            taskServiceMock.Setup(mts => mts.GetTaskStatesForUser(It.IsAny<int[]>(), It.IsAny<int>())).Throws(new EntityException());
-
-            var usertask = GetTestUserTasks()[0];
-            var response = taskController.GetAllTasksState(usertask.UserId, new[] { usertask.PlanTaskId });
-
-            Assert.AreEqual(response.StatusCode, HttpStatusCode.InternalServerError);
-        }
-
-
-        #endregion
         #region GetUserTask
 
         [Test]
@@ -675,7 +633,6 @@ namespace LearnWithMentor.Tests.Controllers.Tests
 
 
         #endregion
-
         #region PutNewUserTaskResult
         [Test]
         public void PutNewUserTaskResultTest_ShouldSuccessfullyPutNewResult()
