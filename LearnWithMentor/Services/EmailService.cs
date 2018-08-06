@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Net.Mail;
-using LearnWithMentor.Filters;
-using LearnWithMentor.Models;
 
 namespace LearnWithMentor.Services
 {
@@ -15,18 +9,19 @@ namespace LearnWithMentor.Services
         {
             var from = "learnwithmentor@gmail.com";
             var pass = "learnwithmentor2018";
-
-            SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
-
-            client.DeliveryMethod = SmtpDeliveryMethod.Network;
-            client.UseDefaultCredentials = false;
-            client.Credentials = new System.Net.NetworkCredential(from, pass);
-            client.EnableSsl = true;
-
-            var mail = new MailMessage(from, destination);
-            mail.Subject = subject;
-            mail.Body = body;
-            mail.IsBodyHtml = true;
+            var client = new SmtpClient("smtp.gmail.com", 587)
+            {
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new System.Net.NetworkCredential(@from, pass),
+                EnableSsl = true
+            };
+            var mail = new MailMessage(from, destination)
+            {
+                Subject = subject,
+                Body = body,
+                IsBodyHtml = true
+            };
             return client.SendMailAsync(mail);
         }
 

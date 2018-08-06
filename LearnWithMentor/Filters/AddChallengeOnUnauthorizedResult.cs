@@ -22,8 +22,7 @@ namespace LearnWithMentor.Filters
 
         public async Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
         {
-            HttpResponseMessage response = await InnerResult.ExecuteAsync(cancellationToken);
-
+            var response = await InnerResult.ExecuteAsync(cancellationToken);
             if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 // Only add one challenge per authentication scheme.
@@ -32,7 +31,6 @@ namespace LearnWithMentor.Filters
                     response.Headers.WwwAuthenticate.Add(Challenge);
                 }
             }
-            
             return response;
         }
     }

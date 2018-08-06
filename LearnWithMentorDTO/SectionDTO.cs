@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace LearnWithMentorDTO
+﻿namespace LearnWithMentorDTO
 {
     public class SectionDTO
     {

@@ -36,32 +36,6 @@ namespace LearnWithMentorDTO
             PlanTaskId = planTaskId;
         }
 
-        public TaskDTO(int id,
-                string name,
-                string description,
-                bool privateness,
-                int createId,
-                string creatorName,               
-                int? modId,
-                string modifierName,
-                DateTime? createDate,
-                DateTime? modDate)
-        {
-            Id = id;
-            Name = name;
-            Description = description;
-            Private = privateness;
-            CreateDate = createDate;
-            ModDate = modDate;
-            CreatorId = createId;
-            CreatorName = creatorName;
-            ModifierId = modId;
-            ModifierName = modifierName;
-            Priority = null;
-            SectionId = null;
-            PlanTaskId = null;
-        }
-
         public int Id { get; set; }
         [Required]
         [StringLength(ValidationRules.MAX_TASK_NAME_LENGTH,

@@ -39,7 +39,6 @@ namespace LearnWithMentor.Controllers
                     return Request.CreateResponse(HttpStatusCode.OK, JwtManager.GenerateToken(user));
                 }
             }
-
             var message = " Not valid logination data.";
             if (user != null && user.Blocked == true) message = "This user is blocked!";
             return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, message);

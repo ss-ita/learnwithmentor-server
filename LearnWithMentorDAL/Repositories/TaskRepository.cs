@@ -31,10 +31,10 @@ namespace LearnWithMentorDAL.Repositories
         {
             if (!Context.Plans.Any(p => p.Id == planId))
                 return null;
-            List<Task> result = new List<Task>();
+            var result = new List<Task>();
             foreach (var s in str)
             {
-                IQueryable<Task> found = Context.PlanTasks.Where(p => p.Plan_Id == planId)
+                var found = Context.PlanTasks.Where(p => p.Plan_Id == planId)
                                              .Select(t => t.Tasks)
                                              .Where(t => t.Name.Contains(s));
                 foreach (var f in found)
@@ -53,7 +53,7 @@ namespace LearnWithMentorDAL.Repositories
             var result = new List<Task>();
             foreach (var s in str)
             {
-                IQueryable<Task> found = Context.Tasks.Where(t => t.Name.Contains(s));
+                var found = Context.Tasks.Where(t => t.Name.Contains(s));
                 foreach (var f in found)
                 {
                     if (!result.Contains(f))

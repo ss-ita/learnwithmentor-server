@@ -25,12 +25,11 @@ namespace LearnWithMentor.Filters
 
         private HttpResponseMessage Execute()
         {
-            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.Unauthorized)
+            var response = new HttpResponseMessage(HttpStatusCode.Unauthorized)
             {
                 RequestMessage = Request,
                 ReasonPhrase = ReasonPhrase
             };
-
             return response;
         }
     }
