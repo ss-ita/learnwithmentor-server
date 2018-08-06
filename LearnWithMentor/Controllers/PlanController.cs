@@ -368,7 +368,7 @@ namespace LearnWithMentor.Controllers
             }
             catch (EntityException e)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, e);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
         }
 
