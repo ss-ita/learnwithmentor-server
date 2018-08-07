@@ -72,6 +72,16 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             return testTasks;
         }
 
+        private List<MessageDTO> GetTestMessage()
+        {
+            var testMessages = new List<MessageDTO>
+            {
+                new MessageDTO(1, 1, 1, "petro", "good result", DateTime.Now),
+                new MessageDTO(2, 1, 1, "petro",  new string('*',5000), DateTime.Now)
+            };
+            return testMessages;
+        }
+
         private List<UserTaskDTO> GetTestUserTasks()
         {
             var testUserTasks = new List<UserTaskDTO>
@@ -683,6 +693,115 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             httpRequestMessage.Content =
                 new StringContent("Do not touch this ****", Encoding.UTF8, "application/json");
             var response = taskController.PutNewUserTaskResult(0, httpRequestMessage);
+
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.InternalServerError);
+        }
+
+
+        #endregion
+        #region PostNewUserTask
+        [Test]
+        public void PostNewUserTaskTest_ShouldSuccessfullyCreateNewUserTask()
+        {
+
+            taskServiceMock.Setup(mts => mts.CreateUserTask(It.IsAny<UserTaskDTO>()))
+                .Returns(true);
+            var newTask = GetTestUserTasks()[0];
+            var response = taskController.PostNewUserTask(newTask);
+
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+        }
+
+        [Test]
+        public void PostNewUserTaskTest_ShouldCheckNotValidInputParameterAndReturnBadRequestResponse()
+        {
+            taskServiceMock.Setup(mts => mts.CreateUserTask(It.IsAny<UserTaskDTO>()))
+                .Returns(true);
+
+            var newUserTask = new UserTaskDTO();
+            ValidateViewModel(taskController, newUserTask);
+            var response = taskController.PostNewUserTask(newUserTask);
+
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Test]
+        public void PostNewUserTaskTest_ShouldCheckNotSuccessfullPostTryAndReturnNoContentResponse()
+        {
+            taskServiceMock.Setup(mts => mts.CreateUserTask(It.IsAny<UserTaskDTO>()))
+                .Returns(false);
+
+            var newUserTask = GetTestUserTasks()[0];
+
+            var response = taskController.PostNewUserTask(newUserTask);
+
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.NoContent);
+        }
+
+        [Test]
+        public void PostNewUserTaskTest_ShouldCatchEntityException()
+        {
+            taskServiceMock.Setup(mts => mts.CreateUserTask(It.IsAny<UserTaskDTO>()))
+                .Throws(new EntityException());
+
+            var newUserTask = GetTestUserTasks()[0];
+            var response = taskController.PostNewUserTask(newUserTask);
+
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.InternalServerError);
+        }
+
+
+        #endregion
+        #region PostUserTaskMessage
+        [Test]
+        public void PostUserTaskMessageTest_ShouldSuccessfullyCreateUserTaskMessage()
+        {
+            userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(1);
+            messageServiceMock.Setup(mts => mts.SendMessage(It.IsAny<MessageDTO>()))
+                .Returns(true);
+
+            var message = GetTestMessage()[0];
+            var response = taskController.PostUserTaskMessage(message.UserTaskId,message);
+
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+        }
+
+        [Test]
+        public void PostUserTaskMessageTest_ShouldCheckNotValidInputParameterAndReturnBadRequestResponse()
+        {
+            userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(1);
+            messageServiceMock.Setup(mts => mts.SendMessage(It.IsAny<MessageDTO>()))
+                .Returns(true);
+
+            var message = GetTestMessage()[1];
+            ValidateViewModel(taskController, message);
+            var response = taskController.PostUserTaskMessage(message.UserTaskId, message);
+
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Test]
+        public void PostUserTaskMessageTest_ShouldCheckNotSuccessfullPostTryAndReturnBadRequestResponse()
+        {
+            userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(1);
+            messageServiceMock.Setup(mts => mts.SendMessage(It.IsAny<MessageDTO>()))
+                .Returns(false);
+
+            var message = GetTestMessage()[0];
+            var response = taskController.PostUserTaskMessage(message.UserTaskId, message);
+
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
+        }
+
+        [Test]
+        public void PostUserTaskMessageTest_ShouldCatchEntityException()
+        {
+            userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(1);
+            messageServiceMock.Setup(mts => mts.SendMessage(It.IsAny<MessageDTO>()))
+                .Throws(new EntityException());
+
+            var message = GetTestMessage()[0];
+            var response = taskController.PostUserTaskMessage(message.UserTaskId, message);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.InternalServerError);
         }

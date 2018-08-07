@@ -362,7 +362,23 @@ namespace LearnWithMentorBLL.Services
             }
             return dtosList;
         }
-        public bool ContainsId(int id)
+
+        public string GetInfo(int groupid, int planid)
+        {
+            var group = db.Groups.Get(groupid);
+            if (group == null)
+            {
+                return null;
+            }
+            var plan = db.Plans.Get(planid);
+            if (plan == null)
+            {
+                return null;
+            }
+
+            return group.Name + ": " + plan.Name;
+        }
+       public bool ContainsId(int id)
         {
             return db.Plans.ContainsId(id);
         }
