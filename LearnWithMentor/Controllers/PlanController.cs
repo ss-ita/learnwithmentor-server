@@ -68,6 +68,25 @@ namespace LearnWithMentor.Controllers
         }
 
         /// <summary>
+        /// Gets plan name and group name  by groupid and planid.
+        /// </summary>
+        /// <param name="groupid"> Id of the group. </param>
+        ///  <param name="planid"> Id of the plan. </param>
+        [HttpGet]
+        [Route("api/plan/{planid}/group/{groupid}")]
+        public HttpResponseMessage GetInfo(int groupid, int planid)
+        {
+            
+            var info = planService.GetInfo(groupid, planid);
+            if (info == null)
+            {
+                const string message = "Plan or Group does not exist in database.";
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, info);
+        }
+
+        /// <summary>
         /// Returns tasks for concrete plan grouped by sections.
         /// </summary>
         /// <param name="id"> Id of the plan. </param>

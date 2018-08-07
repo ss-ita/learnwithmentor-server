@@ -6,6 +6,7 @@ namespace LearnWithMentorDTO
 {
     public class UserTaskDTO
     {
+        public UserTaskDTO() { }
         public UserTaskDTO(int id,
                 int userId,
                 int planTaskId,
