@@ -14,5 +14,8 @@ namespace LearnWithMentorDAL.Repositories.Interfaces
         bool AddTaskToPlan(int planId, int taskId, int? sectionId, int? priority);
         IEnumerable<Plan> GetPlansNotUsedInGroup(int planId);
         string GetImageBase64(int planId);
+        IEnumerable<PlanSuggestion> GetPlanSuggestionByMentor(int userId);
+        IEnumerable<PlanSuggestion> GetPlanSuggestionByPlan(int planId);
+        IEnumerable<PlanSuggestion> GetPlanSuggestionByAuthor(int planId);
     }
 }

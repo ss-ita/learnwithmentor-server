@@ -51,6 +51,7 @@
     <Compile Include="Infrastructure\PagedList.cs" />
     <Compile Include="PagedListDTO.cs" />
     <Compile Include="PlanDTO.cs" />
+    <Compile Include="PlanSuggestionDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoleDTO.cs" />
     <Compile Include="SectionDTO.cs" />

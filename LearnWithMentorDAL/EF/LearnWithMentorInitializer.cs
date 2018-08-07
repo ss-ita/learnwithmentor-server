@@ -107,9 +107,10 @@ namespace LearnWithMentorDAL.EF
                 @"LearnWithMentorDAL\EF\images\");
 
             const int numOfMentors = 11;
-            const int numOfStudents = 20;
+            const int numOfStudents = 20;    
 
-            for (var i = 0; i < numOfMentors; i++)
+
+            for (var i = 0; i < numOfMentors ; i++)
             {
                 users[i].Role_Id = 1;
                 users[i].Image_Name = "mentorImage";
@@ -121,7 +122,7 @@ namespace LearnWithMentorDAL.EF
                 users[i].Image_Name = "studentImage";
                 users[i].Image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(pathToImagesFolder, @"student.png")));
             }
-            for (var i = numOfMentors + numOfStudents - 1; i < users.Count; i++)
+            for (var i = numOfMentors + numOfStudents; i < users.Count; i++)
             {
                 users[i].Role_Id = 3;
                 users[i].Image_Name = "adminImage";
@@ -597,6 +598,8 @@ namespace LearnWithMentorDAL.EF
                     planSuggestions.Add(new PlanSuggestion() { Mentor_Id = 3, Plan_Id = k, User_Id = j, Text = "Suggest you to make task more interesting" });
                 }
             }
+           
+
             context.PlanSuggestion.AddRange(planSuggestions);
             context.SaveChanges();
         }
