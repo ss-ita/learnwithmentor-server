@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Net.Mail;
 using LearnWithMentor.Filters;
 using LearnWithMentor.Models;
+using System.Configuration;
+using System.Security.Cryptography;
 
 namespace LearnWithMentor.Services
 {
@@ -13,10 +15,12 @@ namespace LearnWithMentor.Services
     {
         public static Task SendEmail(string destination, string subject, string body)
         {
-            var from = "learnwithmentor@gmail.com";
-            var pass = "learnwithmentor2018";
+            var from = ConfigurationManager.AppSettings["BaseEmail"];
+            var pass = ConfigurationManager.AppSettings["EmailPassword"]; 
+            var SmtpHost = ConfigurationManager.AppSettings["SmtpClient"];
+            var SmtpPort = int.Parse(ConfigurationManager.AppSettings["SmtpClientPort"]);
 
-            SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
+            SmtpClient client = new SmtpClient(SmtpHost, SmtpPort);
 
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
             client.UseDefaultCredentials = false;
