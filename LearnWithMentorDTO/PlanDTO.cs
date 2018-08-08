@@ -6,6 +6,7 @@ namespace LearnWithMentorDTO
 {
     public class PlanDTO
     {
+        public PlanDTO() { }
         public PlanDTO(int id,
             string name,
             string description,

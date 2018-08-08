@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-
 namespace LearnWithMentorDTO
 {
     public class GroupDTO
@@ -11,6 +10,8 @@ namespace LearnWithMentorDTO
         public string Name { get; set; }
         public int? MentorId { get; set; }
         public string MentorName { get; set; }
+
+        public GroupDTO() { }
 
         public GroupDTO(int id, string name, int? mentorId, string mentorName)
         {

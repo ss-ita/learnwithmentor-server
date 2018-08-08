@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Net.Mail;
 using LearnWithMentor.Filters;
 using LearnWithMentor.Models;
@@ -20,17 +16,19 @@ namespace LearnWithMentor.Services
             var SmtpHost = ConfigurationManager.AppSettings["SmtpClient"];
             var SmtpPort = int.Parse(ConfigurationManager.AppSettings["SmtpClientPort"]);
 
-            SmtpClient client = new SmtpClient(SmtpHost, SmtpPort);
-
-            client.DeliveryMethod = SmtpDeliveryMethod.Network;
-            client.UseDefaultCredentials = false;
-            client.Credentials = new System.Net.NetworkCredential(from, pass);
-            client.EnableSsl = true;
-
-            var mail = new MailMessage(from, destination);
-            mail.Subject = subject;
-            mail.Body = body;
-            mail.IsBodyHtml = true;
+            var client = new SmtpClient(SmtpHost, SmtpPort)
+            {
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new System.Net.NetworkCredential(@from, pass),
+                EnableSsl = true
+            };
+            var mail = new MailMessage(from, destination)
+            {
+                Subject = subject,
+                Body = body,
+                IsBodyHtml = true
+            };
             return client.SendMailAsync(mail);
         }
 

@@ -261,7 +261,7 @@ namespace LearnWithMentorBLL.Services
 
         public List<UserTaskDTO> GetTaskStatesForUser(int[] planTaskIds, int userId)
         {
-            List<UserTaskDTO> dtoList = new List<UserTaskDTO>();
+            var dtoList = new List<UserTaskDTO>();
             foreach (int planTaskId in planTaskIds)
             {
                 var userTask = db.UserTasks.GetByPlanTaskForUser(planTaskId, userId);
@@ -366,7 +366,7 @@ namespace LearnWithMentorBLL.Services
         }
         public PagedListDTO<TaskDTO> GetTasks(int pageSize, int pageNumber = 1)
         {
-            IQueryable<Task> query = db.Tasks.GetAll().AsQueryable();
+            var query = db.Tasks.GetAll().AsQueryable();
             query = query.OrderBy(x => x.Id);
             return PagedList<Task, TaskDTO>.GetDTO(query, pageNumber, pageSize, TaskToTaskDTO);
         }

@@ -68,6 +68,25 @@ namespace LearnWithMentor.Controllers
         }
 
         /// <summary>
+        /// Gets plan name and group name  by groupid and planid.
+        /// </summary>
+        /// <param name="groupid"> Id of the group. </param>
+        ///  <param name="planid"> Id of the plan. </param>
+        [HttpGet]
+        [Route("api/plan/{planid}/group/{groupid}")]
+        public HttpResponseMessage GetInfo(int groupid, int planid)
+        {
+            
+            var info = planService.GetInfo(groupid, planid);
+            if (info == null)
+            {
+                const string message = "Plan or Group does not exist in database.";
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, info);
+        }
+
+        /// <summary>
         /// Returns tasks for concrete plan grouped by sections.
         /// </summary>
         /// <param name="id"> Id of the plan. </param>
@@ -78,7 +97,7 @@ namespace LearnWithMentor.Controllers
             var sections = planService.GetTasksForPlan(id);
             if (sections == null)
             {
-                var message = "Plan does not exist in database.";
+                const string message = "Plan does not exist in database.";
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
             }
             return Request.CreateResponse<IEnumerable<SectionDTO>>(HttpStatusCode.OK, sections);
@@ -123,18 +142,18 @@ namespace LearnWithMentor.Controllers
         /// <summary>
         /// Gets all Plantask ids of concrete plan.
         /// </summary>
-        /// <param name="plan_id"> Id of plan. </param>
+        /// <param name="planId"> Id of plan. </param>
         [HttpGet]
-        [Route("api/plan/{plan_id}/plantaskids")]
-        public HttpResponseMessage GetAllPlanTaskIds(int plan_id)
+        [Route("api/plan/{planId}/plantaskids")]
+        public HttpResponseMessage GetAllPlanTaskIds(int planId)
         {
-            List<int> dtosList = planService.GetAllPlanTaskids(plan_id);
-            if (dtosList == null || dtosList.Count == 0)
+            var idsList = planService.GetAllPlanTaskids(planId);
+            if (idsList == null || idsList.Count == 0)
             {
-                var message = "Plan does not contain any plantask.";
+                const string message = "Plan does not contain any plantask.";
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
             }
-            return Request.CreateResponse<IEnumerable<int>>(HttpStatusCode.OK, dtosList);
+            return Request.CreateResponse<IEnumerable<int>>(HttpStatusCode.OK, idsList);
         }
 
         /// <summary>
@@ -242,7 +261,7 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpPut]
         [Route("api/plan/{id}/task/{taskId}")]
-        public HttpResponseMessage PutTaskToPlan(int id,  int taskId,string sectionId, string priority)
+        public HttpResponseMessage PutTaskToPlan(int id, int taskId,string sectionId, string priority)
         {
             try
             {
@@ -295,40 +314,34 @@ namespace LearnWithMentor.Controllers
                 const string errorMessage = "No plan with this id in database.";
                 return Request.CreateResponse(HttpStatusCode.NoContent, errorMessage);
             }
-
             if (HttpContext.Current.Request.Files.Count != 1)
             {
                 const string errorMessage = "Only one image can be sent.";
                 return Request.CreateResponse(HttpStatusCode.BadRequest, errorMessage);
             }
-
             try
             {
                 var postedFile = HttpContext.Current.Request.Files[0];
                 if (postedFile.ContentLength > 0)
                 {
                     var allowedFileExtensions = new List<string>(Constants.ImageRestrictions.Extensions);
-
                     var extension = postedFile.FileName.Substring(postedFile.FileName.LastIndexOf('.')).ToLower();
                     if (!allowedFileExtensions.Contains(extension))
                     {
                         const string errorMessage = "Types allowed only .jpeg .jpg .png";
                         return Request.CreateResponse(HttpStatusCode.BadRequest, errorMessage);
                     }
-
                     const int maxContentLength = Constants.ImageRestrictions.MaxSize;
                     if (postedFile.ContentLength > maxContentLength)
                     {
                         const string errorMessage = "Please Upload a file upto 1 mb.";
                         return Request.CreateResponse(HttpStatusCode.BadRequest, errorMessage);
                     }
-
                     byte[] imageData;
                     using (var binaryReader = new BinaryReader(postedFile.InputStream))
                     {
                         imageData = binaryReader.ReadBytes(postedFile.ContentLength);
                     }
-
                     planService.SetImage(id, imageData, postedFile.FileName);
                     const string okMessage = "Successfully created image.";
                     return Request.CreateResponse(HttpStatusCode.OK, okMessage);
@@ -368,7 +381,7 @@ namespace LearnWithMentor.Controllers
             }
             catch (EntityException e)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, e);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
         }
 

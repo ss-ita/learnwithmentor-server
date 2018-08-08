@@ -9,7 +9,6 @@ namespace LearnWithMentorBLL.Services
         public int GetUserId()
         {
             var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
-
             if (identity == null)
             {
                 return -1;
@@ -20,12 +19,7 @@ namespace LearnWithMentorBLL.Services
         public string GetUserRole()
         {
             var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
-
-            if (identity == null)
-            {
-                return "";
-            }
-            return identity.FindFirst(identity.RoleClaimType).Value;
+            return identity == null ? "" : identity.FindFirst(identity.RoleClaimType).Value;
         }
     }
 }

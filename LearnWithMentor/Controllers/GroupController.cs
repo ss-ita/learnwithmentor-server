@@ -133,10 +133,7 @@ namespace LearnWithMentor.Controllers
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, group);
                 }
-                else
-                {
-                    return Request.CreateErrorResponse(HttpStatusCode.NoContent, "There are no users with image in the group.");
-                }
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, "There are no users with image in the group.");
             }
             catch (EntityException e)
             {
@@ -172,12 +169,12 @@ namespace LearnWithMentor.Controllers
         public HttpResponseMessage GetPlansNotUsedInCurrentGroup(int groupId)
         {
             var notUsedPlans = groupService.GetPlansNotUsedInGroup(groupId);
-            if (notUsedPlans == null)
+            if (notUsedPlans != null)
             {
-                const string errorMessage = "No plans in database.";
-                return Request.CreateErrorResponse(HttpStatusCode.NoContent, errorMessage);
+                return Request.CreateResponse(HttpStatusCode.OK, notUsedPlans);
             }
-            return Request.CreateResponse(HttpStatusCode.OK, notUsedPlans);
+            const string errorMessage = "No plans in database.";
+            return Request.CreateErrorResponse(HttpStatusCode.NoContent, errorMessage);
         }
 
 
@@ -284,15 +281,6 @@ namespace LearnWithMentor.Controllers
                 tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
-        }
-
-        /// <summary>
-        /// Releases memory
-        /// </summary>
-        protected override void Dispose(bool disposing)
-        {
-            groupService.Dispose();
-            base.Dispose(disposing);
         }
 
         /// <summary>
@@ -420,6 +408,7 @@ namespace LearnWithMentor.Controllers
             }
 
         }
+
         /// <summary>
         /// If user: strudent - returns its learning groups, if mentor - returns mentored groups, if admin - returns all groups."
         /// </summary>
@@ -451,6 +440,15 @@ namespace LearnWithMentor.Controllers
                 tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
+        }
+
+        /// <summary>
+        /// Releases memory
+        /// </summary>
+        protected override void Dispose(bool disposing)
+        {
+            groupService.Dispose();
+            base.Dispose(disposing);
         }
     }
 }
