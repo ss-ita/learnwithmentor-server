@@ -1,0 +1,10 @@
+﻿CREATE TABLE Groups
+(
+    Id INT IDENTITY,
+    Name NVARCHAR(50) NOT NULL,
+    Mentor_Id INT,
+
+CONSTRAINT PK_Group_Id PRIMARY KEY (Id),
+CONSTRAINT UQ_Group_Name UNIQUE (Name),
+CONSTRAINT FK_Groups_To_Users FOREIGN KEY (Mentor_Id)  REFERENCES Users (Id)
+)
