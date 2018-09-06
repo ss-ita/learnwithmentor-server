@@ -60,7 +60,7 @@ namespace LearnWithMentorDAL.EF
             context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('Users', RESEED, 0)");
             var users = new List<User>
             {
-                new User() {FirstName = "Vyacheslav", LastName = "Koldovsky", Email = "koldovsky@gmail.com"},
+               new User() {FirstName = "Vyacheslav", LastName = "Koldovsky", Email = "koldovsky@gmail.com"},
                 new User() {FirstName = "Khrystyna ", LastName = "Romaniv", Email = "romaniv@gmail.com"},
                 new User() {FirstName = "Orysia", LastName = "Khoroshchak", Email = "khoroshchak@gmail.com"},
                 new User() {FirstName = "Lesya", LastName = "Klakovych", Email = "klakovych@gmail.com"},
@@ -71,15 +71,16 @@ namespace LearnWithMentorDAL.EF
                 new User() {FirstName = "Yaroslav", LastName = "Harasym", Email = "harasym@gmail.com"},
                 new User() {FirstName = "Mykhaylo", LastName = "Plesna", Email = "plesna@gmail.com"},
                 new User() {FirstName = "Maryana", LastName = "Lopatynska", Email = "lopatynska@gmail.com"},
+                //lv-343.net
+                new User() {FirstName = "Bohdan", LastName = "Bondarets", Email = "bondarets.bogdan@gmail.com"},
+                new User() {FirstName = "Yura", LastName = "Vasko", Email = "zhydetskyi@gmail.com"},
+                new User() {FirstName = "Yura", LastName = "Kozlovsky", Email = "yurikozlovskiJ@gmail.com"},
+                new User() {FirstName = "Nazar", LastName = "Polevyy", Email = "nazarp06@gmail.com"},
+                new User() {FirstName = "Valentyn", LastName = "Kravchenko", Email = "kravchenkov.me@gmail.com"},
+                new User() {FirstName = "Yura", LastName = "Stashko", Email = "yura.stashko98@gmail.com"},
+                new User() {FirstName = "Solomia", LastName = "Yusko", Email = "solayusko@gmail.com"},
+                new User() {FirstName = "Sofia", LastName = "Flys", Email = "flyssoffia@gmail.com"},
 
-                new User() {FirstName = "Roman", LastName = "Maksymyshyn", Email = "maksymyshyn.roman@gmail.com"},
-                new User() {FirstName = "Yurii-Stefan", LastName = "Zhydetskyi", Email = "zhydetskyi@gmail.com"},
-                new User() {FirstName = "Oleksandr", LastName = "Isakov", Email = "isakov@gmail.com"},
-                new User() {FirstName = "Roman", LastName = "Parobii", Email = "parobii@gmail.com"},
-                new User() {FirstName = "Andrii", LastName = "Lysyi", Email = "lysyi@gmail.com"},
-                new User() {FirstName = "Andrii", LastName = "Panchyshyn", Email = "panchyshyn@gmail.com"},
-                new User() {FirstName = "Yulia", LastName = "Pavlyk", Email = "pavlyk@gmail.com"},
-                new User() {FirstName = "Karim", LastName = "Benkhenni", Email = "benkhenni@gmail.com"},
                 new User() {FirstName = "Pedro", LastName = "Alvares", Email = "alvares@gmail.com"},
                 new User() {FirstName = "Dmytro", LastName = "Chalyi", Email = "chalyi@gmail.com"},
                 new User() {FirstName = "Adriana", LastName = "Prudyvus", Email = "prudyvus@gmail.com"},
@@ -127,6 +128,11 @@ namespace LearnWithMentorDAL.EF
                 users[i].Image_Name = "adminImage";
                 users[i].Image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(pathToImagesFolder, @"admin.png")));
             }
+            for (var i = 12; i < 19; i++)
+            {
+                users[i-1].Image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(pathToImagesFolder, @i+".jpg")));
+            }
+
             context.Users.AddRange(users);
             context.SaveChanges();
         }
@@ -249,7 +255,7 @@ namespace LearnWithMentorDAL.EF
             #region List of groups
             var groups = new List<Group>
             {
-                new Group() { Name = "Lv-319.Net" },
+                new Group() { Name = "Lv-343.Net" },
                 new Group() { Name = "Lv-320.Net" },
                 new Group() { Name = "Lv-321.Net" },
                 new Group() { Name = "Lv-322.Web" },
@@ -271,16 +277,17 @@ namespace LearnWithMentorDAL.EF
                 group.Mentor_Id = group.Id;
             }
             var netFullStackPlans = context.Plans.Where(p => p.Id >= 1 && p.Id <= 6);
-            var students319 = context.Users.Where(user => user.Id >= 12 && user.Id <= 18);
+            var students343 = context.Users.Where(user => user.Id >= 12 && user.Id <= 18);
+
             foreach (var netFullStackPlan in netFullStackPlans)
             {
                 groups[0].Plans.Add(netFullStackPlan);
                 groups[1].Plans.Add(netFullStackPlan);
                 groups[2].Plans.Add(netFullStackPlan);
             }
-            foreach (var student319 in students319)
+            foreach (var student343 in students343)
             {
-                groups[0].Users.Add(student319);
+                groups[0].Users.Add(student343);
             }
             var students320 = context.Users.Where(user => user.Id >= 19 && user.Id <= 24);
             foreach (var student320 in students320)
