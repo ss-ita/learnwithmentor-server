@@ -80,5 +80,6 @@
     <Build Include="dbo\Views\GROUPS-PLANS-TASKS.sql" />
     <Build Include="dbo\Views\USERS_ROLES.sql" />
     <Build Include="dbo\Stored Procedures\sp_Total_Ammount_of_Users.sql" />
+    <Build Include="dbo\Tables\Comments.sql" />
   </ItemGroup>
 </Project>
