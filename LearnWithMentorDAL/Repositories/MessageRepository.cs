@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
+using System.Threading.Tasks;
 using LearnWithMentorDAL.Entities;
 using LearnWithMentorDAL.Repositories.Interfaces;
 
@@ -10,20 +12,27 @@ namespace LearnWithMentorDAL.Repositories
         public MessageRepository(LearnWithMentor_DBEntities context) : base(context)
         {
         }
+
         public Message Get(int id)
         {
-            return Context.Messages.FirstOrDefault(m => m.Id == id);
+            Task<Message> findMessage = Context.Messages.FirstOrDefaultAsync(m => m.Id == id);
+            return findMessage.GetAwaiter().GetResult();
         }
 
-        public IEnumerable<Message> GetByUserTaskId(int utId)
+        public IEnumerable<Message> GetByUserTaskId(int userTaskId)
         {
-            return Context.UserTasks.FirstOrDefault(ut => ut.Id == utId)?.Messages;
+            Task<UserTask> findUserTask = Context.UserTasks.FirstOrDefaultAsync(userTask => userTask.Id == userTaskId);
+            return findUserTask.GetAwaiter().GetResult()?.Messages;
         }
-        public bool SendForUserTaskId(int utId,Message m)
+
+        public bool SendForUserTaskId(int userTaskId, Message message)
         {
-            var ut = Context.UserTasks.FirstOrDefault(t => t.Id == utId);
-            if(ut!=null)
+            Task<UserTask> findUserTask = Context.UserTasks.FirstOrDefaultAsync(task => task.Id == userTaskId);
+            if (findUserTask.GetAwaiter().GetResult() != null)
+            {
+                findUserTask.Result.Messages.Add(message);
                 return true;
+            }
             return false;
         }
     }

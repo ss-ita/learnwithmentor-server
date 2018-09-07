@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using System.Data.Entity;
+using System.Threading.Tasks;
 using LearnWithMentorDAL.Entities;
 using LearnWithMentorDAL.Repositories.Interfaces;
 
@@ -9,13 +11,17 @@ namespace LearnWithMentorDAL.Repositories
         public RoleRepository(LearnWithMentor_DBEntities context) : base(context)
         {
         }
+
         public Role Get(int id)
         {
-            return Context.Roles.FirstOrDefault(r => r.Id == id);
+            Task<Role> findRole = Context.Roles.FirstOrDefaultAsync(r => r.Id == id);
+            return findRole.GetAwaiter().GetResult();
         }
+
         public bool TryGetByName(string name, out Role role)
         {
-            role = Context.Roles.FirstOrDefault(r => r.Name == name);
+            Task<Role> findRole = Context.Roles.FirstOrDefaultAsync(r => r.Name == name);
+            role = findRole.GetAwaiter().GetResult();
             return role != null;
         }
     }

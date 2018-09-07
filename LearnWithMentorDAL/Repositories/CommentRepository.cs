@@ -1,6 +1,9 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
+using System.Data.Entity;
 using LearnWithMentorDAL.Entities;
 using LearnWithMentorDAL.Repositories.Interfaces;
+using System.Collections.Generic;
 
 namespace LearnWithMentorDAL.Repositories
 {
@@ -12,12 +15,14 @@ namespace LearnWithMentorDAL.Repositories
 
         public Comment Get(int id)
         {
-            return Context.Comments.FirstOrDefault(t => t.Id == id);
+            Task<Comment> findCommnet = Context.Comments.FirstOrDefaultAsync(t => t.Id == id);
+            return findCommnet.GetAwaiter().GetResult();
         }
 
         public bool ContainsId(int id)
         {
-            return Context.Comments.FirstOrDefault(t => t.Id == id)!=null;
+            Task<bool> checkIdExisting = Context.Comments.AnyAsync(t => t.Id == id);
+            return checkIdExisting.GetAwaiter().GetResult();
         }
 
         public IQueryable<Comment> GetByPlanTaskId(int ptId)
@@ -27,16 +32,17 @@ namespace LearnWithMentorDAL.Repositories
 
         public void RemoveById(int id)
         {
-            var item = Context.Comments.Where(c => c.Id == id);
-            if (item.Any())
+            IEnumerable<Comment> comments = Context.Comments.Where(c => c.Id == id);
+            if (comments.Any())
             {
-                Context.Comments.RemoveRange(item);
+                Context.Comments.RemoveRange(comments);
             }
         }
+
         public void RemoveByPlanTaskId(int planTaskid)
         {
-            var item = Context.Comments.FirstOrDefault(c => c.PlanTask_Id == planTaskid);
-            Remove(item);
+            Task<Comment> findComment = Context.Comments.FirstOrDefaultAsync(c => c.PlanTask_Id == planTaskid);
+            Remove(findComment.GetAwaiter().GetResult());
         }
 
     }
