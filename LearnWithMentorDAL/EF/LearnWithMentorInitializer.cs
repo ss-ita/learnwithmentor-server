@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -72,7 +72,7 @@ namespace LearnWithMentorDAL.EF
                 new User() {FirstName = "Yaroslav", LastName = "Harasym", Email = "harasym@gmail.com"},
                 new User() {FirstName = "Mykhaylo", LastName = "Plesna", Email = "plesna@gmail.com"},
                 new User() {FirstName = "Maryana", LastName = "Lopatynska", Email = "lopatynska@gmail.com"},
-               	//students of Lv-341.Net
+               	//students of Lv-343.Net
                 new User() {FirstName = "Bohdan", LastName = "Bondarets", Email = "bondarets.bogdan@gmail.com"},
                 new User() {FirstName = "Yura", LastName = "Vasko", Email = "zhydetskyi@gmail.com"},
                 new User() {FirstName = "Yura", LastName = "Kozlovsky", Email = "yurikozlovskiJ@gmail.com"},
@@ -143,7 +143,7 @@ namespace LearnWithMentorDAL.EF
             var pathToImagesFolder = Path.Combine((AppDomain.CurrentDomain.BaseDirectory).
                 Replace("LearnWithMentor", string.Empty),
                 @"LearnWithMentorDAL\EF\images\");
-
+            
             var plans = new List<Plan>
             {
                 new Plan()
