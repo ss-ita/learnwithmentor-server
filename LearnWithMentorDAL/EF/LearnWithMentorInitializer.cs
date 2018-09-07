@@ -60,7 +60,8 @@ namespace LearnWithMentorDAL.EF
             context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('Users', RESEED, 0)");
             var users = new List<User>
             {
-               new User() {FirstName = "Vyacheslav", LastName = "Koldovsky", Email = "koldovsky@gmail.com"},
+            	//mentors
+                new User() {FirstName = "Vyacheslav", LastName = "Koldovsky", Email = "koldovsky@gmail.com"},
                 new User() {FirstName = "Khrystyna ", LastName = "Romaniv", Email = "romaniv@gmail.com"},
                 new User() {FirstName = "Orysia", LastName = "Khoroshchak", Email = "khoroshchak@gmail.com"},
                 new User() {FirstName = "Lesya", LastName = "Klakovych", Email = "klakovych@gmail.com"},
@@ -71,7 +72,7 @@ namespace LearnWithMentorDAL.EF
                 new User() {FirstName = "Yaroslav", LastName = "Harasym", Email = "harasym@gmail.com"},
                 new User() {FirstName = "Mykhaylo", LastName = "Plesna", Email = "plesna@gmail.com"},
                 new User() {FirstName = "Maryana", LastName = "Lopatynska", Email = "lopatynska@gmail.com"},
-                //lv-343.net
+               	//students of Lv-341.Net
                 new User() {FirstName = "Bohdan", LastName = "Bondarets", Email = "bondarets.bogdan@gmail.com"},
                 new User() {FirstName = "Yura", LastName = "Vasko", Email = "zhydetskyi@gmail.com"},
                 new User() {FirstName = "Yura", LastName = "Kozlovsky", Email = "yurikozlovskiJ@gmail.com"},
@@ -80,7 +81,7 @@ namespace LearnWithMentorDAL.EF
                 new User() {FirstName = "Yura", LastName = "Stashko", Email = "yura.stashko98@gmail.com"},
                 new User() {FirstName = "Solomia", LastName = "Yusko", Email = "solayusko@gmail.com"},
                 new User() {FirstName = "Sofia", LastName = "Flys", Email = "flyssoffia@gmail.com"},
-
+                //Next users are administators
                 new User() {FirstName = "Pedro", LastName = "Alvares", Email = "alvares@gmail.com"},
                 new User() {FirstName = "Dmytro", LastName = "Chalyi", Email = "chalyi@gmail.com"},
                 new User() {FirstName = "Adriana", LastName = "Prudyvus", Email = "prudyvus@gmail.com"},
@@ -132,7 +133,6 @@ namespace LearnWithMentorDAL.EF
             {
                 users[i-1].Image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(pathToImagesFolder, @i+".jpg")));
             }
-
             context.Users.AddRange(users);
             context.SaveChanges();
         }
