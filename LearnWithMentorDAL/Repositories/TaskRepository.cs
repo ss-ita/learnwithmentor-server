@@ -59,7 +59,7 @@ namespace LearnWithMentorDAL.Repositories
         public IEnumerable<TaskEntity> Search(string[] str)
         {
             List<TaskEntity> result = new List<TaskEntity>();
-            foreach (string word in str)
+            foreach (var word in str)
             {
                 IEnumerable<TaskEntity> tasks = Context.Tasks.Where(task => task.Name.Contains(word));
                 foreach (var task in tasks)
