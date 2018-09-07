@@ -60,7 +60,7 @@ namespace LearnWithMentorDAL.EF
             context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('Users', RESEED, 0)");
             var users = new List<User>
             {
-            	//mentors
+                //mentors
                 new User() {FirstName = "Vyacheslav", LastName = "Koldovsky", Email = "koldovsky@gmail.com"},
                 new User() {FirstName = "Khrystyna ", LastName = "Romaniv", Email = "romaniv@gmail.com"},
                 new User() {FirstName = "Orysia", LastName = "Khoroshchak", Email = "khoroshchak@gmail.com"},
@@ -72,7 +72,7 @@ namespace LearnWithMentorDAL.EF
                 new User() {FirstName = "Yaroslav", LastName = "Harasym", Email = "harasym@gmail.com"},
                 new User() {FirstName = "Mykhaylo", LastName = "Plesna", Email = "plesna@gmail.com"},
                 new User() {FirstName = "Maryana", LastName = "Lopatynska", Email = "lopatynska@gmail.com"},
-               	//students of Lv-343.Net
+                //students of Lv-343.Net
                 new User() {FirstName = "Bohdan", LastName = "Bondarets", Email = "bondarets.bogdan@gmail.com"},
                 new User() {FirstName = "Yura", LastName = "Vasko", Email = "zhydetskyi@gmail.com"},
                 new User() {FirstName = "Yura", LastName = "Kozlovsky", Email = "yurikozlovskiJ@gmail.com"},
