@@ -3,8 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Data.Entity;
 using LearnWithMentorDAL.Entities;
-using TaskEntity = LearnWithMentorDAL.Entities.Task;
 using LearnWithMentorDAL.Repositories.Interfaces;
+using TaskEntity = LearnWithMentorDAL.Entities.Task;
 
 namespace LearnWithMentorDAL.Repositories
 {
@@ -39,13 +39,13 @@ namespace LearnWithMentorDAL.Repositories
             {
                 return null;
             }
-            var result = new List<TaskEntity>();
-            foreach (string word in str)
+            List<TaskEntity> result = new List<TaskEntity>();
+            foreach (var word in str)
             {
                 IEnumerable<TaskEntity> tasks = Context.PlanTasks.Where(plan => plan.Plan_Id == planId)
                                              .Select(planTask => planTask.Tasks)
                                              .Where(task => task.Name.Contains(word));
-                foreach (TaskEntity task in tasks)
+                foreach (var task in tasks)
                 {
                     if (!result.Contains(task))
                     {
@@ -58,11 +58,11 @@ namespace LearnWithMentorDAL.Repositories
 
         public IEnumerable<TaskEntity> Search(string[] str)
         {
-            var result = new List<TaskEntity>();
+            List<TaskEntity> result = new List<TaskEntity>();
             foreach (string word in str)
             {
                 IEnumerable<TaskEntity> tasks = Context.Tasks.Where(task => task.Name.Contains(word));
-                foreach (TaskEntity task in tasks)
+                foreach (var task in tasks)
                 {
                     if (!result.Contains(task))
                     {

@@ -33,10 +33,10 @@ namespace LearnWithMentorDAL.Repositories
 
         public IEnumerable<User> Search(string[] searchString, int? roleId)
         {
-            var result = new List<User>();
+            List<User> result = new List<User>();
             IQueryable<User> usersWithCriteria;
-            var firstWord = searchString.Length >= 1 ? searchString[0] : "";
-            var secondWord = searchString.Length == 2 ? searchString[1] : "";
+            string firstWord = searchString.Length >= 1 ? searchString[0] : "";
+            string secondWord = searchString.Length == 2 ? searchString[1] : "";
             if (roleId == null)
             {
                 usersWithCriteria = Context.Users;
