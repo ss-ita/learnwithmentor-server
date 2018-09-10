@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
+using System.Data.Entity;
 using LearnWithMentorDAL.Entities;
 using LearnWithMentorDAL.Repositories.Interfaces;
 
@@ -12,17 +14,20 @@ namespace LearnWithMentorDAL.Repositories
 
         public UserTask Get(int id)
         {
-            return Context.UserTasks.FirstOrDefault(t => t.Id == id);
+            Task<UserTask> findUserTask = Context.UserTasks.FirstOrDefaultAsync(task => task.Id == id);
+            return findUserTask.GetAwaiter().GetResult();
         }
 
         public int GetNumberOfTasksByState(int userId, string state)
         {
-            return Context.UserTasks.Where(ut => ut.User_Id == userId).Count(ut => ut.State == state);
+            Task<int> countTasksWithState = Context.UserTasks.Where(userTask => userTask.User_Id == userId).CountAsync(userTask => userTask.State == state);
+            return countTasksWithState.GetAwaiter().GetResult();
         }
 
         public UserTask GetByPlanTaskForUser(int planTaskId, int userId)
         {
-            return Context.UserTasks.FirstOrDefault(ut => ut.User_Id == userId && ut.PlanTask_Id == planTaskId);
+            Task<UserTask> findUserTask = Context.UserTasks.FirstOrDefaultAsync(userTask => userTask.User_Id == userId && userTask.PlanTask_Id == planTaskId);
+            return findUserTask.GetAwaiter().GetResult();
         }
     }
 }
