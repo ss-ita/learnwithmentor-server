@@ -20,7 +20,6 @@ namespace LearnWithMentor.Controllers
     /// <summary>
     /// Controller for system users.
     /// </summary>
-    [Authorize]
     public class UserController : ApiController
     {
         private readonly IUserService userService;
@@ -165,14 +164,19 @@ namespace LearnWithMentor.Controllers
         }
 
         /// <summary>
-        /// Returns specific user by id in token.
+        /// Returns specific user by id if exists or get id from token.
         /// </summary>
-        [JwtAuthentication]
+        /// <param name="id">id</param>
+        /// <returns></returns>
         [HttpGet]
-        [Route("api/user/profile")]
-        public HttpResponseMessage GetSingle()
+        [Route("api/user/profile/{id?}")]
+        public HttpResponseMessage GetSingle(int id = 0 )
         {
-            var id = userIdentityService.GetUserId();
+            if (id == 0)
+            {
+                id = userIdentityService.GetUserId();
+            }
+
             var user = userService.Get(id);
             if (user != null)
             {
