@@ -20,6 +20,7 @@ namespace LearnWithMentor.Controllers
     /// <summary>
     /// Controller for system users.
     /// </summary>
+    [Authorize]
     public class UserController : ApiController
     {
         private readonly IUserService userService;
@@ -168,6 +169,7 @@ namespace LearnWithMentor.Controllers
         /// </summary>
         /// <param name="id">id</param>
         /// <returns></returns>
+        [JwtAuthentication]
         [HttpGet]
         [Route("api/user/profile/{id?}")]
         public HttpResponseMessage GetSingle(int id = 0 )
