@@ -32,10 +32,10 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         {
             users = new List<UserDTO>()
             {
-                new UserDTO(1, "test1", "test1", "Student", false, true),
-                new UserDTO(2, "test2", "test2", "Student", false, true),
-                new UserDTO(3, "test3", "test3", "Mentor", false, true),
-                new UserDTO(4, "test4", "test4", "Admin", false, true)
+                new UserDTO(1, "test1", "test1","test1", "Student", false, true),
+                new UserDTO(2, "test2", "test2","test1", "Student", false, true),
+                new UserDTO(3, "test3", "test3","test1", "Mentor", false, true),
+                new UserDTO(4, "test4", "test4","test1", "Admin", false, true)
             };
             roles = new List<RoleDTO>()
             {
