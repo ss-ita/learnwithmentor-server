@@ -131,7 +131,7 @@ namespace LearnWithMentorDAL.EF
             }
             for (var i = 12; i < 19; i++)
             {
-                users[i-1].Image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(pathToImagesFolder, @i+".jpg")));
+                users[i - 1].Image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(pathToImagesFolder, @i + ".jpg")));
             }
             context.Users.AddRange(users);
             context.SaveChanges();
@@ -143,7 +143,7 @@ namespace LearnWithMentorDAL.EF
             var pathToImagesFolder = Path.Combine((AppDomain.CurrentDomain.BaseDirectory).
                 Replace("LearnWithMentor", string.Empty),
                 @"LearnWithMentorDAL\EF\images\");
-            
+
             var plans = new List<Plan>
             {
                 new Plan()
@@ -571,9 +571,9 @@ namespace LearnWithMentorDAL.EF
                 comments.Add(new Comment() { PlanTask_Id = i, Create_Id = rnd.Next(12, 18), Text = commentTemplates[rnd.Next(commentTemplates.Length - 1)] });
                 comments.Add(new Comment() { PlanTask_Id = i, Create_Id = rnd.Next(12, 18), Text = commentTemplates[rnd.Next(commentTemplates.Length - 1)] });
             }
-            for (int i = 0, j = 1; i < comments.Count; i++, j++)
+            for (int i = 0; i < comments.Count; i++)
             {
-                comments[i].Id = j;
+                comments[i].Id = i + 1;
             }
             context.Comments.AddRange(comments);
             context.SaveChanges();
