@@ -49,7 +49,7 @@ namespace LearnWithMentorDAL.UnitOfWork
 
         public ITaskRepository Tasks => tasks ?? (tasks = new TaskRepository(context));
 
-        public IUserRepository Users => users ?? (users = new UserRepository(context));
+        public virtual IUserRepository Users => users ?? (users = new UserRepository(context));
 
         public IUserRoleViewRepository UserRoleView => userRoleView ?? (userRoleView = new UserRoleViewRepository(context));
 
