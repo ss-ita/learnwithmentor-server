@@ -1,9 +1,9 @@
-USE master
-IF EXISTS(select * from sys.databases where name='LearnWithMentor_DB')
-DROP DATABASE LearnWithMentor_DB
+--USE master
+--IF EXISTS(select * from sys.databases where name='LearnWithMentor_DB')
+--DROP DATABASE LearnWithMentor_DB
 
-CREATE DATABASE LearnWithMentor_DB
-Go 
+--CREATE DATABASE LearnWithMentor_DB
+--Go 
 use LearnWithMentor_DB
 
 CREATE TABLE Roles
