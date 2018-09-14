@@ -1,6 +1,6 @@
-﻿namespace LearnWithMentorDTO
+﻿namespace LearnWithMentorDto
 {
-    public class StatisticsDTO
+    public class StatisticsDto
     {
         public int InProgressNumber { get; set; }
         public int DoneNumber { get; set; }

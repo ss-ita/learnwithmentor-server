@@ -2,7 +2,7 @@
 using System.Net;
 using System.Net.Http;
 using LearnWithMentor.Filters;
-using LearnWithMentorDTO;
+using LearnWithMentorDto;
 using LearnWithMentorBLL.Interfaces;
 using System.Web.Http.Tracing;
 using System.Data.Entity.Core;
@@ -80,7 +80,7 @@ namespace LearnWithMentor.Controllers
         /// <param name="comment">New comment.</param>
         [HttpPost]
         [Route("api/comment")]
-        public HttpResponseMessage Post(int planTaskId, CommentDTO comment)
+        public HttpResponseMessage Post(int planTaskId, CommentDto comment)
         {
             if (!ModelState.IsValid)
             {
@@ -109,7 +109,7 @@ namespace LearnWithMentor.Controllers
         /// <param name="comment">New comment.</param>
         [HttpPut]
         [Route("api/comment")]
-        public HttpResponseMessage PutComment(int commentId, [FromBody]CommentDTO comment)
+        public HttpResponseMessage PutComment(int commentId, [FromBody]CommentDto comment)
         {
             try
             {

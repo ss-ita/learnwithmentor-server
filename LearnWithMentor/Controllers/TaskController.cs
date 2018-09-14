@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Web.Http;
 using System.Net;
 using System.Net.Http;
-using LearnWithMentorDTO;
+using LearnWithMentorDto;
 using LearnWithMentorBLL.Interfaces;
 using System.Text.RegularExpressions;
 using LearnWithMentor.Filters;
 using System.Web.Http.Tracing;
 using System.Data.Entity.Core;
-using LearnWithMentorDTO.Infrastructure;
+using LearnWithMentorDto.Infrastructure;
 
 namespace LearnWithMentor.Controllers
 {
@@ -191,7 +191,7 @@ namespace LearnWithMentor.Controllers
         {
             try
             {
-                var allUserTasks = new List<ListUserTasksDTO>();
+                var allUserTasks = new List<ListUserTasksDto>();
                 foreach (var userid in userId)
                 {
                     var userTasks = taskService.GetTaskStatesForUser(planTaskId, userid);
@@ -200,7 +200,7 @@ namespace LearnWithMentor.Controllers
                         return Request.CreateErrorResponse(HttpStatusCode.NoContent,
                             $"Task for this user with id: {userid}  does not exist in database.");
                     }
-                    allUserTasks.Add(new ListUserTasksDTO() { UserTasks = userTasks });
+                    allUserTasks.Add(new ListUserTasksDto() { UserTasks = userTasks });
                 }
                 return Request.CreateResponse(HttpStatusCode.OK, allUserTasks);
             }
@@ -271,7 +271,7 @@ namespace LearnWithMentor.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("api/task/userTask/{userTaskId}/messages")]
-        public HttpResponseMessage PostUserTaskMessage(int userTaskId, [FromBody]MessageDTO newMessage)
+        public HttpResponseMessage PostUserTaskMessage(int userTaskId, [FromBody]MessageDto newMessage)
         {
             try
             {
@@ -305,7 +305,7 @@ namespace LearnWithMentor.Controllers
         /// <param name="newUserTask">New userTask object.</param>
         [HttpPost]
         [Route("api/task/usertask")]
-        public HttpResponseMessage PostNewUserTask([FromBody]UserTaskDTO newUserTask)
+        public HttpResponseMessage PostNewUserTask([FromBody]UserTaskDto newUserTask)
         {
             try
             {
@@ -456,7 +456,7 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpPost]
         [Route("api/task")]
-        public HttpResponseMessage Post([FromBody]TaskDTO newTask)
+        public HttpResponseMessage Post([FromBody]TaskDto newTask)
         {
             try
             {
@@ -489,7 +489,7 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpPost]
         [Route("api/task/return")]
-        public HttpResponseMessage PostAndReturnId([FromBody]TaskDTO value)
+        public HttpResponseMessage PostAndReturnId([FromBody]TaskDto value)
         {
             try
             {
@@ -523,7 +523,7 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpPut]
         [Route("api/task/{taskId}")]
-        public HttpResponseMessage Put(int taskId, [FromBody]TaskDTO task)
+        public HttpResponseMessage Put(int taskId, [FromBody]TaskDto task)
         {
             try
             {

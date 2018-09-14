@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using LearnWithMentorDTO.Infrastructure;
+using LearnWithMentorDto.Infrastructure;
 
-namespace LearnWithMentorDTO
+namespace LearnWithMentorDto
 {
-    public class UserDTO
+    public class UserDto
     {
-        public UserDTO(int id, string firstName, string lastName, string role, bool blocked, bool emailConfirmed)
+        public UserDto(int id, string firstName, string lastName, string role, bool blocked, bool emailConfirmed)
         {
             LastName = lastName;
             FirstName = firstName;

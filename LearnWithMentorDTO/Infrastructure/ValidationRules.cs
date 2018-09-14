@@ -1,4 +1,4 @@
-﻿namespace LearnWithMentorDTO.Infrastructure
+﻿namespace LearnWithMentorDto.Infrastructure
 {
     public static class ValidationRules
     {

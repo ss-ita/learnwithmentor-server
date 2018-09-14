@@ -1,16 +1,16 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using LearnWithMentorDTO;
+using LearnWithMentorDto;
 using Microsoft.IdentityModel.Tokens;
 
 namespace LearnWithMentor.Models
 {
-    public class JwtManager
+    public static class JwtManager
     {
         private const string Secret = "db3OIsj+BXE9NZDy0t8W3TcNekrF+2d/1sFnWG4HnV8TZY30iTOdtVWJG8abWvB1GlOgJuQZdcF2Luqm/hccMw==";
 
-        public static string GenerateToken(UserIdentityDTO user, int expireDays = 1, int expireHours = 0)
+        public static string GenerateToken(UserIdentityDto user, int expireDays = 1, int expireHours = 0)
         {
             var symmetricKey = Convert.FromBase64String(Secret);
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -40,9 +40,9 @@ namespace LearnWithMentor.Models
 
         public static bool LifetimeValidator(DateTime? notBefore, DateTime? expires, SecurityToken securityToken, TokenValidationParameters validationParameters)
         {
-            if (expires != null)
+            if((expires != null) && (DateTime.UtcNow < expires))
             {
-                if (DateTime.UtcNow < expires) return true;
+                return true;
             }
             return false;
         }
@@ -51,9 +51,7 @@ namespace LearnWithMentor.Models
             try
             {
                 var tokenHandler = new JwtSecurityTokenHandler();
-                var jwtToken = tokenHandler.ReadToken(token) as JwtSecurityToken;
-
-                if (jwtToken == null)
+                if(tokenHandler.ReadToken(token) is JwtSecurityToken jwtToken)
                     return null;
 
                 var symmetricKey = Convert.FromBase64String(Secret);

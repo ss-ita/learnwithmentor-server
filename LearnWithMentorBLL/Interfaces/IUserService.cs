@@ -1,27 +1,27 @@
 ﻿using System.Collections.Generic;
-using LearnWithMentorDTO;
+using LearnWithMentorDto;
 
 namespace LearnWithMentorBLL.Interfaces
 {
     public interface IUserService : IDisposableService
     {
-        UserDTO Get(int id);
-        UserIdentityDTO GetByEmail(string email);
-        List<UserDTO> GetAllUsers();
+        UserDto Get(int id);
+        UserIdentityDto GetByEmail(string email);
+        List<UserDto> GetAllUsers();
         bool BlockById(int id);
         bool ConfirmEmailById(int id);
-        bool UpdateById(int id, UserDTO user);
-        bool Add(UserRegistrationDTO dto);
-        List<UserDTO> Search(string[] str, int? roleId);
-        List<UserDTO> GetUsersByRole(int roleId);
-        List<UserDTO> GetUsersByState(bool state);
-        bool SetImage(int planId, byte[] image, string imageName);
-        ImageDTO GetImage(int id);
+        bool UpdateById(int id, UserDto user);
+        bool Add(UserRegistrationDto userLoginDTO);
+        List<UserDto> Search(string[] str, int? roleId);
+        List<UserDto> GetUsersByRole(int roleId);
+        List<UserDto> GetUsersByState(bool state);
+        bool SetImage(int id, byte[] image, string imageName);
+        ImageDto GetImage(int id);
         bool ContainsId(int id);
         bool UpdatePassword(int userId, string password);
-        PagedListDTO<UserDTO> GetUsers(int pageSize, int pageNumber = 1);
-        PagedListDTO<UserDTO> Search(string[] str, int pageSize, int pageNumber, int? roleId);
-        PagedListDTO<UserDTO> GetUsersByRole(int roleId, int pageSize, int pageNumber);
-        PagedListDTO<UserDTO> GetUsersByState(bool state, int pageSize, int pageNumber);
+        PagedListDto<UserDto> GetUsers(int pageSize, int pageNumber = 1);
+        PagedListDto<UserDto> Search(string[] str, int pageSize, int pageNumber, int? roleId);
+        PagedListDto<UserDto> GetUsersByRole(int roleId, int pageSize, int pageNumber);
+        PagedListDto<UserDto> GetUsersByState(bool state, int pageSize, int pageNumber);
     }
 }
