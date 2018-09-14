@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using LearnWithMentor.Filters;
-using LearnWithMentorDTO;
+using LearnWithMentorDto;
 using LearnWithMentorBLL.Interfaces;
 using System.Web.Http.Tracing;
 using System.Data.Entity.Core;
@@ -186,7 +186,7 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpPost]
         [Route("api/group")]
-        public HttpResponseMessage Post([FromBody]GroupDTO group)
+        public HttpResponseMessage Post([FromBody]GroupDto group)
         {
             try
             {

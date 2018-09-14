@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace LearnWithMentorDTO
+namespace LearnWithMentorDto
 {
     public static class PagedList<T, TDto>
     {
-        public static PagedListDTO<TDto> GetDTO(IQueryable<T> source, int pageNumber, int pageSize, Func<T, TDto> convertToDTO)
+        public static PagedListDto<TDto> GetDTO(IQueryable<T> source, int pageNumber, int pageSize, Func<T, TDto> convertToDTO)
         {
             var maxPageSize = Infrastructure.ValidationRules.MAX_PAGE_SIZE;
             pageSize = (pageSize > maxPageSize) ? maxPageSize : (pageSize < 1) ? 1 : pageSize;
@@ -21,7 +21,7 @@ namespace LearnWithMentorDTO
             {
                 listDTO.Add(convertToDTO(user));
             }
-            return new PagedListDTO<TDto>(pageNumber, totalPages, totalCount, pageSize, hasPrevious, hasNext, listDTO);
+            return new PagedListDto<TDto>(pageNumber, totalPages, totalCount, pageSize, hasPrevious, hasNext, listDTO);
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace LearnWithMentorDTO
+namespace LearnWithMentorDto
 {
-    public class EmailDTO
+    public class EmailDto
     {
         [Required]
         [EmailAddress]

@@ -35,21 +35,20 @@ namespace LearnWithMentorDAL.Repositories
         public IEnumerable<TaskEntity> Search(string[] str, int planId)
         {
             Task<bool> checkPlanExisting = Context.Plans.AnyAsync(plan => plan.Id == planId);
-            if (!checkPlanExisting.GetAwaiter().GetResult())
-            {
-                return null;
-            }
             List<TaskEntity> result = new List<TaskEntity>();
-            foreach (var word in str)
+            if (checkPlanExisting.GetAwaiter().GetResult())
             {
-                IEnumerable<TaskEntity> tasks = Context.PlanTasks.Where(plan => plan.Plan_Id == planId)
-                                             .Select(planTask => planTask.Tasks)
-                                             .Where(task => task.Name.Contains(word));
-                foreach (var task in tasks)
+                foreach (var word in str)
                 {
-                    if (!result.Contains(task))
+                    IEnumerable<TaskEntity> tasks = Context.PlanTasks.Where(plan => plan.Plan_Id == planId)
+                                                 .Select(planTask => planTask.Tasks)
+                                                 .Where(task => task.Name.Contains(word));
+                    foreach (var task in tasks)
                     {
-                        result.Add(task);
+                        if (!result.Contains(task))
+                        {
+                            result.Add(task);
+                        }
                     }
                 }
             }

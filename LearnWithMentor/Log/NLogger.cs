@@ -7,7 +7,7 @@ using System.Web.Http.Tracing;
 
 namespace LearnWithMentor.Log
 {
-    public sealed class LWMLogger : ITraceWriter
+    public sealed class LwmLogger : ITraceWriter
     {
         private static readonly Logger classLogger = LogManager.GetCurrentClassLogger();
 

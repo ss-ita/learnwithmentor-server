@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using LearnWithMentor.Filters;
-using LearnWithMentorDTO;
+using LearnWithMentorDto;
 using LearnWithMentorBLL.Interfaces;
 using System.Web.Http.Tracing;
 using System.Data.Entity.Core;
@@ -42,12 +42,12 @@ namespace LearnWithMentor.Controllers
         public HttpResponseMessage Get()
         {
             var dtoList = planService.GetAll();
-            if (dtoList == null || dtoList.Count == 0)
+            if (dtoList.Count == 0)
             {
                 const string errorMessage = "No plans in database.";
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, errorMessage);
             }
-            return Request.CreateResponse<IEnumerable<PlanDTO>>(HttpStatusCode.OK, dtoList);
+            return Request.CreateResponse<IEnumerable<PlanDto>>(HttpStatusCode.OK, dtoList);
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace LearnWithMentor.Controllers
                 const string message = "Plan does not exist in database.";
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
             }
-            return Request.CreateResponse<IEnumerable<SectionDTO>>(HttpStatusCode.OK, sections);
+            return Request.CreateResponse<IEnumerable<SectionDto>>(HttpStatusCode.OK, sections);
         }
 
         /// <summary>
@@ -114,12 +114,12 @@ namespace LearnWithMentor.Controllers
         public HttpResponseMessage GetSome(int prevAmount, int amount)
         {
             var dtoList = planService.GetSomeAmount(prevAmount, amount);
-            if (dtoList == null || dtoList.Count == 0)
+            if (dtoList.Count == 0)
             {
                 const string errorMessage = "No plans in database.";
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, errorMessage);
             }
-            return Request.CreateResponse<IEnumerable<PlanDTO>>(HttpStatusCode.OK, dtoList);
+            return Request.CreateResponse<IEnumerable<PlanDto>>(HttpStatusCode.OK, dtoList);
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace LearnWithMentor.Controllers
                 const string message = "Plan does not contain any task.";
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
             }
-            return Request.CreateResponse<IEnumerable<TaskDTO>>(HttpStatusCode.OK, dtosList);
+            return Request.CreateResponse<IEnumerable<TaskDto>>(HttpStatusCode.OK, dtosList);
         }
 
         /// <summary>
@@ -163,7 +163,7 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpPost]
         [Route("api/plan")]
-        public HttpResponseMessage Post([FromBody]PlanDTO value)
+        public HttpResponseMessage Post([FromBody]PlanDto value)
         {
             try
             {
@@ -193,7 +193,7 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpPost]
         [Route("api/plan/return")]
-        public HttpResponseMessage PostAndReturnId([FromBody]PlanDTO value)
+        public HttpResponseMessage PostAndReturnId([FromBody]PlanDto value)
         {
             try
             {
@@ -227,7 +227,7 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpPut]
         [Route("api/plan/{id}")]
-        public HttpResponseMessage Put(int id, [FromBody]PlanDTO value)
+        public HttpResponseMessage Put(int id, [FromBody]PlanDto value)
         {
             try
             {
@@ -399,12 +399,12 @@ namespace LearnWithMentor.Controllers
             }
             var lines = q.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             var dto = planService.Search(lines);
-            if (dto == null || dto.Count == 0)
+            if (dto.Count == 0)
             {
                 const string message = "No plans found.";
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
             }
-            return Request.CreateResponse<IEnumerable<PlanDTO>>(HttpStatusCode.OK, dto);
+            return Request.CreateResponse<IEnumerable<PlanDto>>(HttpStatusCode.OK, dto);
         }
 
         /// <summary>

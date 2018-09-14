@@ -1,12 +1,12 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using LearnWithMentorDTO.Infrastructure;
+using LearnWithMentorDto.Infrastructure;
 
-namespace LearnWithMentorDTO
+namespace LearnWithMentorDto
 {
-    public class CommentDTO
+    public class CommentDto
     {
-        public CommentDTO(int id, string text, int creatorId, string creatorFullName, DateTime? createDate, DateTime? modDate)
+        public CommentDto(int id, string text, int creatorId, string creatorFullName, DateTime? createDate, DateTime? modDate)
         {
             Id = id;
             Text = text;

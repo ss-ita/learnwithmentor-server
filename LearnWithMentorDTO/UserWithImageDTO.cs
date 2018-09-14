@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using LearnWithMentorDTO.Infrastructure;
+using LearnWithMentorDto.Infrastructure;
 
-namespace LearnWithMentorDTO
+namespace LearnWithMentorDto
 {
-    public class UserWithImageDTO
+    public class UserWithImageDto
     {
-        public UserWithImageDTO(string email, int id, string firstName, string lastName, string role, bool blocked, ImageDTO image)
+        public UserWithImageDto(string email, int id, string firstName, string lastName, string role, bool blocked, ImageDto image)
         {
             Email = email;
             LastName = lastName;
@@ -35,6 +35,6 @@ namespace LearnWithMentorDTO
         public int Id { set; get; }
         public string Role { set; get; }
         public bool? Blocked { set; get; }
-        public ImageDTO Image { set; get; }
+        public ImageDto Image { set; get; }
     }
 }

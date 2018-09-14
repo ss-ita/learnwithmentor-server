@@ -1,12 +1,12 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using LearnWithMentorDTO.Infrastructure;
+using LearnWithMentorDto.Infrastructure;
 
-namespace LearnWithMentorDTO
+namespace LearnWithMentorDto
 {
-    public class MessageDTO
+    public class MessageDto
     {
-        public MessageDTO(int id,
+        public MessageDto(int id,
                         int senderId,
                         int userTaskId,
                         string senderName,

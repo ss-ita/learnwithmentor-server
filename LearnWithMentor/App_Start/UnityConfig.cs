@@ -18,7 +18,7 @@ namespace LearnWithMentor
 			var container = new UnityContainer();
 
             container.RegisterType<ICommentService, CommentService>();
-            container.RegisterType<ITraceWriter, LWMLogger>();
+            container.RegisterType<ITraceWriter, LwmLogger>();
             container.RegisterType<IPlanService, PlanService>();
             container.RegisterType<IGroupService, GroupService>();
             container.RegisterType<ITaskService, TaskService>();

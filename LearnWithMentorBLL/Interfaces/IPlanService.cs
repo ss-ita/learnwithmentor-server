@@ -1,24 +1,24 @@
 ﻿using System.Collections.Generic;
-using LearnWithMentorDTO;
+using LearnWithMentorDto;
 
 namespace LearnWithMentorBLL.Interfaces
 {
     public interface IPlanService : IDisposableService
     {
-        PlanDTO Get(int id);
-        List<PlanDTO> GetAll();
-        List<PlanDTO> GetSomeAmount(int prevAmount, int amount);
-        List<TaskDTO> GetAllTasks(int planId);
+        PlanDto Get(int id);
+        List<PlanDto> GetAll();
+        List<PlanDto> GetSomeAmount(int prevAmount, int amount);
+        List<TaskDto> GetAllTasks(int planId);
         string GetInfo(int groupid, int planid);
         List<int> GetAllPlanTaskids(int planId);
-        List<SectionDTO> GetTasksForPlan(int planId);
-        bool UpdateById(PlanDTO plan, int id);
-        bool Add(PlanDTO dto);
-        int? AddAndGetId(PlanDTO dto);
-        List<PlanDTO> Search(string[] str);
+        List<SectionDto> GetTasksForPlan(int planId);
+        bool UpdateById(PlanDto plan, int id);
+        bool Add(PlanDto dto);
+        int? AddAndGetId(PlanDto dto);
+        List<PlanDto> Search(string[] searchString);
         bool ContainsId(int id);
         bool SetImage(int planId, byte[] image, string imageName);
         bool AddTaskToPlan(int planId, int taskId, int? sectionId, int? priority);
-        ImageDTO GetImage(int id);
+        ImageDto GetImage(int id);
     }
 }

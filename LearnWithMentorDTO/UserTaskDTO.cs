@@ -1,13 +1,13 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using LearnWithMentorDTO.Infrastructure;
+using LearnWithMentorDto.Infrastructure;
 
-namespace LearnWithMentorDTO
+namespace LearnWithMentorDto
 {
-    public class UserTaskDTO
+    public class UserTaskDto
     {
-        public UserTaskDTO() { }
-        public UserTaskDTO(int id,
+        public UserTaskDto() { }
+        public UserTaskDto(int id,
                 int userId,
                 int planTaskId,
                 DateTime? endDate,

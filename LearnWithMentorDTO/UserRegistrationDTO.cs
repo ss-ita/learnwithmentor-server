@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using LearnWithMentorDTO.Infrastructure;
+using LearnWithMentorDto.Infrastructure;
 
-namespace LearnWithMentorDTO
+namespace LearnWithMentorDto
 {
-    public class UserRegistrationDTO
+    public class UserRegistrationDto
     {
-        public UserRegistrationDTO(string email, string lastName, string firstName, string password)
+        public UserRegistrationDto(string email, string lastName, string firstName, string password)
         {
             Email = email;
             LastName = lastName;
