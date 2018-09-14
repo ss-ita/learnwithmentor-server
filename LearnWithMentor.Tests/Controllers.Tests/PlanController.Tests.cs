@@ -103,8 +103,8 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public void GetTasksForPlanTest_ShouldReturnNoContentMessage()
         {
-            planServiceMock.Setup(mts => mts.GetTasksForPlan(It.IsAny<int>()))
-                .Returns(()=>null);
+           // planServiceMock.Setup(mts => mts.GetTasksForPlan(It..IsAny<int>()));
+                
 
             var response = planController.GetTasksForPlan(1);            
 
@@ -155,7 +155,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public void GetSomeTest_ShouldReturnNoContentMessage()
         {
             planServiceMock.Setup(mts => mts.GetSomeAmount(It.IsAny<int>(), It.IsAny<int>()))
-                .Returns( ()=> null);
+               .Returns( ()=> new List<PlanDto>());
 
             var response = planController.GetSome(1,1);
 
@@ -171,29 +171,6 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             var response = planController.GetSome(1, 1);
 
             Assert.AreEqual( HttpStatusCode.OK,response.StatusCode);
-        }
-
-
-        [Test]
-        public void GetAllTasksAssignedToPlanTest_ShouldReturnNoContentMessage()
-        {
-            planServiceMock.Setup(mts => mts.GetAllTasks(It.IsAny<int>()))
-                .Returns(()=>null);
-
-            var response = planController.GetAllTasks(1);
-
-            Assert.AreEqual(HttpStatusCode.NoContent, response.StatusCode);
-        }
-
-        
-        [Test]
-        public void GetAllPlansTest_ShouldReturnNoContentResponse()
-        {
-            planServiceMock.Setup(ps => ps.GetAll());
-
-            var response = planController.Get();
-
-            Assert.AreEqual(response.StatusCode, HttpStatusCode.NoContent);
         }
 
         [Test]
@@ -393,7 +370,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public void SearchTest_ShouldReturnNoContentResponse()
         {
             planServiceMock.Setup(mts => mts.Search(It.IsAny<string[]>())).Returns(
-                (string[] lines) => null);
+                (string[] lines) => new List<PlanDto>());
 
             var searchKey = "1";
             var response = planController.Search(searchKey);
