@@ -248,6 +248,7 @@ namespace LearnWithMentorBLL.Services
             return new UserDTO(user.Id,
                                user.FirstName,
                                user.LastName,
+                               user.Email,
                                user.Roles.Name,
                                user.Blocked,
                                user.Email_Confirmed);
