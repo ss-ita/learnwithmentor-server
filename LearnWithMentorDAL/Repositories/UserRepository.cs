@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Data.Entity;
 using LearnWithMentorDAL.Entities;
 using LearnWithMentorDAL.Repositories.Interfaces;
 
@@ -13,40 +15,44 @@ namespace LearnWithMentorDAL.Repositories
 
         public User Get(int id)
         {
-            return Context.Users.FirstOrDefault(u => u.Id == id);
+            Task<User> findUser = Context.Users.FirstOrDefaultAsync(user => user.Id == id);
+            return findUser.GetAwaiter().GetResult();
         }
 
         public User GetByEmail(string email)
         {
-            return Context.Users.FirstOrDefault(u => u.Email == email);
+            Task<User> findUser = Context.Users.FirstOrDefaultAsync(user => user.Email == email);
+            return findUser.GetAwaiter().GetResult();
         }
 
         public IEnumerable<User> GetUsersByGroup(int groupId)
         {
-            return Context.Groups.FirstOrDefault(g => g.Id == groupId)?.Users;
+            Task<Group> findGroup = Context.Groups.FirstOrDefaultAsync(group => group.Id == groupId);
+            return findGroup.GetAwaiter().GetResult()?.Users;
         }
 
         public IEnumerable<User> Search(string[] searchString, int? roleId)
         {
-            var result = new List<User>();
+            List<User> result = new List<User>();
             IQueryable<User> usersWithCriteria;
-            var firstWord = searchString.Length >= 1 ? searchString[0] : "";
-            var secondWord = searchString.Length == 2 ? searchString[1] : "";
+            string firstWord = searchString.Length >= 1 ? searchString[0] : "";
+            string secondWord = searchString.Length == 2 ? searchString[1] : "";
             if (roleId == null)
             {
                 usersWithCriteria = Context.Users;
             }
             else if (roleId == -1)
             {
-                usersWithCriteria = Context.Users.Where(u => u.Blocked);
+                usersWithCriteria = Context.Users.Where(user => user.Blocked);
             }
             else
             {
-                usersWithCriteria = Context.Users.Where(u => u.Role_Id == roleId);
+                usersWithCriteria = Context.Users.Where(user => user.Role_Id == roleId);
             }
-            usersWithCriteria = usersWithCriteria.Where(u =>
-                (u.FirstName.Contains(firstWord) && u.LastName.Contains(secondWord))
-                || (u.FirstName.Contains(secondWord) && u.LastName.Contains(firstWord)));
+            usersWithCriteria = usersWithCriteria.Where(user =>
+                (user.FirstName.Contains(firstWord) && user.LastName.Contains(secondWord))
+                || (user.FirstName.Contains(secondWord) && user.LastName.Contains(firstWord)));
+
             foreach (var user in usersWithCriteria)
             {
                 if (!result.Contains(user))
@@ -59,39 +65,47 @@ namespace LearnWithMentorDAL.Repositories
 
         public string GetImageBase64(int userId)
         {
-            return Context.Users.FirstOrDefault(u => u.Id == userId)?.Image;
+            Task<User> findUser = Context.Users.FirstOrDefaultAsync(user => user.Id == userId);
+            return findUser.GetAwaiter().GetResult()?.Image;
         }
 
         public bool ContainsId(int id)
         {
-            return Context.Users.Any(u => u.Id == id);
+            Task<bool> checkIdExistion = Context.Users.AnyAsync(user => user.Id == id);
+            return checkIdExistion.GetAwaiter().GetResult();
         }
-        
+
         public IEnumerable<User> GetUsersByRole(int roleId)
         {
-            return Context.Users.Where(u => u.Role_Id == roleId);
+            return Context.Users.Where(user => user.Role_Id == roleId);
         }
 
         public IEnumerable<User> GetUsersByState(bool state)
         {
-            return Context.Users.Where(u => u.Blocked == state);
+            return Context.Users.Where(user => user.Blocked == state);
         }
 
         public string ExtractFullName(int? id)
         {
             if (id == null)
+            {
                 return null;
-            var currentUser = Context.Users.FirstOrDefault(u => u.Id == id.Value);
+            }
+
+            Task<User> findUser = Context.Users.FirstOrDefaultAsync(user => user.Id == id.Value);
             string fullName = null;
-            if (currentUser != null)
-                fullName = string.Concat(currentUser.FirstName, " ", currentUser.LastName);
+            if (findUser.GetAwaiter().GetResult() != null)
+            {
+                fullName = string.Concat(findUser.Result.FirstName, " ", findUser.Result.LastName);
+            }
+
             return fullName;
         }
 
         public IEnumerable<User> GetUsersNotInGroup(int groupId)
         {
-            return Context.Users.Where(u => !u.Groups.Select(g => g.Id).Contains(groupId))
-                .Where(u => !u.Blocked && u.Roles.Name == "Student");
+            return Context.Users.Where(user => !user.Groups.Select(group => group.Id).Contains(groupId))
+                .Where(user => !user.Blocked && user.Roles.Name == "Student");
         }
     }
 }

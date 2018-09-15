@@ -1,5 +1,7 @@
 ﻿using System.Linq;
 using LearnWithMentorDAL.Entities;
+using System.Threading.Tasks;
+using System.Data.Entity;
 using System.Collections.Generic;
 using LearnWithMentorDAL.Repositories.Interfaces;
 
@@ -10,29 +12,36 @@ namespace LearnWithMentorDAL.Repositories
         public GroupRepository(LearnWithMentor_DBEntities context) : base(context)
         {
         }
+
         public Group Get(int id)
         {
-            return Context.Groups.FirstOrDefault(group => group.Id == id);
+            Task<Group> findGroup = Context.Groups.FirstOrDefaultAsync(group => group.Id == id);
+            return findGroup.GetAwaiter().GetResult();
         }
 
         public bool GroupNameExists(string groupName)
         {
-            return Context.Groups.Any(g => g.Name.Equals(groupName));
+            Task<bool> checkNameExisting = Context.Groups.AnyAsync(g => g.Name.Equals(groupName));
+            return checkNameExisting.GetAwaiter().GetResult();
         }
 
         public int Count()
         {
-            return Context.Groups.Count();
+            Task<int> countGroups = Context.Groups.CountAsync();
+            return countGroups.GetAwaiter().GetResult();
         }
 
         public IEnumerable<Group> GetGroupsByMentor(int mentorId)
         {
             return Context.Groups.Where(group => group.Mentor_Id == mentorId);
         }
+
         public IEnumerable<Group> GetStudentGroups(int studentId)
         {
-            return Context.Users.FirstOrDefault(u => u.Id == studentId)?.Groups;
+            Task<User> findStudent = Context.Users.FirstOrDefaultAsync(u => u.Id == studentId);
+            return findStudent.GetAwaiter().GetResult()?.Groups;
         }
+
         public IEnumerable<Group> GetGroupsByPlan(int planId)
         {
             return Context.Groups.Where(g => g.Plans.Any(p => p.Id == planId));
@@ -40,29 +49,32 @@ namespace LearnWithMentorDAL.Repositories
 
         public bool AddPlanToGroup(int planId, int groupId)
         {
-            var planAdd = Context.Plans.FirstOrDefault(plan => plan.Id == planId);
-            Context.Groups.FirstOrDefault(group => group.Id == groupId)?.Plans.Add(planAdd);
+            Task<Plan> findPlan = Context.Plans.FirstOrDefaultAsync(plan => plan.Id == planId);
+            Task<Group> findGroup = Context.Groups.FirstOrDefaultAsync(group => group.Id == groupId);
+            findGroup.GetAwaiter().GetResult()?.Plans.Add(findPlan.GetAwaiter().GetResult());
             return true;
         }
+
         public bool AddUserToGroup(int userId, int groupId)
         {
-            var userAdd = Context.Users.FirstOrDefault(user => user.Id == userId);   
-            Context.Groups.FirstOrDefault(group => group.Id == groupId)?.Users.Add(userAdd);
+            Task<User> findUser = Context.Users.FirstOrDefaultAsync(user => user.Id == userId);
+            Task<Group> findGroup = Context.Groups.FirstOrDefaultAsync(group => group.Id == groupId);
+            findGroup.GetAwaiter().GetResult()?.Users.Add(findUser.GetAwaiter().GetResult());
             return true;
         }
 
         public void RemoveUserFromGroup(int groupId, int userId)
         {
-            var group = Get(groupId);
-            var userToRemove = Context.Users.FirstOrDefault(user => user.Id == userId);
-            group.Users.Remove(userToRemove);
+            Group group = Get(groupId); 
+            Task<User> findUser = Context.Users.FirstOrDefaultAsync(user => user.Id == userId);
+            group.Users.Remove(findUser.GetAwaiter().GetResult());
         }
 
         public void RemovePlanFromGroup(int groupId, int planId)
         {
-            var group = Get(groupId);
-            var planToRemove = Context.Plans.FirstOrDefault(plan => plan.Id == planId);
-            group.Plans.Remove(planToRemove);
+            Group group = Get(groupId);
+            Task <Plan> findPlan = Context.Plans.FirstOrDefaultAsync(plan => plan.Id == planId);
+            group.Plans.Remove(findPlan.GetAwaiter().GetResult());
         }
     }
 }

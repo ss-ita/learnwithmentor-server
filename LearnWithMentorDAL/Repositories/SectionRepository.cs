@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using System.Data.Entity;
+using System.Threading.Tasks;
 using LearnWithMentorDAL.Entities;
 using LearnWithMentorDAL.Repositories.Interfaces;
 
@@ -10,7 +12,8 @@ namespace LearnWithMentorDAL.Repositories
 
         public Section Get(int id)
         {
-            return Context.Sections.FirstOrDefault(t => t.Id == id);
+            Task<Section> findSection = Context.Sections.FirstOrDefaultAsync(t => t.Id == id);
+            return findSection.GetAwaiter().GetResult();
         }
     }
 }

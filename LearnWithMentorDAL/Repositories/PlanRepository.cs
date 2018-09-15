@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
+using System.Threading.Tasks;
 using LearnWithMentorDAL.Entities;
 using LearnWithMentorDAL.Repositories.Interfaces;
 
@@ -9,21 +11,25 @@ namespace LearnWithMentorDAL.Repositories
     {
         public PlanRepository(LearnWithMentor_DBEntities context) : base(context)
         {
-            
+
         }
 
         public Plan Get(int id)
         {
-            return Context.Plans.FirstOrDefault(p => p.Id == id);
+            Task<Plan> findPlan = Context.Plans.FirstOrDefaultAsync(p => p.Id == id);
+            return findPlan.GetAwaiter().GetResult();
         }
+
         public Plan AddAndReturnElement(Plan plan)
         {
             Context.Plans.Add(plan);
             return plan;
         }
+
         public IEnumerable<Plan> GetPlansForGroup(int groupId)
         {
-            return Context.Groups.FirstOrDefault(g => g.Id == groupId)?.Plans;
+            Task<Group> findGroup = Context.Groups.FirstOrDefaultAsync(g => g.Id == groupId);
+            return findGroup.GetAwaiter().GetResult()?.Plans;
         }
 
         public IEnumerable<Plan> Search(string[] searchString)
@@ -45,12 +51,14 @@ namespace LearnWithMentorDAL.Repositories
 
         public bool ContainsId(int id)
         {
-            return Context.Plans.Any(p => p.Id == id);
+            Task<bool> checkIdExisting = Context.Plans.AnyAsync(p => p.Id == id);
+            return checkIdExisting.GetAwaiter().GetResult();
         }
 
         public string GetImageBase64(int planId)
         {
-            return Context.Plans.FirstOrDefault(p => p.Id == planId)?.Image;
+            Task<Plan> findPlan = Context.Plans.FirstOrDefaultAsync(p => p.Id == planId);
+            return findPlan.GetAwaiter().GetResult()?.Image;
         }
 
         public bool AddTaskToPlan(int planId, int taskId, int? sectionId, int? priority)
@@ -63,6 +71,7 @@ namespace LearnWithMentorDAL.Repositories
             {
                 return false;
             }
+
             PlanTask toInsert = new PlanTask()
             {
                 Plan_Id = planId,
@@ -74,6 +83,7 @@ namespace LearnWithMentorDAL.Repositories
             Context.PlanTasks.Add(toInsert);
             return true;
         }
+
         public IEnumerable<Plan> GetSomePlans(int previousNumberOfPlans, int numberOfPlans)
         {
             return Context.Plans.OrderBy(p => p.Id).Skip(previousNumberOfPlans).Take(numberOfPlans);
@@ -81,8 +91,9 @@ namespace LearnWithMentorDAL.Repositories
 
         public IEnumerable<Plan> GetPlansNotUsedInGroup(int groupId)
         {
-            var usedPlans = Context.Groups.FirstOrDefault(g => g.Id == groupId)?.Plans.Select(p => p.Id);
-            return Context.Plans.Where(p => !usedPlans.Contains(p.Id));
+            Task<Group> findGroup = Context.Groups.FirstOrDefaultAsync(g => g.Id == groupId);
+            IEnumerable <int> usedPlansId = findGroup.GetAwaiter().GetResult()?.Plans.Select(p => p.Id);
+            return Context.Plans.Where(p => !usedPlansId.Contains(p.Id));
         }
     }
 }
