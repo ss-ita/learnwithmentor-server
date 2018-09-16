@@ -9,7 +9,7 @@ namespace LearnWithMentorDAL.Repositories
 {
     public class MessageRepository : BaseRepository<Message>, IMessageRepository
     {
-        public MessageRepository(LearnWithMentor_DBEntities context) : base(context)
+        public MessageRepository(LearnWithMentorContext context) : base(context)
         {
         }
 

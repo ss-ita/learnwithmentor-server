@@ -159,7 +159,7 @@ namespace LearnWithMentorBLL.Services
                                      user.Id,
                                      user.FirstName,
                                      user.LastName,
-                                     user.Roles.Name,
+                                     user.Role.Name,
                                      user.Blocked,
                                      user.Email_Confirmed
                                     ));
@@ -187,7 +187,7 @@ namespace LearnWithMentorBLL.Services
                     user.Id,
                     user.FirstName,
                     user.LastName,
-                    user.Roles.Name,
+                    user.Role.Name,
                     user.Blocked,
                     new ImageDTO()
                     {
@@ -226,11 +226,11 @@ namespace LearnWithMentorBLL.Services
                 return null;
             }
             IEnumerable<Group> groups;
-            if (user.Roles.Name == "Mentor")
+            if (user.Role.Name == "Mentor")
             { 
                 groups = db.Groups.GetGroupsByMentor(userId);
             }
-            else if (user.Roles.Name == "Student")
+            else if (user.Role.Name == "Student")
             {
                 groups = db.Groups.GetStudentGroups(userId);
             }
@@ -325,7 +325,7 @@ namespace LearnWithMentorBLL.Services
                     user.Id,
                     user.FirstName,
                     user.LastName,
-                    user.Roles.Name,
+                    user.Role.Name,
                     user.Blocked,
                     user.Email_Confirmed);
                 if (!usersNotInGroupList.Contains(rdDto))

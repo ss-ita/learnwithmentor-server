@@ -9,7 +9,7 @@ namespace LearnWithMentorDAL.Repositories
 {
     public class CommentRepository: BaseRepository<Comment>, ICommentRepository
     {
-        public CommentRepository(LearnWithMentor_DBEntities context) : base(context)
+        public CommentRepository(LearnWithMentorContext context) : base(context)
         {
         }
 

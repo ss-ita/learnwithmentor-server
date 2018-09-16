@@ -9,7 +9,7 @@ namespace LearnWithMentorDAL.Repositories
 {
     public class PlanRepository : BaseRepository<Plan>, IPlanRepository
     {
-        public PlanRepository(LearnWithMentor_DBEntities context) : base(context)
+        public PlanRepository(LearnWithMentorContext context) : base(context)
         {
 
         }

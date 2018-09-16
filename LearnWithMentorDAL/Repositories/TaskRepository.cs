@@ -10,7 +10,7 @@ namespace LearnWithMentorDAL.Repositories
 {
     public class TaskRepository: BaseRepository<TaskEntity>, ITaskRepository
     {
-        public TaskRepository(LearnWithMentor_DBEntities context) : base(context)
+        public TaskRepository(LearnWithMentorContext context) : base(context)
         {
         }
 

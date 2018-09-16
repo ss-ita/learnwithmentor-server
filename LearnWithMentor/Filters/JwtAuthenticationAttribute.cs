@@ -16,7 +16,7 @@ namespace LearnWithMentor.Filters
     {
         public string Realm { get; set; }
         public bool AllowMultiple => false;
-        private readonly IUserService userService = new UserService(new UnitOfWork(new LearnWithMentorDAL.Entities.LearnWithMentor_DBEntities()));
+        private readonly IUserService userService = new UserService(new UnitOfWork(new LearnWithMentorDAL.Entities.LearnWithMentorContext()));
 
         public async Task AuthenticateAsync(HttpAuthenticationContext context, CancellationToken cancellationToken)
         {
