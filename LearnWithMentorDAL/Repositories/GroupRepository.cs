@@ -7,7 +7,7 @@ namespace LearnWithMentorDAL.Repositories
 {
     public class GroupRepository : BaseRepository<Group>, IGroupRepository
     {
-        public GroupRepository(LearnWithMentor_DBEntities context) : base(context)
+        public GroupRepository(LearnWithMentorContext context) : base(context)
         {
         }
         public Group Get(int id)

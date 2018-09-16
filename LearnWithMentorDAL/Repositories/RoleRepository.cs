@@ -6,7 +6,7 @@ namespace LearnWithMentorDAL.Repositories
 {
     public class RoleRepository : BaseRepository<Role>, IRoleRepository
     {
-        public RoleRepository(LearnWithMentor_DBEntities context) : base(context)
+        public RoleRepository(LearnWithMentorContext context) : base(context)
         {
         }
         public Role Get(int id)

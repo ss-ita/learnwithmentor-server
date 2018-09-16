@@ -7,7 +7,7 @@ namespace LearnWithMentorDAL.Repositories
 {
     public class UserRepository : BaseRepository<User>, IUserRepository
     {
-        public UserRepository(LearnWithMentor_DBEntities context) : base(context)
+        public UserRepository(LearnWithMentorContext context) : base(context)
         {
         }
 
@@ -42,7 +42,7 @@ namespace LearnWithMentorDAL.Repositories
             }
             else
             {
-                usersWithCriteria = Context.Users.Where(u => u.Role_Id == roleId);
+                usersWithCriteria = Context.Users.Where(u => u.Role.Id == roleId);
             }
             usersWithCriteria = usersWithCriteria.Where(u =>
                 (u.FirstName.Contains(firstWord) && u.LastName.Contains(secondWord))
@@ -69,7 +69,7 @@ namespace LearnWithMentorDAL.Repositories
         
         public IEnumerable<User> GetUsersByRole(int roleId)
         {
-            return Context.Users.Where(u => u.Role_Id == roleId);
+            return Context.Users.Where(u => u.Role.Id == roleId);
         }
 
         public IEnumerable<User> GetUsersByState(bool state)
@@ -91,7 +91,7 @@ namespace LearnWithMentorDAL.Repositories
         public IEnumerable<User> GetUsersNotInGroup(int groupId)
         {
             return Context.Users.Where(u => !u.Groups.Select(g => g.Id).Contains(groupId))
-                .Where(u => !u.Blocked && u.Roles.Name == "Student");
+                .Where(u => !u.Blocked && u.Role.Name == "Student");
         }
     }
 }

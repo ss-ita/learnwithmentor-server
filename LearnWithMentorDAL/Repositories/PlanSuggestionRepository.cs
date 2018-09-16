@@ -5,7 +5,7 @@ namespace LearnWithMentorDAL.Repositories
 {
     public class PlanSuggestionRepository:BaseRepository<PlanSuggestion>, IPlanSuggestionRepository
     {
-        public PlanSuggestionRepository(LearnWithMentor_DBEntities context) : base(context)
+        public PlanSuggestionRepository(LearnWithMentorContext context) : base(context)
         {
         }
     }

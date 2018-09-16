@@ -2,17 +2,18 @@
 using LearnWithMentorDAL.Entities;
 using System.Data.Entity;
 using LearnWithMentorDAL.Repositories.Interfaces;
+using System.Linq;
 
 namespace LearnWithMentorDAL.Repositories
 {
     public class BaseRepository<T>: IRepository<T> where T : class
     {
-        protected readonly LearnWithMentor_DBEntities Context;
-        public BaseRepository(LearnWithMentor_DBEntities context)
+        protected readonly LearnWithMentorContext Context;
+        public BaseRepository(LearnWithMentorContext context)
         {
             Context = context;
         }
-        public IEnumerable<T> GetAll()
+        public IQueryable<T> GetAll()
         {
             return Context.Set<T>();
         }

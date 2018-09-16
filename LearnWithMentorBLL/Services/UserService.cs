@@ -34,7 +34,7 @@ namespace LearnWithMentorBLL.Services
             return new UserIdentityDTO(user.Email, user.Password, user.Id,
                 user.FirstName,
                 user.LastName,
-                user.Roles.Name,
+                user.Role.Name,
                 user.Blocked,
                 user.Email_Confirmed);
         }
@@ -97,7 +97,7 @@ namespace LearnWithMentorBLL.Services
                 }
                 if (db.Roles.TryGetByName(user.Role, out var updatedRole))
                 {
-                    item.Role_Id = updatedRole.Id;
+                    item.Role.Id = updatedRole.Id;
                     modified = true;
                 }
                 db.Users.Update(item);
@@ -127,7 +127,7 @@ namespace LearnWithMentorBLL.Services
                 Password = BCrypt.Net.BCrypt.HashPassword(userLoginDTO.Password)
             };
             db.Roles.TryGetByName("Student", out var studentRole);
-            toAdd.Role_Id = studentRole.Id;
+            toAdd.Role.Id = studentRole.Id;
             toAdd.FirstName = userLoginDTO.FirstName;
             toAdd.LastName = userLoginDTO.LastName;
             db.Users.Add(toAdd);
@@ -248,7 +248,7 @@ namespace LearnWithMentorBLL.Services
             return new UserDTO(user.Id,
                                user.FirstName,
                                user.LastName,
-                               user.Roles.Name,
+                               user.Role.Name,
                                user.Blocked,
                                user.Email_Confirmed);
         }
