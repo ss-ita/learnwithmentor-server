@@ -40,12 +40,9 @@ namespace LearnWithMentorBLL.Services
             }
             foreach(var planTask in planTasks)
             {
-                if(db.UserTasks.GetByPlanTaskForUser(planTask.Id, userId) == null)
+                if ((db.UserTasks.GetByPlanTaskForUser(planTask.Id, userId) == null) && (group.Mentor_Id != null))
                 {
-                    if (group.Mentor_Id != null)
-                    {
-                        db.UserTasks.Add(CreateDefaultUserTask(userId, planTask.Id, group.Mentor_Id.Value));
-                    }
+                    db.UserTasks.Add(CreateDefaultUserTask(userId, planTask.Id, group.Mentor_Id.Value));
                 }
             }
         }
@@ -64,19 +61,16 @@ namespace LearnWithMentorBLL.Services
             {
                 foreach( var planTask in planTasks)
                 {
-                    if (db.UserTasks.GetByPlanTaskForUser(planTask.Id, user.Id) == null)
+                    if ((db.UserTasks.GetByPlanTaskForUser(planTask.Id, user.Id) == null) && (group.Mentor_Id != null))
                     {
-                        if (group.Mentor_Id != null)
-                        {
                             db.UserTasks.Add(CreateDefaultUserTask(user.Id, planTask.Id, group.Mentor_Id.Value));
-                        }
                     }
                 }
             }
            
         }
 
-        public bool AddGroup(GroupDTO group)
+        public bool AddGroup(GroupDto group)
         {
             if (string.IsNullOrEmpty(group.Name) || db.Groups.GroupNameExists(group.Name))
                 return false;
@@ -90,12 +84,12 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public GroupDTO GetGroupById(int id)
+        public GroupDto GetGroupById(int id)
         {
             var group = db.Groups.Get(id);
             if (group == null)
                 return null;
-            return new GroupDTO(group.Id,
+            return new GroupDto(group.Id,
                                group.Name,
                                group.Mentor_Id,
                                db.Users.ExtractFullName(group.Mentor_Id));
@@ -111,7 +105,7 @@ namespace LearnWithMentorBLL.Services
             return db.Groups.Count();
         }
 
-        public IEnumerable<PlanDTO> GetPlans(int groupId)
+        public IEnumerable<PlanDto> GetPlans(int groupId)
         {
             var group = db.Groups.Get(groupId);
             var plans = db.Plans.GetPlansForGroup(groupId);
@@ -119,10 +113,10 @@ namespace LearnWithMentorBLL.Services
                 return null;
             if (plans == null)
                 return null;
-            var planList = new List<PlanDTO>();
+            var planList = new List<PlanDto>();
             foreach (var plan in plans)
             {
-                planList.Add(new PlanDTO(plan.Id,
+                planList.Add(new PlanDto(plan.Id,
                                      plan.Name,
                                      plan.Description,
                                      plan.Published,
@@ -139,7 +133,7 @@ namespace LearnWithMentorBLL.Services
             return planList;
         }
 
-        public IEnumerable<UserIdentityDTO> GetUsers(int groupId)
+        public IEnumerable<UserIdentityDto> GetUsers(int groupId)
         {
             var group = db.Groups.GetGroupsByMentor(groupId);
             var users = db.Users.GetUsersByGroup(groupId);
@@ -151,10 +145,10 @@ namespace LearnWithMentorBLL.Services
             {
                 return null;
             }
-            var userList = new List<UserIdentityDTO>();
+            var userList = new List<UserIdentityDto>();
             foreach (var user in users)
             {
-                userList.Add(new UserIdentityDTO(user.Email,
+                userList.Add(new UserIdentityDto(user.Email,
                                      null,
                                      user.Id,
                                      user.FirstName,
@@ -167,7 +161,7 @@ namespace LearnWithMentorBLL.Services
             return userList;
         }
 
-        public IEnumerable<UserWithImageDTO> GetUsersWithImage(int groupId)
+        public IEnumerable<UserWithImageDto> GetUsersWithImage(int groupId)
         {
             var group = db.Groups.GetGroupsByMentor(groupId);
             var users = db.Users.GetUsersByGroup(groupId);
@@ -179,17 +173,17 @@ namespace LearnWithMentorBLL.Services
             {
                 return null;
             }
-            var userList = new List<UserWithImageDTO>();
+            var userList = new List<UserWithImageDto>();
             foreach (var user in users)
             {
                 var userToGetImage = db.Users.Get(user.Id);
-                userList.Add(new UserWithImageDTO(user.Email,
+                userList.Add(new UserWithImageDto(user.Email,
                     user.Id,
                     user.FirstName,
                     user.LastName,
                     user.Roles.Name,
                     user.Blocked,
-                    new ImageDTO()
+                    new ImageDto()
                     {
                         Name = userToGetImage.Image_Name,
                         Base64Data = userToGetImage.Image
@@ -200,17 +194,17 @@ namespace LearnWithMentorBLL.Services
 
         }
 
-        public IEnumerable<GroupDTO> GetGroupsByMentor(int mentorId)
+        public IEnumerable<GroupDto> GetGroupsByMentor(int mentorId)
         {
             var groups = db.Groups.GetGroupsByMentor(mentorId);
             if (groups == null)
             {
                 return null;
             }
-            var groupList = new List<GroupDTO>();
+            var groupList = new List<GroupDto>();
             foreach (var group in groups)
             {
-                groupList.Add(new GroupDTO(group.Id,
+                groupList.Add(new GroupDto(group.Id,
                                          group.Name,
                                          group.Mentor_Id,
                                          db.Users.ExtractFullName(group.Mentor_Id)));
@@ -218,7 +212,7 @@ namespace LearnWithMentorBLL.Services
             return groupList;
         }
 
-        public IEnumerable<GroupDTO> GetUserGroups(int userId)
+        public IEnumerable<GroupDto> GetUserGroups(int userId)
         {
             var user = db.Users.Get(userId);
             if (user == null)
@@ -242,10 +236,10 @@ namespace LearnWithMentorBLL.Services
             {
                 return null;
             }
-            var groupList = new List<GroupDTO>();
+            var groupList = new List<GroupDto>();
             foreach (var group in groups)
             {
-                groupList.Add(new GroupDTO(group.Id,
+                groupList.Add(new GroupDto(group.Id,
                                          group.Name,
                                          group.Mentor_Id,
                                          db.Users.ExtractFullName(group.Mentor_Id)));
@@ -257,7 +251,7 @@ namespace LearnWithMentorBLL.Services
             return groupList;
         }
 
-        public bool AddUsersToGroup(int[] allUsersId, int groupId)
+        public bool AddUsersToGroup(int[] usersId, int groupId)
         {
             var groups = db.Groups.Get(groupId);
             if (groups == null)
@@ -265,7 +259,7 @@ namespace LearnWithMentorBLL.Services
                 return false;
             }
             var added = false;
-            foreach (var userId in allUsersId)
+            foreach (var userId in usersId)
             {
                 var addUser = db.Users.Get(userId);
                 if (addUser != null)
@@ -281,7 +275,7 @@ namespace LearnWithMentorBLL.Services
             return added;
         }
 
-        public bool AddPlansToGroup(int[] allPlansId, int groupId)
+        public bool AddPlansToGroup(int[] plansId, int groupId)
         {
             var groups = db.Groups.Get(groupId);
             if (groups == null)
@@ -289,7 +283,7 @@ namespace LearnWithMentorBLL.Services
                 return false;
             }
             var added = false;
-            foreach (var planId in allPlansId)
+            foreach (var planId in plansId)
             {
                 var addPlan = db.Plans.Get(planId);
                 if (addPlan != null)
@@ -305,7 +299,7 @@ namespace LearnWithMentorBLL.Services
             return added;
         }
 
-        public IEnumerable<UserIdentityDTO> GetUsersNotInGroup(int groupId)
+        public IEnumerable<UserIdentityDto> GetUsersNotInGroup(int groupId)
         {
             var group = db.Groups.Get(groupId);
             if (group == null)
@@ -317,10 +311,10 @@ namespace LearnWithMentorBLL.Services
             {
                 return null;
             }
-            var usersNotInGroupList = new List<UserIdentityDTO>();
+            var usersNotInGroupList = new List<UserIdentityDto>();
             foreach (var user in usersNotInGroup)
             {
-                var rdDto = new UserIdentityDTO(user.Email,
+                var rdDto = new UserIdentityDto(user.Email,
                     null,
                     user.Id,
                     user.FirstName,
@@ -336,27 +330,24 @@ namespace LearnWithMentorBLL.Services
             return usersNotInGroupList;
         }
 
-        public IEnumerable<UserIdentityDTO> SearchUserNotInGroup(string[] searchCases, int groupId)
+        public IEnumerable<UserIdentityDto> SearchUserNotInGroup(string[] searchCases, int groupId)
         {
             var usersNotInGroup = GetUsersNotInGroup(groupId).ToList();
-            var usersNotInGroupdto = new List<UserIdentityDTO>();
+            var usersNotInGroupdto = new List<UserIdentityDto>();
             foreach (var searchCase in searchCases)
             {
                 foreach (var user in usersNotInGroup)
                 {
-                    if (user.FirstName.Contains(searchCase) || user.LastName.Contains(searchCase))
+                    if ((user.FirstName.Contains(searchCase) || user.LastName.Contains(searchCase)) && (!usersNotInGroupdto.Contains((user))))
                     {
-                        if (!usersNotInGroupdto.Contains((user)))
-                        {
-                            usersNotInGroupdto.Add(user);
-                        }
+                        usersNotInGroupdto.Add(user);
                     }
                 }
             }
             return usersNotInGroupdto;
         }
 
-        public IEnumerable<PlanDTO> GetPlansNotUsedInGroup(int groupId)
+        public IEnumerable<PlanDto> GetPlansNotUsedInGroup(int groupId)
         {
             var group = db.Groups.Get(groupId);
             if (group == null)
@@ -368,10 +359,10 @@ namespace LearnWithMentorBLL.Services
             {
                 return null;
             }
-            var plansNotUsedInGroupList = new List<PlanDTO>();
+            var plansNotUsedInGroupList = new List<PlanDto>();
             foreach (var plan in plansNotUsedInGroup)
             {
-                var planDto = new PlanDTO
+                var planDto = new PlanDto
                 (plan.Id,
                     plan.Name,
                     plan.Description,
@@ -393,20 +384,17 @@ namespace LearnWithMentorBLL.Services
             return plansNotUsedInGroupList;
         }
 
-        public IEnumerable<PlanDTO> SearchPlansNotUsedInGroup(string[] searchCases, int groupId)
+        public IEnumerable<PlanDto> SearchPlansNotUsedInGroup(string[] searchCases, int groupId)
         {
             var plansNotInGroup = GetPlansNotUsedInGroup(groupId).ToList();
-            var plansNotInGroupdto = new List<PlanDTO>();
+            var plansNotInGroupdto = new List<PlanDto>();
             foreach (var searchCase in searchCases)
             {
                 foreach (var plan in plansNotInGroup)
                 {
-                    if (plan.Name.ToLower().Contains(searchCase.ToLower()))
+                    if ((plan.Name.ToLower().Contains(searchCase.ToLower())) && (!plansNotInGroupdto.Contains(plan)))
                     {
-                        if (!plansNotInGroupdto.Contains(plan))
-                        {
-                            plansNotInGroupdto.Add(plan);
-                        }
+                        plansNotInGroupdto.Add(plan);
                     }
                 }
             }

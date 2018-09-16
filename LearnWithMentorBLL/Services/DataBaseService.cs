@@ -1,13 +1,8 @@
 ﻿namespace LearnWithMentorBLL.Services
 {
-    public class DataBaseService
+    public static class DataBaseService
     {
-        public  DataBaseService()
-        {
-            DbInitialize();
-        }
-
-        public void DbInitialize()
+        public static void DbInitialize()
         {
             LearnWithMentorDAL.EF.LearnWithMentorInitializer.Initialize();
         }

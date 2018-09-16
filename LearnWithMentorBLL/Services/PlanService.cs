@@ -13,14 +13,14 @@ namespace LearnWithMentorBLL.Services
         public PlanService(IUnitOfWork db) : base(db)
         {
         }
-        public PlanDTO Get(int id)
+        public PlanDto Get(int id)
         {
             var plan = db.Plans.Get(id);
             if (plan == null)
             {
                 return null;
             }
-            return new PlanDTO(plan.Id,
+            return new PlanDto(plan.Id,
                                plan.Name,
                                plan.Description,
                                plan.Published,
@@ -33,17 +33,17 @@ namespace LearnWithMentorBLL.Services
                                plan.Create_Date,
                                plan.Mod_Date);
         }
-        public List<PlanDTO> GetAll()
+        public List<PlanDto> GetAll()
         {
             var allPlans = db.Plans.GetAll();
             if (allPlans == null)
             {
                 return null;
             }
-            var dtosList = new List<PlanDTO>();
+            var dtosList = new List<PlanDto>();
             foreach (var plan in allPlans)
             {
-                dtosList.Add(new PlanDTO(plan.Id,
+                dtosList.Add(new PlanDto(plan.Id,
                                plan.Name,
                                plan.Description,
                                plan.Published,
@@ -58,17 +58,17 @@ namespace LearnWithMentorBLL.Services
             }
             return dtosList;
         }
-        public List<PlanDTO> GetSomeAmount(int prevAmount, int amount)
+        public List<PlanDto> GetSomeAmount(int prevAmount, int amount)
         {
             var somePlans = db.Plans.GetSomePlans(prevAmount, amount);
             if (somePlans == null)
             {
                 return null;
             }
-            var dtosList = new List<PlanDTO>();
+            var dtosList = new List<PlanDto>();
             foreach(var plan in somePlans)
             {
-                dtosList.Add(new PlanDTO(plan.Id,
+                dtosList.Add(new PlanDto(plan.Id,
                                plan.Name,
                                plan.Description,
                                plan.Published,
@@ -84,7 +84,7 @@ namespace LearnWithMentorBLL.Services
             return dtosList;
         }
 
-        public List<TaskDTO> GetAllTasks(int planId)
+        public List<TaskDto> GetAllTasks(int planId)
         {
             var plan = db.Plans.Get(planId);
             if (plan == null)
@@ -101,10 +101,10 @@ namespace LearnWithMentorBLL.Services
             {
                 return null;
             }
-            var dtosList = new List<TaskDTO>();
+            var dtosList = new List<TaskDto>();
             foreach (var task in tasksForConcretePlan)
             {
-                var toAdd = new TaskDTO(task.Id,
+                var toAdd = new TaskDto(task.Id,
                                          task.Name,
                                          task.Description,
                                          task.Private,
@@ -139,7 +139,7 @@ namespace LearnWithMentorBLL.Services
             return planTaskIds;
         }
 
-        public List<SectionDTO> GetTasksForPlan(int planId)
+        public List<SectionDto> GetTasksForPlan(int planId)
         {
             var plan = db.Plans.Get(planId);
             if (plan == null)
@@ -159,15 +159,15 @@ namespace LearnWithMentorBLL.Services
                         .Select(pt => pt.Tasks)
                 }).ToList();
 
-            List<SectionDTO> sectionDTOs = new List<SectionDTO>();
+            List<SectionDto> sectionDTOs = new List<SectionDto>();
 
             foreach (var sec in section)
             {
-                List<TaskDTO> taskDTOs = new List<TaskDTO>();
-                ContentDTO contentDTO = new ContentDTO();
+                List<TaskDto> taskDTOs = new List<TaskDto>();
+                ContentDto contentDTO = new ContentDto();
                 foreach (var task in sec.Tasks)
                 {
-                    var toAdd = new TaskDTO(task.Id,
+                    var toAdd = new TaskDto(task.Id,
                         task.Name,
                         task.Description,
                         task.Private,
@@ -183,7 +183,7 @@ namespace LearnWithMentorBLL.Services
                     taskDTOs.Add(toAdd);
                 }
                 contentDTO.Tasks = taskDTOs;
-                SectionDTO sectionDTO = new SectionDTO()
+                SectionDto sectionDTO = new SectionDto()
                 {
                     Id = sec.Id,
                     Name = sec.Name,
@@ -194,7 +194,7 @@ namespace LearnWithMentorBLL.Services
             return sectionDTOs;
         }
 
-        public bool UpdateById(PlanDTO plan, int id)
+        public bool UpdateById(PlanDto plan, int id)
         {
             var toUpdate = db.Plans.Get(id);
             if (toUpdate == null)
@@ -289,21 +289,21 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public ImageDTO GetImage(int id)
+        public ImageDto GetImage(int id)
         {
             var toGetImage = db.Plans.Get(id);
             if (toGetImage?.Image == null || toGetImage.Image_Name == null)
             {
                 return null;
             }
-            return new ImageDTO()
+            return new ImageDto()
             {
                 Name = toGetImage.Image_Name,
                 Base64Data = toGetImage.Image
             };            
         }
 
-        public bool Add(PlanDTO dto)
+        public bool Add(PlanDto dto)
         {
             if (!ContainsId(dto.CreatorId))
             {
@@ -320,7 +320,7 @@ namespace LearnWithMentorBLL.Services
             db.Save();
             return true;
         }
-        public int? AddAndGetId(PlanDTO dto)
+        public int? AddAndGetId(PlanDto dto)
         {
             if (!db.Users.ContainsId(dto.CreatorId))
             {
@@ -337,17 +337,17 @@ namespace LearnWithMentorBLL.Services
             db.Save();
             return createdPlan?.Id;
         }
-        public List<PlanDTO> Search(string[] searchString)
+        public List<PlanDto> Search(string[] searchString)
         {
             var result = db.Plans.Search(searchString);
             if (result == null)
             {
                 return null;
             }
-            var dtosList = new List<PlanDTO>();
+            var dtosList = new List<PlanDto>();
             foreach (var plan in result)
             {
-                dtosList.Add(new PlanDTO(plan.Id,
+                dtosList.Add(new PlanDto(plan.Id,
                                          plan.Name,
                                          plan.Description,
                                          plan.Published,

@@ -4,10 +4,10 @@ using LearnWithMentorDTO.Infrastructure;
 
 namespace LearnWithMentorDTO
 {
-    public class TaskDTO
+    public class TaskDto
     {
-        public TaskDTO() { }
-        public TaskDTO(int id,
+        public TaskDto() { }
+        public TaskDto(int id,
                         string name,
                         string description,
                         bool privateness,

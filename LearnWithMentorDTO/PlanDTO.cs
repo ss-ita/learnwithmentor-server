@@ -4,10 +4,10 @@ using LearnWithMentorDTO.Infrastructure;
 
 namespace LearnWithMentorDTO
 {
-    public class PlanDTO
+    public class PlanDto
     {
-        public PlanDTO() { }
-        public PlanDTO(int id,
+        public PlanDto() { }
+        public PlanDto(int id,
             string name,
             string description,
             bool published,
