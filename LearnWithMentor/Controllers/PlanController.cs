@@ -37,6 +37,7 @@ namespace LearnWithMentor.Controllers
         /// <summary>
         /// Returns all plans in database.
         /// </summary>
+        [AllowAnonymous]
         [HttpGet]
         [Route("api/plan")]
         public HttpResponseMessage Get()
@@ -54,6 +55,7 @@ namespace LearnWithMentor.Controllers
         /// Gets plan by id.
         /// </summary>
         /// <param name="id"> Id of the plan. </param>
+        [AllowAnonymous]
         [HttpGet]
         [Route("api/plan/{id}")]
         public HttpResponseMessage Get(int id)
@@ -126,6 +128,7 @@ namespace LearnWithMentor.Controllers
         /// Gets all tasks assigned to plan.
         /// </summary>
         /// <param name="planId"> Id of plan. </param>
+        [AllowAnonymous]
         [HttpGet]
         [Route("api/plan/{planId}/tasks")]
         public HttpResponseMessage GetAllTasks(int planId)
