@@ -3,9 +3,9 @@ using LearnWithMentorDTO.Infrastructure;
 
 namespace LearnWithMentorDTO
 {
-    public class UserRegistrationDTO
+    public class UserRegistrationDto
     {
-        public UserRegistrationDTO(string email, string lastName, string firstName, string password)
+        public UserRegistrationDto(string email, string lastName, string firstName, string password)
         {
             Email = email;
             LastName = lastName;

@@ -14,7 +14,7 @@ namespace LearnWithMentorBLL.Services
         {
         }
 
-        public UserDTO Get(int id)
+        public UserDto Get(int id)
         {
             var user = db.Users.Get(id);
             if (user == null)
@@ -24,14 +24,14 @@ namespace LearnWithMentorBLL.Services
             return UserToUserDTO(user);
         }
 
-        public UserIdentityDTO GetByEmail(string email)
+        public UserIdentityDto GetByEmail(string email)
         {
             var user = db.Users.GetByEmail(email);
             if (user == null)
             {
                 return null;
             }
-            return new UserIdentityDTO(user.Email, user.Password, user.Id,
+            return new UserIdentityDto(user.Email, user.Password, user.Id,
                 user.FirstName,
                 user.LastName,
                 user.Role.Name,
@@ -39,14 +39,14 @@ namespace LearnWithMentorBLL.Services
                 user.Email_Confirmed);
         }
 
-        public List<UserDTO> GetAllUsers()
+        public List<UserDto> GetAllUsers()
         {
             var users = db.Users.GetAll();
             if (users == null)
             {
                 return null;
             }
-            var dtos = new List<UserDTO>();
+            var dtos = new List<UserDto>();
             foreach (var user in users)
             {
                 dtos.Add(UserToUserDTO(user));
@@ -54,11 +54,11 @@ namespace LearnWithMentorBLL.Services
             return dtos;
         }
 
-        public PagedListDTO<UserDTO> GetUsers(int pageSize, int pageNumber = 0)
+        public PagedListDto<UserDto> GetUsers(int pageSize, int pageNumber = 0)
         {
             var query = db.Users.GetAll().AsQueryable();
             query = query.OrderBy(x => x.Id);
-            return PagedList<User, UserDTO>.GetDTO(query, pageNumber, pageSize, UserToUserDTO);
+            return PagedList<User, UserDto>.GetDTO(query, pageNumber, pageSize, UserToUserDTO);
         }
 
         public bool BlockById(int id)
@@ -74,7 +74,7 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public bool UpdateById(int id, UserDTO user)
+        public bool UpdateById(int id, UserDto user)
         {
             var modified = false;
             var item = db.Users.Get(id);
@@ -119,7 +119,7 @@ namespace LearnWithMentorBLL.Services
             return false;
         }
 
-        public bool Add(UserRegistrationDTO userLoginDTO)
+        public bool Add(UserRegistrationDto userLoginDTO)
         {
             var toAdd = new User
             {
@@ -148,10 +148,10 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public List<UserDTO> Search(string[] str, int? roleId)
+        public List<UserDto> Search(string[] str, int? roleId)
         {
             var users = db.Users.Search(str, roleId);
-            var dtos = new List<UserDTO>();
+            var dtos = new List<UserDto>();
             foreach (var user in users)
             {
                 dtos.Add(UserToUserDTO(user));
@@ -159,21 +159,21 @@ namespace LearnWithMentorBLL.Services
             return dtos;
         }
 
-        public PagedListDTO<UserDTO> Search(string[] str, int pageSize, int pageNumber, int? roleId)
+        public PagedListDto<UserDto> Search(string[] str, int pageSize, int pageNumber, int? roleId)
         {
             var query = db.Users.Search(str, roleId).AsQueryable();
             query = query.OrderBy(x => x.Id);
-            return PagedList<User, UserDTO>.GetDTO(query, pageNumber, pageSize, UserToUserDTO);
+            return PagedList<User, UserDto>.GetDTO(query, pageNumber, pageSize, UserToUserDTO);
         }
 
-        public List<UserDTO> GetUsersByRole(int roleId)
+        public List<UserDto> GetUsersByRole(int roleId)
         {
             var users = db.Users.GetUsersByRole(roleId);
             if (users == null)
             {
                 return null;
             }
-            var dtos = new List<UserDTO>();
+            var dtos = new List<UserDto>();
             foreach (var user in users)
             {
                 dtos.Add(UserToUserDTO(user));
@@ -181,11 +181,11 @@ namespace LearnWithMentorBLL.Services
             return dtos;
         }
 
-        public PagedListDTO<UserDTO> GetUsersByRole(int roleId, int pageSize, int pageNumber)
+        public PagedListDto<UserDto> GetUsersByRole(int roleId, int pageSize, int pageNumber)
         {
             var query = db.Users.GetUsersByRole(roleId).AsQueryable();
             query = query.OrderBy(x => x.Id);
-            return PagedList<User, UserDTO>.GetDTO(query, pageNumber, pageSize, UserToUserDTO);
+            return PagedList<User, UserDto>.GetDTO(query, pageNumber, pageSize, UserToUserDTO);
         }
 
         public bool SetImage(int id, byte[] image, string imageName)
@@ -202,14 +202,14 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public ImageDTO GetImage(int id)
+        public ImageDto GetImage(int id)
         {
             var userToGetImage = db.Users.Get(id);
             if (userToGetImage?.Image == null || userToGetImage.Image_Name == null)
             {
                 return null;
             }
-            return new ImageDTO()
+            return new ImageDto()
             {
                 Name = userToGetImage.Image_Name,
                 Base64Data = userToGetImage.Image
@@ -221,14 +221,14 @@ namespace LearnWithMentorBLL.Services
             return db.Users.ContainsId(id);
         }
 
-        public List<UserDTO> GetUsersByState(bool state)
+        public List<UserDto> GetUsersByState(bool state)
         {
             var users = db.Users.GetUsersByState(state);
             if (users == null)
             {
                 return null;
             }
-            var dtos = new List<UserDTO>();
+            var dtos = new List<UserDto>();
             foreach (var user in users)
             {
                 dtos.Add(UserToUserDTO(user));
@@ -236,16 +236,16 @@ namespace LearnWithMentorBLL.Services
             return dtos;
         }
 
-        public PagedListDTO<UserDTO> GetUsersByState(bool state, int pageSize, int pageNumber)
+        public PagedListDto<UserDto> GetUsersByState(bool state, int pageSize, int pageNumber)
         {
             var query = db.Users.GetUsersByState(state).AsQueryable();
             query = query.OrderBy(x => x.Id);
-            return PagedList<User, UserDTO>.GetDTO(query, pageNumber, pageSize, UserToUserDTO);
+            return PagedList<User, UserDto>.GetDTO(query, pageNumber, pageSize, UserToUserDTO);
         }
 
-        private UserDTO UserToUserDTO(User user)
+        private UserDto UserToUserDTO(User user)
         {
-            return new UserDTO(user.Id,
+            return new UserDto(user.Id,
                                user.FirstName,
                                user.LastName,
                                user.Email,

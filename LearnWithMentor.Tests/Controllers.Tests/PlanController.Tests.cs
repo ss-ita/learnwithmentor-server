@@ -26,7 +26,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
        
         private PlanController planController;
         private Mock<IPlanService> planServiceMock;
-        private List<PlanDTO> plans;
+        private List<PlanDto> plans;
         private Mock<ITraceWriter> traceWriterMock;
         private Mock<IUserService> userServiceMock;
         private Mock<ITaskService> taskServiceMock;
@@ -36,12 +36,12 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [OneTimeSetUp]
         public void SetUp()
         {
-            plans = new List<PlanDTO>()
+            plans = new List<PlanDto>()
             {
-                new PlanDTO(1, "name1","description1",true,1,"nameCreator1","lastenameCreator1",1,"nameCreator1","lastenameCreator1", DateTime.Now, DateTime.Now),
-                new PlanDTO(2, "name2", "description2",true,2,"nameCreator2","lastenameCreator2",2,"nameCreator1","lastenameCreator1",DateTime.Now, DateTime.Now),
-                new PlanDTO(3, "name3", "description3",true,3,"nameCreator3","lastenameCreator3",3,"nameCreator1","lastenameCreator1",DateTime.Now, DateTime.Now),
-                new PlanDTO(4, "name4", "description4",true,4,"nameCreator4","lastenameCreator4",4,"nameCreator1","lastenameCreator1",DateTime.Now, DateTime.Now)
+                new PlanDto(1, "name1","description1",true,1,"nameCreator1","lastenameCreator1",1,"nameCreator1","lastenameCreator1", DateTime.Now, DateTime.Now),
+                new PlanDto(2, "name2", "description2",true,2,"nameCreator2","lastenameCreator2",2,"nameCreator1","lastenameCreator1",DateTime.Now, DateTime.Now),
+                new PlanDto(3, "name3", "description3",true,3,"nameCreator3","lastenameCreator3",3,"nameCreator1","lastenameCreator1",DateTime.Now, DateTime.Now),
+                new PlanDto(4, "name4", "description4",true,4,"nameCreator4","lastenameCreator4",4,"nameCreator1","lastenameCreator1",DateTime.Now, DateTime.Now)
             };
 
             planServiceMock = new Mock<IPlanService>();
@@ -74,10 +74,10 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             plans = null;
         }
 
-        private List<PlanDTO> GetTestPlansSearch(string[] lines)
+        private List<PlanDto> GetTestPlansSearch(string[] lines)
         {
            
-            var result = new List<PlanDTO>();
+            var result = new List<PlanDto>();
             foreach (var line in lines)
             {
                 result.AddRange(plans.Where(t => t.Name.Contains(line)));
@@ -91,8 +91,8 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             planServiceMock.Setup(mts => mts.GetAll()).Returns(plans);
 
             var response = planController.Get();
-            var successfull = response.TryGetContentValue<IEnumerable<PlanDTO>>(out var planDTOs);
-            var expected = planServiceMock.Object.GetAll().Count();
+            var successfull = response.TryGetContentValue<IEnumerable<PlanDto>>(out var planDTOs);
+            var expected = planServiceMock.Object.GetAll().Count;
             var actual = planDTOs.Count();
 
             Assert.IsTrue(successfull);
@@ -114,9 +114,9 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public void UpdatePlanTest_ShouldReturnSuccess()
         {
-            planServiceMock.Setup(u => u.UpdateById( It.IsAny<PlanDTO>(), It.IsAny<int>())).Returns(true);
+            planServiceMock.Setup(u => u.UpdateById( It.IsAny<PlanDto>(), It.IsAny<int>())).Returns(true);
 
-            PlanDTO forUpdating = new PlanDTO(1, "name1", "description1", true, 1, "nameCreator1", "lastenameCreator1", 1, "nameCreator1", "lastenameCreator1", DateTime.Now, DateTime.Now);
+            PlanDto forUpdating = new PlanDto(1, "name1", "description1", true, 1, "nameCreator1", "lastenameCreator1", 1, "nameCreator1", "lastenameCreator1", DateTime.Now, DateTime.Now);
             var response = planController.Put(1, forUpdating);
             var expectedStatusCode = HttpStatusCode.OK;
             var actualStatusCode = response.StatusCode;
@@ -127,9 +127,9 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public void UpdatePlanTest_ShouldReturnBadRequestMessage()
         {
-            planServiceMock.Setup(u => u.UpdateById(It.IsAny<PlanDTO>(), It.IsAny<int>())).Returns(false);
+            planServiceMock.Setup(u => u.UpdateById(It.IsAny<PlanDto>(), It.IsAny<int>())).Returns(false);
 
-            PlanDTO forUpdating = new PlanDTO(1, "name1", "description1", true, 1, "nameCreator1", "lastenameCreator1", 1, "nameCreator1", "lastenameCreator1", DateTime.Now, DateTime.Now);
+            PlanDto forUpdating = new PlanDto(1, "name1", "description1", true, 1, "nameCreator1", "lastenameCreator1", 1, "nameCreator1", "lastenameCreator1", DateTime.Now, DateTime.Now);
             var response = planController.Put(1, forUpdating);
             var expectedStatusCode = HttpStatusCode.BadRequest;
             var actualStatusCode = response.StatusCode;
@@ -140,10 +140,10 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public void UpdatePlanTest_ShouldCatchEntityExeption()
         {
-            planServiceMock.Setup(u => u.UpdateById(It.IsAny<PlanDTO>(), It.IsAny<int>()))
+            planServiceMock.Setup(u => u.UpdateById(It.IsAny<PlanDto>(), It.IsAny<int>()))
                 .Throws(new EntityException());
 
-            PlanDTO forUpdating = new PlanDTO(1, "name1", "description1", true, 1, "nameCreator1", "lastenameCreator1", 1, "nameCreator1", "lastenameCreator1", DateTime.Now, DateTime.Now);
+            PlanDto forUpdating = new PlanDto(1, "name1", "description1", true, 1, "nameCreator1", "lastenameCreator1", 1, "nameCreator1", "lastenameCreator1", DateTime.Now, DateTime.Now);
             var response = planController.Put(1, forUpdating);
             var expectedStatusCode = HttpStatusCode.InternalServerError;
             var actualStatusCode = response.StatusCode;
@@ -200,11 +200,11 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public void GetPlanByIdTest_ShouldReturnPlan()
         {
             planServiceMock.Setup(mts => mts.Get(It.IsAny<int>())).Returns(
-                (int i) => plans.Where(x => x.Id == i).Single());
+                (int i) => plans.Single(x => x.Id == i));
 
             var plan = plans[0];
             var response = planController.Get(plan.Id);
-            var successfull = response.TryGetContentValue<PlanDTO>(out var planDTO);
+            var successfull = response.TryGetContentValue<PlanDto>(out var planDTO);
             var expected = planServiceMock.Object.Get(plan.Id);
             var actual = planDTO;
 
@@ -228,7 +228,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public void PostPlanTest_ShouldSuccessfullyCreateNewPlan()
         {
 
-            planServiceMock.Setup(mts => mts.Add(It.IsAny<PlanDTO>())).Returns(true);
+            planServiceMock.Setup(mts => mts.Add(It.IsAny<PlanDto>())).Returns(true);
             var newPlan = plans[0];
             var response = planController.Post(newPlan);
 
@@ -247,7 +247,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public void PostPlanTest_ShouldCheckNotSuccessfullPostTryAndReturnBadRequestResponse()
         {
-            planServiceMock.Setup(mts => mts.Add(It.IsAny<PlanDTO>()))
+            planServiceMock.Setup(mts => mts.Add(It.IsAny<PlanDto>()))
                 .Returns(false);
 
             var newPlan = plans[0];
@@ -261,7 +261,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public void PostPlanTestAndReturnId_ShouldSuccessfullyCreateNewPlanAndReturnId()
         {
 
-            planServiceMock.Setup(mts => mts.AddAndGetId(It.IsAny<PlanDTO>())).Returns(1);
+            planServiceMock.Setup(mts => mts.AddAndGetId(It.IsAny<PlanDto>())).Returns(1);
             var newPlan = plans[0];
             var response = planController.PostAndReturnId(newPlan);
 
@@ -271,7 +271,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public void PostPlanTestAndReturnId_ShouldCheckNotSuccessfullPostTryAndReturnBadRequestResponse()
         {
-            planServiceMock.Setup(mts => mts.AddAndGetId(It.IsAny<PlanDTO>()))
+            planServiceMock.Setup(mts => mts.AddAndGetId(It.IsAny<PlanDto>()))
                 .Returns(()=>null);
 
             var newPlan = plans[0];
@@ -284,7 +284,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public void PostPlanTest_ShouldCatchEntityException()
         {
-            planServiceMock.Setup(mts => mts.Add(It.IsAny<PlanDTO>()))
+            planServiceMock.Setup(mts => mts.Add(It.IsAny<PlanDto>()))
                 .Throws(new EntityException());
 
             var newPlan = plans[0];
@@ -296,7 +296,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public void PostPlanTestAndReturnId_ShouldCatchEntityException()
         {
-            planServiceMock.Setup(mts => mts.AddAndGetId(It.IsAny<PlanDTO>()))
+            planServiceMock.Setup(mts => mts.AddAndGetId(It.IsAny<PlanDto>()))
                 .Throws(new EntityException());
 
             var newPlan = plans[0];
@@ -309,14 +309,14 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public void GetImageTest()
         {
             planServiceMock.Setup(u => u.ContainsId(It.IsInRange(1, 8, Range.Inclusive))).Returns(true);
-            planServiceMock.Setup(u => u.GetImage(It.IsInRange(1, 3, Range.Inclusive))).Returns(new ImageDTO()
+            planServiceMock.Setup(u => u.GetImage(It.IsInRange(1, 3, Range.Inclusive))).Returns(new ImageDto()
             {
                 Base64Data = "test",
                 Name = "test"
             });
 
             var response = planController.GetImage(1);
-            response.TryGetContentValue<ImageDTO>(out var imageDTO);
+            response.TryGetContentValue<ImageDto>(out var imageDTO);
             var expected = "test";
             var actual = imageDTO.Name;
 
@@ -363,9 +363,9 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             planServiceMock.Setup(mts => mts.GetAll()).Returns(plans);
 
             var response = planController.Search(null);
-            var successfull = response.TryGetContentValue<List<PlanDTO>>(out var planDTOs);
-            var expected = planServiceMock.Object.GetAll().Count();
-            var actual = planDTOs.Count();
+            var successfull = response.TryGetContentValue<List<PlanDto>>(out var planDTOs);
+            var expected = planServiceMock.Object.GetAll().Count;
+            var actual = planDTOs.Count;
 
             Assert.IsTrue(successfull);
             Assert.AreEqual(expected, actual);
@@ -380,7 +380,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
 
             var searchKey = "1";
             var response = planController.Search(searchKey);
-            var successfull = response.TryGetContentValue<List<PlanDTO>>(out var planDTOs);
+            var successfull = response.TryGetContentValue<List<PlanDto>>(out var planDTOs);
             var expected = planServiceMock.Object.Search(new[] { searchKey });
             var actual = planDTOs;
 

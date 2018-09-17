@@ -7,7 +7,7 @@ using LearnWithMentorDAL.Entities;
 
 namespace LearnWithMentorDAL.EF
 {
-    public class LearnWithMentorInitializer
+    public static class LearnWithMentorInitializer
     {
         static LearnWithMentorInitializer()
         {

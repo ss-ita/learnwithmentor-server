@@ -7,7 +7,7 @@ namespace LearnWithMentorDAL.Repositories.Interfaces
     {
         User Get(int id);
         User GetByEmail(string email);
-        IEnumerable<User> Search(string[] str, int? roleId);
+        IEnumerable<User> Search(string[] searchString, int? roleId);
         IEnumerable<User> GetUsersByRole(int roleId);
         IEnumerable<User> GetUsersByGroup(int groupId);
         IEnumerable<User> GetUsersByState(bool state);

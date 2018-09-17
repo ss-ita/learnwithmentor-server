@@ -29,15 +29,12 @@ namespace LearnWithMentor.Controllers
         /// <param name="value"> User data. </param>
         /// <returns></returns>
         [AllowAnonymous]
-        public HttpResponseMessage Post([FromBody]UserLoginDTO value)
+        public HttpResponseMessage Post([FromBody]UserLoginDto value)
         {
-            UserIdentityDTO user = null;
-            if (ModelState.IsValid)
+            UserIdentityDto user = null;
+            if ((ModelState.IsValid) && (CheckUser(value.Email, value.Password, out user)))
             {
-                if (CheckUser(value.Email, value.Password, out user))
-                {
-                    return Request.CreateResponse(HttpStatusCode.OK, JwtManager.GenerateToken(user));
-                }
+                return Request.CreateResponse(HttpStatusCode.OK, JwtManager.GenerateToken(user));
             }
             var message = " Not valid logination data.";
             if (user != null && user.Blocked == true) message = "This user is blocked!";
@@ -51,7 +48,7 @@ namespace LearnWithMentor.Controllers
         /// <param name="password"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public bool CheckUser(string email, string password, out UserIdentityDTO user)
+        public bool CheckUser(string email, string password, out UserIdentityDto user)
         {
 
             user = userService.GetByEmail(email);

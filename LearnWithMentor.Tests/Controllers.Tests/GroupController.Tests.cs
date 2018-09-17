@@ -22,7 +22,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
     {
         private GroupController groupController;
         private Mock<IGroupService> groupServiceMock;
-        private List<GroupDTO> groups;
+        private List<GroupDto> groups;
         private Mock<ITraceWriter> traceWriterMock;
         private Mock<IUserService> userServiceMock;
         private Mock<IUserIdentityService> userIdentityServiceMock;
@@ -31,12 +31,12 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [SetUp]
         public void SetUp()
         {
-            groups = new List<GroupDTO>()
+            groups = new List<GroupDto>()
             {
-                new GroupDTO(1, "name1", 1, "mentorName1"),
-                new GroupDTO(2, "name2", 2, "mentorName2"),
-                new GroupDTO(3, "name3", 3, "mentorName3"),
-                new GroupDTO(4, "name4", 4, "mentorName4")
+                new GroupDto(1, "name1", 1, "mentorName1"),
+                new GroupDto(2, "name2", 2, "mentorName2"),
+                new GroupDto(3, "name3", 3, "mentorName3"),
+                new GroupDto(4, "name4", 4, "mentorName4")
             };
 
             groupServiceMock = new Mock<IGroupService>();
@@ -84,10 +84,10 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public void GetGroupByIdTest_ShouldReturnTask()
         {
             groupServiceMock.Setup(u => u.GetGroupById(It.IsAny<int>())).Returns(
-                 (int i) => groups.Where(x => x.Id == i).Single());
+                 (int i) => groups.Single(x => x.Id == i));
 
             var response = groupController.GetById(3);
-            var successfull = response.TryGetContentValue<GroupDTO>(out var groupDTO);
+            var successfull = response.TryGetContentValue<GroupDto>(out var groupDTO);
             var expected = groupServiceMock.Object.GetGroupById(3);
             var actual = groupDTO;
 
@@ -112,10 +112,10 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public void GetGroupByMentor_ShouldReturnGroupsForMentor()
         {
-            groupServiceMock.Setup(g => g.GetGroupsByMentor(It.IsAny<int>())).Returns(new List<GroupDTO>());
+            groupServiceMock.Setup(g => g.GetGroupsByMentor(It.IsAny<int>())).Returns(new List<GroupDto>());
 
             var response = groupController.GetByMentor(2);
-            var successfull = response.TryGetContentValue<List<GroupDTO>>(out var groupDTOs);
+            var successfull = response.TryGetContentValue<List<GroupDto>>(out var groupDTOs);
             var expected = groupServiceMock.Object.GetGroupsByMentor(2);
             var actual = groupDTOs;
 
@@ -139,7 +139,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public void GetAllPlansByGroupId_ShouldReturnOk()
         {
-            groupServiceMock.Setup(p => p.GetPlans(It.IsAny<int>())).Returns(new List<PlanDTO>());
+            groupServiceMock.Setup(p => p.GetPlans(It.IsAny<int>())).Returns(new List<PlanDto>());
 
             var response = groupController.GetPlans(4);
             var expected = HttpStatusCode.OK;
@@ -176,7 +176,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public void GetUsersWithImage_ShouldReturnOk()
         {
-            groupServiceMock.Setup(p => p.GetUsersWithImage(It.IsAny<int>())).Returns(new List<UserWithImageDTO>());
+            groupServiceMock.Setup(p => p.GetUsersWithImage(It.IsAny<int>())).Returns(new List<UserWithImageDto>());
 
             var response = groupController.GetUsersWithImage(4);
             var expected = HttpStatusCode.OK;
@@ -213,7 +213,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public void GetUsersNotInCurrentGroupShouldReturnOk()
         {
-            groupServiceMock.Setup(u => u.GetUsersNotInGroup(It.IsAny<int>())).Returns(new List<UserIdentityDTO>());
+            groupServiceMock.Setup(u => u.GetUsersNotInGroup(It.IsAny<int>())).Returns(new List<UserIdentityDto>());
             var response = groupController.GetUsersNotInCurrentGroup(4);
             var expected = HttpStatusCode.OK;
             var actual = response.StatusCode;
@@ -236,7 +236,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public void GetPlansNotUsedInCurrentGroupShouldReturnOk()
         {
-            groupServiceMock.Setup(u => u.GetPlansNotUsedInGroup(It.IsAny<int>())).Returns(new List<PlanDTO>());
+            groupServiceMock.Setup(u => u.GetPlansNotUsedInGroup(It.IsAny<int>())).Returns(new List<PlanDto>());
             var response = groupController.GetPlansNotUsedInCurrentGroup(4);
             var expected = HttpStatusCode.OK;
             var actual = response.StatusCode;
@@ -259,7 +259,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public void AddNewGroupShouldReturnOk()
         {
-            groupServiceMock.Setup(u => u.AddGroup(It.IsAny<GroupDTO>())).Returns(true);
+            groupServiceMock.Setup(u => u.AddGroup(It.IsAny<GroupDto>())).Returns(true);
             var response = groupController.Post(groups[0]);
             var expected = HttpStatusCode.OK;
             var actual = response.StatusCode;
@@ -270,7 +270,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public void AddNewGroupShouldReturnBadRequestValid()
         {
-            groupServiceMock.Setup(u => u.AddGroup(It.IsAny<GroupDTO>())).Returns(false);
+            groupServiceMock.Setup(u => u.AddGroup(It.IsAny<GroupDto>())).Returns(false);
             var response = groupController.Post(groups[0]);
             var expected = HttpStatusCode.BadRequest;
             var actual = response.StatusCode;
@@ -281,9 +281,9 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public void AddNewGroupShouldReturnBadRequestInValid()
         {
-            groupServiceMock.Setup(u => u.AddGroup(It.IsAny<GroupDTO>())).Returns(true);
-            var newGroup = new GroupDTO { };
-            ValidateViewModel<GroupDTO, GroupController>(groupController, newGroup);
+            groupServiceMock.Setup(u => u.AddGroup(It.IsAny<GroupDto>())).Returns(true);
+            var newGroup = new GroupDto { };
+            ValidateViewModel<GroupDto, GroupController>(groupController, newGroup);
             var response = groupController.Post(groups[0]);
             var expected = HttpStatusCode.BadRequest;
             var actual = response.StatusCode;
@@ -294,7 +294,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public void AddNewGroupShouldReturnInternalServerError()
         {
-            groupServiceMock.Setup(u => u.AddGroup(It.IsAny<GroupDTO>())).Throws(new EntityException());
+            groupServiceMock.Setup(u => u.AddGroup(It.IsAny<GroupDto>())).Throws(new EntityException());
             var response = groupController.Post(groups[0]);
             var expected = HttpStatusCode.InternalServerError;
             var actual = response.StatusCode;
@@ -409,7 +409,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public void SearchPlansNotUsedInCurrentGroupShouldReturnOk()
         {
-            groupServiceMock.Setup(u => u.SearchPlansNotUsedInGroup(It.IsAny<string[]>(), It.IsAny<int>())).Returns(new List<PlanDTO>());
+            groupServiceMock.Setup(u => u.SearchPlansNotUsedInGroup(It.IsAny<string[]>(), It.IsAny<int>())).Returns(new List<PlanDto>());
             var response = groupController.SearchPlansNotUsedInCurrentGroup("search", 2);
             var expected = HttpStatusCode.OK;
             var actual = response.StatusCode;
@@ -443,7 +443,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public void SearchUsersNotUsedInCurrentGroupOk()
         {
-            groupServiceMock.Setup(u => u.SearchUserNotInGroup(It.IsAny<string[]>(), It.IsAny<int>())).Returns(new List<UserIdentityDTO>());
+            groupServiceMock.Setup(u => u.SearchUserNotInGroup(It.IsAny<string[]>(), It.IsAny<int>())).Returns(new List<UserIdentityDto>());
             var response = groupController.SearchPlansNotUsedInCurrentGroup("search", 2);
             var expected = HttpStatusCode.OK;
             var actual = response.StatusCode;
@@ -566,7 +566,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         {
             userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(new int());
             userServiceMock.Setup(u => u.ContainsId(It.IsAny<int>())).Returns(true);
-            groupServiceMock.Setup(u => u.GetUserGroups(It.IsAny<int>())).Returns(new List<GroupDTO>());
+            groupServiceMock.Setup(u => u.GetUserGroups(It.IsAny<int>())).Returns(new List<GroupDto>());
             groupServiceMock.Setup(u => u.GroupsCount()).Returns(1);
             var response = groupController.GetUserGroups();
             var expected = HttpStatusCode.OK;
@@ -580,7 +580,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         {
             userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(new int());
             userServiceMock.Setup(u => u.ContainsId(It.IsAny<int>())).Returns(false);
-            groupServiceMock.Setup(u => u.GetUserGroups(It.IsAny<int>())).Returns(new List<GroupDTO>());
+            groupServiceMock.Setup(u => u.GetUserGroups(It.IsAny<int>())).Returns(new List<GroupDto>());
             groupServiceMock.Setup(u => u.GroupsCount()).Returns(1);
             var response = groupController.GetUserGroups();
             var expected = HttpStatusCode.NoContent;
@@ -594,7 +594,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         {
             userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(new int());
             userServiceMock.Setup(u => u.ContainsId(It.IsAny<int>())).Returns(true);
-            groupServiceMock.Setup(u => u.GetUserGroups(It.IsAny<int>())).Returns(new List<GroupDTO>());
+            groupServiceMock.Setup(u => u.GetUserGroups(It.IsAny<int>())).Returns(new List<GroupDto>());
             groupServiceMock.Setup(u => u.GroupsCount()).Returns(0);
             var response = groupController.GetUserGroups();
             var expected = HttpStatusCode.NoContent;
@@ -622,7 +622,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         {
             userIdentityServiceMock.Setup(u => u.GetUserId()).Throws(new EntityException());
             userServiceMock.Setup(u => u.ContainsId(It.IsAny<int>())).Returns(true);
-            groupServiceMock.Setup(u => u.GetUserGroups(It.IsAny<int>())).Returns(new List<GroupDTO>());
+            groupServiceMock.Setup(u => u.GetUserGroups(It.IsAny<int>())).Returns(new List<GroupDto>());
             groupServiceMock.Setup(u => u.GroupsCount()).Returns(1);
             var response = groupController.GetUserGroups();
             var expected = HttpStatusCode.InternalServerError;

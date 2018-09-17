@@ -29,7 +29,7 @@ namespace LearnWithMentorDAL.UnitOfWork
             disposed = false;
         }
 
-        public ICommentRepository Comments => comments ?? (comments = new CommentRepository(context));
+        public virtual ICommentRepository Comments => comments ?? (comments = new CommentRepository(context));
 
         public IGroupPlanTaskViewRepository GroupPlanTaskView => groupPlanTaskView ?? (groupPlanTaskView = new GroupPlanTaskViewRepository(context));
 

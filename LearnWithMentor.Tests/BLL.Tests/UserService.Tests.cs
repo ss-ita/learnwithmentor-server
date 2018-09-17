@@ -52,7 +52,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
             //assert
             Assert.IsNotNull(result);
             Assert.AreEqual(userId, result.Id);
-            Assert.AreSame(result.GetType(), typeof(UserDTO));
+            Assert.AreSame(result.GetType(), typeof(UserDto));
         }
 
         [Test]
@@ -86,7 +86,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
             //assert
             Assert.IsNotNull(result);
             Assert.AreEqual(userEmail, result.Email);
-            Assert.AreSame(result.GetType(), typeof(UserIdentityDTO));
+            Assert.AreSame(result.GetType(), typeof(UserIdentityDto));
         }
 
         [Test]
@@ -131,7 +131,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
                 Assert.AreEqual(users[i].Id, result[i].Id);
             }
 
-            Assert.AreSame(result.GetType(), typeof(List<UserDTO>));
+            Assert.AreSame(result.GetType(), typeof(List<UserDto>));
         }
 
         [Test]

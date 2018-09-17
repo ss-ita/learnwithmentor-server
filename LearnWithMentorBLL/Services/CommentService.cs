@@ -12,14 +12,14 @@ namespace LearnWithMentorBLL.Services
         {
         }
 
-        public CommentDTO GetComment(int commentId)
+        public CommentDto GetComment(int commentId)
         {
             var comment = db.Comments.Get(commentId);
             if (comment == null)
             {
                 return null;
             }
-            var commentDTO = new CommentDTO(comment.Id,
+            var commentDTO = new CommentDto(comment.Id,
                                    comment.Text,
                                    comment.Create_Id,
                                    db.Users.ExtractFullName(comment.Create_Id),
@@ -28,7 +28,7 @@ namespace LearnWithMentorBLL.Services
             return commentDTO;
         }
 
-        public bool AddCommentToPlanTask(int planTaskId, CommentDTO comment)
+        public bool AddCommentToPlanTask(int planTaskId, CommentDto comment)
         {
             var plantask = db.PlanTasks.Get(planTaskId);
             if (plantask == null)
@@ -50,7 +50,7 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public bool AddCommentToPlanTask(int planId, int taskId, CommentDTO comment)
+        public bool AddCommentToPlanTask(int planId, int taskId, CommentDto comment)
         {
             var planTaskId = db.PlanTasks.GetIdByTaskAndPlan(taskId, planId);
             if (planTaskId == null)
@@ -62,7 +62,7 @@ namespace LearnWithMentorBLL.Services
 
         public bool UpdateCommentIdText(int commentId, string text)
         {
-            if (text == null || text.Equals(string.Empty))
+            if (string.IsNullOrEmpty(text))
             {
                 return false;
             }
@@ -77,7 +77,7 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public bool UpdateComment(int commentId, CommentDTO commentDTO)
+        public bool UpdateComment(int commentId, CommentDto commentDTO)
         {
             if (commentDTO == null)
             {
@@ -90,15 +90,15 @@ namespace LearnWithMentorBLL.Services
             return UpdateCommentIdText(commentId, commentDTO.Text);
         }
 
-        public IEnumerable<CommentDTO> GetCommentsForPlanTask(int taskId, int planId)
+        public IEnumerable<CommentDto> GetCommentsForPlanTask(int taskId, int planId)
         {
             var planTaskId = db.PlanTasks.GetIdByTaskAndPlan(taskId, planId);
             return planTaskId == null ? null : GetCommentsForPlanTask(planTaskId.Value);
         }
 
-        public IEnumerable<CommentDTO> GetCommentsForPlanTask(int planTaskId)
+        public IEnumerable<CommentDto> GetCommentsForPlanTask(int planTaskId)
         {
-            var commentsList = new List<CommentDTO>();
+            var commentsList = new List<CommentDto>();
             var planTask = db.PlanTasks.Get(planTaskId);
             var comments = planTask?.Comments;
             if (comments == null)
@@ -107,7 +107,7 @@ namespace LearnWithMentorBLL.Services
             }
             foreach (var c in comments)
             {
-                commentsList.Add(new CommentDTO(c.Id,
+                commentsList.Add(new CommentDto(c.Id,
                                        c.Text,
                                        c.Create_Id,
                                        db.Users.ExtractFullName(c.Create_Id),

@@ -5,22 +5,22 @@ namespace LearnWithMentorBLL.Interfaces
 {
     public interface IGroupService: IDisposableService
     {
-        GroupDTO GetGroupById(int id);
+        GroupDto GetGroupById(int id);
         int GroupsCount();
         int? GetMentorIdByGroup(int groupId);
-        IEnumerable<GroupDTO> GetGroupsByMentor(int mentorId);
-        IEnumerable<UserIdentityDTO> GetUsers(int groupId);
-        IEnumerable<UserWithImageDTO> GetUsersWithImage(int groupId);
-        IEnumerable<PlanDTO> GetPlans(int groupId);
-        bool AddGroup(GroupDTO group);        
+        IEnumerable<GroupDto> GetGroupsByMentor(int mentorId);
+        IEnumerable<UserIdentityDto> GetUsers(int groupId);
+        IEnumerable<UserWithImageDto> GetUsersWithImage(int groupId);
+        IEnumerable<PlanDto> GetPlans(int groupId);
+        bool AddGroup(GroupDto group);        
         bool AddUsersToGroup(int []usersId , int groupId);
-        bool AddPlansToGroup(int[] usersId, int groupId);
-        IEnumerable<UserIdentityDTO> GetUsersNotInGroup(int groupId);
-        IEnumerable<UserIdentityDTO> SearchUserNotInGroup(string[] searchCases, int groupId);
-        IEnumerable<PlanDTO> GetPlansNotUsedInGroup(int groupId);
-        IEnumerable<PlanDTO> SearchPlansNotUsedInGroup(string[] searchCases, int groupId);
+        bool AddPlansToGroup(int[] plansId, int groupId);
+        IEnumerable<UserIdentityDto> GetUsersNotInGroup(int groupId);
+        IEnumerable<UserIdentityDto> SearchUserNotInGroup(string[] searchCases, int groupId);
+        IEnumerable<PlanDto> GetPlansNotUsedInGroup(int groupId);
+        IEnumerable<PlanDto> SearchPlansNotUsedInGroup(string[] searchCases, int groupId);
         bool RemoveUserFromGroup(int groupId, int userIdToRemove);
         bool RemovePlanFromGroup(int groupId, int planIdToRemove);
-        IEnumerable<GroupDTO> GetUserGroups(int userId);
+        IEnumerable<GroupDto> GetUserGroups(int userId);
     }
 }

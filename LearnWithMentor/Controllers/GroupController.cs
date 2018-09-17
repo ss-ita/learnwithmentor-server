@@ -186,7 +186,7 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpPost]
         [Route("api/group")]
-        public HttpResponseMessage Post([FromBody]GroupDTO group)
+        public HttpResponseMessage Post([FromBody]GroupDto group)
         {
             try
             {

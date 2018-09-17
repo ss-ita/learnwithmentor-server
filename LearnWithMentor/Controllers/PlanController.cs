@@ -37,6 +37,7 @@ namespace LearnWithMentor.Controllers
         /// <summary>
         /// Returns all plans in database.
         /// </summary>
+        [AllowAnonymous]
         [HttpGet]
         [Route("api/plan")]
         public HttpResponseMessage Get()
@@ -47,13 +48,14 @@ namespace LearnWithMentor.Controllers
                 const string errorMessage = "No plans in database.";
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, errorMessage);
             }
-            return Request.CreateResponse<IEnumerable<PlanDTO>>(HttpStatusCode.OK, dtoList);
+            return Request.CreateResponse<IEnumerable<PlanDto>>(HttpStatusCode.OK, dtoList);
         }
 
         /// <summary>
         /// Gets plan by id.
         /// </summary>
         /// <param name="id"> Id of the plan. </param>
+        [AllowAnonymous]
         [HttpGet]
         [Route("api/plan/{id}")]
         public HttpResponseMessage Get(int id)
@@ -100,7 +102,7 @@ namespace LearnWithMentor.Controllers
                 const string message = "Plan does not exist in database.";
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
             }
-            return Request.CreateResponse<IEnumerable<SectionDTO>>(HttpStatusCode.OK, sections);
+            return Request.CreateResponse<IEnumerable<SectionDto>>(HttpStatusCode.OK, sections);
         }
 
         /// <summary>
@@ -119,13 +121,14 @@ namespace LearnWithMentor.Controllers
                 const string errorMessage = "No plans in database.";
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, errorMessage);
             }
-            return Request.CreateResponse<IEnumerable<PlanDTO>>(HttpStatusCode.OK, dtoList);
+            return Request.CreateResponse<IEnumerable<PlanDto>>(HttpStatusCode.OK, dtoList);
         }
 
         /// <summary>
         /// Gets all tasks assigned to plan.
         /// </summary>
         /// <param name="planId"> Id of plan. </param>
+        [AllowAnonymous]
         [HttpGet]
         [Route("api/plan/{planId}/tasks")]
         public HttpResponseMessage GetAllTasks(int planId)
@@ -136,7 +139,7 @@ namespace LearnWithMentor.Controllers
                 const string message = "Plan does not contain any task.";
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
             }
-            return Request.CreateResponse<IEnumerable<TaskDTO>>(HttpStatusCode.OK, dtosList);
+            return Request.CreateResponse<IEnumerable<TaskDto>>(HttpStatusCode.OK, dtosList);
         }
 
         /// <summary>
@@ -163,7 +166,7 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpPost]
         [Route("api/plan")]
-        public HttpResponseMessage Post([FromBody]PlanDTO value)
+        public HttpResponseMessage Post([FromBody]PlanDto value)
         {
             try
             {
@@ -193,7 +196,7 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpPost]
         [Route("api/plan/return")]
-        public HttpResponseMessage PostAndReturnId([FromBody]PlanDTO value)
+        public HttpResponseMessage PostAndReturnId([FromBody]PlanDto value)
         {
             try
             {
@@ -227,7 +230,7 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpPut]
         [Route("api/plan/{id}")]
-        public HttpResponseMessage Put(int id, [FromBody]PlanDTO value)
+        public HttpResponseMessage Put(int id, [FromBody]PlanDto value)
         {
             try
             {
@@ -404,7 +407,7 @@ namespace LearnWithMentor.Controllers
                 const string message = "No plans found.";
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
             }
-            return Request.CreateResponse<IEnumerable<PlanDTO>>(HttpStatusCode.OK, dto);
+            return Request.CreateResponse<IEnumerable<PlanDto>>(HttpStatusCode.OK, dto);
         }
 
         /// <summary>

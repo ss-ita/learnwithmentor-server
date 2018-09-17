@@ -2,8 +2,8 @@
 
 namespace LearnWithMentorDTO
 {
-    public class ContentDTO
+    public class ContentDto
     {
-        public List<TaskDTO> Tasks { get; set; }
+        public List<TaskDto> Tasks { get; set; }
     }
 }
