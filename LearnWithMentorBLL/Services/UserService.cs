@@ -34,7 +34,7 @@ namespace LearnWithMentorBLL.Services
             return new UserIdentityDto(user.Email, user.Password, user.Id,
                 user.FirstName,
                 user.LastName,
-                user.Roles.Name,
+                user.Role.Name,
                 user.Blocked,
                 user.Email_Confirmed);
         }
@@ -249,7 +249,7 @@ namespace LearnWithMentorBLL.Services
                                user.FirstName,
                                user.LastName,
                                user.Email,
-                               user.Roles.Name,
+                               user.Role.Name,
                                user.Blocked,
                                user.Email_Confirmed);
         }

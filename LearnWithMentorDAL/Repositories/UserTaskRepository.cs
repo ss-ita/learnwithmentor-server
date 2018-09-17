@@ -8,7 +8,7 @@ namespace LearnWithMentorDAL.Repositories
 {
     public class UserTaskRepository: BaseRepository<UserTask>, IUserTaskRepository
     {
-        public UserTaskRepository(LearnWithMentor_DBEntities context) : base(context)
+        public UserTaskRepository(LearnWithMentorContext context) : base(context)
         {
         }
 

@@ -9,7 +9,7 @@ namespace LearnWithMentorDAL.Repositories
 {
     public class UserRepository : BaseRepository<User>, IUserRepository
     {
-        public UserRepository(LearnWithMentor_DBEntities context) : base(context)
+        public UserRepository(LearnWithMentorContext context) : base(context)
         {
         }
 
@@ -105,7 +105,7 @@ namespace LearnWithMentorDAL.Repositories
         public IEnumerable<User> GetUsersNotInGroup(int groupId)
         {
             return Context.Users.Where(user => !user.Groups.Select(group => group.Id).Contains(groupId))
-                .Where(user => !user.Blocked && user.Roles.Name == "Student");
+                .Where(user => !user.Blocked && user.Role.Name == "Student");
         }
     }
 }

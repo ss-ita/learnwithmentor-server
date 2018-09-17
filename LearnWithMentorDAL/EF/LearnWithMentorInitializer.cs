@@ -15,18 +15,18 @@ namespace LearnWithMentorDAL.EF
         }
         public static void Initialize()
         {
-            using (var context = new LearnWithMentor_DBEntities())
+            using (var context = new LearnWithMentorContext())
             {
-                context.Database.ExecuteSqlCommand("delete PlanSuggestion;");
+                context.Database.ExecuteSqlCommand("delete PlanSuggestions;");
                 context.Database.ExecuteSqlCommand("delete Messages;");
                 context.Database.ExecuteSqlCommand("delete Comments;");
                 context.Database.ExecuteSqlCommand("delete UserTasks;");
                 context.Database.ExecuteSqlCommand("delete PlanTasks;");
                 context.Database.ExecuteSqlCommand("delete Tasks;");
-                context.Database.ExecuteSqlCommand("delete GroupPlans;");
+                context.Database.ExecuteSqlCommand("delete GroupPlan;");
                 context.Database.ExecuteSqlCommand("delete Sections;");
                 context.Database.ExecuteSqlCommand("delete Plans;");
-                context.Database.ExecuteSqlCommand("delete UserGroups;");
+                context.Database.ExecuteSqlCommand("delete UserGroup;");
                 context.Database.ExecuteSqlCommand("delete Groups;");
                 context.Database.ExecuteSqlCommand("delete Users;");
                 context.Database.ExecuteSqlCommand("delete Roles;");
@@ -43,19 +43,20 @@ namespace LearnWithMentorDAL.EF
                 InitializePlanSugestion(context);
             }
         }
-        private static void InitializeRoles(LearnWithMentor_DBEntities context)
+        private static void InitializeRoles(LearnWithMentorContext context)
         {
             context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('Roles', RESEED, 0)");
             var roles = new List<Role>
             {
-                new Role() {Id = 1, Name = "Mentor"},
-                new Role() {Id = 2, Name = "Student"},
-                new Role() {Id = 3, Name = "Admin"}
+                new Role() {Name = "Guest"},
+                new Role() {Name = "Mentor"},
+                new Role() {Name = "Student"},
+                new Role() {Name = "Admin"}
             };
             context.Roles.AddRange(roles);
             context.SaveChanges();
         }
-        private static void InitializeUsers(LearnWithMentor_DBEntities context)
+        private static void InitializeUsers(LearnWithMentorContext context)
         {
             context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('Users', RESEED, 0)");
             var users = new List<User>
@@ -136,7 +137,7 @@ namespace LearnWithMentorDAL.EF
             context.Users.AddRange(users);
             context.SaveChanges();
         }
-        private static void InitializePlans(LearnWithMentor_DBEntities context)
+        private static void InitializePlans(LearnWithMentorContext context)
         {
             context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('[Plans]', RESEED, 0)");
 
@@ -249,7 +250,7 @@ namespace LearnWithMentorDAL.EF
             context.Plans.AddRange(plans);
             context.SaveChanges();
         }
-        private static void InitializeGroups(LearnWithMentor_DBEntities context)
+        private static void InitializeGroups(LearnWithMentorContext context)
         {
             context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('[Groups]', RESEED, 0)");
             #region List of groups
@@ -302,7 +303,7 @@ namespace LearnWithMentorDAL.EF
             context.Groups.AddRange(groups);
             context.SaveChanges();
         }
-        private static void InitializeTasks(LearnWithMentor_DBEntities context)
+        private static void InitializeTasks(LearnWithMentorContext context)
         {
             context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('[Tasks]', RESEED, 0)");
             var tasks = new List<Task>
@@ -378,7 +379,7 @@ namespace LearnWithMentorDAL.EF
             context.Tasks.AddRange(tasks);
             context.SaveChanges();
         }
-        private static void InitializeSections(LearnWithMentor_DBEntities context)
+        private static void InitializeSections(LearnWithMentorContext context)
         {
             context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('[Sections]', RESEED, 0)");
             #region List of Sections
@@ -413,7 +414,7 @@ namespace LearnWithMentorDAL.EF
             context.Sections.AddRange(sections);
             context.SaveChanges();
         }
-        private static void InitializePlanTask(LearnWithMentor_DBEntities context)
+        private static void InitializePlanTask(LearnWithMentorContext context)
         {
             context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('[Plantasks]', RESEED, 0)");
             var planTasks = new List<PlanTask>();
@@ -484,7 +485,7 @@ namespace LearnWithMentorDAL.EF
             context.PlanTasks.AddRange(planTasks);
             context.SaveChanges();
         }
-        private static void InitializeUserTasks(LearnWithMentor_DBEntities context)
+        private static void InitializeUserTasks(LearnWithMentorContext context)
         {
             context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('[UserTasks]', RESEED, 0)");
             var userTasks = new List<UserTask>();
@@ -534,7 +535,7 @@ namespace LearnWithMentorDAL.EF
             context.UserTasks.AddRange(userTasks);
             context.SaveChanges();
         }
-        private static void InitializeMessages(LearnWithMentor_DBEntities context)
+        private static void InitializeMessages(LearnWithMentorContext context)
         {
             context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('[Messages]', RESEED, 0)");
             var messagesTemplates = new[] { "Sorry, i've got cold.", "Hello. I've done this task. Can you review?", "I have problem with this task. Can you help me?", "There some bugs in my code." };
@@ -559,7 +560,7 @@ namespace LearnWithMentorDAL.EF
             context.Messages.AddRange(messages);
             context.SaveChanges();
         }
-        private static void InitializeComments(LearnWithMentor_DBEntities context)
+        private static void InitializeComments(LearnWithMentorContext context)
         {
             context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('[Comments]', RESEED, 1)");
             var rnd = new Random();
@@ -579,7 +580,7 @@ namespace LearnWithMentorDAL.EF
             context.SaveChanges();
         }
 
-        private static void InitializePlanSugestion(LearnWithMentor_DBEntities context)
+        private static void InitializePlanSugestion(LearnWithMentorContext context)
         {
             var planSuggestions = new List<PlanSuggestion>();
 

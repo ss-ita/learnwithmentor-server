@@ -7,7 +7,7 @@ namespace LearnWithMentorDAL.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly LearnWithMentor_DBEntities context;
+        private readonly LearnWithMentorContext context;
         private bool disposed;
         private ICommentRepository comments;
         private IGroupPlanTaskViewRepository groupPlanTaskView;
@@ -23,7 +23,7 @@ namespace LearnWithMentorDAL.UnitOfWork
         private IUserRoleViewRepository userRoleView;
         private IUserTaskRepository userTasks;
 
-        public UnitOfWork(LearnWithMentor_DBEntities context)
+        public UnitOfWork(LearnWithMentorContext context)
         {
             this.context = context;
             disposed = false;

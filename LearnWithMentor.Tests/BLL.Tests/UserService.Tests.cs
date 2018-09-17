@@ -17,14 +17,14 @@ namespace LearnWithMentor.Tests.BLL.Tests
     public class UserServiceTests
     {
         private UserService userService;
-        private Mock<LearnWithMentor_DBEntities> dbContextMock;
+        private Mock<LearnWithMentorContext> dbContextMock;
         private Mock<UnitOfWork> uowMock;
         private Mock<UserRepository> userRepositoryMock;
 
         [SetUp]
         public void SetUp()
         {
-            dbContextMock = new Mock<LearnWithMentor_DBEntities>();
+            dbContextMock = new Mock<LearnWithMentorContext>();
             userRepositoryMock = new Mock<UserRepository>(dbContextMock.Object);
             uowMock = new Mock<UnitOfWork>(dbContextMock.Object);
             userService = new UserService(uowMock.Object);
@@ -41,7 +41,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
         public void GetUserById_ShouldReturnUserById()
         {
             uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);
-            uowMock.Setup(u => u.Users.Get(It.IsAny<int>())).Returns(new User() { Id = 3, Roles = new Role() });
+            uowMock.Setup(u => u.Users.Get(It.IsAny<int>())).Returns(new User() { Id = 3, Role = new Role() });
 
             //arrange
             int userId = 3;
@@ -78,7 +78,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
             string userEmail = "qwerty@gmail.com";
 
             uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);
-            uowMock.Setup(u => u.Users.GetByEmail(It.IsAny<string>())).Returns(new User() { Email = userEmail, Roles = new Role() });
+            uowMock.Setup(u => u.Users.GetByEmail(It.IsAny<string>())).Returns(new User() { Email = userEmail, Role = new Role() });
 
             //act
             var result = userService.GetByEmail(userEmail);
@@ -111,9 +111,9 @@ namespace LearnWithMentor.Tests.BLL.Tests
             //arrange
             var users = new List<User>
             {
-                new User() {Id=1, Roles=new Role() },
-                new User() {Id=2, Roles=new Role() },
-                new User() {Id=3, Roles=new Role() }
+                new User() {Id=1, Role=new Role() },
+                new User() {Id=2, Role=new Role() },
+                new User() {Id=3, Role=new Role() }
             };
 
             uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);

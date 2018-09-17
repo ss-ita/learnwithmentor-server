@@ -55,61 +55,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EF\LearnWithMentorInitializer.cs" />
-    <Compile Include="Entities\Comment.cs">
-      <DependentUpon>LearnWithMentorContext.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\Group.cs">
-      <DependentUpon>LearnWithMentorContext.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\GROUP_PLAN_TASK.cs">
-      <DependentUpon>LearnWithMentorContext.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\LearnWithMentorContext.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>LearnWithMentorContext.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\LearnWithMentorContext.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>LearnWithMentorContext.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\LearnWithMentorContext.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>LearnWithMentorContext.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\Message.cs">
-      <DependentUpon>LearnWithMentorContext.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\Plan.cs">
-      <DependentUpon>LearnWithMentorContext.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\PlanSuggestion.cs">
-      <DependentUpon>LearnWithMentorContext.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\PlanTask.cs">
-      <DependentUpon>LearnWithMentorContext.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\Role.cs">
-      <DependentUpon>LearnWithMentorContext.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\Section.cs">
-      <DependentUpon>LearnWithMentorContext.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\Task.cs">
-      <DependentUpon>LearnWithMentorContext.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\User.cs">
-      <DependentUpon>LearnWithMentorContext.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\UserTask.cs">
-      <DependentUpon>LearnWithMentorContext.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\USER_ROLE.cs">
-      <DependentUpon>LearnWithMentorContext.tt</DependentUpon>
-    </Compile>
-    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Entities\Comment.cs" />
+    <Compile Include="Entities\Group.cs" />
+    <Compile Include="Entities\GROUP_PLAN_TASK.cs" />
+    <Compile Include="Entities\LearnWithMentorContext.cs" />
+    <Compile Include="Entities\Message.cs" />
+    <Compile Include="Entities\Plan.cs" />
+    <Compile Include="Entities\PlanSuggestion.cs" />
+    <Compile Include="Entities\PlanTask.cs" />
+    <Compile Include="Entities\Role.cs" />
+    <Compile Include="Entities\Section.cs" />
+    <Compile Include="Entities\Task.cs" />
+    <Compile Include="Entities\User.cs" />
+    <Compile Include="Entities\UserTask.cs" />
+    <Compile Include="Entities\USER_ROLE.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\BaseRepository.cs" />
     <Compile Include="Repositories\CommentRepository.cs" />
@@ -150,26 +109,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <EntityDeploy Include="Entities\LearnWithMentorContext.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>LearnWithMentorContext.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <None Include="Entities\LearnWithMentorContext.edmx.diagram">
-      <DependentUpon>LearnWithMentorContext.edmx</DependentUpon>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Entities\LearnWithMentorContext.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>LearnWithMentorContext.edmx</DependentUpon>
-      <LastGenOutput>LearnWithMentorContext.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Entities\LearnWithMentorContext.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>LearnWithMentorContext.edmx</DependentUpon>
-      <LastGenOutput>LearnWithMentorContext.cs</LastGenOutput>
-    </Content>
     <Content Include="LICENSE.txt" />
   </ItemGroup>
   <ItemGroup>

@@ -16,7 +16,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
     class CommentServiceTests
     {
         private CommentService commentService;
-        private Mock<LearnWithMentor_DBEntities> dbContextMock;
+        private Mock<LearnWithMentorContext> dbContextMock;
         private Mock<UnitOfWork> uowMock;
         private Mock<CommentRepository> commentRepositoryMock;
         private Mock<UserRepository> userRepositoryMock;
@@ -25,7 +25,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
         [SetUp]
         public void SetUp()
         {
-            dbContextMock = new Mock<LearnWithMentor_DBEntities>();
+            dbContextMock = new Mock<LearnWithMentorContext>();
             commentRepositoryMock = new Mock<CommentRepository>(dbContextMock.Object);
             userRepositoryMock = new Mock<UserRepository>(dbContextMock.Object);
             planTaskRepositoryMock = new Mock<PlanTaskRepository>(dbContextMock.Object);
