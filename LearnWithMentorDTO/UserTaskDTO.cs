@@ -4,10 +4,10 @@ using LearnWithMentorDTO.Infrastructure;
 
 namespace LearnWithMentorDTO
 {
-    public class UserTaskDTO
+    public class UserTaskDto
     {
-        public UserTaskDTO() { }
-        public UserTaskDTO(int id,
+        public UserTaskDto() { }
+        public UserTaskDto(int id,
                 int userId,
                 int planTaskId,
                 DateTime? endDate,

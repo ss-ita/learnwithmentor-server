@@ -5,13 +5,13 @@ namespace LearnWithMentorBLL.Interfaces
 {
     public interface ICommentService: IDisposableService
     {
-        CommentDTO GetComment(int id);
-        IEnumerable<CommentDTO> GetCommentsForPlanTask(int taskId, int planId);
-        IEnumerable<CommentDTO> GetCommentsForPlanTask(int planTaskId);
-        bool AddCommentToPlanTask(int planTaskId, CommentDTO c);
-        bool AddCommentToPlanTask(int planId, int taskId, CommentDTO c);
-        bool UpdateCommentIdText(int id, string text);
-        bool UpdateComment(int id, CommentDTO c);
-        bool RemoveById(int id);
+        CommentDto GetComment(int commentId);
+        IEnumerable<CommentDto> GetCommentsForPlanTask(int taskId, int planId);
+        IEnumerable<CommentDto> GetCommentsForPlanTask(int planTaskId);
+        bool AddCommentToPlanTask(int planTaskId, CommentDto comment);
+        bool AddCommentToPlanTask(int planId, int taskId, CommentDto comment);
+        bool UpdateCommentIdText(int commentId, string text);
+        bool UpdateComment(int commentId, CommentDto commentDTO);
+        bool RemoveById(int commentId);
     }
 }

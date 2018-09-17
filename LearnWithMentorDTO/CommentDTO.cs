@@ -4,9 +4,9 @@ using LearnWithMentorDTO.Infrastructure;
 
 namespace LearnWithMentorDTO
 {
-    public class CommentDTO
+    public class CommentDto
     {
-        public CommentDTO(int id, string text, int creatorId, string creatorFullName, DateTime? createDate, DateTime? modDate)
+        public CommentDto(int id, string text, int creatorId, string creatorFullName, DateTime? createDate, DateTime? modDate)
         {
             Id = id;
             Text = text;

@@ -58,47 +58,47 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             traceWriterMock = null;
         }
 
-        private List<TaskDTO> GetTestTasks()
+        private List<TaskDto> GetTestTasks()
         {
-            var testTasks = new List<TaskDTO>
+            var testTasks = new List<TaskDto>
             {
-                new TaskDTO(1, "Task #1", "Task #1", false, 1, "Task #1 creator", 1,
+                new TaskDto(1, "Task #1", "Task #1", false, 1, "Task #1 creator", 1,
                             "Task #1 creator", DateTime.Now, DateTime.Now, 1, 1, 1),
-                new TaskDTO(2, "Task #2", "Task #2", false, 1, "Task #2 creator", 1,
+                new TaskDto(2, "Task #2", "Task #2", false, 1, "Task #2 creator", 1,
                             "Task #2 creator", DateTime.Now, DateTime.Now, 1, 1, 1),
-                new TaskDTO(3, "Task #3", "Task #3", false, 1, "Task #3 creator", 1,
+                new TaskDto(3, "Task #3", "Task #3", false, 1, "Task #3 creator", 1,
                             "Task #3 creator", DateTime.Now, DateTime.Now, 1, 1, 1),
             };
             return testTasks;
         }
 
-        private List<MessageDTO> GetTestMessage()
+        private List<MessageDto> GetTestMessage()
         {
-            var testMessages = new List<MessageDTO>
+            var testMessages = new List<MessageDto>
             {
-                new MessageDTO(1, 1, 1, "petro", "good result", DateTime.Now),
-                new MessageDTO(2, 1, 1, "petro",  new string('*',5000), DateTime.Now)
+                new MessageDto(1, 1, 1, "petro", "good result", DateTime.Now),
+                new MessageDto(2, 1, 1, "petro",  new string('*',5000), DateTime.Now)
             };
             return testMessages;
         }
 
-        private List<UserTaskDTO> GetTestUserTasks()
+        private List<UserTaskDto> GetTestUserTasks()
         {
-            var testUserTasks = new List<UserTaskDTO>
+            var testUserTasks = new List<UserTaskDto>
             {
-                new UserTaskDTO(1, 1 , 1, DateTime.Now, DateTime.Now, 1),
-                new UserTaskDTO(2, 1 , 2, DateTime.Now, DateTime.Now, 1),
-                new UserTaskDTO(3, 1 , 3, DateTime.Now, DateTime.Now, 1),
-                new UserTaskDTO(4, 2 , 1, DateTime.Now, DateTime.Now, 1),
-                new UserTaskDTO(5, 2 , 2, DateTime.Now, DateTime.Now, 1),
-                new UserTaskDTO(6, 2 , 3, DateTime.Now, DateTime.Now, 1)
+                new UserTaskDto(1, 1 , 1, DateTime.Now, DateTime.Now, 1),
+                new UserTaskDto(2, 1 , 2, DateTime.Now, DateTime.Now, 1),
+                new UserTaskDto(3, 1 , 3, DateTime.Now, DateTime.Now, 1),
+                new UserTaskDto(4, 2 , 1, DateTime.Now, DateTime.Now, 1),
+                new UserTaskDto(5, 2 , 2, DateTime.Now, DateTime.Now, 1),
+                new UserTaskDto(6, 2 , 3, DateTime.Now, DateTime.Now, 1)
             };
             return testUserTasks;
         }
-        private List<TaskDTO> GetTestTasksSearch(string[] lines)
+        private List<TaskDto> GetTestTasksSearch(string[] lines)
         {
             var testTasks = GetTestTasks();
-            var result = new List<TaskDTO>();
+            var result = new List<TaskDto>();
             foreach (var line in lines)
             {
                 result.AddRange(testTasks.Where(t => t.Name.Contains(line)));
@@ -123,7 +123,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             taskServiceMock.Setup(mts => mts.GetAllTasks()).Returns(GetTestTasks());
 
             var response = taskController.GetAllTasks();
-            var successfull = response.TryGetContentValue<IEnumerable<TaskDTO>>(out var taskDTOs);
+            var successfull = response.TryGetContentValue<IEnumerable<TaskDto>>(out var taskDTOs);
             var expected = taskServiceMock.Object.GetAllTasks().Count();
             var actual = taskDTOs.Count();
 
@@ -161,7 +161,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
 
             var task = GetTestTasks()[0];
             var response = taskController.GetTaskById(task.Id);
-            var successfull = response.TryGetContentValue<TaskDTO>(out var taskDTO);
+            var successfull = response.TryGetContentValue<TaskDto>(out var taskDTO);
             var expected = taskServiceMock.Object.GetTaskById(task.Id);
             var actual = taskDTO;
 
@@ -199,7 +199,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             taskServiceMock.Setup(mts => mts.GetTaskForPlan(It.IsAny<int>())).Returns(GetTestTasks()[0]);
 
             var response = taskController.GetTaskForPlan(1);
-            var successfull = response.TryGetContentValue<TaskDTO>(out var taskDTOs);
+            var successfull = response.TryGetContentValue<TaskDto>(out var taskDTOs);
             var expected = taskServiceMock.Object.GetTaskForPlan(1);
             var actual = taskDTOs;
 
@@ -236,9 +236,9 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             taskServiceMock.Setup(mts => mts.GetAllTasks()).Returns(GetTestTasks());
 
             var response = taskController.Search(null);
-            var successfull = response.TryGetContentValue<List<TaskDTO>>(out var taskDTOs);
+            var successfull = response.TryGetContentValue<List<TaskDto>>(out var taskDTOs);
             var expected = taskServiceMock.Object.GetAllTasks().Count();
-            var actual = taskDTOs.Count();
+            var actual = taskDTOs.Count;
 
             Assert.IsTrue(successfull);
             Assert.AreEqual(expected, actual);
@@ -253,7 +253,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
 
             var searchKey = "1";
             var response = taskController.Search(searchKey);
-            var successfull = response.TryGetContentValue<List<TaskDTO>>(out var taskDTOs);
+            var successfull = response.TryGetContentValue<List<TaskDto>>(out var taskDTOs);
             var expected = taskServiceMock.Object.Search(new[] { searchKey });
             var actual = taskDTOs;
 
@@ -332,7 +332,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public void PostTaskTest_ShouldSuccessfullyCreateNewTask()
         {
 
-            taskServiceMock.Setup(mts => mts.CreateTask(It.IsAny<TaskDTO>()))
+            taskServiceMock.Setup(mts => mts.CreateTask(It.IsAny<TaskDto>()))
                 .Returns(true);
             var newTask = GetTestTasks()[0];
             var response = taskController.Post(newTask);
@@ -343,10 +343,10 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public void PostTaskTest_ShouldCheckNotValidInputParameterAndReturnBadRequestResponse()
         {
-            taskServiceMock.Setup(mts => mts.CreateTask(It.IsAny<TaskDTO>()))
+            taskServiceMock.Setup(mts => mts.CreateTask(It.IsAny<TaskDto>()))
                 .Returns(true);
 
-            var newTask = new TaskDTO();
+            var newTask = new TaskDto();
             ValidateViewModel(taskController, newTask);
             var response = taskController.Post(newTask);
 
@@ -356,7 +356,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public void PostTaskTest_ShouldCheckNotSuccessfullPostTryAndReturnBadRequestResponse()
         {
-            taskServiceMock.Setup(mts => mts.CreateTask(It.IsAny<TaskDTO>()))
+            taskServiceMock.Setup(mts => mts.CreateTask(It.IsAny<TaskDto>()))
                 .Returns(false);
 
             var newTask = GetTestTasks()[0];
@@ -369,7 +369,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public void PostTaskTest_ShouldCatchEntityException()
         {
-            taskServiceMock.Setup(mts => mts.CreateTask(It.IsAny<TaskDTO>()))
+            taskServiceMock.Setup(mts => mts.CreateTask(It.IsAny<TaskDto>()))
                 .Throws(new EntityException());
 
             var newTask = GetTestTasks()[0];
@@ -383,7 +383,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public void PostAndReturnIdTest_ShouldSuccessfullyCreateNewTaskAndReturnItsId()
         {
             var returnId = 1;
-            taskServiceMock.Setup(mts => mts.AddAndGetId(It.IsAny<TaskDTO>()))
+            taskServiceMock.Setup(mts => mts.AddAndGetId(It.IsAny<TaskDto>()))
                 .Returns(returnId);
 
             var response = taskController.PostAndReturnId(GetTestTasks()[0]);
@@ -399,10 +399,10 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public void PostAndReturnIdTest_ShouldCheckNotValidInputAndReturnBadRequestResponse()
         {
-            taskServiceMock.Setup(mts => mts.AddAndGetId(It.IsAny<TaskDTO>()))
+            taskServiceMock.Setup(mts => mts.AddAndGetId(It.IsAny<TaskDto>()))
                 .Returns(1);
 
-            var newTask = new TaskDTO();
+            var newTask = new TaskDto();
             ValidateViewModel(taskController, newTask);
             var response = taskController.PostAndReturnId(newTask);
 
@@ -412,7 +412,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public void PostAndReturnIdTest_ShouldCheckNotSuccessfullPostTryAndReturnBadRequestResponse()
         {
-            taskServiceMock.Setup(mts => mts.AddAndGetId(It.IsAny<TaskDTO>()))
+            taskServiceMock.Setup(mts => mts.AddAndGetId(It.IsAny<TaskDto>()))
                 .Returns(() => null);
 
             var response = taskController.PostAndReturnId(GetTestTasks()[0]);
@@ -423,7 +423,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public void PostAndReturnIdTest_ShouldCatchEntityException()
         {
-            taskServiceMock.Setup(mts => mts.AddAndGetId(It.IsAny<TaskDTO>()))
+            taskServiceMock.Setup(mts => mts.AddAndGetId(It.IsAny<TaskDto>()))
                 .Throws(new EntityException());
 
             var response = taskController.PostAndReturnId(GetTestTasks()[0]);
@@ -511,7 +511,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
 
             var task = GetTestUserTasks()[0];
             var response = taskController.GetUsersTasks(new []{task.PlanTaskId}, new[]{ task.UserId });
-            var successfull = response.TryGetContentValue<List<ListUserTasksDTO>>(out var taskDTO);
+            var successfull = response.TryGetContentValue<List<ListUserTasksDto>>(out var taskDTO);
             var expected = taskServiceMock.Object.GetTaskStatesForUser(new[] { task.PlanTaskId }, task.UserId);
             var actual = taskDTO;
 
@@ -556,7 +556,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
 
             var usertask = GetTestUserTasks()[0];
             var response = taskController.GetUserTask(usertask.PlanTaskId,usertask.UserId);
-            var successfull = response.TryGetContentValue<UserTaskDTO>(out var usertaskDTO);
+            var successfull = response.TryGetContentValue<UserTaskDto>(out var usertaskDTO);
             var expected = taskServiceMock.Object.GetUserTaskByUserPlanTaskId(usertask.UserId, usertask.PlanTaskId);
             var actual = usertaskDTO;
 
@@ -704,7 +704,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public void PostNewUserTaskTest_ShouldSuccessfullyCreateNewUserTask()
         {
 
-            taskServiceMock.Setup(mts => mts.CreateUserTask(It.IsAny<UserTaskDTO>()))
+            taskServiceMock.Setup(mts => mts.CreateUserTask(It.IsAny<UserTaskDto>()))
                 .Returns(true);
             var newTask = GetTestUserTasks()[0];
             var response = taskController.PostNewUserTask(newTask);
@@ -715,10 +715,10 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public void PostNewUserTaskTest_ShouldCheckNotValidInputParameterAndReturnBadRequestResponse()
         {
-            taskServiceMock.Setup(mts => mts.CreateUserTask(It.IsAny<UserTaskDTO>()))
+            taskServiceMock.Setup(mts => mts.CreateUserTask(It.IsAny<UserTaskDto>()))
                 .Returns(true);
 
-            var newUserTask = new UserTaskDTO();
+            var newUserTask = new UserTaskDto();
             ValidateViewModel(taskController, newUserTask);
             var response = taskController.PostNewUserTask(newUserTask);
 
@@ -728,7 +728,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public void PostNewUserTaskTest_ShouldCheckNotSuccessfullPostTryAndReturnNoContentResponse()
         {
-            taskServiceMock.Setup(mts => mts.CreateUserTask(It.IsAny<UserTaskDTO>()))
+            taskServiceMock.Setup(mts => mts.CreateUserTask(It.IsAny<UserTaskDto>()))
                 .Returns(false);
 
             var newUserTask = GetTestUserTasks()[0];
@@ -741,7 +741,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public void PostNewUserTaskTest_ShouldCatchEntityException()
         {
-            taskServiceMock.Setup(mts => mts.CreateUserTask(It.IsAny<UserTaskDTO>()))
+            taskServiceMock.Setup(mts => mts.CreateUserTask(It.IsAny<UserTaskDto>()))
                 .Throws(new EntityException());
 
             var newUserTask = GetTestUserTasks()[0];
@@ -757,7 +757,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public void PostUserTaskMessageTest_ShouldSuccessfullyCreateUserTaskMessage()
         {
             userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(1);
-            messageServiceMock.Setup(mts => mts.SendMessage(It.IsAny<MessageDTO>()))
+            messageServiceMock.Setup(mts => mts.SendMessage(It.IsAny<MessageDto>()))
                 .Returns(true);
 
             var message = GetTestMessage()[0];
@@ -770,7 +770,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public void PostUserTaskMessageTest_ShouldCheckNotValidInputParameterAndReturnBadRequestResponse()
         {
             userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(1);
-            messageServiceMock.Setup(mts => mts.SendMessage(It.IsAny<MessageDTO>()))
+            messageServiceMock.Setup(mts => mts.SendMessage(It.IsAny<MessageDto>()))
                 .Returns(true);
 
             var message = GetTestMessage()[1];
@@ -784,7 +784,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public void PostUserTaskMessageTest_ShouldCheckNotSuccessfullPostTryAndReturnBadRequestResponse()
         {
             userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(1);
-            messageServiceMock.Setup(mts => mts.SendMessage(It.IsAny<MessageDTO>()))
+            messageServiceMock.Setup(mts => mts.SendMessage(It.IsAny<MessageDto>()))
                 .Returns(false);
 
             var message = GetTestMessage()[0];
@@ -797,7 +797,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public void PostUserTaskMessageTest_ShouldCatchEntityException()
         {
             userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(1);
-            messageServiceMock.Setup(mts => mts.SendMessage(It.IsAny<MessageDTO>()))
+            messageServiceMock.Setup(mts => mts.SendMessage(It.IsAny<MessageDto>()))
                 .Throws(new EntityException());
 
             var message = GetTestMessage()[0];

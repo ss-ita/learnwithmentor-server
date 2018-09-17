@@ -265,7 +265,6 @@ namespace LearnWithMentor.Areas.HelpPage
                         type = requestBodyParameter == null ? null : requestBodyParameter.ParameterDescriptor.ParameterType;
                         formatters = api.SupportedRequestBodyFormatters;
                         break;
-                    case SampleDirection.Response:
                     default:
                         type = api.ResponseDescription.ResponseType ?? api.ResponseDescription.DeclaredType;
                         formatters = api.SupportedResponseFormatters;

@@ -4,9 +4,9 @@ using LearnWithMentorDTO.Infrastructure;
 
 namespace LearnWithMentorDTO
 {
-    public class MessageDTO
+    public class MessageDto
     {
-        public MessageDTO(int id,
+        public MessageDto(int id,
                         int senderId,
                         int userTaskId,
                         string senderName,

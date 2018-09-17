@@ -10,33 +10,33 @@ namespace LearnWithMentorBLL.Services
         public RoleService(IUnitOfWork db) : base(db)
         {
         }
-        public RoleDTO Get(int id)
+        public RoleDto Get(int id)
         {
             var role = db.Roles.Get(id);
             return role == null ? null :
-                new RoleDTO(role.Id, role.Name);
+                new RoleDto(role.Id, role.Name);
         }
-        public List<RoleDTO> GetAllRoles()
+        public List<RoleDto> GetAllRoles()
         {
             var roles = db.Roles.GetAll();
             if (roles == null)
             {
                 return null;
             }
-            var dtos = new List<RoleDTO>();
+            var dtos = new List<RoleDto>();
             foreach (var role in roles)
             {
-                dtos.Add(new RoleDTO(role.Id, role.Name));
+                dtos.Add(new RoleDto(role.Id, role.Name));
             }
             return dtos;
         }
-        public RoleDTO GetByName(string name)
+        public RoleDto GetByName(string name)
         {
             if (!db.Roles.TryGetByName(name, out var role))
             {
                 return null;
             }
-            return new RoleDTO(role.Id, role.Name);
+            return new RoleDto(role.Id, role.Name);
         }
     }
 }

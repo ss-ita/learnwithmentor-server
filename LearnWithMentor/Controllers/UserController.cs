@@ -51,7 +51,7 @@ namespace LearnWithMentor.Controllers
             var users = userService.GetAllUsers();
             if (users.Count != 0)
             {
-                return Request.CreateResponse<IEnumerable<UserDTO>>(HttpStatusCode.OK, users);
+                return Request.CreateResponse<IEnumerable<UserDto>>(HttpStatusCode.OK, users);
             }
             const string message = "No users in database.";
             return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
@@ -102,7 +102,7 @@ namespace LearnWithMentor.Controllers
                 const string usersErorMessage = "No users with this role_id  in database.";
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, usersErorMessage);
             }
-            return Request.CreateResponse<IEnumerable<UserDTO>>(HttpStatusCode.OK, users);
+            return Request.CreateResponse<IEnumerable<UserDto>>(HttpStatusCode.OK, users);
         }
         /// <summary>
         /// Returns one page of users with specified role.
@@ -145,7 +145,7 @@ namespace LearnWithMentor.Controllers
                 const string usersErorMessage = "No users with this state in database.";
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, usersErorMessage);
             }
-            return Request.CreateResponse<IEnumerable<UserDTO>>(HttpStatusCode.OK, users);
+            return Request.CreateResponse<IEnumerable<UserDto>>(HttpStatusCode.OK, users);
         }
 
         /// <summary>
@@ -195,7 +195,7 @@ namespace LearnWithMentor.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Route("api/user")]
-        public HttpResponseMessage Post([FromBody]UserRegistrationDTO value)
+        public HttpResponseMessage Post([FromBody]UserRegistrationDto value)
         {
             if (!ModelState.IsValid)
             {
@@ -289,7 +289,7 @@ namespace LearnWithMentor.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Route("api/user/password-reset")]
-        public async Task<HttpResponseMessage> SendPasswordResetLink([FromBody] EmailDTO emailModel, string resetPasswordLink)
+        public async Task<HttpResponseMessage> SendPasswordResetLink([FromBody] EmailDto emailModel, string resetPasswordLink)
         {
             try
             {
@@ -329,7 +329,7 @@ namespace LearnWithMentor.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Route("api/user/confirm-email")]
-        public async Task<HttpResponseMessage> SendEmailConfirmLink([FromBody] EmailDTO emailModel, string emailConfirmLink)
+        public async Task<HttpResponseMessage> SendEmailConfirmLink([FromBody] EmailDto emailModel, string emailConfirmLink)
         {
             try
             {
@@ -471,7 +471,7 @@ namespace LearnWithMentor.Controllers
         [JwtAuthentication]
         [HttpPut]
         [Route("api/user/{id}")]
-        public HttpResponseMessage Put(int id, [FromBody]UserDTO value)
+        public HttpResponseMessage Put(int id, [FromBody]UserDto value)
         {
             try
             {
@@ -553,7 +553,7 @@ namespace LearnWithMentor.Controllers
                 userService.Search(lines, searchParametr);
             if (users.Count != 0)
             {
-                return Request.CreateResponse<IEnumerable<UserDTO>>(HttpStatusCode.OK, users);
+                return Request.CreateResponse<IEnumerable<UserDto>>(HttpStatusCode.OK, users);
             }
             const string message = "No users found.";
             return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
@@ -648,7 +648,7 @@ namespace LearnWithMentor.Controllers
             var roles = roleService.GetAllRoles();
             if (roles.Count != 0)
             {
-                return Request.CreateResponse<IEnumerable<RoleDTO>>(HttpStatusCode.OK, roles);
+                return Request.CreateResponse<IEnumerable<RoleDto>>(HttpStatusCode.OK, roles);
             }
             const string message = "No roles in database.";
             return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);

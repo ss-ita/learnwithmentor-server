@@ -14,7 +14,7 @@ namespace LearnWithMentor.Areas.HelpPage
     /// </summary>
     public class XmlDocumentationProvider : IDocumentationProvider, IModelDocumentationProvider
     {
-        private XPathNavigator _documentNavigator;
+        private readonly XPathNavigator _documentNavigator;
         private const string TypeExpression = "/doc/members/member[@name='T:{0}']";
         private const string MethodExpression = "/doc/members/member[@name='M:{0}']";
         private const string PropertyExpression = "/doc/members/member[@name='P:{0}']";
@@ -139,7 +139,6 @@ namespace LearnWithMentor.Areas.HelpPage
             string name = type.FullName;
             if (type.IsGenericType)
             {
-                // Format the generic type name to something like: Generic{System.Int32,System.String}
                 Type genericType = type.GetGenericTypeDefinition();
                 Type[] genericArguments = type.GetGenericArguments();
                 string genericTypeName = genericType.FullName;
