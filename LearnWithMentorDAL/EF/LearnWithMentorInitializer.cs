@@ -48,7 +48,6 @@ namespace LearnWithMentorDAL.EF
             context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('Roles', RESEED, 0)");
             var roles = new List<Role>
             {
-                new Role() {Name = "Guest"},
                 new Role() {Name = "Mentor"},
                 new Role() {Name = "Student"},
                 new Role() {Name = "Admin"}
