@@ -4,7 +4,7 @@
 
 --CREATE DATABASE LearnWithMentor_DB
 --Go 
-use LearnWithMentor_DB
+use LearnWithMentor_DataBaseExample
 
 CREATE TABLE Roles
 (
@@ -24,7 +24,7 @@ CREATE TABLE Users
 	Password NVARCHAR(100) NOT NULL,
 	Role_Id INT NOT NULL,
 	Blocked BIT NOT NULL CONSTRAINT DF_User_Blocked DEFAULT 0,
-	Image VARCHAR(MAX),
+	Image NVARCHAR(MAX),
 	Image_Name NVARCHAR(1000),
 
 CONSTRAINT PK_Users_Id PRIMARY KEY (Id),
