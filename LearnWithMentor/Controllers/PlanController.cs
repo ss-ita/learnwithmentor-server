@@ -227,7 +227,7 @@ namespace LearnWithMentor.Controllers
         /// </summary>
         /// <param name="id"> Id of plan to be updated. </param>
         /// <param name="value"> Plan info to be updated. </param>
-        [Authorize(Roles = "Mentor")]
+        [Authorize(Roles = "Mentor,Admin")]
         [HttpPut]
         [Route("api/plan/{id}")]
         public HttpResponseMessage Put(int id, [FromBody]PlanDto value)
@@ -261,7 +261,7 @@ namespace LearnWithMentor.Controllers
         /// <param name="sectionId"></param>
         /// <param name="priority"></param>
         /// <returns></returns>            
-        [Authorize(Roles = "Mentor")]
+        [Authorize(Roles = "Mentor,Admin")]
         [HttpPut]
         [Route("api/plan/{id}/task/{taskId}")]
         public HttpResponseMessage PutTaskToPlan(int id, int taskId,string sectionId, string priority)
@@ -307,7 +307,7 @@ namespace LearnWithMentor.Controllers
         /// Sets image for plan by plan id.
         /// </summary>
         /// <param name="id"> Id of the plan. </param>
-        [Authorize(Roles = "Mentor")]
+        [Authorize(Roles = "Mentor,Admin")]
         [HttpPost]
         [Route("api/plan/{id}/image")]
         public HttpResponseMessage PostImage(int id)

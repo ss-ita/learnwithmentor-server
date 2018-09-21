@@ -1,5 +1,5 @@
-use LearnWithMentor_DB;
-delete PlanSuggestion;
+use LearnWithMentor_DataBaseExample;
+delete PlanSuggestions;
 delete Messages;
 delete Comments;
 delete UserTasks;
@@ -8,7 +8,7 @@ delete Tasks;
 delete GroupPlans;
 delete Sections;
 delete Plans;
-delete UserGroups;
+delete UserGroup;
 delete Groups;
 delete Users;
 delete Roles;
