@@ -12,6 +12,7 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Tracing;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDTO;
+using System.Threading.Tasks;
 
 namespace LearnWithMentor.Tests.Controllers.Tests
 {
@@ -180,7 +181,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public void GetStatisticsTest()
+        public async Task GetStatisticsTest()
         {
             var statsDTO = new StatisticsDto()
             {
@@ -190,9 +191,9 @@ namespace LearnWithMentor.Tests.Controllers.Tests
                 InProgressNumber = 1
             };
             userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(1);
-            taskServiceMock.Setup(t => t.GetUserStatistics(1)).Returns(statsDTO);
+            taskServiceMock.Setup(t => t.GetUserStatistics(1)).ReturnsAsync(statsDTO);
 
-            var response = userController.GetStatistics();
+            HttpResponseMessage response = await userController.GetStatistics();
             response.TryGetContentValue<StatisticsDto>(out var resultDTO);
             var expectedNumber = statsDTO.ApprovedNumber;
             var actualNumber = resultDTO.ApprovedNumber;
@@ -287,12 +288,12 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public void NoUserInGetStatisticsTest()
+        public async Task NoUserInGetStatisticsTest()
         {
             userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(1);
             taskServiceMock.Setup(t => t.GetUserStatistics(1));
 
-            var response = userController.GetStatistics();
+            HttpResponseMessage response = await userController.GetStatistics();
             var expectedStatusCode = HttpStatusCode.NoContent;
             var actualStatusCode = response.StatusCode;
 

@@ -7,6 +7,7 @@ using LearnWithMentorDTO;
 using LearnWithMentorBLL.Interfaces;
 using System.Web.Http.Tracing;
 using System.Data.Entity.Core;
+using System.Threading.Tasks;
 
 namespace LearnWithMentor.Controllers
 {
@@ -351,7 +352,7 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpDelete]
         [Route("api/group/removeUserFromGroup")]
-        public HttpResponseMessage RemoveUserFromCurrentGroup(int groupId, int userToRemoveId)
+        public async Task<HttpResponseMessage> RemoveUserFromCurrentGroup(int groupId, int userToRemoveId)
         {
             try
             {
@@ -361,7 +362,7 @@ namespace LearnWithMentor.Controllers
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
                 }
-                var successfullyRemoved = groupService.RemoveUserFromGroup(groupId, userToRemoveId);
+                bool successfullyRemoved = await groupService.RemoveUserFromGroup(groupId, userToRemoveId);
                 if (successfullyRemoved)
                 {
                     var log = $"Succesfully removed user with id = {userToRemoveId} from group with id = {groupId}";

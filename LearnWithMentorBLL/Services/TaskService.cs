@@ -7,6 +7,8 @@ using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDAL.UnitOfWork;
 using LearnWithMentorDTO.Infrastructure;
 using System;
+using System.Threading.Tasks;
+using TaskEntity = LearnWithMentorDAL.Entities.Task;
 
 namespace LearnWithMentorBLL.Services
 {
@@ -47,7 +49,7 @@ namespace LearnWithMentorBLL.Services
             {
                 return null;
             }
-            var task = new Task
+            var task = new TaskEntity
             {
                 Name = taskDTO.Name,
                 Description = taskDTO.Description,
@@ -99,7 +101,7 @@ namespace LearnWithMentorBLL.Services
             return taskDTO;
         }
 
-        public StatisticsDto GetUserStatistics(int userId)
+        public async Task<StatisticsDto> GetUserStatistics(int userId)
         {
             if(!db.Users.ContainsId(userId))
             {
@@ -107,10 +109,10 @@ namespace LearnWithMentorBLL.Services
             }
             return new StatisticsDto()
             {
-                InProgressNumber = db.UserTasks.GetNumberOfTasksByState(userId, "P"),
-                DoneNumber = db.UserTasks.GetNumberOfTasksByState(userId, "D"),
-                ApprovedNumber = db.UserTasks.GetNumberOfTasksByState(userId, "A"),
-                RejectedNumber = db.UserTasks.GetNumberOfTasksByState(userId, "R")
+                InProgressNumber = await db.UserTasks.GetNumberOfTasksByState(userId, "P"),
+                DoneNumber =  await db.UserTasks.GetNumberOfTasksByState(userId, "D"),
+                ApprovedNumber = await db.UserTasks.GetNumberOfTasksByState(userId, "A"),
+                RejectedNumber = await db.UserTasks.GetNumberOfTasksByState(userId, "R")
             };
         }
 
@@ -152,7 +154,7 @@ namespace LearnWithMentorBLL.Services
 
         public bool CreateTask(TaskDto taskDTO)
         {
-            var task = new Task()
+            var task = new TaskEntity()
             {
                 Name = taskDTO.Name,
                 Description = taskDTO.Description,
@@ -191,9 +193,9 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public bool UpdateProposeEndDate(int userTaskId, DateTime proposeEndDate)
+        public async Task<bool> UpdateProposeEndDate(int userTaskId, DateTime proposeEndDate)
         {
-            var userTask = db.UserTasks.Get(userTaskId);
+            UserTask userTask = await db.UserTasks.Get(userTaskId);
             if (userTask == null) return false;
             userTask.Propose_End_Date = proposeEndDate;
             db.UserTasks.Update(userTask);
@@ -201,9 +203,9 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public bool SetNewEndDate(int userTaskId)
+        public async Task<bool> SetNewEndDate(int userTaskId)
         {
-            var userTask = db.UserTasks.Get(userTaskId);
+            UserTask userTask = await db.UserTasks.Get(userTaskId);
             if (userTask == null) return false;
             userTask.End_Date = userTask.Propose_End_Date;
             userTask.Propose_End_Date = null;
@@ -212,9 +214,9 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public bool DeleteProposeEndDate(int userTaskId)
+        public async Task<bool> DeleteProposeEndDate(int userTaskId)
         {
-            var userTask = db.UserTasks.Get(userTaskId);
+            UserTask userTask =  await db.UserTasks.Get(userTaskId);
             if (userTask == null) return false;
             userTask.Propose_End_Date = null;
             db.UserTasks.Update(userTask);
@@ -259,12 +261,12 @@ namespace LearnWithMentorBLL.Services
             return false;
         }
 
-        public List<UserTaskDto> GetTaskStatesForUser(int[] planTaskIds, int userId)
+        public async Task<List<UserTaskDto>> GetTaskStatesForUser(int[] planTaskIds, int userId)
         {
             var dtoList = new List<UserTaskDto>();
             foreach (int planTaskId in planTaskIds)
             {
-                var userTask = db.UserTasks.GetByPlanTaskForUser(planTaskId, userId);
+                UserTask userTask = await db.UserTasks.GetByPlanTaskForUser(planTaskId, userId);
                 if (userTask != null)
                 {
                     dtoList.Add(new UserTaskDto(userTask.Id, userTask.User_Id, userTask.PlanTask_Id, userTask.End_Date,
@@ -313,9 +315,9 @@ namespace LearnWithMentorBLL.Services
             return tasksNotUsedInPlanList;
         }
         
-        public UserTaskDto GetUserTaskByUserPlanTaskId(int userId, int planTaskId)
+        public async Task<UserTaskDto> GetUserTaskByUserPlanTaskId(int userId, int planTaskId)
         {
-            var userTask = db.UserTasks.GetByPlanTaskForUser(planTaskId, userId);
+            UserTask userTask = await db.UserTasks.GetByPlanTaskForUser(planTaskId, userId);
             if (userTask == null)
             {
                 return null;
@@ -331,13 +333,13 @@ namespace LearnWithMentorBLL.Services
             return userTaskDto;
         }
 
-        public bool UpdateUserTaskStatus(int userTaskId, string newStatus)
+        public async Task<bool> UpdateUserTaskStatus(int userTaskId, string newStatus)
         {
             if (!Regex.IsMatch(newStatus, ValidationRules.USERTASK_STATE))
             {
                 return false;
             }
-            var userTask= db.UserTasks.Get(userTaskId);
+            UserTask userTask= await db.UserTasks.Get(userTaskId);
             if (userTask == null)
             {
                 return false;
@@ -348,13 +350,13 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public bool UpdateUserTaskResult(int userTaskId, string newResult)
+        public async Task<bool> UpdateUserTaskResult(int userTaskId, string newResult)
         {
             if (newResult == null)
             {
                 return false;
             }
-            var userTask = db.UserTasks.Get(userTaskId);
+            UserTask userTask = await db.UserTasks.Get(userTaskId);
             if (userTask == null)
             {
                 return false;
@@ -368,9 +370,9 @@ namespace LearnWithMentorBLL.Services
         {
             var query = db.Tasks.GetAll().AsQueryable();
             query = query.OrderBy(x => x.Id);
-            return PagedList<Task, TaskDto>.GetDTO(query, pageNumber, pageSize, TaskToTaskDTO);
+            return PagedList<TaskEntity, TaskDto>.GetDTO(query, pageNumber, pageSize, TaskToTaskDTO);
         }
-        private TaskDto TaskToTaskDTO(Task task)
+        private TaskDto TaskToTaskDTO(TaskEntity task)
         {
             return new TaskDto(task.Id,
                                 task.Name,
@@ -386,9 +388,9 @@ namespace LearnWithMentorBLL.Services
                                 null,
                                 null);
         }
-        public bool CheckUserTaskOwner(int userTaskId, int userId)
+        public async Task<bool> CheckUserTaskOwner(int userTaskId, int userId)
         {
-            var userTask = db.UserTasks.Get(userTaskId);
+            UserTask userTask = await db.UserTasks.Get(userTaskId);
             return userTask.User_Id == userId;
         }
     }

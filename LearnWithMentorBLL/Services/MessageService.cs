@@ -3,6 +3,7 @@ using LearnWithMentorDAL.Entities;
 using LearnWithMentorDTO;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDAL.UnitOfWork;
+using System.Threading.Tasks;
 
 namespace LearnWithMentorBLL.Services
 {
@@ -12,9 +13,9 @@ namespace LearnWithMentorBLL.Services
         {
         }
 
-        public IEnumerable<MessageDto> GetMessages(int userTaskId)
+        public async Task<IEnumerable<MessageDto>> GetMessages(int userTaskId)
         {
-            var userTask = db.UserTasks.Get(userTaskId);
+            UserTask userTask = await db.UserTasks.Get(userTaskId);
             if (userTask == null)
             {
                 return null;

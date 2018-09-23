@@ -4,6 +4,7 @@ using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDAL.Entities;
 using LearnWithMentorDAL.UnitOfWork;
 using LearnWithMentorDTO;
+using TaskThread =  System.Threading.Tasks;
 
 namespace LearnWithMentorBLL.Services
 {
@@ -427,7 +428,7 @@ namespace LearnWithMentorBLL.Services
             return matchNumber > 1;
         }
 
-        private void DeleteUserTasksOnRemovingUser(int groupId, int userId)
+        private async TaskThread.Task DeleteUserTasksOnRemovingUser(int groupId, int userId)
         {
             var group = db.Groups.Get(groupId);
             var user = db.Users.Get(userId);
@@ -447,7 +448,7 @@ namespace LearnWithMentorBLL.Services
                 }
                 foreach (var planTask in plan.PlanTasks)
                 {
-                    var userTask = db.UserTasks.GetByPlanTaskForUser(planTask.Id, user.Id);
+                    UserTask userTask = await db.UserTasks.GetByPlanTaskForUser(planTask.Id, user.Id);
                     if (userTask == null)
                     {
                         continue;
@@ -456,9 +457,11 @@ namespace LearnWithMentorBLL.Services
                     db.UserTasks.Remove(userTask);
                 }
             }
+
+            
         }
 
-        public bool RemoveUserFromGroup(int groupId, int userIdToRemove)
+        public async TaskThread.Task<bool> RemoveUserFromGroup(int groupId, int userIdToRemove)
         {
             var group = db.Groups.Get(groupId);
             var userToRemove = db.Users.Get(userIdToRemove);
@@ -470,13 +473,13 @@ namespace LearnWithMentorBLL.Services
             {
                 return false;
             }
-            DeleteUserTasksOnRemovingUser(groupId, userIdToRemove);
+            await DeleteUserTasksOnRemovingUser(groupId, userIdToRemove);
             group.Users.Remove(userToRemove);
             db.Save();
             return true;
         }
 
-        private void DeleteUserTasksOnRemovingPlan(int groupId, int planId)
+        private async TaskThread.Task DeleteUserTasksOnRemovingPlan(int groupId, int planId)
         {
             var group = db.Groups.Get(groupId);
             var plan = db.Plans.Get(planId);
@@ -492,7 +495,8 @@ namespace LearnWithMentorBLL.Services
                 }
                 foreach (var planTask in plan.PlanTasks)
                 {
-                    var userTask = db.UserTasks.GetByPlanTaskForUser(planTask.Id, user.Id);
+
+                    var userTask = await db.UserTasks.GetByPlanTaskForUser(planTask.Id, user.Id);
                     if (userTask == null)
                     {
                         continue;

@@ -13,7 +13,7 @@ using System.Web.Http.Tracing;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDTO;
 using System.ComponentModel.DataAnnotations;
-
+using System.Threading.Tasks;
 
 namespace LearnWithMentor.Tests.Controllers.Tests
 {
@@ -475,12 +475,12 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         #endregion
         #region RemoveUserFromCurrentGroup
         [Test]
-        public void RemoveUserFromCurrentGroupOk()
+        public async Task RemoveUserFromCurrentGroupOk()
         {
-            groupServiceMock.Setup(u => u.RemoveUserFromGroup(It.IsAny<int>(), It.IsAny<int>())).Returns(true);
+            groupServiceMock.Setup(u => u.RemoveUserFromGroup(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(true);
             userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(new int());
             groupServiceMock.Setup(u => u.GetMentorIdByGroup(It.IsAny<int>())).Returns(new int());
-            var response = groupController.RemoveUserFromCurrentGroup(1, 2);
+            HttpResponseMessage response = await groupController.RemoveUserFromCurrentGroup(1, 2);
             var expected = HttpStatusCode.OK;
             var actual = response.StatusCode;
 
@@ -488,12 +488,12 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public void RemoveUserFromCurrentGroupUnauthorized()
+        public async Task RemoveUserFromCurrentGroupUnauthorized()
         {
-            groupServiceMock.Setup(u => u.RemoveUserFromGroup(It.IsAny<int>(), It.IsAny<int>())).Returns(true);
+            groupServiceMock.Setup(u => u.RemoveUserFromGroup(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(true);
             userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(new int());
             groupServiceMock.Setup(u => u.GetMentorIdByGroup(It.IsAny<int>())).Returns(() => null);
-            var response = groupController.RemoveUserFromCurrentGroup(1, 2);
+            HttpResponseMessage response = await groupController.RemoveUserFromCurrentGroup(1, 2);
             var expected = HttpStatusCode.Unauthorized;
             var actual = response.StatusCode;
 
@@ -501,12 +501,12 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public void RemoveUserFromCurrentGroupNoContent()
+        public async Task RemoveUserFromCurrentGroupNoContent()
         {
-            groupServiceMock.Setup(u => u.RemoveUserFromGroup(It.IsAny<int>(), It.IsAny<int>())).Returns(false);
+            groupServiceMock.Setup(u => u.RemoveUserFromGroup(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(false);
             userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(new int());
             groupServiceMock.Setup(u => u.GetMentorIdByGroup(It.IsAny<int>())).Returns(new int());
-            var response = groupController.RemoveUserFromCurrentGroup(1, 2);
+            HttpResponseMessage response = await groupController.RemoveUserFromCurrentGroup(1, 2);
             var expected = HttpStatusCode.NoContent;
             var actual = response.StatusCode;
 
@@ -514,12 +514,12 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public void RemoveUserFromCurrentGroupInternalServerError()
+        public async Task RemoveUserFromCurrentGroupInternalServerError()
         {
             groupServiceMock.Setup(u => u.RemoveUserFromGroup(It.IsAny<int>(), It.IsAny<int>())).Throws(new EntityException());
             userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(new int());
             groupServiceMock.Setup(u => u.GetMentorIdByGroup(It.IsAny<int>())).Returns(new int());
-            var response = groupController.RemoveUserFromCurrentGroup(1, 2);
+            HttpResponseMessage response = await groupController.RemoveUserFromCurrentGroup(1, 2);
             var expected = HttpStatusCode.InternalServerError;
             var actual = response.StatusCode;
 

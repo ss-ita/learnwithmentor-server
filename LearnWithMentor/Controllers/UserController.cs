@@ -366,10 +366,10 @@ namespace LearnWithMentor.Controllers
         [JwtAuthentication]
         [HttpGet]
         [Route("api/user/statistics")]
-        public HttpResponseMessage GetStatistics()
+        public async Task<HttpResponseMessage> GetStatistics()
         {
             var id = userIdentityService.GetUserId();
-            var statistics = taskService.GetUserStatistics(id);
+            StatisticsDto statistics = await taskService.GetUserStatistics(id);
             if (statistics == null)
             {
                 const string errorMessage = "No user with this id in database.";
