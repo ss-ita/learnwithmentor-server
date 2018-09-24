@@ -91,12 +91,12 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public void SearchUsersTest()
+        public async Task SearchUsersTest()
         {
-            roleServiceMock.Setup(r => r.Get(It.IsInRange(1, 3, Range.Inclusive))).Returns(roles.First());
+            roleServiceMock.Setup(r => r.Get(It.IsInRange(1, 3, Range.Inclusive))).ReturnsAsync(roles.First());
             userServiceMock.Setup(u => u.Search(It.IsAny<string[]>(), It.IsAny<int?>())).Returns(users);
 
-            var response = userController.Search("test", "test");
+            var response = await userController.Search("test", "test");
             response.TryGetContentValue<IEnumerable<UserDto>>(out var userDTOs);
             var expected = userServiceMock.Object.Search(new[] { "test" }, 1).Count;
             var actual = userDTOs.Count();
@@ -107,7 +107,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public void GetUsersByRoleTest()
         {
-            roleServiceMock.Setup(r => r.Get(It.IsInRange(1, 3, Range.Inclusive))).Returns(roles.First());
+            roleServiceMock.Setup(r => r.Get(It.IsInRange(1, 3, Range.Inclusive))).ReturnsAsync(roles.First());
             userServiceMock.Setup(u => u.GetUsersByRole(It.IsInRange(1, 2, Range.Inclusive)))
                 .Returns(users.Where(u => u.Role == "Student").ToList());
 
