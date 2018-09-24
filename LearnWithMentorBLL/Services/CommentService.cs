@@ -3,6 +3,7 @@ using LearnWithMentorDTO;
 using LearnWithMentorDAL.Entities;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDAL.UnitOfWork;
+using System.Threading.Tasks;
 
 namespace LearnWithMentorBLL.Services
 {
@@ -28,14 +29,14 @@ namespace LearnWithMentorBLL.Services
             return commentDTO;
         }
 
-        public bool AddCommentToPlanTask(int planTaskId, CommentDto comment)
+        public async Task<bool> AddCommentToPlanTask(int planTaskId, CommentDto comment)
         {
             var plantask = db.PlanTasks.Get(planTaskId);
             if (plantask == null)
             {
                 return false;
             }
-            if (db.Users.Get(comment.CreatorId) == null)
+            if ( await db.Users.Get(comment.CreatorId) == null)
             {
                 return false;
             }
@@ -50,14 +51,14 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public bool AddCommentToPlanTask(int planId, int taskId, CommentDto comment)
+        public async Task<bool> AddCommentToPlanTask(int planId, int taskId, CommentDto comment)
         {
-            var planTaskId = db.PlanTasks.GetIdByTaskAndPlan(taskId, planId);
+            var planTaskId =  db.PlanTasks.GetIdByTaskAndPlan(taskId, planId);
             if (planTaskId == null)
             {
                 return false;
             }
-            return AddCommentToPlanTask(planTaskId.Value, comment);
+            return await AddCommentToPlanTask(planTaskId.Value, comment);
         }
 
         public bool UpdateCommentIdText(int commentId, string text)

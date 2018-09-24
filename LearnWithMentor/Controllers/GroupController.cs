@@ -8,6 +8,7 @@ using LearnWithMentorBLL.Interfaces;
 using System.Web.Http.Tracing;
 using System.Data.Entity.Core;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace LearnWithMentor.Controllers
 {
@@ -125,11 +126,11 @@ namespace LearnWithMentor.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("api/group/{id}/userimages")]
-        public HttpResponseMessage GetUsersWithImage(int id)
+        public async Task<HttpResponseMessage> GetUsersWithImage(int id)
         {
             try
             {
-                var group = groupService.GetUsersWithImage(id);
+                IEnumerable<UserWithImageDto> group = await groupService.GetUsersWithImage(id);
                 if (group != null)
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, group);
@@ -221,7 +222,7 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpPut]
         [Route("api/group/{id}/user")]
-        public HttpResponseMessage PutUsersToGroup(int id, [FromBody] int[] userId)
+        public async Task<HttpResponseMessage> PutUsersToGroup(int id, [FromBody] int[] userId)
         {
             try
             {
@@ -231,7 +232,7 @@ namespace LearnWithMentor.Controllers
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
                 }
-                var success = groupService.AddUsersToGroup(userId, id);
+                bool success = await groupService.AddUsersToGroup(userId, id);
                 if (success)
                 {
                     var log = $"Succesfully add user with id {userId} to group with id = {id}";
@@ -416,7 +417,7 @@ namespace LearnWithMentor.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("api/group/mygroups")]
-        public HttpResponseMessage GetUserGroups()
+        public async Task<HttpResponseMessage> GetUserGroups()
         {
             try
             {
@@ -429,7 +430,7 @@ namespace LearnWithMentor.Controllers
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, "There are no groups in database.");
                 }
-                var groups = groupService.GetUserGroups(userId);
+                IEnumerable<GroupDto> groups = await groupService.GetUserGroups(userId);
                 if (groups == null)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "There are no groups for this user");

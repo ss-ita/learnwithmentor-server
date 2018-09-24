@@ -330,26 +330,26 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         #endregion
         #region PostTask
         [Test]
-        public void PostTaskTest_ShouldSuccessfullyCreateNewTask()
+        public void  PostTaskTest_ShouldSuccessfullyCreateNewTask()
         {
 
             taskServiceMock.Setup(mts => mts.CreateTask(It.IsAny<TaskDto>()))
                 .Returns(true);
             var newTask = GetTestTasks()[0];
-            var response = taskController.Post(newTask);
+            HttpResponseMessage response =  taskController.Post(newTask);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
         }
 
         [Test]
-        public void PostTaskTest_ShouldCheckNotValidInputParameterAndReturnBadRequestResponse()
+        public async Task PostTaskTest_ShouldCheckNotValidInputParameterAndReturnBadRequestResponse()
         {
             taskServiceMock.Setup(mts => mts.CreateTask(It.IsAny<TaskDto>()))
                 .Returns(true);
 
             var newTask = new TaskDto();
             ValidateViewModel(taskController, newTask);
-            var response = taskController.Post(newTask);
+            HttpResponseMessage response =  taskController.Post(newTask);
 
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
         }
@@ -362,7 +362,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
 
             var newTask = GetTestTasks()[0];
 
-            var response = taskController.Post(newTask);
+            HttpResponseMessage response =  taskController.Post(newTask);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
         }
@@ -374,7 +374,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
                 .Throws(new EntityException());
 
             var newTask = GetTestTasks()[0];
-            var response = taskController.Post(newTask);
+            HttpResponseMessage response =  taskController.Post(newTask);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.InternalServerError);
         }
@@ -702,51 +702,51 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         #endregion
         #region PostNewUserTask
         [Test]
-        public void PostNewUserTaskTest_ShouldSuccessfullyCreateNewUserTask()
+        public async Task PostNewUserTaskTest_ShouldSuccessfullyCreateNewUserTask()
         {
 
             taskServiceMock.Setup(mts => mts.CreateUserTask(It.IsAny<UserTaskDto>()))
-                .Returns(true);
+                .ReturnsAsync(true);
             var newTask = GetTestUserTasks()[0];
-            var response = taskController.PostNewUserTask(newTask);
+            HttpResponseMessage response = await taskController.PostNewUserTask(newTask);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
         }
 
         [Test]
-        public void PostNewUserTaskTest_ShouldCheckNotValidInputParameterAndReturnBadRequestResponse()
+        public async Task PostNewUserTaskTest_ShouldCheckNotValidInputParameterAndReturnBadRequestResponse()
         {
             taskServiceMock.Setup(mts => mts.CreateUserTask(It.IsAny<UserTaskDto>()))
-                .Returns(true);
+                .ReturnsAsync(true);
 
             var newUserTask = new UserTaskDto();
             ValidateViewModel(taskController, newUserTask);
-            var response = taskController.PostNewUserTask(newUserTask);
+            HttpResponseMessage response = await taskController.PostNewUserTask(newUserTask);
 
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
         [Test]
-        public void PostNewUserTaskTest_ShouldCheckNotSuccessfullPostTryAndReturnNoContentResponse()
+        public async Task PostNewUserTaskTest_ShouldCheckNotSuccessfullPostTryAndReturnNoContentResponse()
         {
             taskServiceMock.Setup(mts => mts.CreateUserTask(It.IsAny<UserTaskDto>()))
-                .Returns(false);
+                .ReturnsAsync(false);
 
             var newUserTask = GetTestUserTasks()[0];
 
-            var response = taskController.PostNewUserTask(newUserTask);
+            HttpResponseMessage response = await taskController.PostNewUserTask(newUserTask);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.NoContent);
         }
 
         [Test]
-        public void PostNewUserTaskTest_ShouldCatchEntityException()
+        public async Task PostNewUserTaskTest_ShouldCatchEntityException()
         {
             taskServiceMock.Setup(mts => mts.CreateUserTask(It.IsAny<UserTaskDto>()))
                 .Throws(new EntityException());
 
             var newUserTask = GetTestUserTasks()[0];
-            var response = taskController.PostNewUserTask(newUserTask);
+            HttpResponseMessage response = await taskController.PostNewUserTask(newUserTask);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.InternalServerError);
         }

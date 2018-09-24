@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDAL.Entities;
 using LearnWithMentorDAL.UnitOfWork;
@@ -162,7 +163,7 @@ namespace LearnWithMentorBLL.Services
             return userList;
         }
 
-        public IEnumerable<UserWithImageDto> GetUsersWithImage(int groupId)
+        public async Task<IEnumerable<UserWithImageDto>> GetUsersWithImage(int groupId)
         {
             var group = db.Groups.GetGroupsByMentor(groupId);
             var users = db.Users.GetUsersByGroup(groupId);
@@ -177,7 +178,7 @@ namespace LearnWithMentorBLL.Services
             var userList = new List<UserWithImageDto>();
             foreach (var user in users)
             {
-                var userToGetImage = db.Users.Get(user.Id);
+                User userToGetImage = await db.Users.Get(user.Id);
                 userList.Add(new UserWithImageDto(user.Email,
                     user.Id,
                     user.FirstName,
@@ -213,9 +214,9 @@ namespace LearnWithMentorBLL.Services
             return groupList;
         }
 
-        public IEnumerable<GroupDto> GetUserGroups(int userId)
+        public async Task<IEnumerable<GroupDto>> GetUserGroups(int userId)
         {
-            var user = db.Users.Get(userId);
+            User user = await db.Users.Get(userId);
             if (user == null)
             {
                 return null;
@@ -252,7 +253,7 @@ namespace LearnWithMentorBLL.Services
             return groupList;
         }
 
-        public bool AddUsersToGroup(int[] usersId, int groupId)
+        public async Task<bool> AddUsersToGroup(int[] usersId, int groupId)
         {
             var groups = db.Groups.Get(groupId);
             if (groups == null)
@@ -262,7 +263,7 @@ namespace LearnWithMentorBLL.Services
             var added = false;
             foreach (var userId in usersId)
             {
-                var addUser = db.Users.Get(userId);
+                User addUser = await db.Users.Get(userId);
                 if (addUser != null)
                 {
                     added = db.Groups.AddUserToGroup(userId, groupId);
@@ -431,7 +432,7 @@ namespace LearnWithMentorBLL.Services
         private async TaskThread.Task DeleteUserTasksOnRemovingUser(int groupId, int userId)
         {
             var group = db.Groups.Get(groupId);
-            var user = db.Users.Get(userId);
+            User user = await db.Users.Get(userId);
             if (group?.Plans == null || user == null)
             {
                 return;
@@ -464,7 +465,7 @@ namespace LearnWithMentorBLL.Services
         public async TaskThread.Task<bool> RemoveUserFromGroup(int groupId, int userIdToRemove)
         {
             var group = db.Groups.Get(groupId);
-            var userToRemove = db.Users.Get(userIdToRemove);
+            User userToRemove = await db.Users.Get(userIdToRemove);
             if (group == null)
             {
                 return false;
@@ -496,7 +497,7 @@ namespace LearnWithMentorBLL.Services
                 foreach (var planTask in plan.PlanTasks)
                 {
 
-                    var userTask = await db.UserTasks.GetByPlanTaskForUser(planTask.Id, user.Id);
+                    UserTask userTask = await db.UserTasks.GetByPlanTaskForUser(planTask.Id, user.Id);
                     if (userTask == null)
                     {
                         continue;

@@ -167,14 +167,14 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public bool CreateUserTask(UserTaskDto userTaskDTO)
+        public async Task<bool> CreateUserTask(UserTaskDto userTaskDTO)
         {
             var planTask = db.PlanTasks.Get(userTaskDTO.PlanTaskId);
             if (planTask == null)
             {
                 return false;
             }
-            if (db.Users.Get(userTaskDTO.UserId) == null)
+            if ( await db.Users.Get(userTaskDTO.UserId) == null)
             {
                 return false;
             }

@@ -15,7 +15,7 @@ namespace LearnWithMentorBLL.Interfaces
         IEnumerable<TaskDto> GetTasksNotInPlan(int planId);
         Task<UserTaskDto> GetUserTaskByUserPlanTaskId(int userId, int planTaskId);
         bool CreateTask(TaskDto taskDTO);
-        bool CreateUserTask(UserTaskDto userTaskDTO);
+        Task<bool> CreateUserTask(UserTaskDto userTaskDTO);
         Task<bool> UpdateUserTaskStatus(int userTaskId, string newStatus);
         Task<bool> UpdateUserTaskResult(int userTaskId, string newResult);
         bool UpdateTaskById(int taskId,TaskDto taskDTO);

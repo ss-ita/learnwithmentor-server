@@ -172,14 +172,14 @@ namespace LearnWithMentor.Controllers
         [JwtAuthentication]
         [HttpGet]
         [Route("api/user/profile/{id?}")]
-        public HttpResponseMessage GetSingle(int id = 0 )
+        public async Task<HttpResponseMessage> GetSingle(int id = 0 )
         {
             if (id == 0)
             {
                 id = userIdentityService.GetUserId();
             }
 
-            var user = userService.Get(id);
+            UserDto user = await userService.Get(id);
             if (user != null)
             {
                 return Request.CreateResponse(HttpStatusCode.OK, user);
@@ -256,7 +256,7 @@ namespace LearnWithMentor.Controllers
         [AllowAnonymous]
         [HttpGet]
         [Route("api/user/confirm-email")]
-        public HttpResponseMessage ConfirmEmail(string token)
+        public async Task<HttpResponseMessage> ConfirmEmail(string token)
         {
             try
             {
@@ -267,7 +267,7 @@ namespace LearnWithMentor.Controllers
                     {
                         return Request.CreateErrorResponse(HttpStatusCode.NoContent, "User not found");
                     }
-                    if (userService.ConfirmEmailById(user.Id))
+                    if ( await userService.ConfirmEmailById(user.Id))
                     {
                         return Request.CreateResponse(HttpStatusCode.OK, "Email confirmed");
                     }
@@ -385,7 +385,7 @@ namespace LearnWithMentor.Controllers
         [JwtAuthentication]
         [HttpPost]
         [Route("api/user/{id}/image")]
-        public HttpResponseMessage PostImage(int id)
+        public async Task<HttpResponseMessage> PostImage(int id)
         {
             if (!userService.ContainsId(id))
             {
@@ -420,7 +420,7 @@ namespace LearnWithMentor.Controllers
                     {
                         imageData = binaryReader.ReadBytes(postedFile.ContentLength);
                     }
-                    userService.SetImage(id, imageData, postedFile.FileName);
+                   await userService.SetImage(id, imageData, postedFile.FileName);
                     const string okMessage = "Successfully created image.";
                     return Request.CreateResponse(HttpStatusCode.OK, okMessage);
                 }
@@ -440,7 +440,7 @@ namespace LearnWithMentor.Controllers
         [JwtAuthentication]
         [HttpGet]
         [Route("api/user/{id}/image")]
-        public HttpResponseMessage GetImage(int id)
+        public async Task<HttpResponseMessage> GetImage(int id)
         {
             try
             {
@@ -449,7 +449,7 @@ namespace LearnWithMentor.Controllers
                     const string errorMessage = "No user with this id in database.";
                     return Request.CreateResponse(HttpStatusCode.NoContent, errorMessage);
                 }
-                var dto = userService.GetImage(id);
+                ImageDto dto = await userService.GetImage(id);
                 if (dto == null)
                 {
                     const string message = "No image for this user in database.";
@@ -471,11 +471,11 @@ namespace LearnWithMentor.Controllers
         [JwtAuthentication]
         [HttpPut]
         [Route("api/user/{id}")]
-        public HttpResponseMessage Put(int id, [FromBody]UserDto value)
+        public async Task<HttpResponseMessage> Put(int id, [FromBody]UserDto value)
         {
             try
             {
-                var success = userService.UpdateById(id, value);
+                bool success = await userService.UpdateById(id, value);
                 if (success)
                 {
                     var okMessage = $"Succesfully updated user id: {id}.";
@@ -501,11 +501,11 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Admin")]
         [HttpDelete]
         [Route("api/user/{id}")]
-        public HttpResponseMessage Delete(int id)
+        public async Task<HttpResponseMessage> Delete(int id)
         {
             try
             {
-                var success = userService.BlockById(id);
+                bool success = await userService.BlockById(id);
                 if (success)
                 {
                     var okMessage = $"Succesfully blocked user id: {id}.";
@@ -601,11 +601,11 @@ namespace LearnWithMentor.Controllers
         [AllowAnonymous]
         [HttpPut]
         [Route("api/user/resetpasswotd")]
-        public HttpResponseMessage ResetPassword([FromBody]string password, int id)
+        public async Task<HttpResponseMessage> ResetPassword([FromBody]string password, int id)
         {
             try
             {
-                var success = userService.UpdatePassword(id, password);
+                bool success = await userService.UpdatePassword(id, password);
                 if (success)
                 {
                     const string okMessage = "Succesfully updated password.";
@@ -630,10 +630,10 @@ namespace LearnWithMentor.Controllers
         [JwtAuthentication]
         [HttpPut]
         [Route("api/user/newpassword")]
-        public HttpResponseMessage UpdatePassword([FromBody]string value)
+        public async Task<HttpResponseMessage> UpdatePassword([FromBody]string value)
         {
-            var id = userIdentityService.GetUserId();
-            return ResetPassword(value, id);
+            int id = userIdentityService.GetUserId();
+            return await ResetPassword(value, id);
         }
 
         /// <summary>

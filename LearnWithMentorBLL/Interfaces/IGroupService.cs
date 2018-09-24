@@ -11,10 +11,10 @@ namespace LearnWithMentorBLL.Interfaces
         int? GetMentorIdByGroup(int groupId);
         IEnumerable<GroupDto> GetGroupsByMentor(int mentorId);
         IEnumerable<UserIdentityDto> GetUsers(int groupId);
-        IEnumerable<UserWithImageDto> GetUsersWithImage(int groupId);
+        Task<IEnumerable<UserWithImageDto>> GetUsersWithImage(int groupId);
         IEnumerable<PlanDto> GetPlans(int groupId);
         bool AddGroup(GroupDto group);        
-        bool AddUsersToGroup(int []usersId , int groupId);
+        Task<bool> AddUsersToGroup(int []usersId , int groupId);
         bool AddPlansToGroup(int[] plansId, int groupId);
         IEnumerable<UserIdentityDto> GetUsersNotInGroup(int groupId);
         IEnumerable<UserIdentityDto> SearchUserNotInGroup(string[] searchCases, int groupId);
@@ -22,6 +22,6 @@ namespace LearnWithMentorBLL.Interfaces
         IEnumerable<PlanDto> SearchPlansNotUsedInGroup(string[] searchCases, int groupId);
         Task<bool> RemoveUserFromGroup(int groupId, int userIdToRemove);
         bool RemovePlanFromGroup(int groupId, int planIdToRemove);
-        IEnumerable<GroupDto> GetUserGroups(int userId);
+        Task<IEnumerable<GroupDto>> GetUserGroups(int userId);
     }
 }

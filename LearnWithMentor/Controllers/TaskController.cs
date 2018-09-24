@@ -306,7 +306,7 @@ namespace LearnWithMentor.Controllers
         /// <param name="newUserTask">New userTask object.</param>
         [HttpPost]
         [Route("api/task/usertask")]
-        public HttpResponseMessage PostNewUserTask([FromBody]UserTaskDto newUserTask)
+        public async Task<HttpResponseMessage> PostNewUserTask([FromBody]UserTaskDto newUserTask)
         {
             try
             {
@@ -314,7 +314,7 @@ namespace LearnWithMentor.Controllers
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
                 }
-                var success = taskService.CreateUserTask(newUserTask);
+                bool success = await taskService.CreateUserTask(newUserTask);
                 if (success)
                 {
                     var message = $"Succesfully created task with id = {newUserTask.Id} for user with id = {newUserTask.UserId}";
@@ -457,7 +457,7 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpPost]
         [Route("api/task")]
-        public HttpResponseMessage Post([FromBody]TaskDto newTask)
+        public  HttpResponseMessage Post([FromBody]TaskDto newTask)
         {
             try
             {
@@ -465,7 +465,7 @@ namespace LearnWithMentor.Controllers
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
                 }
-                var success = taskService.CreateTask(newTask);
+                bool success =  taskService.CreateTask(newTask);
                 if (success)
                 {
                     var message = $"Succesfully created task with id = {newTask.Id} by user with id = {newTask.CreatorId}";

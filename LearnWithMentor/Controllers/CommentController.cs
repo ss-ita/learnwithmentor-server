@@ -6,6 +6,7 @@ using LearnWithMentorDTO;
 using LearnWithMentorBLL.Interfaces;
 using System.Web.Http.Tracing;
 using System.Data.Entity.Core;
+using System.Threading.Tasks;
 
 namespace LearnWithMentor.Controllers
 {
@@ -80,7 +81,7 @@ namespace LearnWithMentor.Controllers
         /// <param name="comment">New comment.</param>
         [HttpPost]
         [Route("api/comment")]
-        public HttpResponseMessage Post(int planTaskId, CommentDto comment)
+        public  async Task<HttpResponseMessage> Post(int planTaskId, CommentDto comment)
         {
             if (!ModelState.IsValid)
             {
@@ -88,7 +89,7 @@ namespace LearnWithMentor.Controllers
             }
             try
             {
-                if (commentService.AddCommentToPlanTask(planTaskId, comment))
+                if ( await commentService.AddCommentToPlanTask(planTaskId, comment))
                 {
                     var log = $"Succesfully created comment with id = {comment.Id} by user id = {comment.CreatorId}";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);

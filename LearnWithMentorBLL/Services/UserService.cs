@@ -5,6 +5,7 @@ using LearnWithMentorDAL.Entities;
 using System;
 using System.Linq;
 using LearnWithMentorDAL.UnitOfWork;
+using System.Threading.Tasks;
 
 namespace LearnWithMentorBLL.Services
 {
@@ -14,9 +15,9 @@ namespace LearnWithMentorBLL.Services
         {
         }
 
-        public UserDto Get(int id)
+        public async Task<UserDto> Get(int id)
         {
-            var user = db.Users.Get(id);
+            User user = await db.Users.Get(id);
             if (user == null)
             {
                 return null;
@@ -61,9 +62,9 @@ namespace LearnWithMentorBLL.Services
             return PagedList<User, UserDto>.GetDTO(query, pageNumber, pageSize, UserToUserDTO);
         }
 
-        public bool BlockById(int id)
+        public async Task<bool> BlockById(int id)
         {
-            var item = db.Users.Get(id);
+            User item = await db.Users.Get(id);
             if (item == null)
             {
                 return false;
@@ -74,10 +75,10 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public bool UpdateById(int id, UserDto user)
+        public async Task<bool> UpdateById(int id, UserDto user)
         {
             var modified = false;
-            var item = db.Users.Get(id);
+            User item = await db.Users.Get(id);
             if (item != null)
             {
                 if (user.FirstName != null)
@@ -106,9 +107,9 @@ namespace LearnWithMentorBLL.Services
             return modified;
         }
         
-        public bool ConfirmEmailById(int id)
+        public async Task<bool> ConfirmEmailById(int id)
         {
-            var user = db.Users.Get(id);
+            User user = await db.Users.Get(id);
             if (user != null)
             {
                 user.Email_Confirmed = true;
@@ -135,9 +136,9 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public bool UpdatePassword(int userId, string password)
+        public async Task<bool> UpdatePassword(int userId, string password)
         {
-            var user = db.Users.Get(userId);
+            User user = await db.Users.Get(userId);
             if (user == null)
             {
                 return false;
@@ -188,9 +189,9 @@ namespace LearnWithMentorBLL.Services
             return PagedList<User, UserDto>.GetDTO(query, pageNumber, pageSize, UserToUserDTO);
         }
 
-        public bool SetImage(int id, byte[] image, string imageName)
+        public async Task<bool> SetImage(int id, byte[] image, string imageName)
         {
-            var userToUpdate = db.Users.Get(id);
+            User userToUpdate = await db.Users.Get(id);
             if (userToUpdate == null)
             {
                 return false;
@@ -202,9 +203,9 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public ImageDto GetImage(int id)
+        public async Task<ImageDto> GetImage(int id)
         {
-            var userToGetImage = db.Users.Get(id);
+            User userToGetImage = await db.Users.Get(id);
             if (userToGetImage?.Image == null || userToGetImage.Image_Name == null)
             {
                 return null;

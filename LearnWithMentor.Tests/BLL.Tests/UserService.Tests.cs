@@ -41,13 +41,13 @@ namespace LearnWithMentor.Tests.BLL.Tests
         public void GetUserById_ShouldReturnUserById()
         {
             uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);
-            uowMock.Setup(u => u.Users.Get(It.IsAny<int>())).Returns(new User() { Id = 3, Role = new Role() });
+            uowMock.Setup(u => u.Users.Get(It.IsAny<int>())).ReturnsAsync(new User() { Id = 3, Role = new Role() });
 
             //arrange
             int userId = 3;
 
             //act
-            var result = userService.Get(userId);
+            Task<UserDto> result = userService.Get(userId);
 
             //assert
             Assert.IsNotNull(result);
@@ -59,13 +59,13 @@ namespace LearnWithMentor.Tests.BLL.Tests
         public void GetUserById_ShouldReturnNull()
         {
             uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);
-            uowMock.Setup(u => u.Users.Get(It.IsAny<int>())).Returns((User)null);
+            uowMock.Setup(u => u.Users.Get(It.IsAny<int>())).ReturnsAsync((User)null);
 
             //arrange
             int userId = 3;
 
             //act
-            var result = userService.Get(userId);
+            Task<UserDto> result = userService.Get(userId);
 
             //assert
             Assert.IsNull(result);

@@ -13,10 +13,9 @@ namespace LearnWithMentorDAL.Repositories
         {
         }
 
-        public User Get(int id)
+        public Task<User> Get(int id)
         {
-            Task<User> findUser = Context.Users.FirstOrDefaultAsync(user => user.Id == id);
-            return findUser.GetAwaiter().GetResult();
+         return  Context.Users.FirstOrDefaultAsync(user => user.Id == id);
         }
 
         public User GetByEmail(string email)

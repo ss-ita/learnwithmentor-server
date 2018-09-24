@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using LearnWithMentorDAL.Entities;
 
 namespace LearnWithMentorDAL.Repositories.Interfaces
 {
     public interface IUserRepository: IRepository<User>
     {
-        User Get(int id);
+        Task<User> Get(int id);
         User GetByEmail(string email);
         IEnumerable<User> Search(string[] searchString, int? roleId);
         IEnumerable<User> GetUsersByRole(int roleId);
