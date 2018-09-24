@@ -76,11 +76,11 @@ namespace LearnWithMentor.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("api/group/{id}/plans")]
-        public HttpResponseMessage GetPlans(int id)
+        public async Task<HttpResponseMessage> GetPlans(int id)
         {
             try
             {
-                var group = groupService.GetPlans(id);
+                var group = await groupService.GetPlans(id);
                 if (group != null)
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, group);
@@ -168,9 +168,9 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpGet]
         [Route("api/plan/notingroup/{groupId}")]
-        public HttpResponseMessage GetPlansNotUsedInCurrentGroup(int groupId)
+        public async Task<HttpResponseMessage> GetPlansNotUsedInCurrentGroup(int groupId)
         {
-            var notUsedPlans = groupService.GetPlansNotUsedInGroup(groupId);
+            var notUsedPlans = await groupService.GetPlansNotUsedInGroup(groupId);
             if (notUsedPlans != null)
             {
                 return Request.CreateResponse(HttpStatusCode.OK, notUsedPlans);
@@ -258,7 +258,7 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpPut]
         [Route("api/group/{id}/plan")]
-        public HttpResponseMessage PutPlansToGroup(int id, [FromBody] int[] planId)
+        public async Task<HttpResponseMessage> PutPlansToGroup(int id, [FromBody] int[] planId)
         {
             try
             {
@@ -268,7 +268,7 @@ namespace LearnWithMentor.Controllers
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
                 }
-                var success = groupService.AddPlansToGroup(planId, id);
+                var success = await groupService.AddPlansToGroup(planId, id);
                 if (success)
                 {
                     var log = $"Succesfully add plan with id = {planId} to group with id = {id}";
@@ -292,16 +292,16 @@ namespace LearnWithMentor.Controllers
         /// <param name="groupId">Id of the plan.</param>
         [HttpGet]
         [Route("api/group/searchinNotUsedPlan")]
-        public HttpResponseMessage SearchPlansNotUsedInCurrentGroup(string searchKey, int groupId)
+        public async Task<HttpResponseMessage> SearchPlansNotUsedInCurrentGroup(string searchKey, int groupId)
         {
             try
             {
                 if (searchKey == null)
                 {
-                    return GetPlansNotUsedInCurrentGroup(groupId);
+                    return await GetPlansNotUsedInCurrentGroup(groupId);
                 }
                 var lines = searchKey.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                var plansList = groupService.SearchPlansNotUsedInGroup(lines, groupId);
+                var plansList = await groupService.SearchPlansNotUsedInGroup(lines, groupId);
                 if (plansList == null)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, "This plan does not exist.");
@@ -389,11 +389,11 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpDelete]
         [Route("api/group/removePlanFromGroup")]
-        public HttpResponseMessage RemovePlanFromCurrentGroup(int groupId, int planToRemoveId)
+        public async Task<HttpResponseMessage> RemovePlanFromCurrentGroup(int groupId, int planToRemoveId)
         {
             try
             {
-                var successfullyRemoved = groupService.RemovePlanFromGroup(groupId, planToRemoveId);
+                var successfullyRemoved = await groupService.RemovePlanFromGroup(groupId, planToRemoveId);
                 if (successfullyRemoved)
                 {
                     var log = $"Succesfully removed plan with id = {planToRemoveId} from group with id = {groupId}";

@@ -137,11 +137,11 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         #endregion
         #region GetAllPlansByGroupId
         [Test]
-        public void GetAllPlansByGroupId_ShouldReturnOk()
+        public async Task GetAllPlansByGroupId_ShouldReturnOk()
         {
-            groupServiceMock.Setup(p => p.GetPlans(It.IsAny<int>())).Returns(new List<PlanDto>());
+            groupServiceMock.Setup(p => p.GetPlans(It.IsAny<int>())).ReturnsAsync(new List<PlanDto>());
 
-            var response = groupController.GetPlans(4);
+            var response = await groupController.GetPlans(4);
             var expected = HttpStatusCode.OK;
             var actual = response.StatusCode;
 
@@ -149,11 +149,11 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public void GetAllPlansByGroupId_ShouldReturnNoContent()
+        public async Task GetAllPlansByGroupId_ShouldReturnNoContent()
         {
             groupServiceMock.Setup(p => p.GetPlans(It.IsAny<int>())).Returns(() => null);
 
-            var response = groupController.GetPlans(99);
+            var response = await groupController.GetPlans(99);
             var expected = HttpStatusCode.NoContent;
             var actual = response.StatusCode;
 
@@ -161,11 +161,11 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public void GetAllPlansByGroupId_ShouldReturInternalServerError()
+        public async Task GetAllPlansByGroupId_ShouldReturInternalServerError()
         {
             groupServiceMock.Setup(p => p.GetPlans(It.IsAny<int>())).Throws(new EntityException());
 
-            var response = groupController.GetPlans(99);
+            var response = await groupController.GetPlans(99);
             var expected = HttpStatusCode.InternalServerError;
             var actual = response.StatusCode;
 
@@ -234,10 +234,10 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         #endregion
         #region GetPlansNotUsedInCurrentGroup
         [Test]
-        public void GetPlansNotUsedInCurrentGroupShouldReturnOk()
+        public async Task GetPlansNotUsedInCurrentGroupShouldReturnOk()
         {
-            groupServiceMock.Setup(u => u.GetPlansNotUsedInGroup(It.IsAny<int>())).Returns(new List<PlanDto>());
-            var response = groupController.GetPlansNotUsedInCurrentGroup(4);
+            groupServiceMock.Setup(u => u.GetPlansNotUsedInGroup(It.IsAny<int>())).ReturnsAsync(new List<PlanDto>());
+            var response = await groupController.GetPlansNotUsedInCurrentGroup(4);
             var expected = HttpStatusCode.OK;
             var actual = response.StatusCode;
 
@@ -245,10 +245,10 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public void GetPlansNotUsedInCurrentGroupShouldReturnNoContent()
+        public async Task GetPlansNotUsedInCurrentGroupShouldReturnNoContent()
         {
-            groupServiceMock.Setup(u => u.GetPlansNotUsedInGroup(It.IsAny<int>())).Returns(() => null);
-            var response = groupController.GetPlansNotUsedInCurrentGroup(4);
+            groupServiceMock.Setup(u => u.GetPlansNotUsedInGroup(It.IsAny<int>())).ReturnsAsync(() => null);
+            var response = await groupController.GetPlansNotUsedInCurrentGroup(4);
             var expected = HttpStatusCode.NoContent;
             var actual = response.StatusCode;
 
@@ -355,24 +355,24 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         #endregion
         #region PutPlansToGroup
         [Test]
-        public void PutPlansToGroupShouldReturnOk()
+        public async Task PutPlansToGroupShouldReturnOk()
         {
-            groupServiceMock.Setup(u => u.AddPlansToGroup(It.IsAny<int[]>(), It.IsAny<int>())).Returns(true);
+            groupServiceMock.Setup(u => u.AddPlansToGroup(It.IsAny<int[]>(), It.IsAny<int>())).ReturnsAsync(true);
             userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(new int());
             groupServiceMock.Setup(u => u.GetMentorIdByGroup(It.IsAny<int>())).Returns(new int());
-            var response = groupController.PutPlansToGroup(5, new int[] { 1, 2, 3 });
+            var response = await groupController.PutPlansToGroup(5, new int[] { 1, 2, 3 });
             var expected = HttpStatusCode.OK;
             var actual = response.StatusCode;
 
             Assert.AreEqual(expected, actual);
         }
         [Test]
-        public void PutPlansToGroupShouldReturnUnauthorized()
+        public async Task PutPlansToGroupShouldReturnUnauthorized()
         {
-            groupServiceMock.Setup(u => u.AddPlansToGroup(It.IsAny<int[]>(), It.IsAny<int>())).Returns(true);
+            groupServiceMock.Setup(u => u.AddPlansToGroup(It.IsAny<int[]>(), It.IsAny<int>())).ReturnsAsync(true);
             userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(new int());
             groupServiceMock.Setup(u => u.GetMentorIdByGroup(It.IsAny<int>())).Returns(() => null);
-            var response = groupController.PutPlansToGroup(5, new int[] { 1, 2, 3 });
+            var response = await groupController.PutPlansToGroup(5, new int[] { 1, 2, 3 });
             var expected = HttpStatusCode.Unauthorized;
             var actual = response.StatusCode;
 
@@ -380,12 +380,12 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public void PutPlansToGroupShouldReturnBadRequest()
+        public async Task PutPlansToGroupShouldReturnBadRequest()
         {
-            groupServiceMock.Setup(u => u.AddPlansToGroup(It.IsAny<int[]>(), It.IsAny<int>())).Returns(false);
+            groupServiceMock.Setup(u => u.AddPlansToGroup(It.IsAny<int[]>(), It.IsAny<int>())).ReturnsAsync(false);
             userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(new int());
             groupServiceMock.Setup(u => u.GetMentorIdByGroup(It.IsAny<int>())).Returns(new int());
-            var response = groupController.PutPlansToGroup(5, new int[] { 1, 2, 3 });
+            var response = await groupController.PutPlansToGroup(5, new int[] { 1, 2, 3 });
             var expected = HttpStatusCode.BadRequest;
             var actual = response.StatusCode;
 
@@ -393,12 +393,12 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public void PutPlansToGroupShouldReturnInternalServerError()
+        public async Task PutPlansToGroupShouldReturnInternalServerError()
         {
             groupServiceMock.Setup(u => u.AddPlansToGroup(It.IsAny<int[]>(), It.IsAny<int>())).Throws(new EntityException());
             userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(new int());
             groupServiceMock.Setup(u => u.GetMentorIdByGroup(It.IsAny<int>())).Returns(new int());
-            var response = groupController.PutPlansToGroup(5, new int[] { 1, 2, 3 });
+            var response = await groupController.PutPlansToGroup(5, new int[] { 1, 2, 3 });
             var expected = HttpStatusCode.InternalServerError;
             var actual = response.StatusCode;
 
@@ -407,10 +407,10 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         #endregion
         #region SearchPlansNotUsedInCurrentGroup
         [Test]
-        public void SearchPlansNotUsedInCurrentGroupShouldReturnOk()
+        public async Task SearchPlansNotUsedInCurrentGroupShouldReturnOk()
         {
-            groupServiceMock.Setup(u => u.SearchPlansNotUsedInGroup(It.IsAny<string[]>(), It.IsAny<int>())).Returns(new List<PlanDto>());
-            var response = groupController.SearchPlansNotUsedInCurrentGroup("search", 2);
+            groupServiceMock.Setup(u => u.SearchPlansNotUsedInGroup(It.IsAny<string[]>(), It.IsAny<int>())).ReturnsAsync(new List<PlanDto>());
+            var response = await groupController.SearchPlansNotUsedInCurrentGroup("search", 2);
             var expected = HttpStatusCode.OK;
             var actual = response.StatusCode;
 
@@ -418,10 +418,10 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public void SearchPlansNotUsedInCurrentGroupShouldReturnNoContent()
+        public async Task SearchPlansNotUsedInCurrentGroupShouldReturnNoContent()
         {
-            groupServiceMock.Setup(u => u.SearchPlansNotUsedInGroup(It.IsAny<string[]>(), It.IsAny<int>())).Returns(() => null);
-            var response = groupController.SearchPlansNotUsedInCurrentGroup("search", 2);
+            groupServiceMock.Setup(u => u.SearchPlansNotUsedInGroup(It.IsAny<string[]>(), It.IsAny<int>())).ReturnsAsync(() => null);
+            var response = await groupController.SearchPlansNotUsedInCurrentGroup("search", 2);
             var expected = HttpStatusCode.NoContent;
             var actual = response.StatusCode;
 
@@ -429,10 +429,10 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public void SearchPlansNotUsedInCurrentGroupShouldReturnInternalServerError()
+        public async Task SearchPlansNotUsedInCurrentGroupShouldReturnInternalServerError()
         {
             groupServiceMock.Setup(u => u.SearchPlansNotUsedInGroup(It.IsAny<string[]>(), It.IsAny<int>())).Throws(new EntityException());
-            var response = groupController.SearchPlansNotUsedInCurrentGroup("search", 2);
+            var response = await groupController.SearchPlansNotUsedInCurrentGroup("search", 2);
             var expected = HttpStatusCode.InternalServerError;
             var actual = response.StatusCode;
 
@@ -441,10 +441,10 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         #endregion
         #region SearchUsersNotUsedInCurrentGroup
         [Test]
-        public void SearchUsersNotUsedInCurrentGroupOk()
+        public async Task SearchUsersNotUsedInCurrentGroupOk()
         {
             groupServiceMock.Setup(u => u.SearchUserNotInGroup(It.IsAny<string[]>(), It.IsAny<int>())).Returns(new List<UserIdentityDto>());
-            var response = groupController.SearchPlansNotUsedInCurrentGroup("search", 2);
+            var response = await groupController.SearchPlansNotUsedInCurrentGroup("search", 2);
             var expected = HttpStatusCode.OK;
             var actual = response.StatusCode;
 
@@ -528,10 +528,10 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         #endregion
         #region RemovePlanFromCurrentGroup
         [Test]
-        public void RemovePlanFromCurrentGroupOk()
+        public async Task RemovePlanFromCurrentGroupOk()
         {
-            groupServiceMock.Setup(u => u.RemovePlanFromGroup(It.IsAny<int>(), It.IsAny<int>())).Returns(true);
-            var response = groupController.RemovePlanFromCurrentGroup(1, 2);
+            groupServiceMock.Setup(u => u.RemovePlanFromGroup(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(true);
+            var response = await groupController.RemovePlanFromCurrentGroup(1, 2);
             var expected = HttpStatusCode.OK;
             var actual = response.StatusCode;
 
@@ -539,10 +539,10 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public void RemovePlanFromCurrentGroupBadRequest()
+        public async Task RemovePlanFromCurrentGroupBadRequest()
         {
-            groupServiceMock.Setup(u => u.RemovePlanFromGroup(It.IsAny<int>(), It.IsAny<int>())).Returns(false);
-            var response = groupController.RemovePlanFromCurrentGroup(1, 2);
+            groupServiceMock.Setup(u => u.RemovePlanFromGroup(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(false);
+            var response = await groupController.RemovePlanFromCurrentGroup(1, 2);
             var expected = HttpStatusCode.BadRequest;
             var actual = response.StatusCode;
 
@@ -550,10 +550,10 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public void RemovePlanFromCurrentGroupInternalServerError()
+        public async Task RemovePlanFromCurrentGroupInternalServerError()
         {
             groupServiceMock.Setup(u => u.RemovePlanFromGroup(It.IsAny<int>(), It.IsAny<int>())).Throws(new EntityException());
-            var response = groupController.RemovePlanFromCurrentGroup(1, 2);
+            var response = await groupController.RemovePlanFromCurrentGroup(1, 2);
             var expected = HttpStatusCode.InternalServerError;
             var actual = response.StatusCode;
 

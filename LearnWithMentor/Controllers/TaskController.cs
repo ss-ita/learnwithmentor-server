@@ -93,9 +93,9 @@ namespace LearnWithMentor.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("api/plan/{planId}/tasks/notinplan")]
-        public HttpResponseMessage GetTasksNotInCurrentPlan(int planId)
+        public async Task<HttpResponseMessage> GetTasksNotInCurrentPlan(int planId)
         {
-            var task = taskService.GetTasksNotInPlan(planId);
+            var task = await taskService.GetTasksNotInPlan(planId);
             if (task != null)
             {
                 return Request.CreateResponse(HttpStatusCode.OK, task);
@@ -427,7 +427,7 @@ namespace LearnWithMentor.Controllers
         /// <param name="planId">Id of the plan.</param>
         [HttpGet]
         [Route("api/task/searchinplan")]
-        public HttpResponseMessage SearchInPlan(string key, int planId)
+        public async Task<HttpResponseMessage> SearchInPlan(string key, int planId)
         {
             try
             {
@@ -436,7 +436,7 @@ namespace LearnWithMentor.Controllers
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax.");
                 }
                 var lines = key.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                var taskList = taskService.Search(lines, planId);
+                var taskList = await taskService.Search(lines, planId);
                 if (taskList == null)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, "This plan does not exist.");

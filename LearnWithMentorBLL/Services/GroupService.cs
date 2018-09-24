@@ -5,7 +5,8 @@ using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDAL.Entities;
 using LearnWithMentorDAL.UnitOfWork;
 using LearnWithMentorDTO;
-using TaskThread =  System.Threading.Tasks;
+using TaskThread = System.Threading.Tasks;
+using System.Data.Entity;
 
 namespace LearnWithMentorBLL.Services
 {
@@ -27,20 +28,20 @@ namespace LearnWithMentorBLL.Services
             };
         }
 
-        private void SetUserTasksByAddingUser(int userId, int groupId)
+        private async TaskThread.Task SetUserTasksByAddingUser(int userId, int groupId)
         {
-            var plans = db.Plans.GetPlansForGroup(groupId);
+            var plans = await db.Plans.GetPlansForGroup(groupId);
             var group = db.Groups.Get(groupId);
-            if(plans == null || group == null)
+            if (plans == null || group == null)
             {
                 return;
             }
             var planTasks = new List<PlanTask>();
-            foreach(var plan in plans)
+            foreach (var plan in plans)
             {
                 planTasks.AddRange(plan.PlanTasks);
             }
-            foreach(var planTask in planTasks)
+            foreach (var planTask in planTasks)
             {
                 if ((db.UserTasks.GetByPlanTaskForUser(planTask.Id, userId) == null) && (group.Mentor_Id != null))
                 {
@@ -49,27 +50,27 @@ namespace LearnWithMentorBLL.Services
             }
         }
 
-        private void SetUserTasksByAddingPlan(int planId, int groupId)
+        private async TaskThread.Task SetUserTasksByAddingPlan(int planId, int groupId)
         {
             var users = db.Users.GetUsersByGroup(groupId);
             var group = db.Groups.Get(groupId);
-            var plan = db.Plans.Get(planId);
+            var plan = await db.Plans.Get(planId);
             if (users == null || group == null || plan == null)
             {
                 return;
             }
             var planTasks = plan.PlanTasks;
-            foreach(var user in users)
+            foreach (var user in users)
             {
-                foreach( var planTask in planTasks)
+                foreach (var planTask in planTasks)
                 {
                     if ((db.UserTasks.GetByPlanTaskForUser(planTask.Id, user.Id) == null) && (group.Mentor_Id != null))
                     {
-                            db.UserTasks.Add(CreateDefaultUserTask(user.Id, planTask.Id, group.Mentor_Id.Value));
+                        db.UserTasks.Add(CreateDefaultUserTask(user.Id, planTask.Id, group.Mentor_Id.Value));
                     }
                 }
             }
-           
+
         }
 
         public bool AddGroup(GroupDto group)
@@ -107,10 +108,10 @@ namespace LearnWithMentorBLL.Services
             return db.Groups.Count();
         }
 
-        public IEnumerable<PlanDto> GetPlans(int groupId)
+        public async TaskThread.Task<IEnumerable<PlanDto>> GetPlans(int groupId)
         {
             var group = db.Groups.Get(groupId);
-            var plans = db.Plans.GetPlansForGroup(groupId);
+            var plans = await db.Plans.GetPlansForGroup(groupId);
             if (group == null)
                 return null;
             if (plans == null)
@@ -223,7 +224,7 @@ namespace LearnWithMentorBLL.Services
             }
             IEnumerable<Group> groups;
             if (user.Role.Name == "Mentor")
-            { 
+            {
                 groups = db.Groups.GetGroupsByMentor(userId);
             }
             else if (user.Role.Name == "Student")
@@ -267,9 +268,9 @@ namespace LearnWithMentorBLL.Services
                 if (addUser != null)
                 {
                     added = db.Groups.AddUserToGroup(userId, groupId);
-                    if(added)
+                    if (added)
                     {
-                        SetUserTasksByAddingUser(userId, groupId);
+                        await SetUserTasksByAddingUser(userId, groupId);
                     }
                     db.Save();
                 }
@@ -277,7 +278,7 @@ namespace LearnWithMentorBLL.Services
             return added;
         }
 
-        public bool AddPlansToGroup(int[] plansId, int groupId)
+        public async TaskThread.Task<bool> AddPlansToGroup(int[] plansId, int groupId)
         {
             var groups = db.Groups.Get(groupId);
             if (groups == null)
@@ -287,13 +288,13 @@ namespace LearnWithMentorBLL.Services
             var added = false;
             foreach (var planId in plansId)
             {
-                var addPlan = db.Plans.Get(planId);
+                var addPlan = await db.Plans.Get(planId);
                 if (addPlan != null)
                 {
                     added = db.Groups.AddPlanToGroup(planId, groupId);
-                    if(added)
+                    if (added)
                     {
-                        SetUserTasksByAddingPlan(planId, groupId);
+                        await SetUserTasksByAddingPlan(planId, groupId);
                     }
                     db.Save();
                 }
@@ -349,14 +350,14 @@ namespace LearnWithMentorBLL.Services
             return usersNotInGroupdto;
         }
 
-        public IEnumerable<PlanDto> GetPlansNotUsedInGroup(int groupId)
+        public async TaskThread.Task<IEnumerable<PlanDto>> GetPlansNotUsedInGroup(int groupId)
         {
             var group = db.Groups.Get(groupId);
             if (group == null)
             {
                 return null;
             }
-            var plansNotUsedInGroup = db.Plans.GetPlansNotUsedInGroup(groupId);
+            var plansNotUsedInGroup = await db.Plans.GetPlansNotUsedInGroup(groupId);
             if (plansNotUsedInGroup == null)
             {
                 return null;
@@ -386,9 +387,10 @@ namespace LearnWithMentorBLL.Services
             return plansNotUsedInGroupList;
         }
 
-        public IEnumerable<PlanDto> SearchPlansNotUsedInGroup(string[] searchCases, int groupId)
+        public async TaskThread.Task<IEnumerable<PlanDto>> SearchPlansNotUsedInGroup(string[] searchCases, int groupId)
         {
-            var plansNotInGroup = GetPlansNotUsedInGroup(groupId).ToList();
+            var plansNotInGroup = await GetPlansNotUsedInGroup(groupId);
+            plansNotInGroup = plansNotInGroup.ToList();
             var plansNotInGroupdto = new List<PlanDto>();
             foreach (var searchCase in searchCases)
             {
@@ -459,7 +461,7 @@ namespace LearnWithMentorBLL.Services
                 }
             }
 
-            
+
         }
 
         public async TaskThread.Task<bool> RemoveUserFromGroup(int groupId, int userIdToRemove)
@@ -483,7 +485,7 @@ namespace LearnWithMentorBLL.Services
         private async TaskThread.Task DeleteUserTasksOnRemovingPlan(int groupId, int planId)
         {
             var group = db.Groups.Get(groupId);
-            var plan = db.Plans.Get(planId);
+            var plan = await db.Plans.Get(planId);
             if (group?.Users == null || plan?.PlanTasks == null)
             {
                 return;
@@ -508,10 +510,10 @@ namespace LearnWithMentorBLL.Services
             }
         }
 
-        public bool RemovePlanFromGroup(int groupId, int planIdToRemove)
+        public async TaskThread.Task<bool> RemovePlanFromGroup(int groupId, int planIdToRemove)
         {
             var group = db.Groups.Get(groupId);
-            var planToRemove = db.Plans.Get(planIdToRemove);
+            var planToRemove = await db.Plans.Get(planIdToRemove);
             if (group == null)
             {
                 return false;
@@ -520,7 +522,7 @@ namespace LearnWithMentorBLL.Services
             {
                 return false;
             }
-            DeleteUserTasksOnRemovingPlan(groupId, planIdToRemove);
+            await DeleteUserTasksOnRemovingPlan(groupId, planIdToRemove);
             group.Plans.Remove(planToRemove);
             db.Save();
             return true;

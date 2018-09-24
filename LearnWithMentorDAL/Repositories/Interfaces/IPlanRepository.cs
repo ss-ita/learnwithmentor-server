@@ -1,18 +1,19 @@
 ﻿using System.Collections.Generic;
 using LearnWithMentorDAL.Entities;
+using System.Threading.Tasks;
 
 namespace LearnWithMentorDAL.Repositories.Interfaces
 {
-    public interface IPlanRepository: IRepository<Plan>
+    public interface IPlanRepository : IRepository<Plan>
     {
-        Plan Get(int id);
-        Plan AddAndReturnElement(Plan plan);
-        IEnumerable<Plan> Search(string[] searchString);
-        IEnumerable<Plan> GetPlansForGroup(int groupId);
         IEnumerable<Plan> GetSomePlans(int previousNumberOfPlans, int numberOfPlans);
-        bool ContainsId(int id);
-        bool AddTaskToPlan(int planId, int taskId, int? sectionId, int? priority);
-        IEnumerable<Plan> GetPlansNotUsedInGroup(int groupId);
-        string GetImageBase64(int planId);
+        IEnumerable<Plan> Search(string[] searchString);
+        Plan AddAndReturnElement(Plan plan);
+        Task<Plan> Get(int id);
+        Task<IEnumerable<Plan>> GetPlansForGroup(int groupId);
+        Task<bool> ContainsId(int id);
+        Task<bool> AddTaskToPlan(int planId, int taskId, int? sectionId, int? priority);
+        Task<IEnumerable<Plan>> GetPlansNotUsedInGroup(int groupId);
+        Task<string> GetImageBase64(int planId);
     }
 }

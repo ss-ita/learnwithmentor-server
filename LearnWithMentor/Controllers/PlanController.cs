@@ -10,6 +10,7 @@ using System.Web.Http.Tracing;
 using System.Data.Entity.Core;
 using System.Web;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace LearnWithMentor.Controllers
 {
@@ -58,9 +59,9 @@ namespace LearnWithMentor.Controllers
         [AllowAnonymous]
         [HttpGet]
         [Route("api/plan/{id}")]
-        public HttpResponseMessage Get(int id)
+        public async Task<HttpResponseMessage> Get(int id)
         {
-            var plan = planService.Get(id);
+            var plan = await planService.Get(id);
             if (plan == null)
             {
                 const string message = "Plan does not exist in database.";
@@ -76,10 +77,10 @@ namespace LearnWithMentor.Controllers
         ///  <param name="planid"> Id of the plan. </param>
         [HttpGet]
         [Route("api/plan/{planid}/group/{groupid}")]
-        public HttpResponseMessage GetInfo(int groupid, int planid)
+        public async Task<HttpResponseMessage> GetInfo(int groupid, int planid)
         {
-            
-            var info = planService.GetInfo(groupid, planid);
+
+            var info = await planService.GetInfo(groupid, planid);
             if (info == null)
             {
                 const string message = "Plan or Group does not exist in database.";
@@ -94,9 +95,9 @@ namespace LearnWithMentor.Controllers
         /// <param name="id"> Id of the plan. </param>
         [HttpGet]
         [Route("api/plan/{id}/sections")]
-        public HttpResponseMessage GetTasksForPlan(int id)
+        public async Task<HttpResponseMessage> GetTasksForPlan(int id)
         {
-            var sections = planService.GetTasksForPlan(id);
+            var sections = await planService.GetTasksForPlan(id);
             if (sections == null)
             {
                 const string message = "Plan does not exist in database.";
@@ -131,9 +132,9 @@ namespace LearnWithMentor.Controllers
         [AllowAnonymous]
         [HttpGet]
         [Route("api/plan/{planId}/tasks")]
-        public HttpResponseMessage GetAllTasks(int planId)
+        public async Task<HttpResponseMessage> GetAllTasks(int planId)
         {
-            var dtosList = planService.GetAllTasks(planId);
+            var dtosList = await planService.GetAllTasks(planId);
             if (dtosList == null || dtosList.Count == 0)
             {
                 const string message = "Plan does not contain any task.";
@@ -148,9 +149,9 @@ namespace LearnWithMentor.Controllers
         /// <param name="planId"> Id of plan. </param>
         [HttpGet]
         [Route("api/plan/{planId}/plantaskids")]
-        public HttpResponseMessage GetAllPlanTaskIds(int planId)
+        public async Task<HttpResponseMessage> GetAllPlanTaskIds(int planId)
         {
-            var idsList = planService.GetAllPlanTaskids(planId);
+            var idsList = await planService.GetAllPlanTaskids(planId);
             if (idsList == null || idsList.Count == 0)
             {
                 const string message = "Plan does not contain any plantask.";
@@ -166,11 +167,11 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpPost]
         [Route("api/plan")]
-        public HttpResponseMessage Post([FromBody]PlanDto value)
+        public async Task<HttpResponseMessage> Post([FromBody]PlanDto value)
         {
             try
             {
-                var success = planService.Add(value);
+                var success = await planService.Add(value);
                 if (success)
                 {
                     var log = $"Succesfully created plan {value.Name} with id = {value.Id} by user with id = {value.CreatorId}";
@@ -230,11 +231,11 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpPut]
         [Route("api/plan/{id}")]
-        public HttpResponseMessage Put(int id, [FromBody]PlanDto value)
+        public async Task<HttpResponseMessage> Put(int id, [FromBody]PlanDto value)
         {
             try
             {
-                var success = planService.UpdateById(value, id);
+                var success = await planService.UpdateById(value, id);
                 if (success)
                 {
                     var log = $"Succesfully updated plan {value.Name} with id = {value.Id} by user with id = {value.Modid}";
@@ -264,7 +265,7 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpPut]
         [Route("api/plan/{id}/task/{taskId}")]
-        public HttpResponseMessage PutTaskToPlan(int id, int taskId,string sectionId, string priority)
+        public async Task<HttpResponseMessage> PutTaskToPlan(int id, int taskId, string sectionId, string priority)
         {
             try
             {
@@ -286,7 +287,7 @@ namespace LearnWithMentor.Controllers
                 {
                     priorityNew = int.Parse(priority);
                 }
-                var success = planService.AddTaskToPlan(id, taskId, section, priorityNew);
+                var success = await planService.AddTaskToPlan(id, taskId, section, priorityNew);
                 if (success)
                 {
                     var log = $"Succesfully add task with id {taskId} to plan with id = {id}";
@@ -310,9 +311,9 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpPost]
         [Route("api/plan/{id}/image")]
-        public HttpResponseMessage PostImage(int id)
+        public async Task<HttpResponseMessage> PostImage(int id)
         {
-            if (!planService.ContainsId(id))
+            if (!await planService.ContainsId(id))
             {
                 const string errorMessage = "No plan with this id in database.";
                 return Request.CreateResponse(HttpStatusCode.NoContent, errorMessage);
@@ -345,7 +346,7 @@ namespace LearnWithMentor.Controllers
                     {
                         imageData = binaryReader.ReadBytes(postedFile.ContentLength);
                     }
-                    planService.SetImage(id, imageData, postedFile.FileName);
+                    await planService.SetImage(id, imageData, postedFile.FileName);
                     const string okMessage = "Successfully created image.";
                     return Request.CreateResponse(HttpStatusCode.OK, okMessage);
                 }
@@ -365,16 +366,16 @@ namespace LearnWithMentor.Controllers
         [AllowAnonymous]
         [HttpGet]
         [Route("api/plan/{id}/image")]
-        public HttpResponseMessage GetImage(int id)
+        public async Task<HttpResponseMessage> GetImage(int id)
         {
             try
             {
-                if (!planService.ContainsId(id))
+                if (!await planService.ContainsId(id))
                 {
                     const string errorMessage = "No plan with this id in database.";
                     return Request.CreateResponse(HttpStatusCode.NoContent, errorMessage);
                 }
-                var dto = planService.GetImage(id);
+                var dto = await planService.GetImage(id);
                 if (dto == null)
                 {
                     const string message = "No image for this plan in database.";
@@ -400,7 +401,7 @@ namespace LearnWithMentor.Controllers
             {
                 return Get();
             }
-            var lines = q.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var lines = q.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             var dto = planService.Search(lines);
             if (dto == null || dto.Count == 0)
             {

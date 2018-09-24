@@ -14,10 +14,9 @@ namespace LearnWithMentorDAL.Repositories
 
         }
 
-        public Plan Get(int id)
+        public Task<Plan> Get(int id)
         {
-            Task<Plan> findPlan = Context.Plans.FirstOrDefaultAsync(p => p.Id == id);
-            return findPlan.GetAwaiter().GetResult();
+            return Context.Plans.FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public Plan AddAndReturnElement(Plan plan)
@@ -26,10 +25,10 @@ namespace LearnWithMentorDAL.Repositories
             return plan;
         }
 
-        public IEnumerable<Plan> GetPlansForGroup(int groupId)
+        public async Task<IEnumerable<Plan>> GetPlansForGroup(int groupId)
         {
-            Task<Group> findGroup = Context.Groups.FirstOrDefaultAsync(g => g.Id == groupId);
-            return findGroup.GetAwaiter().GetResult()?.Plans;
+            Group group = await Context.Groups.FirstOrDefaultAsync(g => g.Id == groupId);
+            return group?.Plans;
         }
 
         public IEnumerable<Plan> Search(string[] searchString)
@@ -49,23 +48,22 @@ namespace LearnWithMentorDAL.Repositories
             return result;
         }
 
-        public bool ContainsId(int id)
+        public Task<bool> ContainsId(int id)
         {
-            Task<bool> checkIdExisting = Context.Plans.AnyAsync(p => p.Id == id);
-            return checkIdExisting.GetAwaiter().GetResult();
+            return Context.Plans.AnyAsync(p => p.Id == id);
         }
 
-        public string GetImageBase64(int planId)
+        public async Task<string> GetImageBase64(int planId)
         {
-            Task<Plan> findPlan = Context.Plans.FirstOrDefaultAsync(p => p.Id == planId);
-            return findPlan.GetAwaiter().GetResult()?.Image;
+            Plan plan = await Context.Plans.FirstOrDefaultAsync(p => p.Id == planId);
+            return plan?.Image;
         }
 
-        public bool AddTaskToPlan(int planId, int taskId, int? sectionId, int? priority)
+        public async Task<bool> AddTaskToPlan(int planId, int taskId, int? sectionId, int? priority)
         {
-            var taskAdd = Context.Tasks.FirstOrDefault(task => task.Id == taskId);
-            var planAdd = Context.Plans.FirstOrDefault(plan => plan.Id == planId);
-            var section = sectionId != null ? Context.Sections.FirstOrDefault(s => s.Id == sectionId) : Context.Sections.First();
+            var taskAdd = await Context.Tasks.FirstOrDefaultAsync(task => task.Id == taskId);
+            var planAdd = await Context.Plans.FirstOrDefaultAsync(plan => plan.Id == planId);
+            var section = sectionId != null ? await Context.Sections.FirstOrDefaultAsync(s => s.Id == sectionId) : Context.Sections.First();
 
             if (taskAdd == null || planAdd == null)
             {
@@ -89,10 +87,10 @@ namespace LearnWithMentorDAL.Repositories
             return Context.Plans.OrderBy(p => p.Id).Skip(previousNumberOfPlans).Take(numberOfPlans);
         }
 
-        public IEnumerable<Plan> GetPlansNotUsedInGroup(int groupId)
+        public async Task<IEnumerable<Plan>> GetPlansNotUsedInGroup(int groupId)
         {
-            Task<Group> findGroup = Context.Groups.FirstOrDefaultAsync(g => g.Id == groupId);
-            IEnumerable <int> usedPlansId = findGroup.GetAwaiter().GetResult()?.Plans.Select(p => p.Id);
+            Group group = await Context.Groups.FirstOrDefaultAsync(g => g.Id == groupId);
+            IEnumerable<int> usedPlansId = group?.Plans.Select(p => p.Id);
             return Context.Plans.Where(p => !usedPlansId.Contains(p.Id));
         }
     }

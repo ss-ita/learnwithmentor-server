@@ -12,7 +12,7 @@ namespace LearnWithMentorBLL.Interfaces
         int? AddAndGetId(TaskDto taskDTO);
         TaskDto GetTaskForPlan(int taskId, int planId);
         TaskDto GetTaskForPlan(int planTaskId);
-        IEnumerable<TaskDto> GetTasksNotInPlan(int planId);
+        Task<IEnumerable<TaskDto>> GetTasksNotInPlan(int planId);
         Task<UserTaskDto> GetUserTaskByUserPlanTaskId(int userId, int planTaskId);
         bool CreateTask(TaskDto taskDTO);
         Task<bool> CreateUserTask(UserTaskDto userTaskDTO);
@@ -22,7 +22,7 @@ namespace LearnWithMentorBLL.Interfaces
         bool RemoveTaskById(int taskId);
         Task<bool> UpdateProposeEndDate(int userTaskId, DateTime proposeEndDate);
         Task<List<UserTaskDto>> GetTaskStatesForUser(int[] planTaskIds, int userId);
-        IEnumerable<TaskDto> Search(string[] str, int planId);
+        Task<IEnumerable<TaskDto>> Search(string[] str, int planId);
         List<TaskDto> Search(string[] keys);
         Task<StatisticsDto> GetUserStatistics(int userId);
         PagedListDto<TaskDto> GetTasks(int pageSize, int pageNumber = 1);

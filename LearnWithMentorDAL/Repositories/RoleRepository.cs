@@ -14,8 +14,7 @@ namespace LearnWithMentorDAL.Repositories
 
         public Role Get(int id)
         {
-            Task<Role> findRole = Context.Roles.FirstOrDefaultAsync(r => r.Id == id);
-            return findRole.GetAwaiter().GetResult();
+           return Context.Roles.FirstOrDefaultAsync(r => r.Id == id).GetAwaiter().GetResult();
         }
 
         public bool TryGetByName(string name, out Role role)

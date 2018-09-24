@@ -116,9 +116,9 @@ namespace LearnWithMentorBLL.Services
             };
         }
 
-        public IEnumerable<TaskDto> Search(string[] str, int planId)
+        public async Task<IEnumerable<TaskDto>> Search(string[] str, int planId)
         {
-            if (!db.Plans.ContainsId(planId))
+            if (! await db.Plans.ContainsId(planId))
             {
                 return null;
             }
@@ -276,9 +276,9 @@ namespace LearnWithMentorBLL.Services
             return dtoList;
         }
 
-        public IEnumerable<TaskDto> GetTasksNotInPlan(int planId)
+        public async Task<IEnumerable<TaskDto>> GetTasksNotInPlan(int planId)
         {
-            var plan = db.Plans.Get(planId);
+            var plan = await db.Plans.Get(planId);
             if (plan == null)
             {
                 return null;
