@@ -1,16 +1,17 @@
 ﻿using LearnWithMentorDAL.Entities;
+using System.Threading.Tasks;
 
 namespace LearnWithMentorDAL.Repositories.Interfaces
 {
     public interface IPlanTaskRepository:IRepository<PlanTask>
     {
-        PlanTask Get(int id);
-        PlanTask Get(int taskId, int planId);
-        int? GetIdByTaskAndPlan(int taskId, int planId);
-        bool ContainsTaskInPlan(int taskId, int planId);
-        int? GetTaskPriorityInPlan(int taskId, int planId);
-        int? GetTaskSectionIdInPlan(int taskId, int planId);
-        int[] GetTasksIdForPlan(int planId);
-        int[] GetPlansIdForTask(int taskId);
+        Task<PlanTask> Get(int id);
+        Task<PlanTask> Get(int taskId, int planId);
+        Task<int?> GetIdByTaskAndPlan(int taskId, int planId);
+        Task<bool> ContainsTaskInPlan(int taskId, int planId);
+        Task<int?> GetTaskPriorityInPlan(int taskId, int planId);
+        Task<int?> GetTaskSectionIdInPlan(int taskId, int planId);
+        Task<int[]> GetTasksIdForPlan(int planId);
+        Task<int[]> GetPlansIdForTask(int taskId);
     }
 }

@@ -58,11 +58,11 @@ namespace LearnWithMentor.Controllers
         /// <param name="planTaskId">Id of the plantask.</param>
         [HttpGet]
         [Route("api/comment/plantask/{planTaskId}")]
-        public HttpResponseMessage GetCommentsForPlanTask(int planTaskId)
+        public async Task<HttpResponseMessage> GetCommentsForPlanTask(int planTaskId)
         {
             try
             {
-                var comments = commentService.GetCommentsForPlanTask(planTaskId);
+                var comments = await commentService.GetCommentsForPlanTask(planTaskId);
                 if (comments == null)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, "There are no comments for this task in that plan");

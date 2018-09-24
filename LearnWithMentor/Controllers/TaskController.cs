@@ -132,11 +132,11 @@ namespace LearnWithMentor.Controllers
         /// <param name="planTaskId">Id of the planTask.</param>
         [HttpGet]
         [Route("api/task/plantask/{planTaskId}")]
-        public HttpResponseMessage GetTaskForPlan(int planTaskId)
+        public async Task<HttpResponseMessage> GetTaskForPlan(int planTaskId)
         {
             try
             {
-                var task = taskService.GetTaskForPlan(planTaskId);
+                var task = await taskService.GetTaskForPlan(planTaskId);
                 if (task != null)
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, task);

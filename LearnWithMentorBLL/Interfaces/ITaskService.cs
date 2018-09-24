@@ -10,8 +10,8 @@ namespace LearnWithMentorBLL.Interfaces
         IEnumerable<TaskDto> GetAllTasks();
         TaskDto GetTaskById(int taskId);
         int? AddAndGetId(TaskDto taskDTO);
-        TaskDto GetTaskForPlan(int taskId, int planId);
-        TaskDto GetTaskForPlan(int planTaskId);
+        Task<TaskDto> GetTaskForPlan(int taskId, int planId);
+        Task<TaskDto> GetTaskForPlan(int planTaskId);
         Task<IEnumerable<TaskDto>> GetTasksNotInPlan(int planId);
         Task<UserTaskDto> GetUserTaskByUserPlanTaskId(int userId, int planTaskId);
         bool CreateTask(TaskDto taskDTO);

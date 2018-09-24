@@ -7,8 +7,8 @@ namespace LearnWithMentorBLL.Interfaces
     public interface ICommentService: IDisposableService
     {
         CommentDto GetComment(int commentId);
-        IEnumerable<CommentDto> GetCommentsForPlanTask(int taskId, int planId);
-        IEnumerable<CommentDto> GetCommentsForPlanTask(int planTaskId);
+        Task<IEnumerable<CommentDto>> GetCommentsForPlanTask(int taskId, int planId);
+        Task<IEnumerable<CommentDto>> GetCommentsForPlanTask(int planTaskId);
         Task<bool> AddCommentToPlanTask(int planTaskId, CommentDto comment);
         Task<bool> AddCommentToPlanTask(int planId, int taskId, CommentDto comment);
         bool UpdateCommentIdText(int commentId, string text);

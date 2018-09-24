@@ -12,52 +12,47 @@ namespace LearnWithMentorDAL.Repositories
         {
         }
 
-        public PlanTask Get(int id)
+        public Task<PlanTask> Get(int id)
         {
-            Task<PlanTask> findPlanTask = Context.PlanTasks.FirstOrDefaultAsync(p => p.Id == id);
-            return findPlanTask.GetAwaiter().GetResult();
+            return Context.PlanTasks.FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public int? GetIdByTaskAndPlan(int taskId, int planId)
+        public async Task<int?> GetIdByTaskAndPlan(int taskId, int planId)
         {
-            Task<PlanTask> findPlanTask = Context.PlanTasks.FirstOrDefaultAsync(pt => pt.Plan_Id == planId && pt.Task_Id==taskId);
-            return findPlanTask.GetAwaiter().GetResult()?.Id;
+            PlanTask planTask = await Context.PlanTasks.FirstOrDefaultAsync(pt => pt.Plan_Id == planId && pt.Task_Id==taskId);
+            return planTask?.Id;
         }
 
-        public PlanTask Get(int taskId, int planId)
+        public Task<PlanTask> Get(int taskId, int planId)
         {
-            Task<PlanTask> findPlanTask = Context.PlanTasks.FirstOrDefaultAsync(pt => pt.Plan_Id == planId && pt.Task_Id == taskId);
-            return findPlanTask.GetAwaiter().GetResult();
+            return Context.PlanTasks.FirstOrDefaultAsync(pt => pt.Plan_Id == planId && pt.Task_Id == taskId);
         }
 
-        public bool ContainsTaskInPlan(int taskId, int planId)
+        public Task<bool> ContainsTaskInPlan(int taskId, int planId)
         {
-            Task<bool> checkPlanTaskEsixting = Context.PlanTasks.AnyAsync(pt => pt.Task_Id == taskId && pt.Plan_Id == planId);
-            return checkPlanTaskEsixting.GetAwaiter().GetResult();
+            return Context.PlanTasks.AnyAsync(pt => pt.Task_Id == taskId && pt.Plan_Id == planId);
         }
 
-        public int? GetTaskPriorityInPlan(int taskId, int planId)
+        public async Task<int?> GetTaskPriorityInPlan(int taskId, int planId)
         {
-            Task<PlanTask> findPlanTask = Context.PlanTasks.FirstOrDefaultAsync(pt => pt.Task_Id == taskId && planId == pt.Plan_Id);
-            return findPlanTask.GetAwaiter().GetResult()?.Priority;
+            PlanTask planTask = await Context.PlanTasks.FirstOrDefaultAsync(pt => pt.Task_Id == taskId && planId == pt.Plan_Id);
+            return planTask?.Priority;
         }
 
-        public int? GetTaskSectionIdInPlan(int taskId, int planId)
+        public async Task<int?> GetTaskSectionIdInPlan(int taskId, int planId)
         {
-            Task<PlanTask> findPlanTask = Context.PlanTasks.FirstOrDefaultAsync(pt => pt.Task_Id == taskId && planId == pt.Plan_Id);
-            return findPlanTask.GetAwaiter().GetResult()?.Section_Id;
+            PlanTask planTask = await Context.PlanTasks.FirstOrDefaultAsync(pt => pt.Task_Id == taskId && planId == pt.Plan_Id);
+            return planTask?.Section_Id;
         }
 
-        public int[] GetTasksIdForPlan(int planId)
+        public Task<int[]> GetTasksIdForPlan(int planId)
         {
-            Task<int[]> getTasksId = Context.PlanTasks.Where(pt => pt.Plan_Id == planId).Select(pt => pt.Task_Id).ToArrayAsync();
-            return getTasksId.GetAwaiter().GetResult();
+            return Context.PlanTasks.Where(pt => pt.Plan_Id == planId).Select(pt => pt.Task_Id).ToArrayAsync();
         }
 
-        public int[] GetPlansIdForTask(int taskId)
+        public Task<int[]> GetPlansIdForTask(int taskId)
         {
-            Task<int[]> getPlansId = Context.PlanTasks.Where(pt => pt.Plan_Id == taskId).Select(pt => pt.Plan_Id).ToArrayAsync();
-            return getPlansId.GetAwaiter().GetResult();
+            return Context.PlanTasks.Where(pt => pt.Plan_Id == taskId).Select(pt => pt.Plan_Id).ToArrayAsync();
         }
     }
 }

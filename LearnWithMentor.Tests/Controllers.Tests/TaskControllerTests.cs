@@ -195,13 +195,13 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         #endregion
         #region GetAllTasks
         [Test]
-        public void GetTaskForPlanTest_ShouldReturnAllTasksForPlan()
+        public async Task GetTaskForPlanTest_ShouldReturnAllTasksForPlan()
         {
-            taskServiceMock.Setup(mts => mts.GetTaskForPlan(It.IsAny<int>())).Returns(GetTestTasks()[0]);
+            taskServiceMock.Setup(mts => mts.GetTaskForPlan(It.IsAny<int>())).ReturnsAsync(GetTestTasks()[0]);
 
-            var response = taskController.GetTaskForPlan(1);
+            var response = await taskController.GetTaskForPlan(1);
             var successfull = response.TryGetContentValue<TaskDto>(out var taskDTOs);
-            var expected = taskServiceMock.Object.GetTaskForPlan(1);
+            var expected = await taskServiceMock.Object.GetTaskForPlan(1);
             var actual = taskDTOs;
 
             Assert.IsTrue(successfull);
@@ -210,22 +210,22 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public void GetTaskForPlanTest_ShouldReturnNoContentResponse()
+        public async Task GetTaskForPlanTest_ShouldReturnNoContentResponse()
         {
             taskServiceMock.Setup(ts => ts.GetTaskForPlan(It.IsAny<int>()));
 
-            var response = taskController.GetTaskForPlan(1);
+            var response = await taskController.GetTaskForPlan(1);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.NoContent);
         }
 
         [Test]
-        public void GetTaskForPlanTest_ShouldCatchEntityException()
+        public async Task GetTaskForPlanTest_ShouldCatchEntityException()
         {
             taskServiceMock.Setup(ts => ts.GetTaskForPlan(It.IsAny<int>()))
                 .Throws(new EntityException());
 
-            var response = taskController.GetTaskForPlan(1);
+            var response = await taskController.GetTaskForPlan(1);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.InternalServerError);
         }

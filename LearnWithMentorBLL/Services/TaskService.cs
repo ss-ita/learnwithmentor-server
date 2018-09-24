@@ -62,24 +62,24 @@ namespace LearnWithMentorBLL.Services
             return createdTask?.Id;
         }
 
-        public TaskDto GetTaskForPlan(int taskId, int planId)
+        public async Task<TaskDto> GetTaskForPlan(int taskId, int planId)
         {
             var task = db.Tasks.Get(taskId);
             if (task == null)
             {
                 return null;
             }
-            var planTask = db.PlanTasks.Get(taskId, planId);
+            var planTask = await db.PlanTasks.Get(taskId, planId);
             if (planTask == null)
             {
                 return null;
             }
-            return GetTaskForPlan(planTask.Id);
+            return await GetTaskForPlan(planTask.Id);
         }
 
-        public TaskDto GetTaskForPlan(int planTaskId)
+        public async Task<TaskDto> GetTaskForPlan(int planTaskId)
         {
-            var planTask = db.PlanTasks.Get(planTaskId);
+            var planTask = await db.PlanTasks.Get(planTaskId);
             if (planTask == null)
             {
                 return null;
@@ -169,7 +169,7 @@ namespace LearnWithMentorBLL.Services
 
         public async Task<bool> CreateUserTask(UserTaskDto userTaskDTO)
         {
-            var planTask = db.PlanTasks.Get(userTaskDTO.PlanTaskId);
+            var planTask = await db.PlanTasks.Get(userTaskDTO.PlanTaskId);
             if (planTask == null)
             {
                 return false;

@@ -31,7 +31,7 @@ namespace LearnWithMentorBLL.Services
 
         public async Task<bool> AddCommentToPlanTask(int planTaskId, CommentDto comment)
         {
-            var plantask = db.PlanTasks.Get(planTaskId);
+            var plantask = await db.PlanTasks.Get(planTaskId);
             if (plantask == null)
             {
                 return false;
@@ -53,7 +53,7 @@ namespace LearnWithMentorBLL.Services
 
         public async Task<bool> AddCommentToPlanTask(int planId, int taskId, CommentDto comment)
         {
-            var planTaskId =  db.PlanTasks.GetIdByTaskAndPlan(taskId, planId);
+            var planTaskId = await db.PlanTasks.GetIdByTaskAndPlan(taskId, planId);
             if (planTaskId == null)
             {
                 return false;
@@ -91,16 +91,16 @@ namespace LearnWithMentorBLL.Services
             return UpdateCommentIdText(commentId, commentDTO.Text);
         }
 
-        public IEnumerable<CommentDto> GetCommentsForPlanTask(int taskId, int planId)
+        public async Task<IEnumerable<CommentDto>> GetCommentsForPlanTask(int taskId, int planId)
         {
-            var planTaskId = db.PlanTasks.GetIdByTaskAndPlan(taskId, planId);
-            return planTaskId == null ? null : GetCommentsForPlanTask(planTaskId.Value);
+            var planTaskId = await db.PlanTasks.GetIdByTaskAndPlan(taskId, planId);
+            return planTaskId == null ? null : await GetCommentsForPlanTask(planTaskId.Value);
         }
 
-        public IEnumerable<CommentDto> GetCommentsForPlanTask(int planTaskId)
+        public async Task<IEnumerable<CommentDto>> GetCommentsForPlanTask(int planTaskId)
         {
             var commentsList = new List<CommentDto>();
-            var planTask = db.PlanTasks.Get(planTaskId);
+            var planTask = await db.PlanTasks.Get(planTaskId);
             var comments = planTask?.Comments;
             if (comments == null)
             {

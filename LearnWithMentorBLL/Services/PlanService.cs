@@ -115,9 +115,9 @@ namespace LearnWithMentorBLL.Services
                                          db.Users.ExtractFullName(task.Mod_Id),
                                          task.Create_Date,
                                          task.Mod_Date,
-                                         db.PlanTasks.GetTaskPriorityInPlan(task.Id, planId),
-                                         db.PlanTasks.GetTaskSectionIdInPlan(task.Id, planId),
-                                         db.PlanTasks.GetIdByTaskAndPlan(task.Id, planId));
+                                         await db.PlanTasks.GetTaskPriorityInPlan(task.Id, planId),
+                                         await db.PlanTasks.GetTaskSectionIdInPlan(task.Id, planId),
+                                         await db.PlanTasks.GetIdByTaskAndPlan(task.Id, planId));
                 dtosList.Add(toAdd);
             }
             return dtosList;
@@ -178,9 +178,9 @@ namespace LearnWithMentorBLL.Services
                         db.Users.ExtractFullName(task.Mod_Id),
                         task.Create_Date,
                         task.Mod_Date,
-                        db.PlanTasks.GetTaskPriorityInPlan(task.Id, planId),
-                        db.PlanTasks.GetTaskSectionIdInPlan(task.Id, planId),
-                        db.PlanTasks.GetIdByTaskAndPlan(task.Id, planId));
+                        await db.PlanTasks.GetTaskPriorityInPlan(task.Id, planId),
+                        await db.PlanTasks.GetTaskSectionIdInPlan(task.Id, planId),
+                        await db.PlanTasks.GetIdByTaskAndPlan(task.Id, planId));
                     taskDTOs.Add(toAdd);
                 }
                 contentDTO.Tasks = taskDTOs;
@@ -226,7 +226,7 @@ namespace LearnWithMentorBLL.Services
 
         private async TaskThread.Task CreateUserTasksForAllLearningByPlan(int planId, int taskId)
         {
-            var planTaskId = db.PlanTasks.GetIdByTaskAndPlan(taskId, planId);
+            var planTaskId = await db.PlanTasks.GetIdByTaskAndPlan(taskId, planId);
             var plan = await db.Plans.Get(planId);
             var groups = db.Groups.GetGroupsByPlan(planId).ToList();
             if (plan == null || groups.Any() || planTaskId == null)
