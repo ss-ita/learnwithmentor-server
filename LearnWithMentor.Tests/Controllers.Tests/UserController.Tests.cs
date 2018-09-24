@@ -243,7 +243,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public void NoUsersInGetUsersByRoleTest()
         {
-            roleServiceMock.Setup(r => r.GetByName(It.IsAny<string>())).Returns(roles.First());
+            roleServiceMock.Setup(r => r.GetByName(It.IsAny<string>())).ReturnsAsync(roles.First());
             userServiceMock.Setup(u => u.GetUsersByRole(3)).Returns(new List<UserDto>());
 
             var response = userController.GetUsersbyRole(3);
@@ -347,12 +347,12 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public void CreateUserTest()
+        public async Task CreateUserTest()
         {
-            userServiceMock.Setup(u => u.Add(It.IsAny<UserRegistrationDto>())).Returns(true);
+            userServiceMock.Setup(u => u.Add(It.IsAny<UserRegistrationDto>())).ReturnsAsync(true);
 
             UserRegistrationDto requestValue = new UserRegistrationDto("test@test.test", "Test", "Test", "123");
-            var response = userController.Post(requestValue);
+            var response = await userController.Post(requestValue);
             var expected = HttpStatusCode.OK;
             var actual = response.StatusCode;
 
@@ -386,12 +386,12 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public void InvalidSyntaxCreateUserTest()
+        public async Task InvalidSyntaxCreateUserTest()
         {
-            userServiceMock.Setup(u => u.Add(It.IsAny<UserRegistrationDto>())).Returns(false);
+            userServiceMock.Setup(u => u.Add(It.IsAny<UserRegistrationDto>())).ReturnsAsync(false);
 
             var requestValue = new UserRegistrationDto("test", "Test", "Test", "123");
-            var response = userController.Post(requestValue);
+            var response = await userController.Post(requestValue);
             var expected = HttpStatusCode.BadRequest;
             var actual = response.StatusCode;
 

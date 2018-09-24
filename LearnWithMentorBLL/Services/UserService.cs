@@ -96,7 +96,8 @@ namespace LearnWithMentorBLL.Services
                     item.Blocked = user.Blocked.Value;
                     modified = true;
                 }
-                if (db.Roles.TryGetByName(user.Role, out var updatedRole))
+                var updatedRole = await db.Roles.TryGetByName(user.Role);
+                if (updatedRole != null)
                 {
                     item.Role_Id = updatedRole.Id;
                     modified = true;
@@ -106,7 +107,7 @@ namespace LearnWithMentorBLL.Services
             }
             return modified;
         }
-        
+
         public async Task<bool> ConfirmEmailById(int id)
         {
             User user = await db.Users.Get(id);
@@ -120,14 +121,14 @@ namespace LearnWithMentorBLL.Services
             return false;
         }
 
-        public bool Add(UserRegistrationDto userLoginDTO)
+        public async Task<bool> Add(UserRegistrationDto userLoginDTO)
         {
             var toAdd = new User
             {
                 Email = userLoginDTO.Email,
                 Password = BCrypt.Net.BCrypt.HashPassword(userLoginDTO.Password)
             };
-            db.Roles.TryGetByName("Student", out var studentRole);
+            var studentRole = await db.Roles.TryGetByName("Student");
             toAdd.Role_Id = studentRole.Id;
             toAdd.FirstName = userLoginDTO.FirstName;
             toAdd.LastName = userLoginDTO.LastName;

@@ -12,16 +12,14 @@ namespace LearnWithMentorDAL.Repositories
         {
         }
 
-        public Role Get(int id)
+        public Task<Role> Get(int id)
         {
-           return Context.Roles.FirstOrDefaultAsync(r => r.Id == id).GetAwaiter().GetResult();
+           return Context.Roles.FirstOrDefaultAsync(r => r.Id == id);
         }
 
-        public bool TryGetByName(string name, out Role role)
+        public Task<Role> TryGetByName(string name)
         {
-            Task<Role> findRole = Context.Roles.FirstOrDefaultAsync(r => r.Name == name);
-            role = findRole.GetAwaiter().GetResult();
-            return role != null;
+            return Context.Roles.FirstOrDefaultAsync(r => r.Name == name);
         }
     }
 }

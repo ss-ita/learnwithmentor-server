@@ -195,7 +195,7 @@ namespace LearnWithMentor.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Route("api/user")]
-        public HttpResponseMessage Post([FromBody]UserRegistrationDto value)
+        public async Task<HttpResponseMessage> Post([FromBody]UserRegistrationDto value)
         {
             if (!ModelState.IsValid)
             {
@@ -203,7 +203,7 @@ namespace LearnWithMentor.Controllers
             }
             try
             {
-                var success = userService.Add(value);
+                var success = await userService.Add(value);
                 if (success)
                 {
                     var okMessage = $"Succesfully created user: {value.Email}.";
@@ -532,13 +532,13 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Admin, Mentor")]
         [HttpGet]
         [Route("api/user/search")]
-        public HttpResponseMessage Search(string key, string role)
+        public async Task<HttpResponseMessage> Search(string key, string role)
         {
             if (key == null)
             {
                 key = "";
             }
-            var criteria = roleService.GetByName(role);
+            var criteria = await roleService.GetByName(role);
             var lines = key.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             int? searchParametr = null;
             if (role == Constants.Roles.Blocked)
@@ -570,13 +570,13 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Admin, Mentor")]
         [HttpGet]
         [Route("api/user/search")]
-        public HttpResponseMessage Search(string key, string role, [FromUri]int pageSize, [FromUri]int pageNumber)
+        public async Task<HttpResponseMessage> Search(string key, string role, [FromUri]int pageSize, [FromUri]int pageNumber)
         {
             if (key == null)
             {
                 key = "";
             }
-            var criteria = roleService.GetByName(role);
+            var criteria = await roleService.GetByName(role);
             var lines = key.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             int? searchParametr = null;
             if (role == Constants.Roles.Blocked)

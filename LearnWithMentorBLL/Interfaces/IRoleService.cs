@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using LearnWithMentorDTO;
+using System.Threading.Tasks;
 
 namespace LearnWithMentorBLL.Interfaces
 {
     public interface IRoleService : IDisposableService
     {
-        RoleDto Get(int id);
+        Task<RoleDto> Get(int id);
         List<RoleDto> GetAllRoles();
-        RoleDto GetByName(string name);
+        Task<RoleDto> GetByName(string name);
     }
 }
