@@ -4,30 +4,29 @@ using System.Data.Entity;
 using LearnWithMentorDAL.Entities;
 using LearnWithMentorDAL.Repositories.Interfaces;
 using System.Collections.Generic;
+using Task = System.Threading.Tasks.Task;
 
 namespace LearnWithMentorDAL.Repositories
 {
-    public class CommentRepository: BaseRepository<Comment>, ICommentRepository
+    public class CommentRepository : BaseRepository<Comment>, ICommentRepository
     {
         public CommentRepository(LearnWithMentorContext context) : base(context)
         {
         }
 
-        public Comment Get(int id)
+        public async Task<Comment> Get(int id)
         {
-            Task<Comment> findCommnet = Context.Comments.FirstOrDefaultAsync(t => t.Id == id);
-            return findCommnet.GetAwaiter().GetResult();
+            return await Context.Comments.FirstOrDefaultAsync(t => t.Id == id);
         }
 
-        public bool ContainsId(int id)
+        public async Task<bool> ContainsId(int id)
         {
-            Task<bool> checkIdExisting = Context.Comments.AnyAsync(t => t.Id == id);
-            return checkIdExisting.GetAwaiter().GetResult();
+            return await Context.Comments.AnyAsync(t => t.Id == id);
         }
 
-        public IQueryable<Comment> GetByPlanTaskId(int ptId)
+        public async Task<IEnumerable<Comment>> GetByPlanTaskId(int ptId)
         {
-            return Context.Comments.Where(c =>c.PlanTask_Id==ptId );
+            return await Context.Comments.Where(c => c.PlanTask_Id == ptId).ToListAsync();
         }
 
         public void RemoveById(int id)

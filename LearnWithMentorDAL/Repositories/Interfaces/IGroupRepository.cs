@@ -1,19 +1,21 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using LearnWithMentorDAL.Entities;
+using Task = System.Threading.Tasks.Task;
 
 namespace LearnWithMentorDAL.Repositories.Interfaces
 {
     public interface IGroupRepository: IRepository<Group>
     {
-        Group Get(int id);
-        int Count();
-        bool GroupNameExists(string groupName);
-        IEnumerable<Group> GetGroupsByMentor(int mentorId);
-        bool AddUserToGroup(int userId, int groupId);
-        bool AddPlanToGroup(int planId, int groupId);
-        void RemoveUserFromGroup(int groupId, int userId);
-        void RemovePlanFromGroup(int groupId, int planId);
-        IEnumerable<Group> GetStudentGroups(int studentId);
-        IEnumerable<Group> GetGroupsByPlan(int planId);
+        Task<Group> Get(int id);
+        Task<int> Count();
+        Task<bool> GroupNameExists(string groupName);
+        Task<IEnumerable<Group>> GetGroupsByMentor(int mentorId);
+        Task<bool> AddUserToGroup(int userId, int groupId);
+        Task<bool> AddPlanToGroup(int planId, int groupId);
+        Task RemoveUserFromGroup(int groupId, int userId);
+        Task RemovePlanFromGroup(int groupId, int planId);
+        Task<IEnumerable<Group>> GetStudentGroups(int studentId);
+        Task<IEnumerable<Group>> GetGroupsByPlan(int planId);
     }
 }

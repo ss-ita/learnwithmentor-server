@@ -36,11 +36,11 @@ namespace LearnWithMentor.Controllers
         /// <param name="id">Id of the comment.</param>
         [HttpGet]
         [Route("api/comment")]
-        public HttpResponseMessage GetComment(int id)
+        public async Task<HttpResponseMessage> GetComment(int id)
         {
             try
             {
-                var comment = commentService.GetComment(id);
+                CommentDto comment = await commentService.GetComment(id);
                 if (comment == null)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, "Comment with this Id does not exist in database.");
@@ -110,11 +110,11 @@ namespace LearnWithMentor.Controllers
         /// <param name="comment">New comment.</param>
         [HttpPut]
         [Route("api/comment")]
-        public HttpResponseMessage PutComment(int commentId, [FromBody]CommentDto comment)
+        public async Task<HttpResponseMessage> PutComment(int commentId, [FromBody]CommentDto comment)
         {
             try
             {
-                if (commentService.UpdateComment(commentId, comment))
+                if (await commentService.UpdateComment(commentId, comment))
                 {
                     var log = $"Succesfully updated comment with id = {commentId}";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
@@ -134,11 +134,11 @@ namespace LearnWithMentor.Controllers
         /// <param name="commentId">Id of the comment.</param>
         [HttpDelete]
         [Route("api/comment/{commentId}")]
-        public HttpResponseMessage Delete(int commentId)
+        public async Task<HttpResponseMessage> Delete(int commentId)
         {
             try
             {
-                if (commentService.RemoveById(commentId))
+                if (await commentService.RemoveById(commentId))
                 {
                     var log = $"Succesfully deleted comment with id = {commentId}";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);

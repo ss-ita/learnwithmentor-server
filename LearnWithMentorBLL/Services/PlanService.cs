@@ -5,7 +5,8 @@ using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDTO;
 using LearnWithMentorDAL.Entities;
 using LearnWithMentorDAL.UnitOfWork;
-using TaskThread = System.Threading.Tasks;
+using System.Threading.Tasks;
+
 
 namespace LearnWithMentorBLL.Services
 {
@@ -14,7 +15,7 @@ namespace LearnWithMentorBLL.Services
         public PlanService(IUnitOfWork db) : base(db)
         {
         }
-        public async TaskThread.Task<PlanDto> Get(int id)
+        public async Task<PlanDto> Get(int id)
         {
             var plan = await db.Plans.Get(id);
             if (plan == null)
@@ -85,7 +86,7 @@ namespace LearnWithMentorBLL.Services
             return dtosList;
         }
 
-        public async TaskThread.Task<List<TaskDto>> GetAllTasks(int planId)
+        public async Task<List<TaskDto>> GetAllTasks(int planId)
         {
             var plan = await db.Plans.Get(planId);
             if (plan == null)
@@ -123,7 +124,7 @@ namespace LearnWithMentorBLL.Services
             return dtosList;
         }
 
-        public async TaskThread.Task<List<int>> GetAllPlanTaskids(int planId)
+        public async Task<List<int>> GetAllPlanTaskids(int planId)
         {
             var plan = await db.Plans.Get(planId);
             if (plan == null)
@@ -140,7 +141,7 @@ namespace LearnWithMentorBLL.Services
             return planTaskIds;
         }
 
-        public async TaskThread.Task<List<SectionDto>> GetTasksForPlan(int planId)
+        public async Task<List<SectionDto>> GetTasksForPlan(int planId)
         {
             var plan = await db.Plans.Get(planId);
             if (plan == null)
@@ -195,7 +196,7 @@ namespace LearnWithMentorBLL.Services
             return sectionDTOs;
         }
 
-        public async TaskThread.Task<bool> UpdateById(PlanDto plan, int id)
+        public async Task<bool> UpdateById(PlanDto plan, int id)
         {
             var toUpdate = await db.Plans.Get(id);
             if (toUpdate == null)
@@ -224,12 +225,12 @@ namespace LearnWithMentorBLL.Services
             return modified;
         }
 
-        private async TaskThread.Task CreateUserTasksForAllLearningByPlan(int planId, int taskId)
+        private async System.Threading.Tasks.Task CreateUserTasksForAllLearningByPlan(int planId, int taskId)
         {
             var planTaskId = await db.PlanTasks.GetIdByTaskAndPlan(taskId, planId);
             var plan = await db.Plans.Get(planId);
-            var groups = db.Groups.GetGroupsByPlan(planId).ToList();
-            if (plan == null || groups.Any() || planTaskId == null)
+            var groups = await db.Groups.GetGroupsByPlan(planId);
+            if (plan == null ||groups.Any() || planTaskId == null)
             {
                 return;
             }
@@ -258,7 +259,7 @@ namespace LearnWithMentorBLL.Services
 
         }
 
-        public async TaskThread.Task<bool> AddTaskToPlan(int planId, int taskId, int? sectionId, int? priority)
+        public async Task<bool> AddTaskToPlan(int planId, int taskId, int? sectionId, int? priority)
         {
             var plan = await db.Plans.Get(planId);
             if (plan == null)
@@ -276,7 +277,7 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public async TaskThread.Task<bool> SetImage(int id, byte[] image, string imageName)
+        public async Task<bool> SetImage(int id, byte[] image, string imageName)
         {
             var toUpdate = await db.Plans.Get(id);
             if (toUpdate == null)
@@ -290,7 +291,7 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public async TaskThread.Task<ImageDto> GetImage(int id)
+        public async Task<ImageDto> GetImage(int id)
         {
             var toGetImage = await db.Plans.Get(id);
             if (toGetImage?.Image == null || toGetImage.Image_Name == null)
@@ -304,7 +305,7 @@ namespace LearnWithMentorBLL.Services
             };
         }
 
-        public async TaskThread.Task<bool> Add(PlanDto dto)
+        public async Task<bool> Add(PlanDto dto)
         {
             if (! await ContainsId(dto.CreatorId))
             {
@@ -366,9 +367,9 @@ namespace LearnWithMentorBLL.Services
             return dtosList;
         }
 
-        public async TaskThread.Task<string> GetInfo(int groupid, int planid)
+        public async Task<string> GetInfo(int groupid, int planid)
         {
-            var group = db.Groups.Get(groupid);
+            Group group = await db.Groups.Get(groupid);
             if (group == null)
             {
                 return null;
@@ -382,7 +383,7 @@ namespace LearnWithMentorBLL.Services
             return group.Name + ": " + plan.Name;
         }
 
-        public TaskThread.Task<bool> ContainsId(int id)
+        public Task<bool> ContainsId(int id)
         {
             return db.Plans.ContainsId(id);
         }

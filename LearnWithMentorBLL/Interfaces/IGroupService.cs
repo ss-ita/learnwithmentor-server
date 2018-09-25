@@ -7,18 +7,18 @@ namespace LearnWithMentorBLL.Interfaces
 {
     public interface IGroupService : IDisposableService
     {
-        GroupDto GetGroupById(int id);
-        int GroupsCount();
-        int? GetMentorIdByGroup(int groupId);
-        IEnumerable<GroupDto> GetGroupsByMentor(int mentorId);
-        IEnumerable<UserIdentityDto> GetUsers(int groupId);
+        Task<GroupDto> GetGroupById(int id);
+        Task<int> GroupsCount();
+        Task<int?> GetMentorIdByGroup(int groupId);
+        Task<IEnumerable<GroupDto>> GetGroupsByMentor(int mentorId);
+        Task<IEnumerable<UserIdentityDto>> GetUsers(int groupId);
         Task<IEnumerable<UserWithImageDto>> GetUsersWithImage(int groupId);
         TaskThread.Task<IEnumerable<PlanDto>> GetPlans(int groupId);
-        bool AddGroup(GroupDto group);
+        Task<bool> AddGroup(GroupDto group);        
         Task<bool> AddUsersToGroup(int[] usersId, int groupId);
         TaskThread.Task<bool> AddPlansToGroup(int[] plansId, int groupId);
-        IEnumerable<UserIdentityDto> GetUsersNotInGroup(int groupId);
-        IEnumerable<UserIdentityDto> SearchUserNotInGroup(string[] searchCases, int groupId);
+        Task<IEnumerable<UserIdentityDto>> GetUsersNotInGroup(int groupId);
+        Task<IEnumerable<UserIdentityDto>> SearchUserNotInGroup(string[] searchCases, int groupId);
         TaskThread.Task<IEnumerable<PlanDto>> GetPlansNotUsedInGroup(int groupId);
         TaskThread.Task<IEnumerable<PlanDto>> SearchPlansNotUsedInGroup(string[] searchCases, int groupId);
         Task<bool> RemoveUserFromGroup(int groupId, int userIdToRemove);

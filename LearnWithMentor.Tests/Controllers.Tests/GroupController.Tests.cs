@@ -81,13 +81,12 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
         #region GetGroupByIdTest
         [Test]
-        public void GetGroupByIdTest_ShouldReturnTask()
+        public async Task GetGroupByIdTest_ShouldReturnTask()
         {
-            groupServiceMock.Setup(u => u.GetGroupById(It.IsAny<int>())).Returns(
+            groupServiceMock.Setup(u =>  u.GetGroupById(It.IsAny<int>())).ReturnsAsync(
                  (int i) => groups.Single(x => x.Id == i));
-
-            var response = groupController.GetById(3);
-            var successfull = response.TryGetContentValue<GroupDto>(out var groupDTO);
+            var response = await groupController.GetById(3);
+            var successfull =  response.TryGetContentValue<GroupDto>(out var groupDTO);
             var expected = groupServiceMock.Object.GetGroupById(3);
             var actual = groupDTO;
 
@@ -97,11 +96,11 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public void GetGroupByIdTest_ShouldReturnNotFoundResponse()
+        public async  Task GetGroupByIdTest_ShouldReturnNotFoundResponse()
         {
             groupServiceMock.Setup(u => u.GetGroupById(It.IsAny<int>()));
 
-            var response = groupController.GetById(1);
+            var response = await groupController.GetById(1);
             var expected = HttpStatusCode.NotFound;
             var actual = response.StatusCode;
 
@@ -336,7 +335,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             groupServiceMock.Setup(u => u.GetMentorIdByGroup(It.IsAny<int>())).Returns(new int());
             HttpResponseMessage response = await groupController.PutUsersToGroup(5, new int[] { 1, 2, 3 });
             var expected = HttpStatusCode.BadRequest;
-            var actual = response.StatusCode;
+            var actual =  response.StatusCode;
 
             Assert.AreEqual(expected, actual);
         }

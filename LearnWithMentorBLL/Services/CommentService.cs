@@ -13,20 +13,20 @@ namespace LearnWithMentorBLL.Services
         {
         }
 
-        public CommentDto GetComment(int commentId)
+        public async Task<CommentDto> GetComment(int commentId)
         {
-            var comment = db.Comments.Get(commentId);
+            Comment comment = await db.Comments.Get(commentId);
             if (comment == null)
             {
                 return null;
             }
-            var commentDTO = new CommentDto(comment.Id,
+            var commentDTO = new  CommentDto(comment.Id,
                                    comment.Text,
                                    comment.Create_Id,
                                    db.Users.ExtractFullName(comment.Create_Id),
                                    comment.Create_Date,
                                    comment.Mod_Date);
-            return commentDTO;
+            return  commentDTO;
         }
 
         public async Task<bool> AddCommentToPlanTask(int planTaskId, CommentDto comment)
@@ -61,13 +61,13 @@ namespace LearnWithMentorBLL.Services
             return await AddCommentToPlanTask(planTaskId.Value, comment);
         }
 
-        public bool UpdateCommentIdText(int commentId, string text)
+        public async Task<bool> UpdateCommentIdText(int commentId, string text)
         {
             if (string.IsNullOrEmpty(text))
             {
                 return false;
             }
-            var comment = db.Comments.Get(commentId);
+            Comment comment = await db.Comments.Get(commentId);
             if (comment == null)
             {
                 return false;
@@ -78,17 +78,17 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public bool UpdateComment(int commentId, CommentDto commentDTO)
+        public async Task<bool> UpdateComment(int commentId, CommentDto commentDTO)
         {
             if (commentDTO == null)
             {
                 return false;
             }
-            if (!db.Comments.ContainsId(commentId))
+            if (!await db.Comments.ContainsId(commentId))
             {
                 return false;
             }
-            return UpdateCommentIdText(commentId, commentDTO.Text);
+            return await UpdateCommentIdText(commentId, commentDTO.Text);
         }
 
         public async Task<IEnumerable<CommentDto>> GetCommentsForPlanTask(int taskId, int planId)
@@ -118,9 +118,9 @@ namespace LearnWithMentorBLL.Services
             return commentsList;
         }
 
-        public bool RemoveById(int commentId)
+        public async Task<bool> RemoveById(int commentId)
         {
-            if (!db.Comments.ContainsId(commentId))
+            if (!await db.Comments.ContainsId(commentId))
             {
                 return false;
             }
