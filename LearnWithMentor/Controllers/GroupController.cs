@@ -9,6 +9,7 @@ using System.Web.Http.Tracing;
 using System.Data.Entity.Core;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LearnWithMentor.Controllers
 {
@@ -80,8 +81,8 @@ namespace LearnWithMentor.Controllers
         {
             try
             {
-                var group = await groupService.GetPlans(id);
-                if (group != null)
+                IEnumerable<PlanDto> group = await groupService.GetPlans(id);
+                if (group != Enumerable.Empty<PlanDto>())
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, group);
                 }

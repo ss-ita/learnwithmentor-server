@@ -106,7 +106,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public async Task GetTasksForPlanTest_ShouldReturnNoContentMessage()
         {
             planServiceMock.Setup(mts => mts.GetTasksForPlan(It.IsAny<int>()))
-                .Returns(()=>null);
+                .Returns(()=> Task.FromResult<List<SectionDto>>(null));
 
             var response = await planController.GetTasksForPlan(1);            
 
@@ -218,7 +218,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public async Task GetPlanByIdTest_ShouldReturnNoContentResponse()
         {
-            planServiceMock.Setup(mts => mts.Get(It.IsAny<int>()));
+            planServiceMock.Setup(mts => mts.Get(It.IsAny<int>())).Returns(Task.FromResult<PlanDto>(null));
 
             var plan = plans[0];
             var response = await planController.Get(plan.Id);

@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using ThreadingTask = System.Threading.Tasks.Task;
 
 namespace LearnWithMentor.Tests.BLL.Tests
 {
@@ -38,7 +38,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
         }
 
         [Test]
-        public void GetUserById_ShouldReturnUserById()
+        public async ThreadingTask GetUserById_ShouldReturnUserById()
         {
             uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);
             uowMock.Setup(u => u.Users.Get(It.IsAny<int>())).ReturnsAsync(new User() { Id = 3, Role = new Role() });
@@ -47,7 +47,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
             int userId = 3;
 
             //act
-            Task<UserDto> result = userService.Get(userId);
+            var result = await userService.Get(userId);
 
             //assert
             Assert.IsNotNull(result);
@@ -56,7 +56,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
         }
 
         [Test]
-        public void GetUserById_ShouldReturnNull()
+        public async ThreadingTask GetUserById_ShouldReturnNull()
         {
             uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);
             uowMock.Setup(u => u.Users.Get(It.IsAny<int>())).ReturnsAsync((User)null);
@@ -65,7 +65,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
             int userId = 3;
 
             //act
-            Task<UserDto> result = userService.Get(userId);
+            var result = await userService.Get(userId);
 
             //assert
             Assert.IsNull(result);
@@ -118,7 +118,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
 
             uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);
             uowMock.Setup(u => u.Users.GetAll()).Returns(users);
-            
+
             //act
             var result = userService.GetAllUsers();
 

@@ -13,7 +13,8 @@ using System.Threading.Tasks;
 
 namespace LearnWithMentor.Tests.BLL.Tests
 {
-    class CommentServiceTests
+    [TestFixture]
+    public class CommentServiceTests
     {
         private CommentService commentService;
         private Mock<LearnWithMentorContext> dbContextMock;
