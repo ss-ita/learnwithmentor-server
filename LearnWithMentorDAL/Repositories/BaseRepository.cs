@@ -12,18 +12,22 @@ namespace LearnWithMentorDAL.Repositories
         {
             Context = context;
         }
+
         public IEnumerable<T> GetAll()
         {
             return Context.Set<T>();
         }
+
         public void Add(T item)
         {
             Context.Set<T>().Add(item);
         }
+
         public void Update(T item)
         {
             Context.Entry(item).State = EntityState.Modified;
         }
+
         public void Remove(T item)
         {
             Context.Set<T>().Remove(item);

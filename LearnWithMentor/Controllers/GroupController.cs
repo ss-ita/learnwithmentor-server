@@ -103,11 +103,11 @@ namespace LearnWithMentor.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("api/group/{id}/users")]
-        public HttpResponseMessage GetUsers(int id)
+        public async Task<HttpResponseMessage> GetUsers(int id)
         {
             try
             {
-                var group = groupService.GetUsers(id);
+                var group = await groupService.GetUsers(id);
                 if (group != null)
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, group);

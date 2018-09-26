@@ -108,7 +108,7 @@ namespace LearnWithMentorBLL.Services
 
         public async ThreadTask.Task<IEnumerable<PlanDto>> GetPlans(int groupId)
         {
-            var group = db.Groups.Get(groupId);
+            var group = await db.Groups.Get(groupId);
             var plans = await db.Plans.GetPlansForGroup(groupId);
 
             if (group == null)
