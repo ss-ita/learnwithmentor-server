@@ -96,9 +96,9 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             };
             return testUserTasks;
         }
-        private List<TaskDto> GetTestTasksSearch(string[] lines)
+        private async Task<List<TaskDto>> GetTestTasksSearch(string[] lines)
         {
-            var testTasks = GetTestTasks();
+            var testTasks =  GetTestTasks();
             var result = new List<TaskDto>();
             foreach (var line in lines)
             {
@@ -119,13 +119,14 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
         #region GetAllTasks
         [Test]
-        public void GetAllTasksTest_ShouldReturnAllTasks()
+        public async Task GetAllTasksTest_ShouldReturnAllTasks()
         {
-            taskServiceMock.Setup(mts => mts.GetAllTasks()).Returns(GetTestTasks());
+            taskServiceMock.Setup(mts => mts.GetAllTasks()).ReturnsAsync(GetTestTasks());
 
-            var response = taskController.GetAllTasks();
-            var successfull = response.TryGetContentValue<IEnumerable<TaskDto>>(out var taskDTOs);
-            var expected = taskServiceMock.Object.GetAllTasks().Count();
+            HttpResponseMessage response =  taskController.GetAllTasks();
+            bool successfull =  response.TryGetContentValue<IEnumerable<TaskDto>>(out var taskDTOs);
+            var toCount = await taskServiceMock.Object.GetAllTasks();
+            var expected =  toCount.Count();
             var actual = taskDTOs.Count();
 
             Assert.IsTrue(successfull);
@@ -155,15 +156,15 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         #endregion
         #region GetTaskById
         [Test]
-        public void GetTaskByIdTest_ShouldReturnTask()
+        public async Task GetTaskByIdTest_ShouldReturnTask()
         {
-            taskServiceMock.Setup(mts => mts.GetTaskById(It.IsAny<int>())).Returns(
+            taskServiceMock.Setup(mts => mts.GetTaskById(It.IsAny<int>())).ReturnsAsync(
                 (int i) => GetTestTasks().Single(x => x.Id == i));
 
             var task = GetTestTasks()[0];
-            var response = taskController.GetTaskById(task.Id);
+            HttpResponseMessage response = await taskController.GetTaskById(task.Id);
             var successfull = response.TryGetContentValue<TaskDto>(out var taskDTO);
-            var expected = taskServiceMock.Object.GetTaskById(task.Id);
+            var expected = await taskServiceMock.Object.GetTaskById(task.Id);
             var actual = taskDTO;
 
             Assert.IsTrue(successfull);
@@ -172,23 +173,23 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public void GetTaskByIdTest_ShouldReturnNoContentResponse()
+        public async Task GetTaskByIdTest_ShouldReturnNoContentResponse()
         {
             taskServiceMock.Setup(mts => mts.GetTaskById(It.IsAny<int>()));
 
-            var task = GetTestTasks()[0];
-            var response = taskController.GetTaskById(task.Id);
+            TaskDto task =  GetTestTasks()[0];
+            HttpResponseMessage response = await taskController.GetTaskById(task.Id);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.NoContent);
         }
 
         [Test]
-        public void GetTaskByIdTest_ShouldCatchEntityException()
+        public async Task GetTaskByIdTest_ShouldCatchEntityException()
         {
             taskServiceMock.Setup(mts => mts.GetTaskById(It.IsAny<int>())).Throws(new EntityException());
 
             var task = GetTestTasks()[0];
-            var response = taskController.GetTaskById(task.Id);
+            HttpResponseMessage response = await taskController.GetTaskById(task.Id);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.InternalServerError);
         }
@@ -199,9 +200,9 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         {
             taskServiceMock.Setup(mts => mts.GetTaskForPlan(It.IsAny<int>())).ReturnsAsync(GetTestTasks()[0]);
 
-            var response = await taskController.GetTaskForPlan(1);
+            HttpResponseMessage response = await taskController.GetTaskForPlan(1);
             var successfull = response.TryGetContentValue<TaskDto>(out var taskDTOs);
-            var expected = await taskServiceMock.Object.GetTaskForPlan(1);
+            var expected =  await taskServiceMock.Object.GetTaskForPlan(1);
             var actual = taskDTOs;
 
             Assert.IsTrue(successfull);
@@ -214,7 +215,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         {
             taskServiceMock.Setup(ts => ts.GetTaskForPlan(It.IsAny<int>())).Returns(Task.FromResult<TaskDto>(null));
 
-            var response = await taskController.GetTaskForPlan(1);
+            HttpResponseMessage response = await taskController.GetTaskForPlan(1);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.NoContent);
         }
@@ -225,20 +226,21 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             taskServiceMock.Setup(ts => ts.GetTaskForPlan(It.IsAny<int>()))
                 .Throws(new EntityException());
 
-            var response = await taskController.GetTaskForPlan(1);
+            HttpResponseMessage response = await taskController.GetTaskForPlan(1);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.InternalServerError);
         }
         #endregion
         #region Search
         [Test]
-        public void SearchTest_ShouldReturnAllTasksByNullKey()
+        public async Task SearchTest_ShouldReturnAllTasksByNullKey()
         {
-            taskServiceMock.Setup(mts => mts.GetAllTasks()).Returns(GetTestTasks());
+            taskServiceMock.Setup(mts => mts.GetAllTasks()).ReturnsAsync(GetTestTasks());
 
-            var response = taskController.Search(null);
+            HttpResponseMessage response = await taskController.Search(null);
             var successfull = response.TryGetContentValue<List<TaskDto>>(out var taskDTOs);
-            var expected = taskServiceMock.Object.GetAllTasks().Count();
+            var toCount= await taskServiceMock.Object.GetAllTasks();
+            var expected = toCount.Count();
             var actual = taskDTOs.Count;
 
             Assert.IsTrue(successfull);
@@ -247,15 +249,15 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public void SearchTest_ShouldReturnTasksByKey()
+        public async Task SearchTest_ShouldReturnTasksByKey()
         {
             taskServiceMock.Setup(mts => mts.Search(It.IsAny<string[]>())).Returns(
                 (string[] lines) => GetTestTasksSearch(lines));
 
             var searchKey = "1";
-            var response = taskController.Search(searchKey);
+            HttpResponseMessage response = await taskController.Search(searchKey);
             var successfull = response.TryGetContentValue<List<TaskDto>>(out var taskDTOs);
-            var expected = taskServiceMock.Object.Search(new[] { searchKey });
+            var expected = await taskServiceMock.Object.Search(new[] { searchKey });
             var actual = taskDTOs;
 
             Assert.IsTrue(successfull);
@@ -264,24 +266,24 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public void SearchTest_ShouldReturnNoContentResponse()
+        public async Task SearchTest_ShouldReturnNoContentResponse()
         {
             taskServiceMock.Setup(mts => mts.Search(It.IsAny<string[]>())).Returns(
-                (string[] lines) => null);
+                (string[] lines) => Task.FromResult<List<TaskDto>>(null));
 
             var searchKey = "1";
-            var response = taskController.Search(searchKey);
+            HttpResponseMessage response = await taskController.Search(searchKey);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.NoContent);
         }
 
         [Test]
-        public void SearchTest_ShouldCatchEntityException()
+        public async Task SearchTest_ShouldCatchEntityException()
         {
             taskServiceMock.Setup(mts => mts.Search(It.IsAny<string[]>())).Throws(new EntityException());
 
             var searchKey = "1";
-            var response = taskController.Search(searchKey);
+            HttpResponseMessage response = await taskController.Search(searchKey);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.InternalServerError);
         }
@@ -342,7 +344,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public async Task PostTaskTest_ShouldCheckNotValidInputParameterAndReturnBadRequestResponse()
+        public void PostTaskTest_ShouldCheckNotValidInputParameterAndReturnBadRequestResponse()
         {
             taskServiceMock.Setup(mts => mts.CreateTask(It.IsAny<TaskDto>()))
                 .Returns(true);
@@ -381,15 +383,15 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         #endregion
         #region PostAndReturnId
         [Test]
-        public void PostAndReturnIdTest_ShouldSuccessfullyCreateNewTaskAndReturnItsId()
+        public async Task PostAndReturnIdTest_ShouldSuccessfullyCreateNewTaskAndReturnItsId()
         {
             var returnId = 1;
             taskServiceMock.Setup(mts => mts.AddAndGetId(It.IsAny<TaskDto>()))
-                .Returns(returnId);
+                .ReturnsAsync(returnId);
 
-            var response = taskController.PostAndReturnId(GetTestTasks()[0]);
+            HttpResponseMessage response = await taskController.PostAndReturnId(GetTestTasks()[0]);
             var successfull = response.TryGetContentValue<int>(out var taskId);
-            var expected = taskServiceMock.Object.AddAndGetId(GetTestTasks()[0]);
+            int? expected = await taskServiceMock.Object.AddAndGetId(GetTestTasks()[0]);
             var actual = taskId;
 
             Assert.IsTrue(successfull);
@@ -398,70 +400,70 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public void PostAndReturnIdTest_ShouldCheckNotValidInputAndReturnBadRequestResponse()
+        public async Task PostAndReturnIdTest_ShouldCheckNotValidInputAndReturnBadRequestResponse()
         {
             taskServiceMock.Setup(mts => mts.AddAndGetId(It.IsAny<TaskDto>()))
-                .Returns(1);
+                .ReturnsAsync(1);
 
             var newTask = new TaskDto();
             ValidateViewModel(taskController, newTask);
-            var response = taskController.PostAndReturnId(newTask);
+            HttpResponseMessage response = await taskController.PostAndReturnId(newTask);
 
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
         [Test]
-        public void PostAndReturnIdTest_ShouldCheckNotSuccessfullPostTryAndReturnBadRequestResponse()
+        public async Task PostAndReturnIdTest_ShouldCheckNotSuccessfullPostTryAndReturnBadRequestResponse()
         {
             taskServiceMock.Setup(mts => mts.AddAndGetId(It.IsAny<TaskDto>()))
-                .Returns(() => null);
+                .ReturnsAsync(() => null);
 
-            var response = taskController.PostAndReturnId(GetTestTasks()[0]);
+            HttpResponseMessage response = await taskController.PostAndReturnId(GetTestTasks()[0]);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
         }
 
         [Test]
-        public void PostAndReturnIdTest_ShouldCatchEntityException()
+        public async Task PostAndReturnIdTest_ShouldCatchEntityException()
         {
             taskServiceMock.Setup(mts => mts.AddAndGetId(It.IsAny<TaskDto>()))
                 .Throws(new EntityException());
 
-            var response = taskController.PostAndReturnId(GetTestTasks()[0]);
+            HttpResponseMessage response = await taskController.PostAndReturnId(GetTestTasks()[0]);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.InternalServerError);
         }
         #endregion
         #region Delete
         [Test]
-        public void DeleteTest_ShouldSuccessfullyDeleteNewTask()
+        public async Task DeleteTest_ShouldSuccessfullyDeleteNewTask()
         {
             taskServiceMock.Setup(mts => mts.RemoveTaskById(It.IsAny<int>()))
-                .Returns(true);
+                .ReturnsAsync(true);
 
-            var response = taskController.Delete(1);
+            HttpResponseMessage response = await taskController.Delete(1);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
         }
 
         [Test]
-        public void DeleteTest_ShouldCheckNotSuccessfullDeleteTryAndReturnBadRequestResponse()
+        public async Task DeleteTest_ShouldCheckNotSuccessfullDeleteTryAndReturnBadRequestResponse()
         {
             taskServiceMock.Setup(mts => mts.RemoveTaskById(It.IsAny<int>()))
-                .Returns(false);
+                .ReturnsAsync(false);
 
-            var response = taskController.Delete(1);
+            HttpResponseMessage response = await taskController.Delete(1);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
         }
 
         [Test]
-        public void DeleteTest_ShouldCatchEntityException()
+        public async Task DeleteTest_ShouldCatchEntityException()
         {
             taskServiceMock.Setup(mts => mts.RemoveTaskById(It.IsAny<int>()))
                 .Throws(new EntityException());
 
-            var response = taskController.Delete(1);
+            HttpResponseMessage response = await taskController.Delete(1);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.InternalServerError);
         }

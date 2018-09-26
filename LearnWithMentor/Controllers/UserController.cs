@@ -46,9 +46,9 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Admin, Mentor")]
         [HttpGet]
         [Route("api/user")]
-        public HttpResponseMessage Get()
+        public async Task<HttpResponseMessage> Get()
         {
-            var users = userService.GetAllUsers();
+            List<UserDto> users = await userService.GetAllUsers();
             if (users.Count != 0)
             {
                 return Request.CreateResponse<IEnumerable<UserDto>>(HttpStatusCode.OK, users);
@@ -63,11 +63,11 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Admin, Mentor")]
         [HttpGet]
         [Route("api/user")]
-        public HttpResponseMessage Get([FromUri]int pageSize, [FromUri]int pageNumber)
+        public async Task<HttpResponseMessage> Get([FromUri]int pageSize, [FromUri]int pageNumber)
         {
             try
             {
-                var users = userService.GetUsers(pageSize, pageNumber);
+                PagedListDto<UserDto> users = await userService.GetUsers(pageSize, pageNumber);
                 return Request.CreateResponse(HttpStatusCode.OK, users);
             }
             catch (EntityException e)
@@ -85,7 +85,7 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("api/user/inrole/{roleId}")]
-        public HttpResponseMessage GetUsersbyRole(int roleId)
+        public async Task<HttpResponseMessage> GetUsersbyRole(int roleId)
         {
             if (roleId != Constants.Roles.BlockedIndex)
             {
@@ -96,7 +96,7 @@ namespace LearnWithMentor.Controllers
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, roleErorMessage);
                 }
             }
-            var users = userService.GetUsersByRole(roleId);
+            List<UserDto> users = await userService.GetUsersByRole(roleId);
             if (users.Count == 0)
             {
                 const string usersErorMessage = "No users with this role_id  in database.";
@@ -114,7 +114,7 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("api/user/inrole/{roleId}")]
-        public HttpResponseMessage GetUsersbyRole(int roleId, [FromUri]int pageSize, [FromUri]int pageNumber)
+        public async Task<HttpResponseMessage> GetUsersbyRole(int roleId, [FromUri]int pageSize, [FromUri]int pageNumber)
         {
             if (roleId != Constants.Roles.BlockedIndex)
             {
@@ -125,7 +125,7 @@ namespace LearnWithMentor.Controllers
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, roleErorMessage);
                 }
             }
-            var users = userService.GetUsersByRole(roleId, pageSize, pageNumber);
+            PagedListDto<UserDto> users = await userService.GetUsersByRole(roleId, pageSize, pageNumber);
             return Request.CreateResponse(HttpStatusCode.OK, users);
         }
 
@@ -137,9 +137,9 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("api/user/instate/{state}")]
-        public HttpResponseMessage GetUsersbyState(bool state)
+        public async Task<HttpResponseMessage> GetUsersbyState(bool state)
         {
-            var users = userService.GetUsersByState(state);
+            List<UserDto> users = await userService.GetUsersByState(state);
             if (users.Count == 0)
             {
                 const string usersErorMessage = "No users with this state in database.";
@@ -158,9 +158,9 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("api/user/instate/{state}")]
-        public HttpResponseMessage GetUsersbyState(bool state, [FromUri]int pageSize, [FromUri]int pageNumber)
+        public async Task<HttpResponseMessage> GetUsersbyState(bool state, [FromUri]int pageSize, [FromUri]int pageNumber)
         {
-            var users = userService.GetUsersByState(state, pageSize, pageNumber);
+            PagedListDto<UserDto> users = await userService.GetUsersByState(state, pageSize, pageNumber);
             return Request.CreateResponse(HttpStatusCode.OK, users);
         }
 
@@ -228,13 +228,13 @@ namespace LearnWithMentor.Controllers
         [AllowAnonymous]
         [HttpGet]
         [Route("api/user/verify-token")]
-        public HttpResponseMessage VerifyToken(string token)
+        public async Task<HttpResponseMessage> VerifyToken(string token)
         {
             try
             {
                 if (JwtAuthenticationAttribute.ValidateToken(token, out string userEmail))
                 {
-                    var user = userService.GetByEmail(userEmail);
+                    UserIdentityDto user = await userService.GetByEmail(userEmail);
                     if (user == null)
                     {
                         return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "User not found");
@@ -262,7 +262,7 @@ namespace LearnWithMentor.Controllers
             {
                 if (JwtAuthenticationAttribute.ValidateToken(token, out string userEmail))
                 {
-                    var user = userService.GetByEmail(userEmail);
+                    UserIdentityDto user = await userService.GetByEmail(userEmail);
                     if (user == null)
                     {
                         return Request.CreateErrorResponse(HttpStatusCode.NoContent, "User not found");
@@ -299,7 +299,7 @@ namespace LearnWithMentor.Controllers
                 }
                 if (ModelState.IsValid)
                 {
-                    var user = userService.GetByEmail(emailModel.Email);
+                    UserIdentityDto user = await userService.GetByEmail(emailModel.Email);
                     if (user == null)
                     {
                         return Request.CreateErrorResponse(HttpStatusCode.NoContent, "User not found");
@@ -339,7 +339,7 @@ namespace LearnWithMentor.Controllers
                 }
                 if (ModelState.IsValid)
                 {
-                    var user = userService.GetByEmail(emailModel.Email);
+                    UserIdentityDto user = await userService.GetByEmail(emailModel.Email);
                     if (user == null)
                     {
                         return Request.CreateErrorResponse(HttpStatusCode.NoContent, "User not found");
@@ -387,7 +387,7 @@ namespace LearnWithMentor.Controllers
         [Route("api/user/{id}/image")]
         public async Task<HttpResponseMessage> PostImage(int id)
         {
-            if (!userService.ContainsId(id))
+            if (!( await userService.ContainsId(id)))
             {
                 const string errorMessage = "No user with this id in database.";
                 return Request.CreateResponse(HttpStatusCode.NoContent, errorMessage);
@@ -444,7 +444,7 @@ namespace LearnWithMentor.Controllers
         {
             try
             {
-                if (!userService.ContainsId(id))
+                if (!(await userService.ContainsId(id)))
                 {
                     const string errorMessage = "No user with this id in database.";
                     return Request.CreateResponse(HttpStatusCode.NoContent, errorMessage);
@@ -538,7 +538,8 @@ namespace LearnWithMentor.Controllers
             {
                 key = "";
             }
-            var criteria = await roleService.GetByName(role);
+
+            RoleDto criteria = await  roleService.GetByName(role);
             var lines = key.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             int? searchParametr = null;
             if (role == Constants.Roles.Blocked)
@@ -549,9 +550,9 @@ namespace LearnWithMentor.Controllers
             {
                 lines = lines.Take(2).ToArray();
             }
-            var users = criteria != null ? userService.Search(lines, criteria.Id) :
-                userService.Search(lines, searchParametr);
-            if (users.Count != 0)
+            List<UserDto> users =  criteria != null ? await userService.Search(lines, criteria.Id) :
+                await userService.Search(lines, searchParametr);
+            if ( users.Count != 0)
             {
                 return Request.CreateResponse<IEnumerable<UserDto>>(HttpStatusCode.OK, users);
             }

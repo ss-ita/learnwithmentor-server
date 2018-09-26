@@ -9,8 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Task = System.Threading.Tasks.Task;
+using ThreadTask = System.Threading.Tasks;
 
 namespace LearnWithMentor.Tests.BLL.Tests
 {
@@ -43,7 +42,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
         }
 
         [Test]
-        public async Task GetCommentById_ShouldReturnCommentById()
+        public async ThreadTask.Task GetCommentById_ShouldReturnCommentById()
         {
             uowMock.SetupGet(c => c.Comments).Returns(commentRepositoryMock.Object);
             uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);
@@ -54,7 +53,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
             int commentId = 3;
 
             //act
-            var result = commentService.GetComment(commentId);
+            var result = await commentService.GetComment(commentId);
 
             //assert
             Assert.IsNotNull(result);
@@ -63,7 +62,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
         }
 
         [Test]
-        public async Task GetCommentById_ShouldReturnNullValue()
+        public async ThreadTask.Task GetCommentById_ShouldReturnNullValue()
         {
             uowMock.SetupGet(c => c.Comments).Returns(commentRepositoryMock.Object);
             uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);
@@ -82,7 +81,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
         }
 
         [Test]
-        public async Task RemoveById_NotRemoveBecauseNotExist()
+        public async ThreadTask.Task RemoveById_NotRemoveBecauseNotExist()
         {
             uowMock.SetupGet(c => c.Comments).Returns(commentRepositoryMock.Object);
             uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);
@@ -101,7 +100,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
         }
 
         [Test]
-        public async Task UpdateCommentIdText_ShouldReturnUpdatedText()
+        public async ThreadTask.Task UpdateCommentIdText_ShouldReturnUpdatedText()
         {
             uowMock.SetupGet(c => c.Comments).Returns(commentRepositoryMock.Object);
             uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);
@@ -121,7 +120,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
         }
 
         [Test]
-        public async Task UpdateCommentIdText_ShouldReturnNullBecauseEmptyNewString()
+        public async ThreadTask.Task UpdateCommentIdText_ShouldReturnNullBecauseEmptyNewString()
         {
             uowMock.SetupGet(c => c.Comments).Returns(commentRepositoryMock.Object);
             uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);
@@ -142,7 +141,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
         }
 
         [Test]
-        public async Task UpdateCommentIdText_ShouldReturnNull()
+        public async ThreadTask.Task UpdateCommentIdText_ShouldReturnNull()
         {
             uowMock.SetupGet(c => c.Comments).Returns(commentRepositoryMock.Object);
             uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);

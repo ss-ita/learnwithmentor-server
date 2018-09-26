@@ -83,9 +83,10 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public async Task GetGroupByIdTest_ShouldReturnTask()
         {
-            groupServiceMock.Setup(u =>  u.GetGroupById(It.IsAny<int>())).ReturnsAsync(
+            groupServiceMock.Setup(u => u.GetGroupById(It.IsAny<int>())).ReturnsAsync(
                  (int i) => groups.Single(x => x.Id == i));
-            var response = await groupController.GetById(3);
+
+            HttpResponseMessage response = await groupController.GetById(3);
             var successfull =  response.TryGetContentValue<GroupDto>(out var groupDTO);
             var expected = groupServiceMock.Object.GetGroupById(3);
             var actual = groupDTO;
@@ -96,11 +97,11 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public async  Task GetGroupByIdTest_ShouldReturnNotFoundResponse()
+        public async Task GetGroupByIdTest_ShouldReturnNotFoundResponse()
         {
             groupServiceMock.Setup(u => u.GetGroupById(It.IsAny<int>()));
 
-            var response = await groupController.GetById(1);
+            HttpResponseMessage response = await groupController.GetById(1);
             var expected = HttpStatusCode.NotFound;
             var actual = response.StatusCode;
 
@@ -109,13 +110,13 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         #endregion
         #region GetGroupByMentor
         [Test]
-        public void GetGroupByMentor_ShouldReturnGroupsForMentor()
+        public async Task GetGroupByMentor_ShouldReturnGroupsForMentor()
         {
             groupServiceMock.Setup(g => g.GetGroupsByMentor(It.IsAny<int>())).ReturnsAsync(new List<GroupDto>());
 
-            var response = groupController.GetByMentor(2);
+            HttpResponseMessage response = await groupController.GetByMentor(2);
             var successfull = response.TryGetContentValue<List<GroupDto>>(out var groupDTOs);
-            var expected = groupServiceMock.Object.GetGroupsByMentor(2);
+            var expected = await groupServiceMock.Object.GetGroupsByMentor(2);
             var actual = groupDTOs;
 
             Assert.IsTrue(successfull);
@@ -124,13 +125,12 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public void GetGroupByMentor_ShouldReturnNotFoundResponse()
+        public async Task GetGroupByMentor_ShouldReturnNotFoundResponse()
         {
             groupServiceMock.Setup(u => u.GetGroupsByMentor(It.IsAny<int>()));
-
-            var response = groupController.GetByMentor(6);
-            var expected = HttpStatusCode.NotFound;
-            var actual = response.StatusCode;
+            HttpResponseMessage response = await groupController.GetByMentor(6);
+            HttpStatusCode expected = HttpStatusCode.NotFound;
+            HttpStatusCode actual = response.StatusCode;
             Assert.AreEqual(expected, actual);
         }
         #endregion
@@ -213,7 +213,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public async Task GetUsersNotInCurrentGroupShouldReturnOk()
         {
             groupServiceMock.Setup(u => u.GetUsersNotInGroup(It.IsAny<int>())).ReturnsAsync(new List<UserIdentityDto>());
-            var response = await groupController.GetUsersNotInCurrentGroup(4);
+            HttpResponseMessage response = await groupController.GetUsersNotInCurrentGroup(4);
             var expected = HttpStatusCode.OK;
             var actual = response.StatusCode;
 
@@ -224,7 +224,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public async Task GetUsersNotInCurrentGroupShouldReturnNotFound()
         {
             groupServiceMock.Setup(u => u.GetUsersNotInGroup(It.IsAny<int>())).Returns(() => null);
-            var response = await groupController.GetUsersNotInCurrentGroup(4);
+            HttpResponseMessage response = await groupController.GetUsersNotInCurrentGroup(4);
             var expected = HttpStatusCode.NotFound;
             var actual = response.StatusCode;
 
@@ -320,7 +320,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         {
             groupServiceMock.Setup(u => u.AddUsersToGroup(It.IsAny<int[]>(), It.IsAny<int>())).ReturnsAsync(true);
             userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(new int());
-            groupServiceMock.Setup(u => u.GetMentorIdByGroup(It.IsAny<int>())).Returns(() => null);
+            groupServiceMock.Setup(u => u.GetMentorIdByGroup(It.IsAny<int>())).ReturnsAsync(() => null);
             HttpResponseMessage response = await groupController.PutUsersToGroup(5, new int[] { 1, 2, 3 });
             var expected = HttpStatusCode.Unauthorized;
             var actual = response.StatusCode;
@@ -359,7 +359,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             groupServiceMock.Setup(u => u.AddPlansToGroup(It.IsAny<int[]>(), It.IsAny<int>())).ReturnsAsync(true);
             userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(new int());
             groupServiceMock.Setup(u => u.GetMentorIdByGroup(It.IsAny<int>())).ReturnsAsync(new int());
-            var response = await groupController.PutPlansToGroup(5, new int[] { 1, 2, 3 });
+            HttpResponseMessage response = await groupController.PutPlansToGroup(5, new int[] { 1, 2, 3 });
             var expected = HttpStatusCode.OK;
             var actual = response.StatusCode;
 
@@ -370,8 +370,8 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         {
             groupServiceMock.Setup(u => u.AddPlansToGroup(It.IsAny<int[]>(), It.IsAny<int>())).ReturnsAsync(true);
             userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(new int());
-            groupServiceMock.Setup(u => u.GetMentorIdByGroup(It.IsAny<int>())).Returns(() => null);
-            var response = await groupController.PutPlansToGroup(5, new int[] { 1, 2, 3 });
+            groupServiceMock.Setup(u => u.GetMentorIdByGroup(It.IsAny<int>())).ReturnsAsync(() => null);
+            HttpResponseMessage response = await groupController.PutPlansToGroup(5, new int[] { 1, 2, 3 });
             var expected = HttpStatusCode.Unauthorized;
             var actual = response.StatusCode;
 
@@ -384,7 +384,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             groupServiceMock.Setup(u => u.AddPlansToGroup(It.IsAny<int[]>(), It.IsAny<int>())).ReturnsAsync(false);
             userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(new int());
             groupServiceMock.Setup(u => u.GetMentorIdByGroup(It.IsAny<int>())).ReturnsAsync(new int());
-            var response = await groupController.PutPlansToGroup(5, new int[] { 1, 2, 3 });
+            HttpResponseMessage response = await groupController.PutPlansToGroup(5, new int[] { 1, 2, 3 });
             var expected = HttpStatusCode.BadRequest;
             var actual = response.StatusCode;
 
@@ -397,7 +397,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             groupServiceMock.Setup(u => u.AddPlansToGroup(It.IsAny<int[]>(), It.IsAny<int>())).Throws(new EntityException());
             userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(new int());
             groupServiceMock.Setup(u => u.GetMentorIdByGroup(It.IsAny<int>())).ReturnsAsync(new int());
-            var response = await groupController.PutPlansToGroup(5, new int[] { 1, 2, 3 });
+            HttpResponseMessage response = await groupController.PutPlansToGroup(5, new int[] { 1, 2, 3 });
             var expected = HttpStatusCode.InternalServerError;
             var actual = response.StatusCode;
 
@@ -454,7 +454,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public async Task SearchUsersNotUsedInCurrentGroupNoContent()
         {
             groupServiceMock.Setup(u => u.SearchUserNotInGroup(It.IsAny<string[]>(), It.IsAny<int>())).Returns(() => null);
-            var response = await groupController.SearchUsersNotUsedInCurrentGroup("search", 2);
+            HttpResponseMessage response = await groupController.SearchUsersNotUsedInCurrentGroup("search", 2);
             var expected = HttpStatusCode.NoContent;
             var actual = response.StatusCode;
 
@@ -465,7 +465,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public async Task SearchUsersNotUsedInCurrentGroupInternalServerError()
         {
             groupServiceMock.Setup(u => u.SearchUserNotInGroup(It.IsAny<string[]>(), It.IsAny<int>())).Throws(new EntityException());
-            var response = await groupController.SearchUsersNotUsedInCurrentGroup("search", 2);
+            HttpResponseMessage response = await groupController.SearchUsersNotUsedInCurrentGroup("search", 2);
             var expected = HttpStatusCode.InternalServerError;
             var actual = response.StatusCode;
 
@@ -491,7 +491,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         {
             groupServiceMock.Setup(u => u.RemoveUserFromGroup(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(true);
             userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(new int());
-            groupServiceMock.Setup(u => u.GetMentorIdByGroup(It.IsAny<int>())).Returns(() => null);
+            groupServiceMock.Setup(u => u.GetMentorIdByGroup(It.IsAny<int>())).ReturnsAsync(() => null);
             HttpResponseMessage response = await groupController.RemoveUserFromCurrentGroup(1, 2);
             var expected = HttpStatusCode.Unauthorized;
             var actual = response.StatusCode;
@@ -530,7 +530,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public async Task RemovePlanFromCurrentGroupOk()
         {
             groupServiceMock.Setup(u => u.RemovePlanFromGroup(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(true);
-            var response = await groupController.RemovePlanFromCurrentGroup(1, 2);
+            HttpResponseMessage response = await groupController.RemovePlanFromCurrentGroup(1, 2);
             var expected = HttpStatusCode.OK;
             var actual = response.StatusCode;
 
@@ -541,7 +541,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public async Task RemovePlanFromCurrentGroupBadRequest()
         {
             groupServiceMock.Setup(u => u.RemovePlanFromGroup(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(false);
-            var response = await groupController.RemovePlanFromCurrentGroup(1, 2);
+            HttpResponseMessage response = await groupController.RemovePlanFromCurrentGroup(1, 2);
             var expected = HttpStatusCode.BadRequest;
             var actual = response.StatusCode;
 
@@ -552,7 +552,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public async Task RemovePlanFromCurrentGroupInternalServerError()
         {
             groupServiceMock.Setup(u => u.RemovePlanFromGroup(It.IsAny<int>(), It.IsAny<int>())).Throws(new EntityException());
-            var response = await groupController.RemovePlanFromCurrentGroup(1, 2);
+            HttpResponseMessage response = await groupController.RemovePlanFromCurrentGroup(1, 2);
             var expected = HttpStatusCode.InternalServerError;
             var actual = response.StatusCode;
 
@@ -564,7 +564,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public async Task GetUserGroupsOk()
         {
             userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(new int());
-            userServiceMock.Setup(u => u.ContainsId(It.IsAny<int>())).Returns(true);
+            userServiceMock.Setup(u => u.ContainsId(It.IsAny<int>())).ReturnsAsync(true);
             groupServiceMock.Setup(u => u.GetUserGroups(It.IsAny<int>())).ReturnsAsync(new List<GroupDto>());
             groupServiceMock.Setup(u => u.GroupsCount()).ReturnsAsync(1);
             HttpResponseMessage response = await groupController.GetUserGroups();
@@ -578,7 +578,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public async Task GetUserGroupsNoUsers()
         {
             userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(new int());
-            userServiceMock.Setup(u => u.ContainsId(It.IsAny<int>())).Returns(false);
+            userServiceMock.Setup(u => u.ContainsId(It.IsAny<int>())).ReturnsAsync(false);
             groupServiceMock.Setup(u => u.GetUserGroups(It.IsAny<int>())).ReturnsAsync(new List<GroupDto>());
             groupServiceMock.Setup(u => u.GroupsCount()).ReturnsAsync(1);
             HttpResponseMessage response = await groupController.GetUserGroups();
@@ -592,7 +592,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public async Task GetUserGroupsNoGroups()
         {
             userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(new int());
-            userServiceMock.Setup(u => u.ContainsId(It.IsAny<int>())).Returns(true);
+            userServiceMock.Setup(u => u.ContainsId(It.IsAny<int>())).ReturnsAsync(true);
             groupServiceMock.Setup(u => u.GetUserGroups(It.IsAny<int>())).ReturnsAsync(new List<GroupDto>());
             groupServiceMock.Setup(u => u.GroupsCount()).ReturnsAsync(0);
             HttpResponseMessage response = await groupController.GetUserGroups();
@@ -606,7 +606,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public async Task GetUserGroupsBadRequest()
         {
             userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(new int());
-            userServiceMock.Setup(u => u.ContainsId(It.IsAny<int>())).Returns(true);
+            userServiceMock.Setup(u => u.ContainsId(It.IsAny<int>())).ReturnsAsync(true);
             groupServiceMock.Setup(u => u.GetUserGroups(It.IsAny<int>())).ReturnsAsync(() => null);
             groupServiceMock.Setup(u => u.GroupsCount()).ReturnsAsync(1);
             HttpResponseMessage response = await groupController.GetUserGroups();
@@ -620,7 +620,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public async Task GetUserGroupsInternalServerError()
         {
             userIdentityServiceMock.Setup(u => u.GetUserId()).Throws(new EntityException());
-            userServiceMock.Setup(u => u.ContainsId(It.IsAny<int>())).Returns(true);
+            userServiceMock.Setup(u => u.ContainsId(It.IsAny<int>())).ReturnsAsync(true);
             groupServiceMock.Setup(u => u.GetUserGroups(It.IsAny<int>())).ReturnsAsync(new List<GroupDto>());
             groupServiceMock.Setup(u => u.GroupsCount()).ReturnsAsync(1);
             HttpResponseMessage response = await groupController.GetUserGroups();

@@ -95,7 +95,7 @@ namespace LearnWithMentor.Controllers
         [Route("api/plan/{planId}/tasks/notinplan")]
         public async Task<HttpResponseMessage> GetTasksNotInCurrentPlan(int planId)
         {
-            var task = await taskService.GetTasksNotInPlan(planId);
+            IEnumerable<TaskDto> task = await taskService.GetTasksNotInPlan(planId);
             if (task != null)
             {
                 return Request.CreateResponse(HttpStatusCode.OK, task);
@@ -108,11 +108,11 @@ namespace LearnWithMentor.Controllers
         /// </summary>
         [HttpGet]
         [Route("api/task/{taskId}")]
-        public HttpResponseMessage GetTaskById(int taskId)
+        public async Task<HttpResponseMessage> GetTaskById(int taskId)
         {
             try
             {
-                var task = taskService.GetTaskById(taskId);
+                TaskDto task = await taskService.GetTaskById(taskId);
                 if (task == null)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, "This task does not exist in database.");
@@ -136,7 +136,7 @@ namespace LearnWithMentor.Controllers
         {
             try
             {
-                var task = await taskService.GetTaskForPlan(planTaskId);
+                TaskDto task = await taskService.GetTaskForPlan(planTaskId);
                 if (task != null)
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, task);
@@ -397,7 +397,7 @@ namespace LearnWithMentor.Controllers
         /// <param name="key">Key for search.</param>
         [HttpGet]
         [Route("api/task/search")]
-        public HttpResponseMessage Search(string key)
+        public async Task<HttpResponseMessage> Search(string key)
         {
             try
             {
@@ -406,8 +406,8 @@ namespace LearnWithMentor.Controllers
                     return GetAllTasks();
                 }
                 var lines = key.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                var taskList = taskService.Search(lines);
-                if (taskList == null || taskList.Count == 0)
+                List<TaskDto> taskList = await taskService.Search(lines);
+                if (taskList == null ||taskList.Count == 0)
                 {
                     return Request.CreateResponse(HttpStatusCode.NoContent, "There are no tasks by this key");
                 }
@@ -433,10 +433,10 @@ namespace LearnWithMentor.Controllers
             {
                 if (string.IsNullOrEmpty(key))
                 {
-                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax.");
+                    return  Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax.");
                 }
                 var lines = key.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                var taskList = await taskService.Search(lines, planId);
+                IEnumerable<TaskDto> taskList =  await taskService.Search(lines, planId);
                 if (taskList == null)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, "This plan does not exist.");
@@ -490,7 +490,7 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpPost]
         [Route("api/task/return")]
-        public HttpResponseMessage PostAndReturnId([FromBody]TaskDto value)
+        public async Task<HttpResponseMessage> PostAndReturnId([FromBody]TaskDto value)
         {
             try
             {
@@ -498,7 +498,7 @@ namespace LearnWithMentor.Controllers
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
                 }
-                var result = taskService.AddAndGetId(value);
+                int? result = await taskService.AddAndGetId(value);
                 if (result != null)
                 {
                     var log = $"Succesfully created task {value.Name} with id = {result} by user with id = {value.CreatorId}";
@@ -524,7 +524,7 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpPut]
         [Route("api/task/{taskId}")]
-        public HttpResponseMessage Put(int taskId, [FromBody]TaskDto task)
+        public async Task<HttpResponseMessage> Put(int taskId, [FromBody]TaskDto task)
         {
             try
             {
@@ -532,7 +532,7 @@ namespace LearnWithMentor.Controllers
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
                 }
-                var success = taskService.UpdateTaskById(taskId, task);
+                bool success = await taskService.UpdateTaskById(taskId, task);
                 if (success)
                 {
                     var message = $"Succesfully updated task with id = {taskId}";
@@ -641,11 +641,11 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpDelete]
         [Route("api/task/{id}")]
-        public HttpResponseMessage Delete(int taskId)
+        public async Task<HttpResponseMessage> Delete(int taskId)
         {
             try
             {
-                var success = taskService.RemoveTaskById(taskId);
+                bool success = await taskService.RemoveTaskById(taskId);
                 if (success)
                 {
                     var message = $"Succesfully deleted task with id = {taskId}";

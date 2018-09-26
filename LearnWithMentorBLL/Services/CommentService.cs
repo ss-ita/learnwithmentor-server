@@ -23,7 +23,7 @@ namespace LearnWithMentorBLL.Services
             var commentDTO = new  CommentDto(comment.Id,
                                    comment.Text,
                                    comment.Create_Id,
-                                   db.Users.ExtractFullName(comment.Create_Id),
+                                   await db.Users.ExtractFullName(comment.Create_Id),
                                    comment.Create_Date,
                                    comment.Mod_Date);
             return  commentDTO;
@@ -111,7 +111,7 @@ namespace LearnWithMentorBLL.Services
                 commentsList.Add(new CommentDto(c.Id,
                                        c.Text,
                                        c.Create_Id,
-                                       db.Users.ExtractFullName(c.Create_Id),
+                                       await db.Users.ExtractFullName(c.Create_Id),
                                        c.Create_Date,
                                        c.Mod_Date));
             }

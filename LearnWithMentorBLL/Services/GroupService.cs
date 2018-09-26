@@ -49,7 +49,7 @@ namespace LearnWithMentorBLL.Services
         }
         private async  ThreadTask.Task SetUserTasksByAddingPlan(int planId, int groupId)
         {
-            var users = db.Users.GetUsersByGroup(groupId);
+            var users = await db.Users.GetUsersByGroup(groupId);
             Group group = await db.Groups.Get(groupId);
             var plan = await db.Plans.Get(planId);
             if (users == null || group == null || plan == null)
@@ -70,7 +70,7 @@ namespace LearnWithMentorBLL.Services
 
         }
 
-        public async Task<bool> AddGroup(GroupDto group)
+        public async ThreadTask.Task<bool> AddGroup(GroupDto group)
         {
             if (string.IsNullOrEmpty(group.Name) || await db.Groups.GroupNameExists(group.Name))
                 return false;
@@ -84,7 +84,7 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public async Task<GroupDto> GetGroupById(int id)
+        public async ThreadTask.Task<GroupDto> GetGroupById(int id)
         {
             Group group = await db.Groups.Get(id);
             if (group == null)
@@ -92,16 +92,16 @@ namespace LearnWithMentorBLL.Services
             return new GroupDto(group.Id,
                                group.Name,
                                group.Mentor_Id,
-                               db.Users.ExtractFullName(group.Mentor_Id));
+                               await db.Users.ExtractFullName(group.Mentor_Id));
         }
         
-        public async Task<int?> GetMentorIdByGroup(int groupId)
+        public async ThreadTask.Task<int?> GetMentorIdByGroup(int groupId)
         {
             GroupDto group = await GetGroupById(groupId);
             return group?.MentorId;
         }
 
-        public async Task<int> GroupsCount()
+        public async ThreadTask.Task<int> GroupsCount()
         {
             return await db.Groups.Count();
         }
@@ -135,10 +135,10 @@ namespace LearnWithMentorBLL.Services
             return planList;
         }
 
-        public async Task<IEnumerable<UserIdentityDto>> GetUsers(int groupId)
+        public async ThreadTask.Task<IEnumerable<UserIdentityDto>> GetUsers(int groupId)
         {
             var group = await db.Groups.GetGroupsByMentor(groupId);
-            var users = db.Users.GetUsersByGroup(groupId);
+            var users = await db.Users.GetUsersByGroup(groupId);
             if (group == null)
             {
                 return null;
@@ -163,10 +163,10 @@ namespace LearnWithMentorBLL.Services
             return userList;
         }
 
-        public async Task<IEnumerable<UserWithImageDto>> GetUsersWithImage(int groupId)
+        public async ThreadTask.Task<IEnumerable<UserWithImageDto>> GetUsersWithImage(int groupId)
         {
             var group = await db.Groups.GetGroupsByMentor(groupId);
-            var users = db.Users.GetUsersByGroup(groupId);
+            var users = await db.Users.GetUsersByGroup(groupId);
             if (group == null)
             {
                 return null;
@@ -196,7 +196,7 @@ namespace LearnWithMentorBLL.Services
 
         }
 
-        public async Task<IEnumerable<GroupDto>> GetGroupsByMentor(int mentorId)
+        public async ThreadTask.Task<IEnumerable<GroupDto>> GetGroupsByMentor(int mentorId)
         {
             var groups = await db.Groups.GetGroupsByMentor(mentorId);
             if (groups == null)
@@ -209,12 +209,12 @@ namespace LearnWithMentorBLL.Services
                 groupList.Add(new GroupDto(group.Id,
                                          group.Name,
                                          group.Mentor_Id,
-                                         db.Users.ExtractFullName(group.Mentor_Id)));
+                                         await db.Users.ExtractFullName(group.Mentor_Id)));
             }
             return groupList;
         }
 
-        public async Task<IEnumerable<GroupDto>> GetUserGroups(int userId)
+        public async ThreadTask.Task<IEnumerable<GroupDto>> GetUserGroups(int userId)
         {
             User user = await db.Users.Get(userId);
             if (user == null)
@@ -244,7 +244,7 @@ namespace LearnWithMentorBLL.Services
                 groupList.Add(new GroupDto(group.Id,
                                          group.Name,
                                          group.Mentor_Id,
-                                         db.Users.ExtractFullName(group.Mentor_Id)));
+                                         await db.Users.ExtractFullName(group.Mentor_Id)));
             }
             if (groupList.Count < 1)
             {
@@ -253,7 +253,7 @@ namespace LearnWithMentorBLL.Services
             return groupList;
         }
 
-        public async Task<bool> AddUsersToGroup(int[] usersId, int groupId)
+        public async ThreadTask.Task<bool> AddUsersToGroup(int[] usersId, int groupId)
         {
             Group groups = await db.Groups.Get(groupId);
             if (groups == null)
@@ -301,14 +301,14 @@ namespace LearnWithMentorBLL.Services
             return added;
         }
 
-        public async Task<IEnumerable<UserIdentityDto>> GetUsersNotInGroup(int groupId)
+        public async ThreadTask.Task<IEnumerable<UserIdentityDto>> GetUsersNotInGroup(int groupId)
         {
             Group group = await db.Groups.Get(groupId);
             if (group == null)
             {
                 return null;
             }
-            var usersNotInGroup = db.Users.GetUsersNotInGroup(groupId);
+            var usersNotInGroup = await db.Users.GetUsersNotInGroup(groupId);
             if (usersNotInGroup == null)
             {
                 return null;
@@ -332,7 +332,7 @@ namespace LearnWithMentorBLL.Services
             return usersNotInGroupList;
         }
 
-        public async Task<IEnumerable<UserIdentityDto>> SearchUserNotInGroup(string[] searchCases, int groupId)
+        public async ThreadTask.Task<IEnumerable<UserIdentityDto>> SearchUserNotInGroup(string[] searchCases, int groupId)
         {
             IEnumerable<UserIdentityDto> usersNotInGroup = await GetUsersNotInGroup(groupId);
             var usersNotInGroupdto = new List<UserIdentityDto>();

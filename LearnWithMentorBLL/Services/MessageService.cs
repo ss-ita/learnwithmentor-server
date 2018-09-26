@@ -27,7 +27,7 @@ namespace LearnWithMentorBLL.Services
                 messageDTOs.Add(new MessageDto(message.Id,
                                        message.User_Id,
                                        message.UserTask_Id,
-                                       db.Users.ExtractFullName(message.User_Id),
+                                       await db.Users.ExtractFullName(message.User_Id),
                                        message.Text,
                                        message.Send_Time));
             }

@@ -97,7 +97,7 @@ namespace LearnWithMentor.Controllers
         [Route("api/plan/{id}/sections")]
         public async Task<HttpResponseMessage> GetTasksForPlan(int id)
         {
-            var sections = await planService.GetTasksForPlan(id);
+            List<SectionDto> sections = await planService.GetTasksForPlan(id);
             if (sections == null)
             {
                 const string message = "Plan does not exist in database.";
@@ -134,7 +134,7 @@ namespace LearnWithMentor.Controllers
         [Route("api/plan/{planId}/tasks")]
         public async Task<HttpResponseMessage> GetAllTasks(int planId)
         {
-            var dtosList = await planService.GetAllTasks(planId);
+            List<TaskDto> dtosList = await planService.GetAllTasks(planId);
             if (dtosList == null || dtosList.Count == 0)
             {
                 const string message = "Plan does not contain any task.";
@@ -197,7 +197,7 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpPost]
         [Route("api/plan/return")]
-        public HttpResponseMessage PostAndReturnId([FromBody]PlanDto value)
+        public async Task<HttpResponseMessage> PostAndReturnId([FromBody]PlanDto value)
         {
             try
             {
@@ -205,7 +205,7 @@ namespace LearnWithMentor.Controllers
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
                 }
-                var result = planService.AddAndGetId(value);
+                int? result = await planService.AddAndGetId(value);
                 if (result != null)
                 {
                     var log = $"Succesfully created plan {value.Name} with id = {result} by user with id = {value.CreatorId}";
@@ -265,7 +265,7 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpPut]
         [Route("api/plan/{id}/task/{taskId}")]
-        public async Task<HttpResponseMessage> PutTaskToPlan(int id, int taskId, string sectionId, string priority)
+        public async Task<HttpResponseMessage> PutTaskToPlan(int id, int taskId,string sectionId, string priority)
         {
             try
             {
@@ -287,7 +287,7 @@ namespace LearnWithMentor.Controllers
                 {
                     priorityNew = int.Parse(priority);
                 }
-                var success = await planService.AddTaskToPlan(id, taskId, section, priorityNew);
+                bool success = await planService.AddTaskToPlan(id, taskId, section, priorityNew);
                 if (success)
                 {
                     var log = $"Succesfully add task with id {taskId} to plan with id = {id}";

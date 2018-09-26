@@ -17,8 +17,8 @@ namespace LearnWithMentorBLL.Services
         public TaskService(IUnitOfWork db) : base(db)
         {
         }
-          
-        public IEnumerable<TaskDto> GetAllTasks()
+
+        public async Task<IEnumerable<TaskDto>> GetAllTasks()
         {
             var taskDTO = new List<TaskDto>();
             var tasks = db.Tasks.GetAll();
@@ -28,24 +28,24 @@ namespace LearnWithMentorBLL.Services
             }
             foreach (var t in tasks)
             {
-                taskDTO.Add(TaskToTaskDTO(t));
+                taskDTO.Add(await TaskToTaskDTO(t));
             }
             return taskDTO;
         }
 
-        public TaskDto GetTaskById(int taskId)
+        public async Task<TaskDto> GetTaskById(int taskId)
         {
-            var taks = db.Tasks.Get(taskId);
+            TaskEntity taks = await db.Tasks.Get(taskId);
             if (taks == null)
             {
                 return null;
             }
-            return TaskToTaskDTO(taks);
+            return await TaskToTaskDTO(taks);
         }
 
-        public int? AddAndGetId(TaskDto taskDTO)
+        public async Task<int?> AddAndGetId(TaskDto taskDTO)
         {
-            if (!db.Users.ContainsId(taskDTO.CreatorId))
+            if (!(await db.Users.ContainsId(taskDTO.CreatorId)))
             {
                 return null;
             }
@@ -57,14 +57,14 @@ namespace LearnWithMentorBLL.Services
                 Create_Id = taskDTO.CreatorId,
                 Mod_Id = taskDTO.ModifierId
             };
-            var createdTask = db.Tasks.AddAndReturnElement(task);
+            var createdTask =  db.Tasks.AddAndReturnElement(task);
             db.Save();
             return createdTask?.Id;
         }
 
         public async Task<TaskDto> GetTaskForPlan(int taskId, int planId)
         {
-            var task = db.Tasks.Get(taskId);
+            TaskEntity task = await db.Tasks.Get(taskId);
             if (task == null)
             {
                 return null;
@@ -90,9 +90,9 @@ namespace LearnWithMentorBLL.Services
                                     task.Description,
                                     task.Private,
                                     task.Create_Id,
-                                    db.Users.ExtractFullName(task.Create_Id),
+                                    await db.Users.ExtractFullName(task.Create_Id),
                                     task.Mod_Id,
-                                    db.Users.ExtractFullName(task.Mod_Id),
+                                    await db.Users.ExtractFullName(task.Mod_Id),
                                     task.Create_Date,
                                     task.Mod_Date,
                                     planTask.Priority,
@@ -103,14 +103,14 @@ namespace LearnWithMentorBLL.Services
 
         public async Task<StatisticsDto> GetUserStatistics(int userId)
         {
-            if(!db.Users.ContainsId(userId))
+            if (!(await db.Users.ContainsId(userId)))
             {
                 return null;
             }
             return new StatisticsDto()
             {
                 InProgressNumber = await db.UserTasks.GetNumberOfTasksByState(userId, "P"),
-                DoneNumber =  await db.UserTasks.GetNumberOfTasksByState(userId, "D"),
+                DoneNumber = await db.UserTasks.GetNumberOfTasksByState(userId, "D"),
                 ApprovedNumber = await db.UserTasks.GetNumberOfTasksByState(userId, "A"),
                 RejectedNumber = await db.UserTasks.GetNumberOfTasksByState(userId, "R")
             };
@@ -123,16 +123,16 @@ namespace LearnWithMentorBLL.Services
                 return null;
             }
             var taskList = new List<TaskDto>();
-            foreach (var task in db.Tasks.Search(str, planId))
+            foreach (var task in await db.Tasks.Search(str, planId))
             {
                 taskList.Add(new TaskDto(task.Id,
                                     task.Name,
                                     task.Description,
                                     task.Private,
                                     task.Create_Id,
-                                    db.Users.ExtractFullName(task.Create_Id),
+                                    await db.Users.ExtractFullName(task.Create_Id),
                                     task.Mod_Id,
-                                    db.Users.ExtractFullName(task.Mod_Id),
+                                    await db.Users.ExtractFullName(task.Mod_Id),
                                     task.Create_Date,
                                     task.Mod_Date,
                                     task.PlanTasks.FirstOrDefault(pt => pt.Task_Id == task.Id && pt.Plan_Id == planId)?.Priority,
@@ -142,12 +142,12 @@ namespace LearnWithMentorBLL.Services
             return taskList;
         }
 
-        public List<TaskDto> Search(string[] keys)
+        public async Task<List<TaskDto>> Search(string[] keys)
         {
             var taskList = new List<TaskDto>();
-            foreach ( var t in db.Tasks.Search(keys))
+            foreach (var t in await db.Tasks.Search(keys))
             {
-                taskList.Add(TaskToTaskDTO(t));
+                taskList.Add(await TaskToTaskDTO(t));
             }
             return taskList;
         }
@@ -174,7 +174,7 @@ namespace LearnWithMentorBLL.Services
             {
                 return false;
             }
-            if ( await db.Users.Get(userTaskDTO.UserId) == null)
+            if (await db.Users.Get(userTaskDTO.UserId) == null)
             {
                 return false;
             }
@@ -216,7 +216,7 @@ namespace LearnWithMentorBLL.Services
 
         public async Task<bool> DeleteProposeEndDate(int userTaskId)
         {
-            UserTask userTask =  await db.UserTasks.Get(userTaskId);
+            UserTask userTask = await db.UserTasks.Get(userTaskId);
             if (userTask == null) return false;
             userTask.Propose_End_Date = null;
             db.UserTasks.Update(userTask);
@@ -224,9 +224,9 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public bool UpdateTaskById(int taskId, TaskDto taskDTO)
+        public async Task<bool> UpdateTaskById(int taskId, TaskDto taskDTO)
         {
-            var item = db.Tasks.Get(taskId);
+            TaskEntity item = await db.Tasks.Get(taskId);
             if (item == null)
             {
                 return false;
@@ -249,10 +249,10 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public bool RemoveTaskById(int taskId)
+        public async Task<bool> RemoveTaskById(int taskId)
         {
-            var item = db.Tasks.Get(taskId);
-            if (item != null || db.Tasks.IsRemovable(taskId))
+            TaskEntity item = await db.Tasks.Get(taskId);
+            if (item != null || await db.Tasks.IsRemovable(taskId))
             {
                 db.Tasks.Remove(item);
                 db.Save();
@@ -283,7 +283,7 @@ namespace LearnWithMentorBLL.Services
             {
                 return null;
             }
-            var tasksNotUsedInPlan= db.Tasks.GetTasksNotInPlan(planId);
+            IEnumerable<TaskEntity> tasksNotUsedInPlan = await db.Tasks.GetTasksNotInPlan(planId);
             if (tasksNotUsedInPlan == null)
             {
                 return null;
@@ -298,9 +298,9 @@ namespace LearnWithMentorBLL.Services
                                 task.Description,
                                 task.Private,
                                 task.Create_Id,
-                                db.Users.ExtractFullName(task.Create_Id),
+                                await db.Users.ExtractFullName(task.Create_Id),
                                 task.Mod_Id,
-                                db.Users.ExtractFullName(task.Mod_Id),
+                                await db.Users.ExtractFullName(task.Mod_Id),
                                 task.Create_Date,
                                 task.Mod_Date,
                                 null,
@@ -314,7 +314,7 @@ namespace LearnWithMentorBLL.Services
             }
             return tasksNotUsedInPlanList;
         }
-        
+
         public async Task<UserTaskDto> GetUserTaskByUserPlanTaskId(int userId, int planTaskId)
         {
             UserTask userTask = await db.UserTasks.GetByPlanTaskForUser(planTaskId, userId);
@@ -339,7 +339,7 @@ namespace LearnWithMentorBLL.Services
             {
                 return false;
             }
-            UserTask userTask= await db.UserTasks.Get(userTaskId);
+            UserTask userTask = await db.UserTasks.Get(userTaskId);
             if (userTask == null)
             {
                 return false;
@@ -366,22 +366,24 @@ namespace LearnWithMentorBLL.Services
             db.Save();
             return true;
         }
-        public PagedListDto<TaskDto> GetTasks(int pageSize, int pageNumber = 1)
+        public Task<PagedListDto<TaskDto>> GetTasks(int pageSize, int pageNumber = 1)
         {
-            var query = db.Tasks.GetAll().AsQueryable();
+            var queryLan = db.Tasks.GetAll();
+            var query = queryLan.AsQueryable();
             query = query.OrderBy(x => x.Id);
             return PagedList<TaskEntity, TaskDto>.GetDTO(query, pageNumber, pageSize, TaskToTaskDTO);
         }
-        private TaskDto TaskToTaskDTO(TaskEntity task)
+
+        private async Task<TaskDto> TaskToTaskDTO(TaskEntity task)
         {
             return new TaskDto(task.Id,
                                 task.Name,
                                 task.Description,
                                 task.Private,
                                 task.Create_Id,
-                                db.Users.ExtractFullName(task.Create_Id),
+                                await db.Users.ExtractFullName(task.Create_Id),
                                 task.Mod_Id,
-                                db.Users.ExtractFullName(task.Mod_Id),
+                                await db.Users.ExtractFullName(task.Mod_Id),
                                 task.Create_Date,
                                 task.Mod_Date,
                                 null,

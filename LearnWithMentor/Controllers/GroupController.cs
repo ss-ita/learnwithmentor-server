@@ -44,9 +44,9 @@ namespace LearnWithMentor.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("api/group/mentor/{id}")]
-        public HttpResponseMessage GetByMentor(int id)
+        public async Task<HttpResponseMessage> GetByMentor(int id)
         {
-            var allGroups = groupService.GetGroupsByMentor(id);
+            IEnumerable<GroupDto> allGroups = await groupService.GetGroupsByMentor(id);
             if (allGroups != null)
             {
                 return Request.CreateResponse(HttpStatusCode.OK, allGroups);
@@ -63,7 +63,7 @@ namespace LearnWithMentor.Controllers
         [Route("api/group/{id}")]
         public async Task<HttpResponseMessage> GetById(int id)
         {
-            var group = await groupService.GetGroupById(id);
+            GroupDto group = await groupService.GetGroupById(id);
             if (group != null)
             {
                 return Request.CreateResponse(HttpStatusCode.OK, group);
@@ -107,7 +107,7 @@ namespace LearnWithMentor.Controllers
         {
             try
             {
-                var group = await groupService.GetUsers(id);
+                IEnumerable<UserIdentityDto> group = await groupService.GetUsers(id);
                 if (group != null)
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, group);
@@ -156,7 +156,7 @@ namespace LearnWithMentor.Controllers
         [Route("api/group/{groupId}/users/notingroup")]
         public async Task<HttpResponseMessage> GetUsersNotInCurrentGroup(int groupId)
         {
-            var group = await groupService.GetUsersNotInGroup(groupId);
+            IEnumerable<UserIdentityDto> group = await groupService.GetUsersNotInGroup(groupId);
             if (group != null)
             {
                 return Request.CreateResponse(HttpStatusCode.OK, group);
@@ -229,8 +229,8 @@ namespace LearnWithMentor.Controllers
             try
             {
                 var currentUserId = userIdentityService.GetUserId();
-                var mentorId = groupService.GetMentorIdByGroup(id);
-                if (await mentorId != currentUserId)
+                int? mentorId = await groupService.GetMentorIdByGroup(id);
+                if (mentorId != currentUserId)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
                 }
@@ -265,12 +265,12 @@ namespace LearnWithMentor.Controllers
             try
             {
                 var userId = userIdentityService.GetUserId();
-                var mentorId = groupService.GetMentorIdByGroup(id);
-                if (await mentorId != userId)
+                int? mentorId = await groupService.GetMentorIdByGroup(id);
+                if (mentorId != userId)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
                 }
-                var success = await groupService.AddPlansToGroup(planId, id);
+                bool success = await groupService.AddPlansToGroup(planId, id);
                 if (success)
                 {
                     var log = $"Succesfully add plan with id = {planId} to group with id = {id}";
@@ -360,8 +360,8 @@ namespace LearnWithMentor.Controllers
             try
             {
                 var id = userIdentityService.GetUserId();
-                var mentorId = groupService.GetMentorIdByGroup(groupId);
-                if (await mentorId != id)
+                int? mentorId = await groupService.GetMentorIdByGroup(groupId);
+                if (mentorId != id)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
                 }
@@ -395,7 +395,7 @@ namespace LearnWithMentor.Controllers
         {
             try
             {
-                var successfullyRemoved = await groupService.RemovePlanFromGroup(groupId, planToRemoveId);
+                bool successfullyRemoved = await groupService.RemovePlanFromGroup(groupId, planToRemoveId);
                 if (successfullyRemoved)
                 {
                     var log = $"Succesfully removed plan with id = {planToRemoveId} from group with id = {groupId}";
@@ -424,7 +424,7 @@ namespace LearnWithMentor.Controllers
             try
             {
                 var userId = userIdentityService.GetUserId();
-                if (!userService.ContainsId(userId))
+                if (!(await userService.ContainsId(userId)))
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"There are no users with id = {userId}");
                 }

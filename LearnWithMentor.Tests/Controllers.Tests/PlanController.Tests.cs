@@ -15,7 +15,7 @@ using System.Web.Http.Results;
 using System.Web.Http.Tracing;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDTO;
-
+using System.Threading.Tasks;
 
 
 namespace LearnWithMentor.Tests.Controllers.Tests
@@ -108,7 +108,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             planServiceMock.Setup(mts => mts.GetTasksForPlan(It.IsAny<int>()))
                 .Returns(()=> Task.FromResult<List<SectionDto>>(null));
 
-            var response = await planController.GetTasksForPlan(1);            
+            HttpResponseMessage response = await planController.GetTasksForPlan(1);            
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.NoContent);
         }
@@ -182,7 +182,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             planServiceMock.Setup(mts => mts.GetAllTasks(It.IsAny<int>()))
                 .ReturnsAsync(()=>null);
 
-            var response = await planController.GetAllTasks(1);
+            HttpResponseMessage response = await planController.GetAllTasks(1);
 
             Assert.AreEqual(HttpStatusCode.NoContent, response.StatusCode);
         }
@@ -260,25 +260,25 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
         
         [Test]
-        public void PostPlanTestAndReturnId_ShouldSuccessfullyCreateNewPlanAndReturnId()
+        public async Task PostPlanTestAndReturnId_ShouldSuccessfullyCreateNewPlanAndReturnId()
         {
 
-            planServiceMock.Setup(mts => mts.AddAndGetId(It.IsAny<PlanDto>())).Returns(1);
+            planServiceMock.Setup(mts => mts.AddAndGetId(It.IsAny<PlanDto>())).ReturnsAsync(1);
             var newPlan = plans[0];
-            var response = planController.PostAndReturnId(newPlan);
+            HttpResponseMessage response = await planController.PostAndReturnId(newPlan);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
         }
 
         [Test]
-        public void PostPlanTestAndReturnId_ShouldCheckNotSuccessfullPostTryAndReturnBadRequestResponse()
+        public async Task PostPlanTestAndReturnId_ShouldCheckNotSuccessfullPostTryAndReturnBadRequestResponse()
         {
             planServiceMock.Setup(mts => mts.AddAndGetId(It.IsAny<PlanDto>()))
-                .Returns(()=>null);
+                .ReturnsAsync(()=>null);
 
             var newPlan = plans[0];
 
-            var response = planController.PostAndReturnId(newPlan);
+            HttpResponseMessage response = await planController.PostAndReturnId(newPlan);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
         }
@@ -296,13 +296,13 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public void PostPlanTestAndReturnId_ShouldCatchEntityException()
+        public async Task PostPlanTestAndReturnId_ShouldCatchEntityException()
         {
             planServiceMock.Setup(mts => mts.AddAndGetId(It.IsAny<PlanDto>()))
                 .Throws(new EntityException());
 
             var newPlan = plans[0];
-            var response = planController.PostAndReturnId(newPlan);
+            HttpResponseMessage response = await planController.PostAndReturnId(newPlan);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.InternalServerError);
         }

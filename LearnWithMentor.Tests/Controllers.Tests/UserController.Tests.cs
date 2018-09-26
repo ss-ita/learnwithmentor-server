@@ -80,12 +80,11 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public async Task GetAllUsersTest()
         {
-            userServiceMock.Setup(u => u.GetAllUsers()).Returns(new List<UserDto>(users));
+            userServiceMock.Setup(u => u.GetAllUsers()).ReturnsAsync(users);
 
-            var response = userController.Get();
+            HttpResponseMessage response = await userController.Get();
             response.TryGetContentValue<IEnumerable<UserDto>>(out var userDTOs);
-            var allUsers = userServiceMock.Object.GetAllUsers();
-            var expected = allUsers.Count;
+            var expected =( await userServiceMock.Object.GetAllUsers()).Count;
             var actual = userDTOs.Count();
 
             Assert.AreEqual(expected, actual);
@@ -95,39 +94,42 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public async Task SearchUsersTest()
         {
             roleServiceMock.Setup(r => r.Get(It.IsInRange(1, 3, Range.Inclusive))).ReturnsAsync(roles.First());
-            userServiceMock.Setup(u => u.Search(It.IsAny<string[]>(), It.IsAny<int?>())).Returns(users);
+            userServiceMock.Setup(u => u.Search(It.IsAny<string[]>(), It.IsAny<int?>())).ReturnsAsync(users);
 
-            var response = await userController.Search("test", "test");
+            HttpResponseMessage response = await userController.Search("test", "test");
             response.TryGetContentValue<IEnumerable<UserDto>>(out var userDTOs);
-            var expected = userServiceMock.Object.Search(new[] { "test" }, 1).Count;
+            var expected = (await userServiceMock.Object.Search(new[] { "test" }, 1)).Count;
             var actual = userDTOs.Count();
 
             Assert.AreEqual(expected, actual);
         }
 
         [Test]
-        public void GetUsersByRoleTest()
+        public async Task GetUsersByRoleTest()
         {
             roleServiceMock.Setup(r => r.Get(It.IsInRange(1, 3, Range.Inclusive))).ReturnsAsync(roles.First());
             userServiceMock.Setup(u => u.GetUsersByRole(It.IsInRange(1, 2, Range.Inclusive)))
-                .Returns(users.Where(u => u.Role == "Student").ToList());
+                .ReturnsAsync(users.Where(u => u.Role == "Student").ToList());
 
-            var response = userController.GetUsersbyRole(1);
+            HttpResponseMessage response = await userController.GetUsersbyRole(1);
             response.TryGetContentValue<IEnumerable<UserDto>>(out var userDTOs);
-            var expected = userServiceMock.Object.GetUsersByRole(1).Count;
+            var getUsers = await userServiceMock.Object.GetUsersByRole(1);
+            var expected = getUsers.Count;
             var actual = userDTOs.Count();
 
             Assert.AreEqual(expected, actual);
         }
 
         [Test]
-        public void GetUsersByStateTest()
+        public async Task GetUsersByStateTest()
         {
-            userServiceMock.Setup(u => u.GetUsersByState(false)).Returns(users);
+            userServiceMock.Setup(u => u.GetUsersByState(false)).ReturnsAsync(users);
 
-            var response = userController.GetUsersbyState(false);
+            HttpResponseMessage response = await userController.GetUsersbyState(false);
             response.TryGetContentValue<IEnumerable<UserDto>>(out var userDTOs);
-            var expected = userServiceMock.Object.GetUsersByState(false).Count;
+            var getGroup = await userServiceMock.Object.GetUsersByState(false);
+            var expected = getGroup.Count;
+
             var actual = userDTOs.Count();
 
             Assert.AreEqual(expected, actual);
@@ -166,7 +168,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public async Task GetImageTest()
         {
-            userServiceMock.Setup(u => u.ContainsId(It.IsInRange(1, 8, Range.Inclusive))).Returns(true);
+            userServiceMock.Setup(u => u.ContainsId(It.IsInRange(1, 8, Range.Inclusive))).ReturnsAsync(true);
             userServiceMock.Setup(u => u.GetImage(It.IsInRange(1, 3, Range.Inclusive))).ReturnsAsync(new ImageDto()
             {
                 Base64Data = "test",
@@ -206,11 +208,11 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public void NoUsersInDatabaseTest()
+        public async Task NoUsersInDatabaseTest()
         {
             roleServiceMock.Setup(r => r.GetAllRoles()).Returns(new List<RoleDto>());
 
-            var response = userController.Get();
+            HttpResponseMessage response = await userController.Get();
             var expected = HttpStatusCode.NoContent;
             var actual = response.StatusCode;
 
@@ -218,11 +220,11 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public void NoRolesInDatabaseTest()
+        public async Task NoRolesInDatabaseTest()
         {
-            userServiceMock.Setup(u => u.GetAllUsers()).Returns(new List<UserDto>());
+            userServiceMock.Setup(u => u.GetAllUsers()).ReturnsAsync(new List<UserDto>());
 
-            var response = userController.Get();
+            HttpResponseMessage response = await userController.Get();
             var expected = HttpStatusCode.NoContent;
             var actual = response.StatusCode;
 
@@ -230,11 +232,11 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public void NotExistingRoleInGetUsersByRoleTest()
+        public async Task NotExistingRoleInGetUsersByRoleTest()
         {
             roleServiceMock.Setup(r => r.Get(4));
 
-            var response = userController.GetUsersbyRole(4);
+            HttpResponseMessage response = await userController.GetUsersbyRole(4);
             var expected = HttpStatusCode.NoContent;
             var actual = response.StatusCode;
 
@@ -242,12 +244,12 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public void NoUsersInGetUsersByRoleTest()
+        public async Task NoUsersInGetUsersByRoleTest()
         {
             roleServiceMock.Setup(r => r.GetByName(It.IsAny<string>())).ReturnsAsync(roles.First());
-            userServiceMock.Setup(u => u.GetUsersByRole(3)).Returns(new List<UserDto>());
+            userServiceMock.Setup(u => u.GetUsersByRole(3)).ReturnsAsync(new List<UserDto>());
 
-            var response = userController.GetUsersbyRole(3);
+            HttpResponseMessage response = await userController.GetUsersbyRole(3);
             var expected = HttpStatusCode.NoContent;
             var actual = response.StatusCode;
 
@@ -255,11 +257,11 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public void NoUsersInGetUsersByStateTest()
+        public async Task NoUsersInGetUsersByStateTest()
         {
-            userServiceMock.Setup(u => u.GetUsersByState(true)).Returns(new List<UserDto>());
+            userServiceMock.Setup(u => u.GetUsersByState(true)).ReturnsAsync(new List<UserDto>());
 
-            var response = userController.GetUsersbyState(true);
+            HttpResponseMessage response = await userController.GetUsersbyState(true);
             var expected = HttpStatusCode.NoContent;
             var actual = response.StatusCode;
 
@@ -295,7 +297,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             taskServiceMock.Setup(t => t.GetUserStatistics(1)).Returns(Task.FromResult<StatisticsDto>(null));
 
             HttpResponseMessage response = await userController.GetStatistics();
-            var expectedStatusCode = HttpStatusCode.NoContent;
+            var expectedStatusCode =  HttpStatusCode.NoContent;
             var actualStatusCode = response.StatusCode;
 
             Assert.AreEqual(expectedStatusCode, actualStatusCode);
@@ -304,7 +306,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public void ExceptionInGetImageTest()
         {
-            userServiceMock.Setup(u => u.ContainsId(It.IsInRange(1, 8, Range.Inclusive))).Returns(true);
+            userServiceMock.Setup(u => u.ContainsId(It.IsInRange(1, 8, Range.Inclusive))).ReturnsAsync(true);
             userServiceMock.Setup(u => u.GetImage(6)).Throws(new EntityException());
 
             Assert.Throws(typeof(EntityException), () => userController.GetImage(6).GetAwaiter().GetResult());
