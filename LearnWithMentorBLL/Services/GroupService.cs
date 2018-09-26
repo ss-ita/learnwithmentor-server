@@ -112,9 +112,9 @@ namespace LearnWithMentorBLL.Services
             var plans = await db.Plans.GetPlansForGroup(groupId);
 
             if (group == null)
-                return null;
+                return Enumerable.Empty<PlanDto>();
             if (plans == null)
-                return null;
+                return Enumerable.Empty<PlanDto>();
             var planList = new List<PlanDto>();
             foreach (var plan in plans)
             {

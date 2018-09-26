@@ -268,7 +268,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public async Task NoImageInGetImageTest()
         {
-            userServiceMock.Setup(u => u.GetImage(4));
+            userServiceMock.Setup(u => u.GetImage(4)).Returns(Task.FromResult<ImageDto>(null));
 
             HttpResponseMessage response = await userController.GetImage(4);
             var expected = HttpStatusCode.NoContent;
@@ -291,7 +291,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public async Task NoUserInGetStatisticsTest()
         {
             userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(1);
-            taskServiceMock.Setup(t => t.GetUserStatistics(1));
+            taskServiceMock.Setup(t => t.GetUserStatistics(1)).Returns(Task.FromResult<StatisticsDto>(null));
 
             HttpResponseMessage response = await userController.GetStatistics();
             var expectedStatusCode = HttpStatusCode.NoContent;
@@ -337,7 +337,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public async Task NoUserGetSingleTest()
         {
             userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(1);
-            userServiceMock.Setup(u => u.Get(1));
+            userServiceMock.Setup(u => u.Get(1)).Returns(Task.FromResult<UserDto>(null));
 
             HttpResponseMessage response = await userController.GetSingle();
             var expectedStatusCode = HttpStatusCode.NoContent;

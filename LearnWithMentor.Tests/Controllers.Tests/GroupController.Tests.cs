@@ -150,7 +150,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public async Task GetAllPlansByGroupId_ShouldReturnNoContent()
         {
-            groupServiceMock.Setup(p => p.GetPlans(It.IsAny<int>())).Returns(() => null);
+            groupServiceMock.Setup(p => p.GetPlans(It.IsAny<int>())).ReturnsAsync(() => Enumerable.Empty<PlanDto>());
 
             var response = await groupController.GetPlans(99);
             var expected = HttpStatusCode.NoContent;
