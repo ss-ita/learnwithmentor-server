@@ -7,7 +7,7 @@ namespace LearnWithMentorBLL.Interfaces
     public interface IUserService : IDisposableService
     {
         UserIdentityDto GetByEmail(string email);
-        Task<List<UserDto>> GetAllUsers();
+        List<UserDto> GetAllUsers();
         Task<bool> BlockById(int id);
         Task<bool> ConfirmEmailById(int id);
         Task<UserDto> Get(int id);

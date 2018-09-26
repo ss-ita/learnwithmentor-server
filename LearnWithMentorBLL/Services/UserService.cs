@@ -40,7 +40,7 @@ namespace LearnWithMentorBLL.Services
                 user.Email_Confirmed);
         }
 
-        public  Task<List<UserDto>> GetAllUsers()
+        public List<UserDto> GetAllUsers()
         {
             var users = db.Users.GetAll();
             if (users == null)

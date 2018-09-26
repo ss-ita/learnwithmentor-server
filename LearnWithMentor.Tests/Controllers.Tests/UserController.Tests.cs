@@ -78,13 +78,14 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public void GetAllUsersTest()
+        public async Task GetAllUsersTest()
         {
-            userServiceMock.Setup(u => u.GetAllUsers()).Returns(users);
+            userServiceMock.Setup(u => u.GetAllUsers()).Returns(new List<UserDto>(users));
 
             var response = userController.Get();
             response.TryGetContentValue<IEnumerable<UserDto>>(out var userDTOs);
-            var expected = userServiceMock.Object.GetAllUsers().Count;
+            var allUsers = userServiceMock.Object.GetAllUsers();
+            var expected = allUsers.Count;
             var actual = userDTOs.Count();
 
             Assert.AreEqual(expected, actual);
