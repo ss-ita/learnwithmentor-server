@@ -503,12 +503,12 @@ namespace LearnWithMentor.Controllers
                 bool success = true;
                 foreach (var item in value)
                 {
-                    var result = userService.UpdateById(item.Id,item);
+                    var result = userService.UpdateById(item.Id, item);
                     success = success && result;
                 }
                 if (success)
                 {
-                    var okMessage = $"Succesfully updated users.";
+                    var okMessage = "Succesfully updated users.";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, okMessage);
                     return Request.CreateResponse(HttpStatusCode.OK, okMessage);
                 }
