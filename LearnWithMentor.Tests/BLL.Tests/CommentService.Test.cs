@@ -42,26 +42,6 @@ namespace LearnWithMentor.Tests.BLL.Tests
         }
 
         [Test]
-        public async ThreadTask.Task GetCommentById_ShouldReturnCommentById()
-        {
-            uowMock.SetupGet(c => c.Comments).Returns(commentRepositoryMock.Object);
-            uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);
-
-            uowMock.Setup(u => u.Comments.Get(It.IsAny<int>())).ReturnsAsync(new Comment() { Id = 3});
-
-            //arrange
-            int commentId = 3;
-
-            //act
-            var result = await commentService.GetComment(commentId);
-
-            //assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(commentId, result.Id);
-            Assert.AreSame(result.GetType(), typeof(CommentDto));
-        }
-
-        [Test]
         public async ThreadTask.Task GetCommentById_ShouldReturnNullValue()
         {
             uowMock.SetupGet(c => c.Comments).Returns(commentRepositoryMock.Object);
