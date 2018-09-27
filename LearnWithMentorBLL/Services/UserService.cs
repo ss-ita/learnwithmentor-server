@@ -78,6 +78,7 @@ namespace LearnWithMentorBLL.Services
         {
             var modified = false;
             var item = db.Users.Get(id);
+            Role updatedRole;
             if (item != null)
             {
                 if (user.FirstName != null)
@@ -95,7 +96,7 @@ namespace LearnWithMentorBLL.Services
                     item.Blocked = user.Blocked.Value;
                     modified = true;
                 }
-                if (db.Roles.TryGetByName(user.Role, out var updatedRole))
+                if (db.Roles.TryGetByName(user.Role, out updatedRole))
                 {
                     item.Role_Id = updatedRole.Id;
                     modified = true;
@@ -121,12 +122,13 @@ namespace LearnWithMentorBLL.Services
 
         public bool Add(UserRegistrationDto userLoginDTO)
         {
+            Role studentRole;
             var toAdd = new User
             {
                 Email = userLoginDTO.Email,
                 Password = BCrypt.Net.BCrypt.HashPassword(userLoginDTO.Password)
             };
-            db.Roles.TryGetByName("Student", out var studentRole);
+            db.Roles.TryGetByName("Student", out studentRole);
             toAdd.Role_Id = studentRole.Id;
             toAdd.FirstName = userLoginDTO.FirstName;
             toAdd.LastName = userLoginDTO.LastName;

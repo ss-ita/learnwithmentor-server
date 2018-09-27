@@ -2,6 +2,7 @@
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDTO;
 using LearnWithMentorDAL.UnitOfWork;
+using LearnWithMentorDAL.Entities;
 
 namespace LearnWithMentorBLL.Services
 {
@@ -32,7 +33,8 @@ namespace LearnWithMentorBLL.Services
         }
         public RoleDto GetByName(string name)
         {
-            if (!db.Roles.TryGetByName(name, out var role))
+            Role role;
+            if (!db.Roles.TryGetByName(name, out role))
             {
                 return null;
             }
