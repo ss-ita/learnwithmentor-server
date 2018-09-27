@@ -16,7 +16,7 @@ namespace LearnWithMentorBLL.Services
         public PlanService(IUnitOfWork db) : base(db)
         {
         }
-        public async Task<PlanDto> Get(int id)
+        public async Task<PlanDto> GetAsync(int id)
         {
             var plan = await db.Plans.Get(id);
             if (plan == null)
@@ -117,15 +117,15 @@ namespace LearnWithMentorBLL.Services
                                          await db.Users.ExtractFullNameAsync(task.Mod_Id),
                                          task.Create_Date,
                                          task.Mod_Date,
-                                         await db.PlanTasks.GetTaskPriorityInPlan(task.Id, planId),
-                                         await db.PlanTasks.GetTaskSectionIdInPlan(task.Id, planId),
-                                         await db.PlanTasks.GetIdByTaskAndPlan(task.Id, planId));
+                                         await db.PlanTasks.GetTaskPriorityInPlanAsync(task.Id, planId),
+                                         await db.PlanTasks.GetTaskSectionIdInPlanAsync(task.Id, planId),
+                                         await db.PlanTasks.GetIdByTaskAndPlanAsync(task.Id, planId));
                 dtosList.Add(toAdd);
             }
             return dtosList;
         }
 
-        public async ThreadTask.Task<List<int>> GetAllPlanTaskids(int planId)
+        public async ThreadTask.Task<List<int>> GetAllPlanTaskidsAsync(int planId)
         {
             var plan = await db.Plans.Get(planId);
             if (plan == null)
@@ -180,9 +180,9 @@ namespace LearnWithMentorBLL.Services
                         await db.Users.ExtractFullNameAsync(task.Mod_Id),
                         task.Create_Date,
                         task.Mod_Date,
-                        await db.PlanTasks.GetTaskPriorityInPlan(task.Id, planId),
-                        await db.PlanTasks.GetTaskSectionIdInPlan(task.Id, planId),
-                        await db.PlanTasks.GetIdByTaskAndPlan(task.Id, planId));
+                        await db.PlanTasks.GetTaskPriorityInPlanAsync(task.Id, planId),
+                        await db.PlanTasks.GetTaskSectionIdInPlanAsync(task.Id, planId),
+                        await db.PlanTasks.GetIdByTaskAndPlanAsync(task.Id, planId));
                     taskDTOs.Add(toAdd);
                 }
                 contentDTO.Tasks = taskDTOs;
@@ -228,7 +228,7 @@ namespace LearnWithMentorBLL.Services
 
         private async ThreadTask.Task CreateUserTasksForAllLearningByPlanAsync(int planId, int taskId)
         {
-            var planTaskId = await db.PlanTasks.GetIdByTaskAndPlan(taskId, planId);
+            var planTaskId = await db.PlanTasks.GetIdByTaskAndPlanAsync(taskId, planId);
             var plan = await db.Plans.Get(planId);
             var groups = await db.Groups.GetGroupsByPlanAsync(planId);
             if (plan == null ||groups.Any() || planTaskId == null)
@@ -272,13 +272,13 @@ namespace LearnWithMentorBLL.Services
             {
                 return false;
             }
-            await db.Plans.AddTaskToPlan(planId, taskId, sectionId, priority);
+            await db.Plans.AddTaskToPlanAsync(planId, taskId, sectionId, priority);
             await CreateUserTasksForAllLearningByPlanAsync(planId, taskId);
             db.Save();
             return true;
         }
 
-        public async ThreadTask.Task<bool> SetImage(int id, byte[] image, string imageName)
+        public async ThreadTask.Task<bool> SetImageAsync(int id, byte[] image, string imageName)
         {
             var toUpdate = await db.Plans.Get(id);
             if (toUpdate == null)
@@ -292,7 +292,7 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public async ThreadTask.Task<ImageDto> GetImage(int id)
+        public async ThreadTask.Task<ImageDto> GetImageAsync(int id)
         {
             var toGetImage = await db.Plans.Get(id);
             if (toGetImage?.Image == null || toGetImage.Image_Name == null)
@@ -306,7 +306,7 @@ namespace LearnWithMentorBLL.Services
             };
         }
 
-        public async ThreadTask.Task<bool> Add(PlanDto dto)
+        public async ThreadTask.Task<bool> AddAsync(PlanDto dto)
         {
             if (! await ContainsId(dto.CreatorId))
             {

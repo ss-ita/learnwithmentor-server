@@ -8,7 +8,7 @@ namespace LearnWithMentorBLL.Interfaces
     {
         Task<GroupDto> GetGroupByIdAsync(int id);
         Task<int> GroupsCountAsync();
-        Task<int?> GetMentorIdByGroup(int groupId);
+        Task<int?> GetMentorIdByGroupAsync(int groupId);
         Task<IEnumerable<GroupDto>> GetGroupsByMentorAsync(int mentorId);
         Task<IEnumerable<UserIdentityDto>> GetUsersAsync(int groupId);
         Task<IEnumerable<UserWithImageDto>> GetUsersWithImageAsync(int groupId);
@@ -19,7 +19,7 @@ namespace LearnWithMentorBLL.Interfaces
         Task<IEnumerable<UserIdentityDto>> GetUsersNotInGroupAsync(int groupId);
         Task<IEnumerable<UserIdentityDto>> SearchUserNotInGroupAsync(string[] searchCases, int groupId);
         Task<IEnumerable<PlanDto>> GetPlansNotUsedInGroupAsync(int groupId);
-        Task<IEnumerable<PlanDto>> SearchPlansNotUsedInGroup(string[] searchCases, int groupId);
+        Task<IEnumerable<PlanDto>> SearchPlansNotUsedInGroupAsync(string[] searchCases, int groupId);
         Task<bool> RemoveUserFromGroupAsync(int groupId, int userIdToRemove);
         Task<bool> RemovePlanFromGroupAsync(int groupId, int planIdToRemove);
         Task<IEnumerable<GroupDto>> GetUserGroupsAsync(int userId);

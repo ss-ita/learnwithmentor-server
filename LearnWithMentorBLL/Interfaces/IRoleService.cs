@@ -6,8 +6,8 @@ namespace LearnWithMentorBLL.Interfaces
 {
     public interface IRoleService : IDisposableService
     {
-        Task<RoleDto> Get(int id);
+        Task<RoleDto> GetAsync(int id);
         List<RoleDto> GetAllRoles();
-        Task<RoleDto> GetByName(string name);
+        Task<RoleDto> GetByNameAsync(string name);
     }
 }

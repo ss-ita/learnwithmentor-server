@@ -59,9 +59,9 @@ namespace LearnWithMentor.Controllers
         [AllowAnonymous]
         [HttpGet]
         [Route("api/plan/{id}")]
-        public async Task<HttpResponseMessage> Get(int id)
+        public async Task<HttpResponseMessage> GetAsync(int id)
         {
-            var plan = await planService.Get(id);
+            var plan = await planService.GetAsync(id);
             if (plan == null)
             {
                 const string message = "Plan does not exist in database.";
@@ -95,7 +95,7 @@ namespace LearnWithMentor.Controllers
         /// <param name="id"> Id of the plan. </param>
         [HttpGet]
         [Route("api/plan/{id}/sections")]
-        public async Task<HttpResponseMessage> GetTasksForPlan(int id)
+        public async Task<HttpResponseMessage> GetTasksForPlanAsync(int id)
         {
             List<SectionDto> sections = await planService.GetTasksForPlanAsync(id);
             if (sections == null)
@@ -132,7 +132,7 @@ namespace LearnWithMentor.Controllers
         [AllowAnonymous]
         [HttpGet]
         [Route("api/plan/{planId}/tasks")]
-        public async Task<HttpResponseMessage> GetAllTasks(int planId)
+        public async Task<HttpResponseMessage> GetAllTasksAsync(int planId)
         {
             List<TaskDto> dtosList = await planService.GetAllTasksAsync(planId);
             if (dtosList == null || dtosList.Count == 0)
@@ -149,9 +149,9 @@ namespace LearnWithMentor.Controllers
         /// <param name="planId"> Id of plan. </param>
         [HttpGet]
         [Route("api/plan/{planId}/plantaskids")]
-        public async Task<HttpResponseMessage> GetAllPlanTaskIds(int planId)
+        public async Task<HttpResponseMessage> GetAllPlanTaskIdsAsync(int planId)
         {
-            var idsList = await planService.GetAllPlanTaskids(planId);
+            var idsList = await planService.GetAllPlanTaskidsAsync(planId);
             if (idsList == null || idsList.Count == 0)
             {
                 const string message = "Plan does not contain any plantask.";
@@ -167,11 +167,11 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpPost]
         [Route("api/plan")]
-        public async Task<HttpResponseMessage> Post([FromBody]PlanDto value)
+        public async Task<HttpResponseMessage> PostAsync([FromBody]PlanDto value)
         {
             try
             {
-                var success = await planService.Add(value);
+                var success = await planService.AddAsync(value);
                 if (success)
                 {
                     var log = $"Succesfully created plan {value.Name} with id = {value.Id} by user with id = {value.CreatorId}";
@@ -197,7 +197,7 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpPost]
         [Route("api/plan/return")]
-        public async Task<HttpResponseMessage> PostAndReturnId([FromBody]PlanDto value)
+        public async Task<HttpResponseMessage> PostAndReturnIdAsync([FromBody]PlanDto value)
         {
             try
             {
@@ -231,7 +231,7 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpPut]
         [Route("api/plan/{id}")]
-        public async Task<HttpResponseMessage> Put(int id, [FromBody]PlanDto value)
+        public async Task<HttpResponseMessage> PutAsync(int id, [FromBody]PlanDto value)
         {
             try
             {
@@ -311,7 +311,7 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpPost]
         [Route("api/plan/{id}/image")]
-        public async Task<HttpResponseMessage> PostImage(int id)
+        public async Task<HttpResponseMessage> PostImageAsync(int id)
         {
             if (!await planService.ContainsId(id))
             {
@@ -346,7 +346,7 @@ namespace LearnWithMentor.Controllers
                     {
                         imageData = binaryReader.ReadBytes(postedFile.ContentLength);
                     }
-                    await planService.SetImage(id, imageData, postedFile.FileName);
+                    await planService.SetImageAsync(id, imageData, postedFile.FileName);
                     const string okMessage = "Successfully created image.";
                     return Request.CreateResponse(HttpStatusCode.OK, okMessage);
                 }
@@ -366,7 +366,7 @@ namespace LearnWithMentor.Controllers
         [AllowAnonymous]
         [HttpGet]
         [Route("api/plan/{id}/image")]
-        public async Task<HttpResponseMessage> GetImage(int id)
+        public async Task<HttpResponseMessage> GetImageAsync(int id)
         {
             try
             {
@@ -375,7 +375,7 @@ namespace LearnWithMentor.Controllers
                     const string errorMessage = "No plan with this id in database.";
                     return Request.CreateResponse(HttpStatusCode.NoContent, errorMessage);
                 }
-                var dto = await planService.GetImage(id);
+                var dto = await planService.GetImageAsync(id);
                 if (dto == null)
                 {
                     const string message = "No image for this plan in database.";

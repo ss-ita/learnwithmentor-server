@@ -11,7 +11,7 @@ namespace LearnWithMentorBLL.Services
         public RoleService(IUnitOfWork db) : base(db)
         {
         }
-        public async Task<RoleDto> Get(int id)
+        public async Task<RoleDto> GetAsync(int id)
         {
             var role = await db.Roles.Get(id);
             return role == null ? null :
@@ -31,7 +31,7 @@ namespace LearnWithMentorBLL.Services
             }
             return dtos;
         }
-        public async Task<RoleDto> GetByName(string name)
+        public async Task<RoleDto> GetByNameAsync(string name)
         {
             var role = await db.Roles.TryGetByName(name);
             if (role == null)

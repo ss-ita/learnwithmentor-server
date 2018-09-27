@@ -25,7 +25,7 @@ namespace LearnWithMentorDAL.Repositories
             return plan;
         }
 
-        public async Task<IEnumerable<Plan>> GetPlansForGroup(int groupId)
+        public async Task<IEnumerable<Plan>> GetPlansForGroupAsync(int groupId)
         {
             Group group = await Context.Groups.FirstOrDefaultAsync(g => g.Id == groupId);
             return group?.Plans;
@@ -53,13 +53,13 @@ namespace LearnWithMentorDAL.Repositories
             return Context.Plans.AnyAsync(p => p.Id == id);
         }
 
-        public async Task<string> GetImageBase64(int planId)
+        public async Task<string> GetImageBase64Async(int planId)
         {
             Plan plan = await Context.Plans.FirstOrDefaultAsync(p => p.Id == planId);
             return plan?.Image;
         }
 
-        public async Task<bool> AddTaskToPlan(int planId, int taskId, int? sectionId, int? priority)
+        public async Task<bool> AddTaskToPlanAsync(int planId, int taskId, int? sectionId, int? priority)
         {
             var taskAdd = await Context.Tasks.FirstOrDefaultAsync(task => task.Id == taskId);
             var planAdd = await Context.Plans.FirstOrDefaultAsync(plan => plan.Id == planId);
@@ -87,7 +87,7 @@ namespace LearnWithMentorDAL.Repositories
             return Context.Plans.OrderBy(p => p.Id).Skip(previousNumberOfPlans).Take(numberOfPlans);
         }
 
-        public async Task<IEnumerable<Plan>> GetPlansNotUsedInGroup(int groupId)
+        public async Task<IEnumerable<Plan>> GetPlansNotUsedInGroupAsync(int groupId)
         {
             Group group = await Context.Groups.FirstOrDefaultAsync(g => g.Id == groupId);
             IEnumerable<int> usedPlansId = group?.Plans.Select(p => p.Id);

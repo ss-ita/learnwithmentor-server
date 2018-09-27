@@ -28,7 +28,7 @@ namespace LearnWithMentorBLL.Services
 
         private  async ThreadTask.Task SetUserTasksByAddingUserAsync(int userId, int groupId)
         {
-            var plans = await db.Plans.GetPlansForGroup(groupId);
+            var plans = await db.Plans.GetPlansForGroupAsync(groupId);
             Group group = await db.Groups.GetAsync(groupId);
             if(plans == null || group == null)
             {
@@ -95,7 +95,7 @@ namespace LearnWithMentorBLL.Services
                                await db.Users.ExtractFullNameAsync(group.Mentor_Id));
         }
         
-        public async ThreadTask.Task<int?> GetMentorIdByGroup(int groupId)
+        public async ThreadTask.Task<int?> GetMentorIdByGroupAsync(int groupId)
         {
             GroupDto group = await GetGroupByIdAsync(groupId);
             return group?.MentorId;
@@ -109,7 +109,7 @@ namespace LearnWithMentorBLL.Services
         public async ThreadTask.Task<IEnumerable<PlanDto>> GetPlansAsync(int groupId)
         {
             var group = await db.Groups.GetAsync(groupId);
-            var plans = await db.Plans.GetPlansForGroup(groupId);
+            var plans = await db.Plans.GetPlansForGroupAsync(groupId);
 
             if (group == null)
                 return Enumerable.Empty<PlanDto>();
@@ -356,7 +356,7 @@ namespace LearnWithMentorBLL.Services
             {
                 return null;
             }
-            var plansNotUsedInGroup = await db.Plans.GetPlansNotUsedInGroup(groupId);
+            var plansNotUsedInGroup = await db.Plans.GetPlansNotUsedInGroupAsync(groupId);
             if (plansNotUsedInGroup == null)
             {
                 return null;
@@ -385,7 +385,7 @@ namespace LearnWithMentorBLL.Services
             }
             return plansNotUsedInGroupList;
         }
-        public async ThreadTask.Task<IEnumerable<PlanDto>> SearchPlansNotUsedInGroup(string[] searchCases, int groupId)
+        public async ThreadTask.Task<IEnumerable<PlanDto>> SearchPlansNotUsedInGroupAsync(string[] searchCases, int groupId)
         {
             var plansNotInGroup = await GetPlansNotUsedInGroupAsync(groupId);
             plansNotInGroup = plansNotInGroup.ToList();

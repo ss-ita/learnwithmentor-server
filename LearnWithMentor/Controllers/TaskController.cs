@@ -45,11 +45,11 @@ namespace LearnWithMentor.Controllers
         /// </summary>
         [HttpGet]
         [Route("api/task")]
-        public async Task<HttpResponseMessage> GetAllTasks()
+        public async Task<HttpResponseMessage> GetAllTasksAsync()
         {
             try
             {
-                var allTasks = await taskService.GetAllTasks();
+                var allTasks = await taskService.GetAllTasksAsync();
                 if (allTasks != null)
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, allTasks);
@@ -93,7 +93,7 @@ namespace LearnWithMentor.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("api/plan/{planId}/tasks/notinplan")]
-        public async Task<HttpResponseMessage> GetTasksNotInCurrentPlan(int planId)
+        public async Task<HttpResponseMessage> GetTasksNotInCurrentPlanAsync(int planId)
         {
             IEnumerable<TaskDto> task = await taskService.GetTasksNotInPlanAsync(planId);
             if (task != null)
@@ -108,7 +108,7 @@ namespace LearnWithMentor.Controllers
         /// </summary>
         [HttpGet]
         [Route("api/task/{taskId}")]
-        public async Task<HttpResponseMessage> GetTaskById(int taskId)
+        public async Task<HttpResponseMessage> GetTaskByIdAsync(int taskId)
         {
             try
             {
@@ -132,11 +132,11 @@ namespace LearnWithMentor.Controllers
         /// <param name="planTaskId">Id of the planTask.</param>
         [HttpGet]
         [Route("api/task/plantask/{planTaskId}")]
-        public async Task<HttpResponseMessage> GetTaskForPlan(int planTaskId)
+        public async Task<HttpResponseMessage> GetTaskForPlanAsync(int planTaskId)
         {
             try
             {
-                TaskDto task = await taskService.GetTaskForPlan(planTaskId);
+                TaskDto task = await taskService.GetTaskForPlanAsync(planTaskId);
                 if (task != null)
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, task);
@@ -157,7 +157,7 @@ namespace LearnWithMentor.Controllers
         /// <param name="userId">Id of the user.</param>
         [HttpGet]
         [Route("api/task/usertask")]
-        public async Task<HttpResponseMessage> GetUserTask(int planTaskId, int userId)
+        public async Task<HttpResponseMessage> GetUserTaskAsync(int planTaskId, int userId)
         {
             try
             {
@@ -188,7 +188,7 @@ namespace LearnWithMentor.Controllers
         /// <param name="userId">array of the user`s ids.</param>
         [HttpGet]
         [Route("api/task/allusertasks")]
-        public async Task<HttpResponseMessage> GetUsersTasks([FromUri]int[] userId, [FromUri]int[] planTaskId)
+        public async Task<HttpResponseMessage> GetUsersTasksAsync([FromUri]int[] userId, [FromUri]int[] planTaskId)
         {
             try
             {
@@ -219,7 +219,7 @@ namespace LearnWithMentor.Controllers
         /// <param name="userId">array of the user`s ids.</param>
         [HttpGet]
         [Route("api/task/usertasks")]
-        public async Task<HttpResponseMessage> GetUserTasks(int userId, [FromUri]int[] planTaskId)
+        public async Task<HttpResponseMessage> GetUserTasksAsync(int userId, [FromUri]int[] planTaskId)
         {
             try
             {
@@ -306,7 +306,7 @@ namespace LearnWithMentor.Controllers
         /// <param name="newUserTask">New userTask object.</param>
         [HttpPost]
         [Route("api/task/usertask")]
-        public async Task<HttpResponseMessage> PostNewUserTask([FromBody]UserTaskDto newUserTask)
+        public async Task<HttpResponseMessage> PostNewUserTaskAsync([FromBody]UserTaskDto newUserTask)
         {
             try
             {
@@ -397,13 +397,13 @@ namespace LearnWithMentor.Controllers
         /// <param name="key">Key for search.</param>
         [HttpGet]
         [Route("api/task/search")]
-        public async Task<HttpResponseMessage> Search(string key)
+        public async Task<HttpResponseMessage> SearchAsync(string key)
         {
             try
             {
                 if (string.IsNullOrEmpty(key))
                 {
-                    return await GetAllTasks();
+                    return await GetAllTasksAsync();
                 }
                 var lines = key.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 List<TaskDto> taskList = await taskService.SearchAsync(lines);
@@ -427,7 +427,7 @@ namespace LearnWithMentor.Controllers
         /// <param name="planId">Id of the plan.</param>
         [HttpGet]
         [Route("api/task/searchinplan")]
-        public async Task<HttpResponseMessage> SearchInPlan(string key, int planId)
+        public async Task<HttpResponseMessage> SearchInPlanAsync(string key, int planId)
         {
             try
             {
@@ -490,7 +490,7 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpPost]
         [Route("api/task/return")]
-        public async Task<HttpResponseMessage> PostAndReturnId([FromBody]TaskDto value)
+        public async Task<HttpResponseMessage> PostAndReturnIdAsync([FromBody]TaskDto value)
         {
             try
             {
@@ -524,7 +524,7 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpPut]
         [Route("api/task/{taskId}")]
-        public async Task<HttpResponseMessage> Put(int taskId, [FromBody]TaskDto task)
+        public async Task<HttpResponseMessage> PutAsync(int taskId, [FromBody]TaskDto task)
         {
             try
             {
@@ -641,7 +641,7 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpDelete]
         [Route("api/task/{id}")]
-        public async Task<HttpResponseMessage> Delete(int taskId)
+        public async Task<HttpResponseMessage> DeleteAsync(int taskId)
         {
             try
             {

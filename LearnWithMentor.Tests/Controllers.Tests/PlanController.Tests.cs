@@ -108,7 +108,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             planServiceMock.Setup(mts => mts.GetTasksForPlanAsync(It.IsAny<int>()))
                 .Returns(()=> Task.FromResult<List<SectionDto>>(null));
 
-            HttpResponseMessage response = await planController.GetTasksForPlan(1);            
+            HttpResponseMessage response = await planController.GetTasksForPlanAsync(1);            
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.NoContent);
         }
@@ -119,7 +119,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             planServiceMock.Setup(u => u.UpdateByIdAsync( It.IsAny<PlanDto>(), It.IsAny<int>())).ReturnsAsync(true);
 
             PlanDto forUpdating = new PlanDto(1, "name1", "description1", true, 1, "nameCreator1", "lastenameCreator1", 1, "nameCreator1", "lastenameCreator1", DateTime.Now, DateTime.Now);
-            var response = await planController.Put(1, forUpdating);
+            var response = await planController.PutAsync(1, forUpdating);
             var expectedStatusCode = HttpStatusCode.OK;
             var actualStatusCode = response.StatusCode;
 
@@ -132,7 +132,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             planServiceMock.Setup(u => u.UpdateByIdAsync(It.IsAny<PlanDto>(), It.IsAny<int>())).ReturnsAsync(false);
 
             PlanDto forUpdating = new PlanDto(1, "name1", "description1", true, 1, "nameCreator1", "lastenameCreator1", 1, "nameCreator1", "lastenameCreator1", DateTime.Now, DateTime.Now);
-            var response = await planController.Put(1, forUpdating);
+            var response = await planController.PutAsync(1, forUpdating);
             var expectedStatusCode = HttpStatusCode.BadRequest;
             var actualStatusCode = response.StatusCode;
 
@@ -146,7 +146,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
                 .Throws(new EntityException());
 
             PlanDto forUpdating = new PlanDto(1, "name1", "description1", true, 1, "nameCreator1", "lastenameCreator1", 1, "nameCreator1", "lastenameCreator1", DateTime.Now, DateTime.Now);
-            var response = await planController.Put(1, forUpdating);
+            var response = await planController.PutAsync(1, forUpdating);
             var expectedStatusCode = HttpStatusCode.InternalServerError;
             var actualStatusCode = response.StatusCode;
 
@@ -182,7 +182,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             planServiceMock.Setup(mts => mts.GetAllTasksAsync(It.IsAny<int>()))
                 .ReturnsAsync(()=>null);
 
-            HttpResponseMessage response = await planController.GetAllTasks(1);
+            HttpResponseMessage response = await planController.GetAllTasksAsync(1);
 
             Assert.AreEqual(HttpStatusCode.NoContent, response.StatusCode);
         }
@@ -201,13 +201,13 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public async Task GetPlanByIdTest_ShouldReturnPlan()
         {
-            planServiceMock.Setup(mts => mts.Get(It.IsAny<int>())).ReturnsAsync(
+            planServiceMock.Setup(mts => mts.GetAsync(It.IsAny<int>())).ReturnsAsync(
                 (int i) => plans.Single(x => x.Id == i));
 
             var plan = plans[0];
-            var response = await planController.Get(plan.Id);
+            var response = await planController.GetAsync(plan.Id);
             var successfull = response.TryGetContentValue<PlanDto>(out var planDTO);
-            var expected = await planServiceMock.Object.Get(plan.Id);
+            var expected = await planServiceMock.Object.GetAsync(plan.Id);
             var actual = planDTO;
 
             Assert.IsTrue(successfull);
@@ -218,10 +218,10 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public async Task GetPlanByIdTest_ShouldReturnNoContentResponse()
         {
-            planServiceMock.Setup(mts => mts.Get(It.IsAny<int>())).Returns(Task.FromResult<PlanDto>(null));
+            planServiceMock.Setup(mts => mts.GetAsync(It.IsAny<int>())).Returns(Task.FromResult<PlanDto>(null));
 
             var plan = plans[0];
-            var response = await planController.Get(plan.Id);
+            var response = await planController.GetAsync(plan.Id);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.NoContent);
         }
@@ -230,9 +230,9 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public async Task PostPlanTest_ShouldSuccessfullyCreateNewPlan()
         {
 
-            planServiceMock.Setup(mts => mts.Add(It.IsAny<PlanDto>())).ReturnsAsync(true);
+            planServiceMock.Setup(mts => mts.AddAsync(It.IsAny<PlanDto>())).ReturnsAsync(true);
             var newPlan = plans[0];
-            var response = await planController.Post(newPlan);
+            var response = await planController.PostAsync(newPlan);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
         }
@@ -241,7 +241,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public async Task PostImageTest_ShouldReturnNoContentResponse()
         {
             planServiceMock.Setup(u => u.ContainsId(It.IsAny<int>())).ReturnsAsync(false);
-            var response = await planController.PostImage(1);
+            var response = await planController.PostImageAsync(1);
 
             Assert.AreEqual(HttpStatusCode.NoContent,response.StatusCode);
         }
@@ -249,12 +249,12 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public async Task PostPlanTest_ShouldCheckNotSuccessfullPostTryAndReturnBadRequestResponse()
         {
-            planServiceMock.Setup(mts => mts.Add(It.IsAny<PlanDto>()))
+            planServiceMock.Setup(mts => mts.AddAsync(It.IsAny<PlanDto>()))
                 .ReturnsAsync(false);
 
             var newPlan = plans[0];
 
-            var response = await planController.Post(newPlan);
+            var response = await planController.PostAsync(newPlan);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
         }
@@ -265,7 +265,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
 
             planServiceMock.Setup(mts => mts.AddAndGetIdAsync(It.IsAny<PlanDto>())).ReturnsAsync(1);
             var newPlan = plans[0];
-            HttpResponseMessage response = await planController.PostAndReturnId(newPlan);
+            HttpResponseMessage response = await planController.PostAndReturnIdAsync(newPlan);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
         }
@@ -278,7 +278,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
 
             var newPlan = plans[0];
 
-            HttpResponseMessage response = await planController.PostAndReturnId(newPlan);
+            HttpResponseMessage response = await planController.PostAndReturnIdAsync(newPlan);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.BadRequest);
         }
@@ -286,11 +286,11 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public async Task PostPlanTest_ShouldCatchEntityException()
         {
-            planServiceMock.Setup(mts => mts.Add(It.IsAny<PlanDto>()))
+            planServiceMock.Setup(mts => mts.AddAsync(It.IsAny<PlanDto>()))
                 .Throws(new EntityException());
 
             var newPlan = plans[0];
-            var response = await planController.Post(newPlan);
+            var response = await planController.PostAsync(newPlan);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.InternalServerError);
         }
@@ -302,7 +302,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
                 .Throws(new EntityException());
 
             var newPlan = plans[0];
-            HttpResponseMessage response = await planController.PostAndReturnId(newPlan);
+            HttpResponseMessage response = await planController.PostAndReturnIdAsync(newPlan);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.InternalServerError);
         }
@@ -311,13 +311,13 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public async Task GetImageTest()
         {
             planServiceMock.Setup(u => u.ContainsId(It.IsInRange(1, 8, Range.Inclusive))).ReturnsAsync(true);
-            planServiceMock.Setup(u => u.GetImage(It.IsInRange(1, 3, Range.Inclusive))).ReturnsAsync(new ImageDto()
+            planServiceMock.Setup(u => u.GetImageAsync(It.IsInRange(1, 3, Range.Inclusive))).ReturnsAsync(new ImageDto()
             {
                 Base64Data = "test",
                 Name = "test"
             });
 
-            var response = await planController.GetImage(1);
+            var response = await planController.GetImageAsync(1);
             response.TryGetContentValue<ImageDto>(out var imageDTO);
             var expected = "test";
             var actual = imageDTO.Name;
@@ -329,11 +329,11 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public async Task GetImageTest_ShouldCatchEntityException()
         {
             planServiceMock.Setup(u => u.ContainsId(It.IsInRange(1, 8, Range.Inclusive))).ReturnsAsync(true);
-            planServiceMock.Setup(mts => mts.GetImage(It.IsInRange(1, 3, Range.Inclusive)))
+            planServiceMock.Setup(mts => mts.GetImageAsync(It.IsInRange(1, 3, Range.Inclusive)))
                 .Throws(new EntityException());
 
             
-            var response = await planController.GetImage(1);
+            var response = await planController.GetImageAsync(1);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.InternalServerError);
         }
@@ -343,7 +343,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         {
             planServiceMock.Setup(u => u.ContainsId(It.IsInRange(1, 8, Range.Inclusive))).ReturnsAsync(false);      
             
-            var response = await planController.GetImage(1);
+            var response = await planController.GetImageAsync(1);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.NoContent);
         }
@@ -351,10 +351,10 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public async Task GetImageTestFromDatabase_ShouldReturnNoContentExeption()
         {
-            planServiceMock.Setup(mts => mts.GetImage(It.IsInRange(1, 3, Range.Inclusive)))
+            planServiceMock.Setup(mts => mts.GetImageAsync(It.IsInRange(1, 3, Range.Inclusive)))
           .Returns(() => null);
 
-            var response = await planController.GetImage(1);
+            var response = await planController.GetImageAsync(1);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.NoContent);
         }

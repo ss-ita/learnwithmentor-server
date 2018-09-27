@@ -58,11 +58,11 @@ namespace LearnWithMentor.Controllers
         /// <param name="planTaskId">Id of the plantask.</param>
         [HttpGet]
         [Route("api/comment/plantask/{planTaskId}")]
-        public async Task<HttpResponseMessage> GetCommentsForPlanTask(int planTaskId)
+        public async Task<HttpResponseMessage> GetCommentsForPlanTaskAsync(int planTaskId)
         {
             try
             {
-                var comments = await commentService.GetCommentsForPlanTask(planTaskId);
+                var comments = await commentService.GetCommentsForPlanTaskAsync(planTaskId);
                 if (comments == null)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, "There are no comments for this task in that plan");
@@ -81,7 +81,7 @@ namespace LearnWithMentor.Controllers
         /// <param name="comment">New comment.</param>
         [HttpPost]
         [Route("api/comment")]
-        public  async Task<HttpResponseMessage> Post(int planTaskId, CommentDto comment)
+        public  async Task<HttpResponseMessage> PostAsync(int planTaskId, CommentDto comment)
         {
             if (!ModelState.IsValid)
             {
@@ -89,7 +89,7 @@ namespace LearnWithMentor.Controllers
             }
             try
             {
-                if ( await commentService.AddCommentToPlanTask(planTaskId, comment))
+                if ( await commentService.AddCommentToPlanTaskAsync(planTaskId, comment))
                 {
                     var log = $"Succesfully created comment with id = {comment.Id} by user id = {comment.CreatorId}";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
@@ -134,7 +134,7 @@ namespace LearnWithMentor.Controllers
         /// <param name="commentId">Id of the comment.</param>
         [HttpDelete]
         [Route("api/comment/{commentId}")]
-        public async Task<HttpResponseMessage> Delete(int commentId)
+        public async Task<HttpResponseMessage> DeleteAsync(int commentId)
         {
             try
             {

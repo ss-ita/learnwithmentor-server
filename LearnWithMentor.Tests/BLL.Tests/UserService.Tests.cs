@@ -47,7 +47,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
             int userId = 3;
 
             //act
-           var result = await userService.Get(userId);
+           var result = await userService.GetAsync(userId);
 
             //assert
             Assert.IsNotNull(result);
@@ -65,7 +65,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
             int userId = 3;
 
             //act
-            UserDto result = await userService.Get(userId);
+            UserDto result = await userService.GetAsync(userId);
 
             //assert
             Assert.IsNull(result);
@@ -81,7 +81,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
             uowMock.Setup(u => u.Users.GetByEmailAsync(It.IsAny<string>())).ReturnsAsync(new User() { Email = userEmail, Role = new Role() });
 
             //act
-            UserIdentityDto result = await userService.GetByEmail(userEmail);
+            UserIdentityDto result = await userService.GetByEmailAsync(userEmail);
 
             //assert
             Assert.IsNotNull(result);
@@ -99,7 +99,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
             string userEmail = "qwerty@gmail.com";
 
             //act
-            UserIdentityDto result = await userService.GetByEmail(userEmail);
+            UserIdentityDto result = await userService.GetByEmailAsync(userEmail);
 
             //assert
             Assert.IsNull(result);
@@ -120,7 +120,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
             uowMock.Setup(u => u.Users.GetAll()).Returns(users);
 
             //act
-            List<UserDto> result = await userService.GetAllUsers();
+            List<UserDto> result = await userService.GetAllUsersAsync();
 
             //assert
             Assert.IsNotNull(result);
@@ -142,7 +142,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
             uowMock.Setup(u => u.Users.GetAll()).Returns((List<User>)null);
 
             //act
-          var result = await userService.GetAllUsers();
+          var result = await userService.GetAllUsersAsync();
 
             //assert
             Assert.IsNull(result);

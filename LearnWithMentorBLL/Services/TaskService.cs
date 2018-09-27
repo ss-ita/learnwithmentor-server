@@ -18,7 +18,7 @@ namespace LearnWithMentorBLL.Services
         {
         }
 
-        public async Task<IEnumerable<TaskDto>> GetAllTasks()
+        public async Task<IEnumerable<TaskDto>> GetAllTasksAsync()
         {
             var taskDTO = new List<TaskDto>();
             var tasks = db.Tasks.GetAll();
@@ -74,10 +74,10 @@ namespace LearnWithMentorBLL.Services
             {
                 return null;
             }
-            return await GetTaskForPlan(planTask.Id);
+            return await GetTaskForPlanAsync(planTask.Id);
         }
 
-        public async Task<TaskDto> GetTaskForPlan(int planTaskId)
+        public async Task<TaskDto> GetTaskForPlanAsync(int planTaskId)
         {
             var planTask = await db.PlanTasks.Get(planTaskId);
             if (planTask == null)

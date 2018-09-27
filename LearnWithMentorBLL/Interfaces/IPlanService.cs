@@ -10,16 +10,16 @@ namespace LearnWithMentorBLL.Interfaces
         List<PlanDto> Search(string[] searchString);
         List<PlanDto> GetAll();
         List<PlanDto> GetSomeAmount(int prevAmount, int amount);
-        Task<PlanDto> Get(int id);
+        Task<PlanDto> GetAsync(int id);
         Task<List<TaskDto>> GetAllTasksAsync(int planId);
         Task<string> GetInfoAsync(int groupid, int planid);
-        Task<List<int>> GetAllPlanTaskids(int planId);
+        Task<List<int>> GetAllPlanTaskidsAsync(int planId);
         Task<List<SectionDto>> GetTasksForPlanAsync(int planId);
         Task<bool> UpdateByIdAsync(PlanDto plan, int id);
-        Task<bool> Add(PlanDto dto);
+        Task<bool> AddAsync(PlanDto dto);
         Task<bool> ContainsId(int id);
-        Task<bool> SetImage(int id, byte[] image, string imageName);
+        Task<bool> SetImageAsync(int id, byte[] image, string imageName);
         Task<bool> AddTaskToPlanAsync(int planId, int taskId, int? sectionId, int? priority);
-        Task<ImageDto> GetImage(int id);
+        Task<ImageDto> GetImageAsync(int id);
     }
 }

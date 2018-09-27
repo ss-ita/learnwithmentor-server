@@ -30,10 +30,10 @@ namespace LearnWithMentor.Controllers
         /// <param name="value"> User data. </param>
         /// <returns></returns>
         [AllowAnonymous]
-        public async  Task<HttpResponseMessage> Post([FromBody]UserLoginDto value)
+        public async  Task<HttpResponseMessage> PostAsync([FromBody]UserLoginDto value)
         {
             UserIdentityDto user = null;
-            user = await CheckUser(value.Email);
+            user = await CheckUserAsync(value.Email);
             bool UserCheck =  BCrypt.Net.BCrypt.Verify(value.Password, user.Password);
             if ((ModelState.IsValid) && (UserCheck))
             {
@@ -52,15 +52,9 @@ namespace LearnWithMentor.Controllers
         /// <param name="user"></param>
         /// <returns></returns>
 
-        public async Task<UserIdentityDto> CheckUser(string email)
+        public async Task<UserIdentityDto> CheckUserAsync(string email)
         {
-            return await userService.GetByEmail(email);
-            //if (user == null || user.Blocked == true)
-            //{
-            //    return false;
-            //}
-            //var result = BCrypt.Net.BCrypt.Verify(password, user.Password);
-            //return result;
+            return await userService.GetByEmailAsync(email);
         }
 
         /// <summary>

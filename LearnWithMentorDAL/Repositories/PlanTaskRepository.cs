@@ -17,7 +17,7 @@ namespace LearnWithMentorDAL.Repositories
             return Context.PlanTasks.FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public async Task<int?> GetIdByTaskAndPlan(int taskId, int planId)
+        public async Task<int?> GetIdByTaskAndPlanAsync(int taskId, int planId)
         {
             PlanTask planTask = await Context.PlanTasks.FirstOrDefaultAsync(pt => pt.Plan_Id == planId && pt.Task_Id==taskId);
             return planTask?.Id;
@@ -33,13 +33,13 @@ namespace LearnWithMentorDAL.Repositories
             return Context.PlanTasks.AnyAsync(pt => pt.Task_Id == taskId && pt.Plan_Id == planId);
         }
 
-        public async Task<int?> GetTaskPriorityInPlan(int taskId, int planId)
+        public async Task<int?> GetTaskPriorityInPlanAsync(int taskId, int planId)
         {
             PlanTask planTask = await Context.PlanTasks.FirstOrDefaultAsync(pt => pt.Task_Id == taskId && planId == pt.Plan_Id);
             return planTask?.Priority;
         }
 
-        public async Task<int?> GetTaskSectionIdInPlan(int taskId, int planId)
+        public async Task<int?> GetTaskSectionIdInPlanAsync(int taskId, int planId)
         {
             PlanTask planTask = await Context.PlanTasks.FirstOrDefaultAsync(pt => pt.Task_Id == taskId && planId == pt.Plan_Id);
             return planTask?.Section_Id;

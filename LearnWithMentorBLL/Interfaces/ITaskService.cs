@@ -7,14 +7,14 @@ namespace LearnWithMentorBLL.Interfaces
 {
     public interface ITaskService : IDisposableService
     {
-        Task<IEnumerable<TaskDto>> GetAllTasks();
+        bool CreateTask(TaskDto taskDTO);
+        Task<IEnumerable<TaskDto>> GetAllTasksAsync();
         Task<TaskDto> GetTaskByIdAsync(int taskId);
         Task<int?> AddAndGetIdAsync(TaskDto taskDTO);
         Task<TaskDto> GetTaskForPlanAsync(int taskId, int planId);
-        Task<TaskDto> GetTaskForPlan(int planTaskId);
+        Task<TaskDto> GetTaskForPlanAsync(int planTaskId);
         Task<IEnumerable<TaskDto>> GetTasksNotInPlanAsync(int planId);
         Task<UserTaskDto> GetUserTaskByUserPlanTaskIdAsync(int userId, int planTaskId);
-        bool CreateTask(TaskDto taskDTO);
         Task<bool> CreateUserTaskAsync(UserTaskDto userTaskDTO);
         Task<bool> UpdateUserTaskStatusAsync(int userTaskId, string newStatus);
         Task<bool> UpdateUserTaskResultAsync(int userTaskId, string newResult);

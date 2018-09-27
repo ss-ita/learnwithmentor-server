@@ -229,7 +229,7 @@ namespace LearnWithMentor.Controllers
             try
             {
                 var currentUserId = userIdentityService.GetUserId();
-                int? mentorId = await groupService.GetMentorIdByGroup(id);
+                int? mentorId = await groupService.GetMentorIdByGroupAsync(id);
                 if (mentorId != currentUserId)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
@@ -265,7 +265,7 @@ namespace LearnWithMentor.Controllers
             try
             {
                 var userId = userIdentityService.GetUserId();
-                int? mentorId = await groupService.GetMentorIdByGroup(id);
+                int? mentorId = await groupService.GetMentorIdByGroupAsync(id);
                 if (mentorId != userId)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
@@ -294,7 +294,7 @@ namespace LearnWithMentor.Controllers
         /// <param name="groupId">Id of the plan.</param>
         [HttpGet]
         [Route("api/group/searchinNotUsedPlan")]
-        public async Task<HttpResponseMessage> SearchPlansNotUsedInCurrentGroup(string searchKey, int groupId)
+        public async Task<HttpResponseMessage> SearchPlansNotUsedInCurrentGroupAsync(string searchKey, int groupId)
         {
             try
             {
@@ -303,7 +303,7 @@ namespace LearnWithMentor.Controllers
                     return await GetPlansNotUsedInCurrentGroupAsync(groupId);
                 }
                 var lines = searchKey.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                var plansList = await groupService.SearchPlansNotUsedInGroup(lines, groupId);
+                var plansList = await groupService.SearchPlansNotUsedInGroupAsync(lines, groupId);
                 if (plansList == null)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, "This plan does not exist.");
@@ -360,7 +360,7 @@ namespace LearnWithMentor.Controllers
             try
             {
                 var id = userIdentityService.GetUserId();
-                int? mentorId = await groupService.GetMentorIdByGroup(groupId);
+                int? mentorId = await groupService.GetMentorIdByGroupAsync(groupId);
                 if (mentorId != id)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
@@ -424,7 +424,7 @@ namespace LearnWithMentor.Controllers
             try
             {
                 var userId = userIdentityService.GetUserId();
-                if (!(await userService.ContainsId(userId)))
+                if (!(await userService.ContainsIdAsync(userId)))
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"There are no users with id = {userId}");
                 }

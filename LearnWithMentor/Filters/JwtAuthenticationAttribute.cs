@@ -35,7 +35,7 @@ namespace LearnWithMentor.Filters
             }
 
             var token = authorization.Parameter;
-            var principal = await AuthenticateJwtToken(token);
+            var principal = await AuthenticateJwtTokenAsync(token);
             if (principal == null)
             {
                 context.ErrorResult = new AuthenticationFailureResult("Invalid token", request);
@@ -85,11 +85,11 @@ namespace LearnWithMentor.Filters
             return true;
         }
 
-        protected async Task<IPrincipal> AuthenticateJwtToken(string token)
+        protected async Task<IPrincipal> AuthenticateJwtTokenAsync(string token)
         {
             if (ValidateToken(token, out string email, out string userrole))
             {
-                UserIdentityDto userDTO = await userService.GetByEmail(email);
+                UserIdentityDto userDTO = await userService.GetByEmailAsync(email);
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Role, userrole),

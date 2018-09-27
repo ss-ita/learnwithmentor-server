@@ -29,7 +29,7 @@ namespace LearnWithMentorBLL.Services
             return  commentDTO;
         }
 
-        public async Task<bool> AddCommentToPlanTask(int planTaskId, CommentDto comment)
+        public async Task<bool> AddCommentToPlanTaskAsync(int planTaskId, CommentDto comment)
         {
             var plantask = await db.PlanTasks.Get(planTaskId);
             if (plantask == null)
@@ -51,14 +51,14 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public async Task<bool> AddCommentToPlanTask(int planId, int taskId, CommentDto comment)
+        public async Task<bool> AddCommentToPlanTaskAsync(int planId, int taskId, CommentDto comment)
         {
-            var planTaskId = await db.PlanTasks.GetIdByTaskAndPlan(taskId, planId);
+            var planTaskId = await db.PlanTasks.GetIdByTaskAndPlanAsync(taskId, planId);
             if (planTaskId == null)
             {
                 return false;
             }
-            return await AddCommentToPlanTask(planTaskId.Value, comment);
+            return await AddCommentToPlanTaskAsync(planTaskId.Value, comment);
         }
 
         public async Task<bool> UpdateCommentIdTextAsync(int commentId, string text)
@@ -91,13 +91,13 @@ namespace LearnWithMentorBLL.Services
             return await UpdateCommentIdTextAsync(commentId, commentDTO.Text);
         }
 
-        public async Task<IEnumerable<CommentDto>> GetCommentsForPlanTask(int taskId, int planId)
+        public async Task<IEnumerable<CommentDto>> GetCommentsForPlanTaskAsync(int taskId, int planId)
         {
-            var planTaskId = await db.PlanTasks.GetIdByTaskAndPlan(taskId, planId);
-            return planTaskId == null ? null : await GetCommentsForPlanTask(planTaskId.Value);
+            var planTaskId = await db.PlanTasks.GetIdByTaskAndPlanAsync(taskId, planId);
+            return planTaskId == null ? null : await GetCommentsForPlanTaskAsync(planTaskId.Value);
         }
 
-        public async Task<IEnumerable<CommentDto>> GetCommentsForPlanTask(int planTaskId)
+        public async Task<IEnumerable<CommentDto>> GetCommentsForPlanTaskAsync(int planTaskId)
         {
             var commentsList = new List<CommentDto>();
             var planTask = await db.PlanTasks.Get(planTaskId);
