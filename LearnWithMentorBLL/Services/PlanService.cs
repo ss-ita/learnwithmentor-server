@@ -87,7 +87,7 @@ namespace LearnWithMentorBLL.Services
             return dtosList;
         }
 
-        public async ThreadTask.Task<List<TaskDto>> GetAllTasks(int planId)
+        public async ThreadTask.Task<List<TaskDto>> GetAllTasksAsync(int planId)
         {
             var plan = await db.Plans.Get(planId);
             if (plan == null)
@@ -112,9 +112,9 @@ namespace LearnWithMentorBLL.Services
                                          task.Description,
                                          task.Private,
                                          task.Create_Id,
-                                         await db.Users.ExtractFullName(task.Create_Id),
+                                         await db.Users.ExtractFullNameAsync(task.Create_Id),
                                          task.Mod_Id,
-                                         await db.Users.ExtractFullName(task.Mod_Id),
+                                         await db.Users.ExtractFullNameAsync(task.Mod_Id),
                                          task.Create_Date,
                                          task.Mod_Date,
                                          await db.PlanTasks.GetTaskPriorityInPlan(task.Id, planId),
@@ -142,7 +142,7 @@ namespace LearnWithMentorBLL.Services
             return planTaskIds;
         }
 
-        public async ThreadTask.Task<List<SectionDto>> GetTasksForPlan(int planId)
+        public async ThreadTask.Task<List<SectionDto>> GetTasksForPlanAsync(int planId)
         {
             var plan = await db.Plans.Get(planId);
             if (plan == null)
@@ -175,9 +175,9 @@ namespace LearnWithMentorBLL.Services
                         task.Description,
                         task.Private,
                         task.Create_Id,
-                        await db.Users.ExtractFullName(task.Create_Id),
+                        await db.Users.ExtractFullNameAsync(task.Create_Id),
                         task.Mod_Id,
-                        await db.Users.ExtractFullName(task.Mod_Id),
+                        await db.Users.ExtractFullNameAsync(task.Mod_Id),
                         task.Create_Date,
                         task.Mod_Date,
                         await db.PlanTasks.GetTaskPriorityInPlan(task.Id, planId),
@@ -197,7 +197,7 @@ namespace LearnWithMentorBLL.Services
             return sectionDTOs;
         }
 
-        public async ThreadTask.Task<bool> UpdateById(PlanDto plan, int id)
+        public async ThreadTask.Task<bool> UpdateByIdAsync(PlanDto plan, int id)
         {
             var toUpdate = await db.Plans.Get(id);
             if (toUpdate == null)
@@ -239,7 +239,7 @@ namespace LearnWithMentorBLL.Services
             {
                 foreach (var user in group.Users)
                 {
-                    if (db.UserTasks.GetByPlanTaskForUser(planTaskId.Value, user.Id) == null)
+                    if (db.UserTasks.  GetByPlanTaskForUserAsync(planTaskId.Value, user.Id) == null)
                     {
                         if (group.Mentor_Id == null)
                         {
@@ -267,7 +267,7 @@ namespace LearnWithMentorBLL.Services
             {
                 return false;
             }
-            LearnWithMentorDAL.Entities.Task task = await db.Tasks.Get(taskId);
+            LearnWithMentorDAL.Entities.Task task = await db.Tasks.GetAsync(taskId);
             if (task == null)
             {
                 return false;
@@ -323,9 +323,9 @@ namespace LearnWithMentorBLL.Services
             db.Save();
             return true;
         }
-        public async ThreadTask.Task<int?> AddAndGetId(PlanDto dto)
+        public async ThreadTask.Task<int?> AddAndGetIdAsync(PlanDto dto)
         {
-            if (!(await db.Users.ContainsId(dto.CreatorId)))
+            if (!(await db.Users.ContainsIdAsync(dto.CreatorId)))
             {
                 return null;
             }

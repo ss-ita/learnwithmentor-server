@@ -105,7 +105,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public async Task GetTasksForPlanTest_ShouldReturnNoContentMessage()
         {
-            planServiceMock.Setup(mts => mts.GetTasksForPlan(It.IsAny<int>()))
+            planServiceMock.Setup(mts => mts.GetTasksForPlanAsync(It.IsAny<int>()))
                 .Returns(()=> Task.FromResult<List<SectionDto>>(null));
 
             HttpResponseMessage response = await planController.GetTasksForPlan(1);            
@@ -116,7 +116,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public async Task UpdatePlanTest_ShouldReturnSuccess()
         {
-            planServiceMock.Setup(u => u.UpdateById( It.IsAny<PlanDto>(), It.IsAny<int>())).ReturnsAsync(true);
+            planServiceMock.Setup(u => u.UpdateByIdAsync( It.IsAny<PlanDto>(), It.IsAny<int>())).ReturnsAsync(true);
 
             PlanDto forUpdating = new PlanDto(1, "name1", "description1", true, 1, "nameCreator1", "lastenameCreator1", 1, "nameCreator1", "lastenameCreator1", DateTime.Now, DateTime.Now);
             var response = await planController.Put(1, forUpdating);
@@ -129,7 +129,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public async Task UpdatePlanTest_ShouldReturnBadRequestMessage()
         {
-            planServiceMock.Setup(u => u.UpdateById(It.IsAny<PlanDto>(), It.IsAny<int>())).ReturnsAsync(false);
+            planServiceMock.Setup(u => u.UpdateByIdAsync(It.IsAny<PlanDto>(), It.IsAny<int>())).ReturnsAsync(false);
 
             PlanDto forUpdating = new PlanDto(1, "name1", "description1", true, 1, "nameCreator1", "lastenameCreator1", 1, "nameCreator1", "lastenameCreator1", DateTime.Now, DateTime.Now);
             var response = await planController.Put(1, forUpdating);
@@ -142,7 +142,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public async Task UpdatePlanTest_ShouldCatchEntityExeption()
         {
-            planServiceMock.Setup(u => u.UpdateById(It.IsAny<PlanDto>(), It.IsAny<int>()))
+            planServiceMock.Setup(u => u.UpdateByIdAsync(It.IsAny<PlanDto>(), It.IsAny<int>()))
                 .Throws(new EntityException());
 
             PlanDto forUpdating = new PlanDto(1, "name1", "description1", true, 1, "nameCreator1", "lastenameCreator1", 1, "nameCreator1", "lastenameCreator1", DateTime.Now, DateTime.Now);
@@ -179,7 +179,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public async Task GetAllTasksAssignedToPlanTest_ShouldReturnNoContentMessage()
         {
-            planServiceMock.Setup(mts => mts.GetAllTasks(It.IsAny<int>()))
+            planServiceMock.Setup(mts => mts.GetAllTasksAsync(It.IsAny<int>()))
                 .ReturnsAsync(()=>null);
 
             HttpResponseMessage response = await planController.GetAllTasks(1);
@@ -263,7 +263,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public async Task PostPlanTestAndReturnId_ShouldSuccessfullyCreateNewPlanAndReturnId()
         {
 
-            planServiceMock.Setup(mts => mts.AddAndGetId(It.IsAny<PlanDto>())).ReturnsAsync(1);
+            planServiceMock.Setup(mts => mts.AddAndGetIdAsync(It.IsAny<PlanDto>())).ReturnsAsync(1);
             var newPlan = plans[0];
             HttpResponseMessage response = await planController.PostAndReturnId(newPlan);
 
@@ -273,7 +273,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public async Task PostPlanTestAndReturnId_ShouldCheckNotSuccessfullPostTryAndReturnBadRequestResponse()
         {
-            planServiceMock.Setup(mts => mts.AddAndGetId(It.IsAny<PlanDto>()))
+            planServiceMock.Setup(mts => mts.AddAndGetIdAsync(It.IsAny<PlanDto>()))
                 .ReturnsAsync(()=>null);
 
             var newPlan = plans[0];
@@ -298,7 +298,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public async Task PostPlanTestAndReturnId_ShouldCatchEntityException()
         {
-            planServiceMock.Setup(mts => mts.AddAndGetId(It.IsAny<PlanDto>()))
+            planServiceMock.Setup(mts => mts.AddAndGetIdAsync(It.IsAny<PlanDto>()))
                 .Throws(new EntityException());
 
             var newPlan = plans[0];

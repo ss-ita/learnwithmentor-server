@@ -6,16 +6,16 @@ namespace LearnWithMentorBLL.Interfaces
 {
     public interface IPlanService : IDisposableService
     {
-        Task<int?> AddAndGetId(PlanDto dto);
+        Task<int?> AddAndGetIdAsync(PlanDto dto);
         List<PlanDto> Search(string[] searchString);
         List<PlanDto> GetAll();
         List<PlanDto> GetSomeAmount(int prevAmount, int amount);
         Task<PlanDto> Get(int id);
-        Task<List<TaskDto>> GetAllTasks(int planId);
+        Task<List<TaskDto>> GetAllTasksAsync(int planId);
         Task<string> GetInfoAsync(int groupid, int planid);
         Task<List<int>> GetAllPlanTaskids(int planId);
-        Task<List<SectionDto>> GetTasksForPlan(int planId);
-        Task<bool> UpdateById(PlanDto plan, int id);
+        Task<List<SectionDto>> GetTasksForPlanAsync(int planId);
+        Task<bool> UpdateByIdAsync(PlanDto plan, int id);
         Task<bool> Add(PlanDto dto);
         Task<bool> ContainsId(int id);
         Task<bool> SetImage(int id, byte[] image, string imageName);

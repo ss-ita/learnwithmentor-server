@@ -13,24 +13,24 @@ namespace LearnWithMentorDAL.Repositories
         {
         }
 
-        public Task<User> Get(int id)
+        public Task<User> GetAsync(int id)
         {
          return  Context.Users.FirstOrDefaultAsync(user => user.Id == id);
         }
 
-        public Task<User> GetByEmail(string email)
+        public Task<User> GetByEmailAsync(string email)
         {
             return Context.Users.FirstOrDefaultAsync(user => user.Email == email);
            
         }
 
-        public async Task<IEnumerable<User>> GetUsersByGroup(int groupId)
+        public async Task<IEnumerable<User>> GetUsersByGroupAsync(int groupId)
         {
             Group findGroup = await Context.Groups.FirstOrDefaultAsync(group => group.Id == groupId);
             return findGroup?.Users;
         }
         
-        public async  Task<IEnumerable<User>> Search(string[] searchString, int? roleId)
+        public async  Task<IEnumerable<User>> SearchAsync(string[] searchString, int? roleId)
         {
             List<User> result = new List<User>();
             IQueryable<User> usersWithCriteria;
@@ -62,29 +62,29 @@ namespace LearnWithMentorDAL.Repositories
             return result;
         }
 
-        public async Task<string> GetImageBase64(int userId)
+        public async Task<string> GetImageBase64Async(int userId)
         {
             User findUser = await Context.Users.FirstOrDefaultAsync(user => user.Id == userId);
             return findUser?.Image;
         }
 
-        public async Task<bool> ContainsId(int id)
+        public async Task<bool> ContainsIdAsync(int id)
         {
             return await Context.Users.AnyAsync(user => user.Id == id);
             
         }
 
-        public async Task<IEnumerable<User>> GetUsersByRole(int roleId)
+        public async Task<IEnumerable<User>> GetUsersByRoleAsync(int roleId)
         {
             return await Context.Users.Where(user => user.Role_Id == roleId).ToListAsync();
         }
 
-        public async Task<IEnumerable<User>> GetUsersByState(bool state)
+        public async Task<IEnumerable<User>> GetUsersByStateAsync(bool state)
         {
             return await Context.Users.Where(user => user.Blocked == state).ToListAsync();
         }
 
-        public async Task<string> ExtractFullName(int? id)
+        public async Task<string> ExtractFullNameAsync(int? id)
         {
             if (id == null)
             {
@@ -101,7 +101,7 @@ namespace LearnWithMentorDAL.Repositories
             return fullName;
         }
 
-        public async Task<IEnumerable<User>> GetUsersNotInGroup(int groupId)
+        public async Task<IEnumerable<User>> GetUsersNotInGroupAsync(int groupId)
         {
             return await Context.Users.Where(user => !user.Groups.Select(group => group.Id).Contains(groupId))
                 .Where(user => !user.Blocked && user.Role.Name == "Student").ToListAsync();

@@ -324,7 +324,7 @@ namespace LearnWithMentor.Controllers
         /// <param name="groupId">Id of the plan.</param>
         [HttpGet]
         [Route("api/group/searchinNotInvolvedUsers")]
-        public async Task<HttpResponseMessage> SearchUsersNotUsedInCurrentGroup(string searchKey, int groupId)
+        public async Task<HttpResponseMessage> SearchUsersNotUsedInCurrentGroupAsync(string searchKey, int groupId)
         {
             try
             {
@@ -333,7 +333,7 @@ namespace LearnWithMentor.Controllers
                     return await GetUsersNotInCurrentGroupAsync(groupId);
                 }
                 var lines = searchKey.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                var usersList = groupService.SearchUserNotInGroup(lines, groupId);
+                var usersList = groupService.SearchUserNotInGroupAsync(lines, groupId);
                 if (usersList == null)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, "This user does not exist.");

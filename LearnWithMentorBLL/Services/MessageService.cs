@@ -13,9 +13,9 @@ namespace LearnWithMentorBLL.Services
         {
         }
 
-        public async Task<IEnumerable<MessageDto>> GetMessages(int userTaskId)
+        public async Task<IEnumerable<MessageDto>> GetMessagesAsync(int userTaskId)
         {
-            UserTask userTask = await db.UserTasks.Get(userTaskId);
+            UserTask userTask = await db.UserTasks.GetAsync(userTaskId);
             if (userTask == null)
             {
                 return null;
@@ -27,7 +27,7 @@ namespace LearnWithMentorBLL.Services
                 messageDTOs.Add(new MessageDto(message.Id,
                                        message.User_Id,
                                        message.UserTask_Id,
-                                       await db.Users.ExtractFullName(message.User_Id),
+                                       await db.Users.ExtractFullNameAsync(message.User_Id),
                                        message.Text,
                                        message.Send_Time));
             }

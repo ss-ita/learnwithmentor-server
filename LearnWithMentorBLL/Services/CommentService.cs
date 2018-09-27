@@ -23,7 +23,7 @@ namespace LearnWithMentorBLL.Services
             var commentDTO = new  CommentDto(comment.Id,
                                    comment.Text,
                                    comment.Create_Id,
-                                   await db.Users.ExtractFullName(comment.Create_Id),
+                                   await db.Users.ExtractFullNameAsync(comment.Create_Id),
                                    comment.Create_Date,
                                    comment.Mod_Date);
             return  commentDTO;
@@ -36,7 +36,7 @@ namespace LearnWithMentorBLL.Services
             {
                 return false;
             }
-            if ( await db.Users.Get(comment.CreatorId) == null)
+            if ( await db.Users.GetAsync(comment.CreatorId) == null)
             {
                 return false;
             }
@@ -111,7 +111,7 @@ namespace LearnWithMentorBLL.Services
                 commentsList.Add(new CommentDto(c.Id,
                                        c.Text,
                                        c.Create_Id,
-                                       await db.Users.ExtractFullName(c.Create_Id),
+                                       await db.Users.ExtractFullNameAsync(c.Create_Id),
                                        c.Create_Date,
                                        c.Mod_Date));
             }

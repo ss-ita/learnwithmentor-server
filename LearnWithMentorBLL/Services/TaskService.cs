@@ -28,24 +28,24 @@ namespace LearnWithMentorBLL.Services
             }
             foreach (var t in tasks)
             {
-                taskDTO.Add(await TaskToTaskDTO(t));
+                taskDTO.Add(await TaskToTaskDTOAsync(t));
             }
             return taskDTO;
         }
 
-        public async Task<TaskDto> GetTaskById(int taskId)
+        public async Task<TaskDto> GetTaskByIdAsync(int taskId)
         {
-            TaskEntity taks = await db.Tasks.Get(taskId);
+            TaskEntity taks = await db.Tasks.GetAsync(taskId);
             if (taks == null)
             {
                 return null;
             }
-            return await TaskToTaskDTO(taks);
+            return await TaskToTaskDTOAsync(taks);
         }
 
-        public async Task<int?> AddAndGetId(TaskDto taskDTO)
+        public async Task<int?> AddAndGetIdAsync(TaskDto taskDTO)
         {
-            if (!(await db.Users.ContainsId(taskDTO.CreatorId)))
+            if (!(await db.Users.ContainsIdAsync(taskDTO.CreatorId)))
             {
                 return null;
             }
@@ -62,9 +62,9 @@ namespace LearnWithMentorBLL.Services
             return createdTask?.Id;
         }
 
-        public async Task<TaskDto> GetTaskForPlan(int taskId, int planId)
+        public async Task<TaskDto> GetTaskForPlanAsync(int taskId, int planId)
         {
-            TaskEntity task = await db.Tasks.Get(taskId);
+            TaskEntity task = await db.Tasks.GetAsync(taskId);
             if (task == null)
             {
                 return null;
@@ -90,9 +90,9 @@ namespace LearnWithMentorBLL.Services
                                     task.Description,
                                     task.Private,
                                     task.Create_Id,
-                                    await db.Users.ExtractFullName(task.Create_Id),
+                                    await db.Users.ExtractFullNameAsync(task.Create_Id),
                                     task.Mod_Id,
-                                    await db.Users.ExtractFullName(task.Mod_Id),
+                                    await db.Users.ExtractFullNameAsync(task.Mod_Id),
                                     task.Create_Date,
                                     task.Mod_Date,
                                     planTask.Priority,
@@ -101,38 +101,38 @@ namespace LearnWithMentorBLL.Services
             return taskDTO;
         }
 
-        public async Task<StatisticsDto> GetUserStatistics(int userId)
+        public async Task<StatisticsDto> GetUserStatisticsAsync(int userId)
         {
-            if (!(await db.Users.ContainsId(userId)))
+            if (!(await db.Users.ContainsIdAsync(userId)))
             {
                 return null;
             }
             return new StatisticsDto()
             {
-                InProgressNumber = await db.UserTasks.GetNumberOfTasksByState(userId, "P"),
-                DoneNumber = await db.UserTasks.GetNumberOfTasksByState(userId, "D"),
-                ApprovedNumber = await db.UserTasks.GetNumberOfTasksByState(userId, "A"),
-                RejectedNumber = await db.UserTasks.GetNumberOfTasksByState(userId, "R")
+                InProgressNumber = await db.UserTasks.GetNumberOfTasksByStateAsync(userId, "P"),
+                DoneNumber = await db.UserTasks.GetNumberOfTasksByStateAsync(userId, "D"),
+                ApprovedNumber = await db.UserTasks.GetNumberOfTasksByStateAsync(userId, "A"),
+                RejectedNumber = await db.UserTasks.GetNumberOfTasksByStateAsync(userId, "R")
             };
         }
 
-        public async Task<IEnumerable<TaskDto>> Search(string[] str, int planId)
+        public async Task<IEnumerable<TaskDto>> SearchAsync(string[] str, int planId)
         {
             if (! await db.Plans.ContainsId(planId))
             {
                 return null;
             }
             var taskList = new List<TaskDto>();
-            foreach (var task in await db.Tasks.Search(str, planId))
+            foreach (var task in await db.Tasks.SearchAsync(str, planId))
             {
                 taskList.Add(new TaskDto(task.Id,
                                     task.Name,
                                     task.Description,
                                     task.Private,
                                     task.Create_Id,
-                                    await db.Users.ExtractFullName(task.Create_Id),
+                                    await db.Users.ExtractFullNameAsync(task.Create_Id),
                                     task.Mod_Id,
-                                    await db.Users.ExtractFullName(task.Mod_Id),
+                                    await db.Users.ExtractFullNameAsync(task.Mod_Id),
                                     task.Create_Date,
                                     task.Mod_Date,
                                     task.PlanTasks.FirstOrDefault(pt => pt.Task_Id == task.Id && pt.Plan_Id == planId)?.Priority,
@@ -142,12 +142,12 @@ namespace LearnWithMentorBLL.Services
             return taskList;
         }
 
-        public async Task<List<TaskDto>> Search(string[] keys)
+        public async Task<List<TaskDto>> SearchAsync(string[] keys)
         {
             var taskList = new List<TaskDto>();
-            foreach (var t in await db.Tasks.Search(keys))
+            foreach (var t in await db.Tasks.SearchAsync(keys))
             {
-                taskList.Add(await TaskToTaskDTO(t));
+                taskList.Add(await TaskToTaskDTOAsync(t));
             }
             return taskList;
         }
@@ -167,14 +167,14 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public async Task<bool> CreateUserTask(UserTaskDto userTaskDTO)
+        public async Task<bool> CreateUserTaskAsync(UserTaskDto userTaskDTO)
         {
             var planTask = await db.PlanTasks.Get(userTaskDTO.PlanTaskId);
             if (planTask == null)
             {
                 return false;
             }
-            if (await db.Users.Get(userTaskDTO.UserId) == null)
+            if (await db.Users.GetAsync(userTaskDTO.UserId) == null)
             {
                 return false;
             }
@@ -193,9 +193,9 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public async Task<bool> UpdateProposeEndDate(int userTaskId, DateTime proposeEndDate)
+        public async Task<bool> UpdateProposeEndDateAsync(int userTaskId, DateTime proposeEndDate)
         {
-            UserTask userTask = await db.UserTasks.Get(userTaskId);
+            UserTask userTask = await db.UserTasks.GetAsync(userTaskId);
             if (userTask == null) return false;
             userTask.Propose_End_Date = proposeEndDate;
             db.UserTasks.Update(userTask);
@@ -203,9 +203,9 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public async Task<bool> SetNewEndDate(int userTaskId)
+        public async Task<bool> SetNewEndDateAsync(int userTaskId)
         {
-            UserTask userTask = await db.UserTasks.Get(userTaskId);
+            UserTask userTask = await db.UserTasks.GetAsync(userTaskId);
             if (userTask == null) return false;
             userTask.End_Date = userTask.Propose_End_Date;
             userTask.Propose_End_Date = null;
@@ -214,9 +214,9 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public async Task<bool> DeleteProposeEndDate(int userTaskId)
+        public async Task<bool> DeleteProposeEndDateAsync(int userTaskId)
         {
-            UserTask userTask = await db.UserTasks.Get(userTaskId);
+            UserTask userTask = await db.UserTasks.GetAsync(userTaskId);
             if (userTask == null) return false;
             userTask.Propose_End_Date = null;
             db.UserTasks.Update(userTask);
@@ -224,9 +224,9 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public async Task<bool> UpdateTaskById(int taskId, TaskDto taskDTO)
+        public async Task<bool> UpdateTaskByIdAsync(int taskId, TaskDto taskDTO)
         {
-            TaskEntity item = await db.Tasks.Get(taskId);
+            TaskEntity item = await db.Tasks.GetAsync(taskId);
             if (item == null)
             {
                 return false;
@@ -249,10 +249,10 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public async Task<bool> RemoveTaskById(int taskId)
+        public async Task<bool> RemoveTaskByIdAsync(int taskId)
         {
-            TaskEntity item = await db.Tasks.Get(taskId);
-            if (item != null || await db.Tasks.IsRemovable(taskId))
+            TaskEntity item = await db.Tasks.GetAsync(taskId);
+            if (item != null || await db.Tasks.IsRemovableAsync(taskId))
             {
                 db.Tasks.Remove(item);
                 db.Save();
@@ -261,12 +261,12 @@ namespace LearnWithMentorBLL.Services
             return false;
         }
 
-        public async Task<List<UserTaskDto>> GetTaskStatesForUser(int[] planTaskIds, int userId)
+        public async Task<List<UserTaskDto>> GetTaskStatesForUserAsync(int[] planTaskIds, int userId)
         {
             var dtoList = new List<UserTaskDto>();
             foreach (int planTaskId in planTaskIds)
             {
-                UserTask userTask = await db.UserTasks.GetByPlanTaskForUser(planTaskId, userId);
+                UserTask userTask = await db.UserTasks.GetByPlanTaskForUserAsync(planTaskId, userId);
                 if (userTask != null)
                 {
                     dtoList.Add(new UserTaskDto(userTask.Id, userTask.User_Id, userTask.PlanTask_Id, userTask.End_Date,
@@ -276,14 +276,14 @@ namespace LearnWithMentorBLL.Services
             return dtoList;
         }
 
-        public async Task<IEnumerable<TaskDto>> GetTasksNotInPlan(int planId)
+        public async Task<IEnumerable<TaskDto>> GetTasksNotInPlanAsync(int planId)
         {
             var plan = await db.Plans.Get(planId);
             if (plan == null)
             {
                 return null;
             }
-            IEnumerable<TaskEntity> tasksNotUsedInPlan = await db.Tasks.GetTasksNotInPlan(planId);
+            IEnumerable<TaskEntity> tasksNotUsedInPlan = await db.Tasks.GetTasksNotInPlanAsync(planId);
             if (tasksNotUsedInPlan == null)
             {
                 return null;
@@ -298,9 +298,9 @@ namespace LearnWithMentorBLL.Services
                                 task.Description,
                                 task.Private,
                                 task.Create_Id,
-                                await db.Users.ExtractFullName(task.Create_Id),
+                                await db.Users.ExtractFullNameAsync(task.Create_Id),
                                 task.Mod_Id,
-                                await db.Users.ExtractFullName(task.Mod_Id),
+                                await db.Users.ExtractFullNameAsync(task.Mod_Id),
                                 task.Create_Date,
                                 task.Mod_Date,
                                 null,
@@ -315,9 +315,9 @@ namespace LearnWithMentorBLL.Services
             return tasksNotUsedInPlanList;
         }
 
-        public async Task<UserTaskDto> GetUserTaskByUserPlanTaskId(int userId, int planTaskId)
+        public async Task<UserTaskDto> GetUserTaskByUserPlanTaskIdAsync(int userId, int planTaskId)
         {
-            UserTask userTask = await db.UserTasks.GetByPlanTaskForUser(planTaskId, userId);
+            UserTask userTask = await db.UserTasks.GetByPlanTaskForUserAsync(planTaskId, userId);
             if (userTask == null)
             {
                 return null;
@@ -333,13 +333,13 @@ namespace LearnWithMentorBLL.Services
             return userTaskDto;
         }
 
-        public async Task<bool> UpdateUserTaskStatus(int userTaskId, string newStatus)
+        public async Task<bool> UpdateUserTaskStatusAsync(int userTaskId, string newStatus)
         {
             if (!Regex.IsMatch(newStatus, ValidationRules.USERTASK_STATE))
             {
                 return false;
             }
-            UserTask userTask = await db.UserTasks.Get(userTaskId);
+            UserTask userTask = await db.UserTasks.GetAsync(userTaskId);
             if (userTask == null)
             {
                 return false;
@@ -350,13 +350,13 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public async Task<bool> UpdateUserTaskResult(int userTaskId, string newResult)
+        public async Task<bool> UpdateUserTaskResultAsync(int userTaskId, string newResult)
         {
             if (newResult == null)
             {
                 return false;
             }
-            UserTask userTask = await db.UserTasks.Get(userTaskId);
+            UserTask userTask = await db.UserTasks.GetAsync(userTaskId);
             if (userTask == null)
             {
                 return false;
@@ -371,28 +371,28 @@ namespace LearnWithMentorBLL.Services
             var queryLan = db.Tasks.GetAll();
             var query = queryLan.AsQueryable();
             query = query.OrderBy(x => x.Id);
-            return PagedList<TaskEntity, TaskDto>.GetDTO(query, pageNumber, pageSize, TaskToTaskDTO);
+            return PagedList<TaskEntity, TaskDto>.GetDTO(query, pageNumber, pageSize, TaskToTaskDTOAsync);
         }
 
-        private async Task<TaskDto> TaskToTaskDTO(TaskEntity task)
+        private async Task<TaskDto> TaskToTaskDTOAsync(TaskEntity task)
         {
             return new TaskDto(task.Id,
                                 task.Name,
                                 task.Description,
                                 task.Private,
                                 task.Create_Id,
-                                await db.Users.ExtractFullName(task.Create_Id),
+                                await db.Users.ExtractFullNameAsync(task.Create_Id),
                                 task.Mod_Id,
-                                await db.Users.ExtractFullName(task.Mod_Id),
+                                await db.Users.ExtractFullNameAsync(task.Mod_Id),
                                 task.Create_Date,
                                 task.Mod_Date,
                                 null,
                                 null,
                                 null);
         }
-        public async Task<bool> CheckUserTaskOwner(int userTaskId, int userId)
+        public async Task<bool> CheckUserTaskOwnerAsync(int userTaskId, int userId)
         {
-            UserTask userTask = await db.UserTasks.Get(userTaskId);
+            UserTask userTask = await db.UserTasks.GetAsync(userTaskId);
             return userTask.User_Id == userId;
         }
     }
