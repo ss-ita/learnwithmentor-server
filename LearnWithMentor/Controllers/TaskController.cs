@@ -454,7 +454,7 @@ namespace LearnWithMentor.Controllers
         /// Creates new task
         /// </summary>
         /// <param name="newTask">Task object for creation.</param>
-        [Authorize(Roles = "Mentor")]
+        [Authorize(Roles = "Mentor, Admin")]
         [HttpPost]
         [Route("api/task")]
         public  HttpResponseMessage Post([FromBody]TaskDto newTask)
@@ -487,7 +487,7 @@ namespace LearnWithMentor.Controllers
         /// Creates new task and returns id of the created task.
         /// </summary>
         /// <param name="value"> New plan to be created. </param>
-        [Authorize(Roles = "Mentor")]
+        [Authorize(Roles = "Mentor, Admin")]
         [HttpPost]
         [Route("api/task/return")]
         public async Task<HttpResponseMessage> PostAndReturnIdAsync([FromBody]TaskDto value)
@@ -582,7 +582,7 @@ namespace LearnWithMentor.Controllers
         /// Delete proposeEndDate for userTask
         /// </summary>
         /// <param name="userTaskId">UserTask Id for update.</param>
-        [Authorize(Roles = "Mentor")]
+        [Authorize(Roles = "Mentor, Admin")]
         [HttpDelete]
         [Route("api/task/usertask/proposedEndDate")]
         public async Task<HttpResponseMessage> DeleteProposeEndDateAsync(int userTaskId)
@@ -610,7 +610,7 @@ namespace LearnWithMentor.Controllers
         /// Set new endDate for userTask
         /// </summary>
         /// <param name="userTaskId">UserTask Id for update.</param>
-        [Authorize(Roles = "Mentor")]
+        [Authorize(Roles = "Mentor, Admin")]
         [HttpPut]
         [Route("api/task/usertask/endDate")]
         public async Task<HttpResponseMessage> SetNewEndDateAsync(int userTaskId)
@@ -638,7 +638,7 @@ namespace LearnWithMentor.Controllers
         /// Deletes task by Id
         /// </summary>
         /// <param name="taskId">Task Id for delete.</param>
-        [Authorize(Roles = "Mentor")]
+        [Authorize(Roles = "Mentor, Admin")]
         [HttpDelete]
         [Route("api/task/{id}")]
         public async Task<HttpResponseMessage> DeleteAsync(int taskId)

@@ -493,6 +493,36 @@ namespace LearnWithMentor.Controllers
             return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
         }
 
+        [JwtAuthentication]
+        [HttpPut]
+        [Route("api/user/update-multiple")]
+        public HttpResponseMessage UpdateUsers([FromBody]UserDto[] value)
+        {
+            try
+            {
+                bool success = true;
+                foreach (var item in value)
+                {
+                    var result = userService.UpdateById(item.Id, item);
+                    success = success && result;
+                }
+                if (success)
+                {
+                    var okMessage = "Succesfully updated users.";
+                    tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, okMessage);
+                    return Request.CreateResponse(HttpStatusCode.OK, okMessage);
+                }
+            }
+            catch (EntityException e)
+            {
+                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
+            const string message = "Incorrect request syntax or users do not exist.";
+            tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, message);
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
+        }
+
         /// <summary>
         /// Blocks user by Id.
         /// </summary>

@@ -3,3 +3,21 @@ before_build:
  
 # Operating system (build VM template)
 os: Visual Studio 2017
+version: 1.0.{build}
+build:
+  verbosity: minimal
+notifications:
+- provider: Email
+  to:
+  - kravchenkov.me@gmail.com
+  - yura.stashko98@gmail.com
+  - yurikozlovskiJ@gmail.com
+  - solayusko@gmail.com
+  - yuravasko2016@gmail.com
+  - flyssoffia@gmail.com
+  - nazarp06@gmail.com
+  subject: Appveyor
+  on_build_success: true
+  on_build_failure: true
+  on_build_status_changed: true
+  
