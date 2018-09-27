@@ -138,7 +138,7 @@ namespace LearnWithMentor.Controllers
         {
             try
             {
-                if (await commentService.RemoveById(commentId))
+                if (await commentService.RemoveByIdAsync(commentId))
                 {
                     var log = $"Succesfully deleted comment with id = {commentId}";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);

@@ -17,7 +17,7 @@ namespace LearnWithMentorBLL.Interfaces
         Task<bool> AddUsersToGroupAsync(int[] usersId, int groupId);
         Task<bool> AddPlansToGroupAsync(int[] plansId, int groupId);
         Task<IEnumerable<UserIdentityDto>> GetUsersNotInGroupAsync(int groupId);
-        Task<IEnumerable<UserIdentityDto>> SearchUserNotInGroup(string[] searchCases, int groupId);
+        Task<IEnumerable<UserIdentityDto>> SearchUserNotInGroupAsync(string[] searchCases, int groupId);
         Task<IEnumerable<PlanDto>> GetPlansNotUsedInGroupAsync(int groupId);
         Task<IEnumerable<PlanDto>> SearchPlansNotUsedInGroup(string[] searchCases, int groupId);
         Task<bool> RemoveUserFromGroupAsync(int groupId, int userIdToRemove);
