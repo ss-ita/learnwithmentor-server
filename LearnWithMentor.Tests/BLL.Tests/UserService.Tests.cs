@@ -41,7 +41,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
         public async ThreadTask.Task GetUserById_ShouldReturnUserById()
         {
             uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);
-            uowMock.Setup(u => u.Users.Get(It.IsAny<int>())).ReturnsAsync(new User() { Id = 3, Role = new Role() });
+            uowMock.Setup(u => u.Users.GetAsync(It.IsAny<int>())).ReturnsAsync(new User() { Id = 3, Role = new Role() });
 
             //arrange
             int userId = 3;
@@ -59,7 +59,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
         public async ThreadTask.Task GetUserById_ShouldReturnNull()
         {
             uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);
-            uowMock.Setup(u => u.Users.Get(It.IsAny<int>())).ReturnsAsync((User)null);
+            uowMock.Setup(u => u.Users.GetAsync(It.IsAny<int>())).ReturnsAsync((User)null);
 
             //arrange
             int userId = 3;
@@ -78,7 +78,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
             string userEmail = "qwerty@gmail.com";
 
             uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);
-            uowMock.Setup(u => u.Users.GetByEmail(It.IsAny<string>())).ReturnsAsync(new User() { Email = userEmail, Role = new Role() });
+            uowMock.Setup(u => u.Users.GetByEmailAsync(It.IsAny<string>())).ReturnsAsync(new User() { Email = userEmail, Role = new Role() });
 
             //act
             UserIdentityDto result = await userService.GetByEmail(userEmail);
@@ -93,7 +93,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
         public async ThreadTask.Task GetUserByEmail_ShouldReturnNull()
         {
             uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);
-            uowMock.Setup(u => u.Users.GetByEmail(It.IsAny<string>())).ReturnsAsync((User)null);
+            uowMock.Setup(u => u.Users.GetByEmailAsync(It.IsAny<string>())).ReturnsAsync((User)null);
 
             //arrange
             string userEmail = "qwerty@gmail.com";

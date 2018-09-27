@@ -44,9 +44,9 @@ namespace LearnWithMentor.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("api/group/mentor/{id}")]
-        public async Task<HttpResponseMessage> GetByMentor(int id)
+        public async Task<HttpResponseMessage> GetByMentorAsync(int id)
         {
-            IEnumerable<GroupDto> allGroups = await groupService.GetGroupsByMentor(id);
+            IEnumerable<GroupDto> allGroups = await groupService.GetGroupsByMentorAsync(id);
             if (allGroups != null)
             {
                 return Request.CreateResponse(HttpStatusCode.OK, allGroups);
@@ -63,7 +63,7 @@ namespace LearnWithMentor.Controllers
         [Route("api/group/{id}")]
         public async Task<HttpResponseMessage> GetById(int id)
         {
-            GroupDto group = await groupService.GetGroupById(id);
+            GroupDto group = await groupService.GetGroupByIdAsync(id);
             if (group != null)
             {
                 return Request.CreateResponse(HttpStatusCode.OK, group);
@@ -103,11 +103,11 @@ namespace LearnWithMentor.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("api/group/{id}/users")]
-        public async Task<HttpResponseMessage> GetUsers(int id)
+        public async Task<HttpResponseMessage> GetUsersAsync(int id)
         {
             try
             {
-                IEnumerable<UserIdentityDto> group = await groupService.GetUsers(id);
+                IEnumerable<UserIdentityDto> group = await groupService.GetUsersAsync(id);
                 if (group != null)
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, group);
@@ -128,11 +128,11 @@ namespace LearnWithMentor.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("api/group/{id}/userimages")]
-        public async Task<HttpResponseMessage> GetUsersWithImage(int id)
+        public async Task<HttpResponseMessage> GetUsersWithImageAsync(int id)
         {
             try
             {
-                var group = await groupService.GetUsersWithImage(id);
+                var group = await groupService.GetUsersWithImageAsync(id);
                 if (group != null)
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, group);
@@ -154,9 +154,9 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpGet]
         [Route("api/group/{groupId}/users/notingroup")]
-        public async Task<HttpResponseMessage> GetUsersNotInCurrentGroup(int groupId)
+        public async Task<HttpResponseMessage> GetUsersNotInCurrentGroupAsync(int groupId)
         {
-            IEnumerable<UserIdentityDto> group = await groupService.GetUsersNotInGroup(groupId);
+            IEnumerable<UserIdentityDto> group = await groupService.GetUsersNotInGroupAsync(groupId);
             if (group != null)
             {
                 return Request.CreateResponse(HttpStatusCode.OK, group);
@@ -234,7 +234,7 @@ namespace LearnWithMentor.Controllers
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
                 }
-                bool success = await groupService.AddUsersToGroup(userId, id);
+                bool success = await groupService.AddUsersToGroupAsync(userId, id);
                 if (success)
                 {
                     var log = $"Succesfully add user with id {userId} to group with id = {id}";
@@ -324,16 +324,16 @@ namespace LearnWithMentor.Controllers
         /// <param name="groupId">Id of the plan.</param>
         [HttpGet]
         [Route("api/group/searchinNotInvolvedUsers")]
-        public async Task<HttpResponseMessage> SearchUsersNotUsedInCurrentGroup(string searchKey, int groupId)
+        public async Task<HttpResponseMessage> SearchUsersNotUsedInCurrentGroupAsync(string searchKey, int groupId)
         {
             try
             {
                 if (searchKey == null)
                 {
-                    return await GetUsersNotInCurrentGroup(groupId);
+                    return await GetUsersNotInCurrentGroupAsync(groupId);
                 }
                 var lines = searchKey.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                var usersList = groupService.SearchUserNotInGroup(lines, groupId);
+                var usersList = groupService.SearchUserNotInGroupAsync(lines, groupId);
                 if (usersList == null)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, "This user does not exist.");
@@ -355,7 +355,7 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpDelete]
         [Route("api/group/removeUserFromGroup")]
-        public async Task<HttpResponseMessage> RemoveUserFromCurrentGroup(int groupId, int userToRemoveId)
+        public async Task<HttpResponseMessage> RemoveUserFromCurrentGroupAsync(int groupId, int userToRemoveId)
         {
             try
             {
@@ -365,7 +365,7 @@ namespace LearnWithMentor.Controllers
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
                 }
-                bool successfullyRemoved = await groupService.RemoveUserFromGroup(groupId, userToRemoveId);
+                bool successfullyRemoved = await groupService.RemoveUserFromGroupAsync(groupId, userToRemoveId);
                 if (successfullyRemoved)
                 {
                     var log = $"Succesfully removed user with id = {userToRemoveId} from group with id = {groupId}";
@@ -395,7 +395,7 @@ namespace LearnWithMentor.Controllers
         {
             try
             {
-                bool successfullyRemoved = await groupService.RemovePlanFromGroup(groupId, planToRemoveId);
+                bool successfullyRemoved = await groupService.RemovePlanFromGroupAsync(groupId, planToRemoveId);
                 if (successfullyRemoved)
                 {
                     var log = $"Succesfully removed plan with id = {planToRemoveId} from group with id = {groupId}";

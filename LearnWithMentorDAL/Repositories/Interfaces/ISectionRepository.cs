@@ -5,6 +5,6 @@ namespace LearnWithMentorDAL.Repositories.Interfaces
 {
     public interface ISectionRepository: IRepository<Section>
     {
-        Task<Section> Get(int id);
+        Task<Section> GetAsync(int id);
     }
 }

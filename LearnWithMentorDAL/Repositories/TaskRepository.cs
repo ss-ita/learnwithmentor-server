@@ -8,22 +8,22 @@ using TaskEntity = LearnWithMentorDAL.Entities.Task;
 
 namespace LearnWithMentorDAL.Repositories
 {
-    public class TaskRepository: BaseRepository<TaskEntity>, ITaskRepository
+    public class TaskRepository : BaseRepository<TaskEntity>, ITaskRepository
     {
         public TaskRepository(LearnWithMentorContext context) : base(context)
         {
         }
 
-        public Task<TaskEntity> Get(int id)
+        public Task<TaskEntity> GetAsync(int id)
         {
-          return Context.Tasks.FirstOrDefaultAsync(task => task.Id == id);
-           
+            return Context.Tasks.FirstOrDefaultAsync(task => task.Id == id);
+
         }
 
-        public async Task<bool> IsRemovable(int id)
+        public async Task<bool> IsRemovableAsync(int id)
         {
-           return await Context.PlanTasks.AnyAsync(planTask => planTask.Task_Id == id);
-           
+            return await Context.PlanTasks.AnyAsync(planTask => planTask.Task_Id == id);
+
         }
 
         public TaskEntity AddAndReturnElement(TaskEntity task)
@@ -32,7 +32,7 @@ namespace LearnWithMentorDAL.Repositories
             return task;
         }
 
-        public async Task<IEnumerable<TaskEntity>> Search(string[] str, int planId)
+        public async Task<IEnumerable<TaskEntity>> SearchAsync(string[] str, int planId)
         {
             bool checkPlanExisting = await Context.Plans.AnyAsync(plan => plan.Id == planId);
             if (!checkPlanExisting)
@@ -56,7 +56,7 @@ namespace LearnWithMentorDAL.Repositories
             return result;
         }
 
-        public async Task<IEnumerable<TaskEntity>> Search(string[] str)
+        public async Task<IEnumerable<TaskEntity>> SearchAsync(string[] str)
         {
             List<TaskEntity> result = new List<TaskEntity>();
             foreach (var word in str)
@@ -73,7 +73,7 @@ namespace LearnWithMentorDAL.Repositories
             return result;
         }
 
-        public async Task<IEnumerable<TaskEntity>> GetTasksNotInPlan(int planId)
+        public async Task<IEnumerable<TaskEntity>> GetTasksNotInPlanAsync(int planId)
         {
             var usedTasks = await Context.PlanTasks.Where(planTask => planTask.Plan_Id == planId).Select(planTask => planTask.Task_Id).ToListAsync();
             return await Context.Tasks.Where(tasks => !usedTasks.Contains(tasks.Id)).ToListAsync();

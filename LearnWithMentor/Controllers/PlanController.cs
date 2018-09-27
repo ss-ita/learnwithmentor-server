@@ -97,7 +97,7 @@ namespace LearnWithMentor.Controllers
         [Route("api/plan/{id}/sections")]
         public async Task<HttpResponseMessage> GetTasksForPlan(int id)
         {
-            List<SectionDto> sections = await planService.GetTasksForPlan(id);
+            List<SectionDto> sections = await planService.GetTasksForPlanAsync(id);
             if (sections == null)
             {
                 const string message = "Plan does not exist in database.";
@@ -134,7 +134,7 @@ namespace LearnWithMentor.Controllers
         [Route("api/plan/{planId}/tasks")]
         public async Task<HttpResponseMessage> GetAllTasks(int planId)
         {
-            List<TaskDto> dtosList = await planService.GetAllTasks(planId);
+            List<TaskDto> dtosList = await planService.GetAllTasksAsync(planId);
             if (dtosList == null || dtosList.Count == 0)
             {
                 const string message = "Plan does not contain any task.";
@@ -205,7 +205,7 @@ namespace LearnWithMentor.Controllers
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
                 }
-                int? result = await planService.AddAndGetId(value);
+                int? result = await planService.AddAndGetIdAsync(value);
                 if (result != null)
                 {
                     var log = $"Succesfully created plan {value.Name} with id = {result} by user with id = {value.CreatorId}";
@@ -235,7 +235,7 @@ namespace LearnWithMentor.Controllers
         {
             try
             {
-                var success = await planService.UpdateById(value, id);
+                var success = await planService.UpdateByIdAsync(value, id);
                 if (success)
                 {
                     var log = $"Succesfully updated plan {value.Name} with id = {value.Id} by user with id = {value.Modid}";
@@ -287,7 +287,7 @@ namespace LearnWithMentor.Controllers
                 {
                     priorityNew = int.Parse(priority);
                 }
-                bool success = await planService.AddTaskToPlan(id, taskId, section, priorityNew);
+                bool success = await planService.AddTaskToPlanAsync(id, taskId, section, priorityNew);
                 if (success)
                 {
                     var log = $"Succesfully add task with id {taskId} to plan with id = {id}";

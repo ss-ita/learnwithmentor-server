@@ -10,7 +10,7 @@ namespace LearnWithMentorDAL.Repositories
     {
         public SectionRepository(LearnWithMentorContext context) : base(context) { }
 
-        public Task<Section> Get(int id)
+        public Task<Section> GetAsync(int id)
         {
             return Context.Sections.FirstOrDefaultAsync(t => t.Id == id);
            

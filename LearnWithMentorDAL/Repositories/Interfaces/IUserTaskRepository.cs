@@ -5,8 +5,8 @@ namespace LearnWithMentorDAL.Repositories.Interfaces
 {
     public interface IUserTaskRepository: IRepository<UserTask>
     {
-        Task<UserTask> Get(int id);
-        Task<UserTask> GetByPlanTaskForUser(int planTaskId, int userId);
-        Task<int> GetNumberOfTasksByState(int userId, string state);
+        Task<UserTask> GetAsync(int id);
+        Task<UserTask> GetByPlanTaskForUserAsync(int planTaskId, int userId);
+        Task<int> GetNumberOfTasksByStateAsync(int userId, string state);
     }
 }

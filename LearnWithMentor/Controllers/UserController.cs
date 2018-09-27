@@ -369,7 +369,7 @@ namespace LearnWithMentor.Controllers
         public async Task<HttpResponseMessage> GetStatistics()
         {
             var id = userIdentityService.GetUserId();
-            StatisticsDto statistics = await taskService.GetUserStatistics(id);
+            StatisticsDto statistics = await taskService.GetUserStatisticsAsync(id);
             if (statistics == null)
             {
                 const string errorMessage = "No user with this id in database.";

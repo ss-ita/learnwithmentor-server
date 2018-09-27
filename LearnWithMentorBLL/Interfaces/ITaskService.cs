@@ -8,26 +8,26 @@ namespace LearnWithMentorBLL.Interfaces
     public interface ITaskService : IDisposableService
     {
         Task<IEnumerable<TaskDto>> GetAllTasks();
-        Task<TaskDto> GetTaskById(int taskId);
-        Task<int?> AddAndGetId(TaskDto taskDTO);
-        Task<TaskDto> GetTaskForPlan(int taskId, int planId);
+        Task<TaskDto> GetTaskByIdAsync(int taskId);
+        Task<int?> AddAndGetIdAsync(TaskDto taskDTO);
+        Task<TaskDto> GetTaskForPlanAsync(int taskId, int planId);
         Task<TaskDto> GetTaskForPlan(int planTaskId);
-        Task<IEnumerable<TaskDto>> GetTasksNotInPlan(int planId);
-        Task<UserTaskDto> GetUserTaskByUserPlanTaskId(int userId, int planTaskId);
+        Task<IEnumerable<TaskDto>> GetTasksNotInPlanAsync(int planId);
+        Task<UserTaskDto> GetUserTaskByUserPlanTaskIdAsync(int userId, int planTaskId);
         bool CreateTask(TaskDto taskDTO);
-        Task<bool> CreateUserTask(UserTaskDto userTaskDTO);
-        Task<bool> UpdateUserTaskStatus(int userTaskId, string newStatus);
-        Task<bool> UpdateUserTaskResult(int userTaskId, string newResult);
-        Task<bool> UpdateTaskById(int taskId,TaskDto taskDTO);
-        Task<bool> RemoveTaskById(int taskId);
-        Task<bool> UpdateProposeEndDate(int userTaskId, DateTime proposeEndDate);
-        Task<List<UserTaskDto>> GetTaskStatesForUser(int[] planTaskIds, int userId);
-        Task<IEnumerable<TaskDto>> Search(string[] str, int planId);
-        Task<List<TaskDto>> Search(string[] keys);
-        Task<StatisticsDto> GetUserStatistics(int userId);
+        Task<bool> CreateUserTaskAsync(UserTaskDto userTaskDTO);
+        Task<bool> UpdateUserTaskStatusAsync(int userTaskId, string newStatus);
+        Task<bool> UpdateUserTaskResultAsync(int userTaskId, string newResult);
+        Task<bool> UpdateTaskByIdAsync(int taskId,TaskDto taskDTO);
+        Task<bool> RemoveTaskByIdAsync(int taskId);
+        Task<bool> UpdateProposeEndDateAsync(int userTaskId, DateTime proposeEndDate);
+        Task<List<UserTaskDto>> GetTaskStatesForUserAsync(int[] planTaskIds, int userId);
+        Task<IEnumerable<TaskDto>> SearchAsync(string[] str, int planId);
+        Task<List<TaskDto>> SearchAsync(string[] keys);
+        Task<StatisticsDto> GetUserStatisticsAsync(int userId);
         Task<PagedListDto<TaskDto>> GetTasks(int pageSize, int pageNumber = 1);
-        Task<bool> DeleteProposeEndDate(int userTaskId);
-        Task<bool> SetNewEndDate(int userTaskId);
-        Task<bool> CheckUserTaskOwner(int userTaskId, int userId);
+        Task<bool> DeleteProposeEndDateAsync(int userTaskId);
+        Task<bool> SetNewEndDateAsync(int userTaskId);
+        Task<bool> CheckUserTaskOwnerAsync(int userTaskId, int userId);
     }
 }

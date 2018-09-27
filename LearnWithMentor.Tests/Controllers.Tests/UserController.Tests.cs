@@ -194,7 +194,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
                 InProgressNumber = 1
             };
             userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(1);
-            taskServiceMock.Setup(t => t.GetUserStatistics(1)).ReturnsAsync(statsDTO);
+            taskServiceMock.Setup(t => t.GetUserStatisticsAsync(1)).ReturnsAsync(statsDTO);
 
             HttpResponseMessage response = await userController.GetStatistics();
             response.TryGetContentValue<StatisticsDto>(out var resultDTO);
@@ -294,7 +294,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public async Task NoUserInGetStatisticsTest()
         {
             userIdentityServiceMock.Setup(u => u.GetUserId()).Returns(1);
-            taskServiceMock.Setup(t => t.GetUserStatistics(1)).Returns(Task.FromResult<StatisticsDto>(null));
+            taskServiceMock.Setup(t => t.GetUserStatisticsAsync(1)).Returns(Task.FromResult<StatisticsDto>(null));
 
             HttpResponseMessage response = await userController.GetStatistics();
             var expectedStatusCode =  HttpStatusCode.NoContent;
