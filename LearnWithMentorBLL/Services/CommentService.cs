@@ -13,9 +13,9 @@ namespace LearnWithMentorBLL.Services
         {
         }
 
-        public async Task<CommentDto> GetComment(int commentId)
+        public async Task<CommentDto> GetCommentAsync(int commentId)
         {
-            Comment comment = await db.Comments.Get(commentId);
+            Comment comment = await db.Comments.GetAsync(commentId);
             if (comment == null)
             {
                 return null;
@@ -61,13 +61,13 @@ namespace LearnWithMentorBLL.Services
             return await AddCommentToPlanTask(planTaskId.Value, comment);
         }
 
-        public async Task<bool> UpdateCommentIdText(int commentId, string text)
+        public async Task<bool> UpdateCommentIdTextAsync(int commentId, string text)
         {
             if (string.IsNullOrEmpty(text))
             {
                 return false;
             }
-            Comment comment = await db.Comments.Get(commentId);
+            Comment comment = await db.Comments.GetAsync(commentId);
             if (comment == null)
             {
                 return false;
@@ -78,17 +78,17 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public async Task<bool> UpdateComment(int commentId, CommentDto commentDTO)
+        public async Task<bool> UpdateCommentAsync(int commentId, CommentDto commentDTO)
         {
             if (commentDTO == null)
             {
                 return false;
             }
-            if (!await db.Comments.ContainsId(commentId))
+            if (!await db.Comments.ContainsIdAsync(commentId))
             {
                 return false;
             }
-            return await UpdateCommentIdText(commentId, commentDTO.Text);
+            return await UpdateCommentIdTextAsync(commentId, commentDTO.Text);
         }
 
         public async Task<IEnumerable<CommentDto>> GetCommentsForPlanTask(int taskId, int planId)
@@ -118,9 +118,9 @@ namespace LearnWithMentorBLL.Services
             return commentsList;
         }
 
-        public async Task<bool> RemoveById(int commentId)
+        public async Task<bool> RemoveByIdAsync(int commentId)
         {
-            if (!await db.Comments.ContainsId(commentId))
+            if (!await db.Comments.ContainsIdAsync(commentId))
             {
                 return false;
             }

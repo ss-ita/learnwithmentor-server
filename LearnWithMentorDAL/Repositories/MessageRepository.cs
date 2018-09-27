@@ -13,19 +13,19 @@ namespace LearnWithMentorDAL.Repositories
         {
         }
 
-        public async Task<Message> Get(int id)
+        public async Task<Message> GetAsync(int id)
         {
             Message findMessage = await Context.Messages.FirstOrDefaultAsync(m => m.Id == id);
             return findMessage;
         }
 
-        public async Task<IEnumerable<Message>> GetByUserTaskId(int userTaskId)
+        public async Task<IEnumerable<Message>> GetByUserTaskIdAsync(int userTaskId)
         {
             UserTask findUserTask = await Context.UserTasks.FirstOrDefaultAsync(userTask => userTask.Id == userTaskId);
             return findUserTask?.Messages;
         }
 
-        public async Task<bool> SendForUserTaskId(int userTaskId, Message message)
+        public async Task<bool> SendForUserTaskIdAsync(int userTaskId, Message message)
         {
             UserTask findUserTask = await Context.UserTasks.FirstOrDefaultAsync(task => task.Id == userTaskId);
             if (findUserTask != null)

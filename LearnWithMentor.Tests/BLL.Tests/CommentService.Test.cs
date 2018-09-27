@@ -54,7 +54,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
             int commentId = 3;
 
             //act
-            var result = await commentService.GetComment(commentId);
+            var result = await commentService.GetCommentAsync(commentId);
 
             //assert
             Assert.IsNull(result);
@@ -73,7 +73,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
             int commentId = 3;
 
             //act
-            var result = await commentService.RemoveById(commentId);
+            var result = await commentService.RemoveByIdAsync(commentId);
 
             //assert
             Assert.IsFalse(result);
@@ -93,7 +93,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
             int commentId = 3;
 
             //act
-            var result = await commentService.UpdateCommentIdText(commentId,newText);
+            var result = await commentService.UpdateCommentIdTextAsync(commentId,newText);
 
             //assert
             Assert.IsTrue(result);
@@ -114,7 +114,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
             int commentId = 3;
 
             //act
-            var result = await commentService.UpdateCommentIdText(commentId, newText);
+            var result = await commentService.UpdateCommentIdTextAsync(commentId, newText);
 
             //assert
             Assert.IsFalse(result);
@@ -134,7 +134,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
             int commentId = 3;
 
             //act
-            var result = await commentService.UpdateCommentIdText(commentId, newText);
+            var result = await commentService.UpdateCommentIdTextAsync(commentId, newText);
 
             //assert
             Assert.IsFalse(result);

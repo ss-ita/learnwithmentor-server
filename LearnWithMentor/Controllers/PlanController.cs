@@ -77,10 +77,10 @@ namespace LearnWithMentor.Controllers
         ///  <param name="planid"> Id of the plan. </param>
         [HttpGet]
         [Route("api/plan/{planid}/group/{groupid}")]
-        public async Task<HttpResponseMessage> GetInfo(int groupid, int planid)
+        public async Task<HttpResponseMessage> GetInfoAsync(int groupid, int planid)
         {
 
-            var info = await planService.GetInfo(groupid, planid);
+            var info = await planService.GetInfoAsync(groupid, planid);
             if (info == null)
             {
                 const string message = "Plan or Group does not exist in database.";
@@ -265,7 +265,7 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpPut]
         [Route("api/plan/{id}/task/{taskId}")]
-        public async Task<HttpResponseMessage> PutTaskToPlan(int id, int taskId,string sectionId, string priority)
+        public async Task<HttpResponseMessage> PutTaskToPlanAsync(int id, int taskId,string sectionId, string priority)
         {
             try
             {
@@ -287,7 +287,7 @@ namespace LearnWithMentor.Controllers
                 {
                     priorityNew = int.Parse(priority);
                 }
-                bool success = await planService.AddTaskToPlan(id, taskId, section, priorityNew);
+                bool success = await planService.AddTaskToPlanAsync(id, taskId, section, priorityNew);
                 if (success)
                 {
                     var log = $"Succesfully add task with id {taskId} to plan with id = {id}";

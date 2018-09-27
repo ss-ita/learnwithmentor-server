@@ -7,15 +7,15 @@ namespace LearnWithMentorDAL.Repositories.Interfaces
 {
     public interface IGroupRepository: IRepository<Group>
     {
-        Task<Group> Get(int id);
-        Task<int> Count();
-        Task<bool> GroupNameExists(string groupName);
-        Task<IEnumerable<Group>> GetGroupsByMentor(int mentorId);
-        Task<bool> AddUserToGroup(int userId, int groupId);
-        Task<bool> AddPlanToGroup(int planId, int groupId);
-        Task RemoveUserFromGroup(int groupId, int userId);
-        Task RemovePlanFromGroup(int groupId, int planId);
-        Task<IEnumerable<Group>> GetStudentGroups(int studentId);
-        Task<IEnumerable<Group>> GetGroupsByPlan(int planId);
+        Task<Group> GetAsync(int id);
+        Task<int> CountAsync();
+        Task<bool> GroupNameExistsAsync(string groupName);
+        Task<IEnumerable<Group>> GetGroupsByMentorAsync(int mentorId);
+        Task<bool> AddUserToGroupAsync(int userId, int groupId);
+        Task<bool> AddPlanToGroupAsync(int planId, int groupId);
+        Task RemoveUserFromGroupAsync(int groupId, int userId);
+        Task RemovePlanFromGroupAsync(int groupId, int planId);
+        Task<IEnumerable<Group>> GetStudentGroupsAsync(int studentId);
+        Task<IEnumerable<Group>> GetGroupsByPlanAsync(int planId);
     }
 }

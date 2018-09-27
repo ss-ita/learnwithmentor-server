@@ -36,11 +36,11 @@ namespace LearnWithMentor.Controllers
         /// <param name="id">Id of the comment.</param>
         [HttpGet]
         [Route("api/comment")]
-        public async Task<HttpResponseMessage> GetComment(int id)
+        public async Task<HttpResponseMessage> GetCommentAsync(int id)
         {
             try
             {
-                CommentDto comment = await commentService.GetComment(id);
+                CommentDto comment = await commentService.GetCommentAsync(id);
                 if (comment == null)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, "Comment with this Id does not exist in database.");
@@ -110,11 +110,11 @@ namespace LearnWithMentor.Controllers
         /// <param name="comment">New comment.</param>
         [HttpPut]
         [Route("api/comment")]
-        public async Task<HttpResponseMessage> PutComment(int commentId, [FromBody]CommentDto comment)
+        public async Task<HttpResponseMessage> PutCommentAsync(int commentId, [FromBody]CommentDto comment)
         {
             try
             {
-                if (await commentService.UpdateComment(commentId, comment))
+                if (await commentService.UpdateCommentAsync(commentId, comment))
                 {
                     var log = $"Succesfully updated comment with id = {commentId}";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);

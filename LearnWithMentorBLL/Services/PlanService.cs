@@ -226,11 +226,11 @@ namespace LearnWithMentorBLL.Services
             return modified;
         }
 
-        private async ThreadTask.Task CreateUserTasksForAllLearningByPlan(int planId, int taskId)
+        private async ThreadTask.Task CreateUserTasksForAllLearningByPlanAsync(int planId, int taskId)
         {
             var planTaskId = await db.PlanTasks.GetIdByTaskAndPlan(taskId, planId);
             var plan = await db.Plans.Get(planId);
-            var groups = await db.Groups.GetGroupsByPlan(planId);
+            var groups = await db.Groups.GetGroupsByPlanAsync(planId);
             if (plan == null ||groups.Any() || planTaskId == null)
             {
                 return;
@@ -260,7 +260,7 @@ namespace LearnWithMentorBLL.Services
 
         }
 
-        public async ThreadTask.Task<bool> AddTaskToPlan(int planId, int taskId, int? sectionId, int? priority)
+        public async ThreadTask.Task<bool> AddTaskToPlanAsync(int planId, int taskId, int? sectionId, int? priority)
         {
             var plan = await db.Plans.Get(planId);
             if (plan == null)
@@ -273,7 +273,7 @@ namespace LearnWithMentorBLL.Services
                 return false;
             }
             await db.Plans.AddTaskToPlan(planId, taskId, sectionId, priority);
-            await CreateUserTasksForAllLearningByPlan(planId, taskId);
+            await CreateUserTasksForAllLearningByPlanAsync(planId, taskId);
             db.Save();
             return true;
         }
@@ -367,9 +367,9 @@ namespace LearnWithMentorBLL.Services
             return dtosList;
         }
 
-        public async ThreadTask.Task<string> GetInfo(int groupid, int planid)
+        public async ThreadTask.Task<string> GetInfoAsync(int groupid, int planid)
         {
-            Group group = await db.Groups.Get(groupid);
+            Group group = await db.Groups.GetAsync(groupid);
             if (group == null)
             {
                 return null;

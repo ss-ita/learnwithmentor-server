@@ -14,17 +14,17 @@ namespace LearnWithMentorDAL.Repositories
         {
         }
 
-        public Task<Comment> Get(int id)
+        public Task<Comment> GetAsync(int id)
         {
             return Context.Comments.FirstOrDefaultAsync(t => t.Id == id);
         }
 
-        public Task<bool> ContainsId(int id)
+        public Task<bool> ContainsIdAsync(int id)
         {
             return Context.Comments.AnyAsync(t => t.Id == id);
         }
 
-        public async Task<IEnumerable<Comment>> GetByPlanTaskId(int ptId)
+        public async Task<IEnumerable<Comment>> GetByPlanTaskIdAsync(int ptId)
         {
             return await Context.Comments.Where(c => c.PlanTask_Id == ptId).ToListAsync();
         }
@@ -38,7 +38,7 @@ namespace LearnWithMentorDAL.Repositories
             }
         }
 
-        public async Task RemoveByPlanTaskId(int planTaskid)
+        public async Task RemoveByPlanTaskIdAsync(int planTaskid)
         {
             Comment findComment = await Context.Comments.FirstOrDefaultAsync(c => c.PlanTask_Id == planTaskid);
             Remove(findComment);

@@ -14,38 +14,38 @@ namespace LearnWithMentorDAL.Repositories
         {
         }
 
-        public async Task<Group> Get(int id)
+        public async Task<Group> GetAsync(int id)
         {
             return await Context.Groups.FirstOrDefaultAsync(group => group.Id == id);
         }
 
-        public async Task<bool> GroupNameExists(string groupName)
+        public async Task<bool> GroupNameExistsAsync(string groupName)
         {
             return await Context.Groups.AnyAsync(g => g.Name.Equals(groupName));
         }
 
-        public async Task<int> Count()
+        public async Task<int> CountAsync()
         {
             return await Context.Groups.CountAsync();
         }
 
-        public async Task<IEnumerable<Group>> GetGroupsByMentor(int mentorId)
+        public async Task<IEnumerable<Group>> GetGroupsByMentorAsync(int mentorId)
         {
             return await Context.Groups.Where(group => group.Mentor_Id == mentorId).ToListAsync();
         }
 
-        public async Task<IEnumerable<Group>> GetStudentGroups(int studentId)
+        public async Task<IEnumerable<Group>> GetStudentGroupsAsync(int studentId)
         {
             User findStudent = await Context.Users.FirstOrDefaultAsync(u => u.Id == studentId);
             return findStudent?.Groups;
         }
 
-        public async Task<IEnumerable<Group>> GetGroupsByPlan(int planId)
+        public async Task<IEnumerable<Group>> GetGroupsByPlanAsync(int planId)
         {
             return await Context.Groups.Where(g => g.Plans.Any(p => p.Id == planId)).ToListAsync();
         }
 
-        public async Task<bool> AddPlanToGroup(int planId, int groupId)
+        public async Task<bool> AddPlanToGroupAsync(int planId, int groupId)
         {
             Plan findPlan = await Context.Plans.FirstOrDefaultAsync(plan => plan.Id == planId);
             Group findGroup = await Context.Groups.FirstOrDefaultAsync(group => group.Id == groupId);
@@ -53,7 +53,7 @@ namespace LearnWithMentorDAL.Repositories
             return true;
         }
 
-        public async Task<bool> AddUserToGroup(int userId, int groupId)
+        public async Task<bool> AddUserToGroupAsync(int userId, int groupId)
         {
             User findUser = await Context.Users.FirstOrDefaultAsync(user => user.Id == userId);
             Group findGroup = await Context.Groups.FirstOrDefaultAsync(group => group.Id == groupId);
@@ -61,16 +61,16 @@ namespace LearnWithMentorDAL.Repositories
             return true;
         }
 
-        public async ThreadTask.Task RemoveUserFromGroup(int groupId, int userId)
+        public async ThreadTask.Task RemoveUserFromGroupAsync(int groupId, int userId)
         {
-            Group group = await Get(groupId); 
+            Group group = await GetAsync(groupId); 
             User findUser = await Context.Users.FirstOrDefaultAsync(user => user.Id == userId);
             group.Users.Remove(findUser);
         }
 
-        public async ThreadTask.Task RemovePlanFromGroup(int groupId, int planId)
+        public async ThreadTask.Task RemovePlanFromGroupAsync(int groupId, int planId)
         {
-            Group group = await Get(groupId);
+            Group group = await GetAsync(groupId);
             Plan findPlan = await Context.Plans.FirstOrDefaultAsync(plan => plan.Id == planId);
             group.Plans.Remove(findPlan);
         }
