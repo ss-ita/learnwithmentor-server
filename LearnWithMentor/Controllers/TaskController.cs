@@ -45,11 +45,11 @@ namespace LearnWithMentor.Controllers
         /// </summary>
         [HttpGet]
         [Route("api/task")]
-        public HttpResponseMessage GetAllTasks()
+        public async Task<HttpResponseMessage> GetAllTasks()
         {
             try
             {
-                var allTasks = taskService.GetAllTasks();
+                var allTasks = await taskService.GetAllTasks();
                 if (allTasks != null)
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, allTasks);
@@ -403,7 +403,7 @@ namespace LearnWithMentor.Controllers
             {
                 if (string.IsNullOrEmpty(key))
                 {
-                    return GetAllTasks();
+                    return await GetAllTasks();
                 }
                 var lines = key.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 List<TaskDto> taskList = await taskService.Search(lines);

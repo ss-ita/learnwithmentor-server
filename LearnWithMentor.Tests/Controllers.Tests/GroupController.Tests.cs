@@ -88,7 +88,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
 
             HttpResponseMessage response = await groupController.GetById(3);
             var successfull =  response.TryGetContentValue<GroupDto>(out var groupDTO);
-            var expected = groupServiceMock.Object.GetGroupById(3);
+            var expected = await groupServiceMock.Object.GetGroupById(3);
             var actual = groupDTO;
 
             Assert.IsTrue(successfull);
@@ -99,7 +99,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public async Task GetGroupByIdTest_ShouldReturnNotFoundResponse()
         {
-            groupServiceMock.Setup(u => u.GetGroupById(It.IsAny<int>()));
+            groupServiceMock.Setup(u => u.GetGroupById(It.IsAny<int>())).Returns(Task.FromResult<GroupDto>(null));
 
             HttpResponseMessage response = await groupController.GetById(1);
             var expected = HttpStatusCode.NotFound;
@@ -127,7 +127,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public async Task GetGroupByMentor_ShouldReturnNotFoundResponse()
         {
-            groupServiceMock.Setup(u => u.GetGroupsByMentor(It.IsAny<int>()));
+            groupServiceMock.Setup(u => u.GetGroupsByMentor(It.IsAny<int>())).Returns(Task.FromResult<IEnumerable<GroupDto>>(null));
             HttpResponseMessage response = await groupController.GetByMentor(6);
             HttpStatusCode expected = HttpStatusCode.NotFound;
             HttpStatusCode actual = response.StatusCode;
@@ -223,7 +223,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public async Task GetUsersNotInCurrentGroupShouldReturnNotFound()
         {
-            groupServiceMock.Setup(u => u.GetUsersNotInGroup(It.IsAny<int>())).Returns(() => null);
+            groupServiceMock.Setup(u => u.GetUsersNotInGroup(It.IsAny<int>())).Returns(Task.FromResult<IEnumerable<UserIdentityDto>>(null));
             HttpResponseMessage response = await groupController.GetUsersNotInCurrentGroup(4);
             var expected = HttpStatusCode.NotFound;
             var actual = response.StatusCode;

@@ -123,7 +123,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         {
             taskServiceMock.Setup(mts => mts.GetAllTasks()).ReturnsAsync(GetTestTasks());
 
-            HttpResponseMessage response =  taskController.GetAllTasks();
+            HttpResponseMessage response =  await taskController.GetAllTasks();
             bool successfull =  response.TryGetContentValue<IEnumerable<TaskDto>>(out var taskDTOs);
             var toCount = await taskServiceMock.Object.GetAllTasks();
             var expected =  toCount.Count();
@@ -135,21 +135,21 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public void GetAllTasksTest_ShouldReturnNoContentResponse()
+        public async Task GetAllTasksTest_ShouldReturnNoContentResponse()
         {
-            taskServiceMock.Setup(ts => ts.GetAllTasks());
+            taskServiceMock.Setup(ts => ts.GetAllTasks()).Returns(Task.FromResult<IEnumerable<TaskDto>>(null));
 
-            var response = taskController.GetAllTasks();
+            var response = await taskController.GetAllTasks();
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.NoContent);
         }
 
         [Test]
-        public void GetAllTasksTest_ShouldCatchEntityException()
+        public async Task GetAllTasksTest_ShouldCatchEntityException()
         {
             taskServiceMock.Setup(ts => ts.GetAllTasks()).Throws(new EntityException());
 
-            var response = taskController.GetAllTasks();
+            var response = await taskController.GetAllTasks();
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.InternalServerError);
         }
@@ -175,7 +175,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public async Task GetTaskByIdTest_ShouldReturnNoContentResponse()
         {
-            taskServiceMock.Setup(mts => mts.GetTaskById(It.IsAny<int>()));
+            taskServiceMock.Setup(mts => mts.GetTaskById(It.IsAny<int>())).Returns(Task.FromResult<TaskDto>(null));
 
             TaskDto task =  GetTestTasks()[0];
             HttpResponseMessage response = await taskController.GetTaskById(task.Id);
