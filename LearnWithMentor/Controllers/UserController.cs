@@ -496,14 +496,14 @@ namespace LearnWithMentor.Controllers
         [JwtAuthentication]
         [HttpPut]
         [Route("api/user/update-multiple")]
-        public HttpResponseMessage UpdateUsers([FromBody]UserDto[] value)
+        public async Task<HttpResponseMessage> UpdateUsersAsync([FromBody]UserDto[] value)
         {
             try
             {
                 bool success = true;
                 foreach (var item in value)
                 {
-                    var result = userService.UpdateById(item.Id, item);
+                    var result = await userService.UpdateByIdAsync(item.Id, item);
                     success = success && result;
                 }
                 if (success)
