@@ -102,12 +102,6 @@
     <Compile Include="UnitOfWork\UnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LearnWithMentorDTO\LearnWithMentorDTO.csproj">
-      <Project>{2fc0c932-6883-4d97-b516-3623bde9222b}</Project>
-      <Name>LearnWithMentorDTO</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>

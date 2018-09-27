@@ -57,7 +57,6 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.6\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
@@ -109,7 +108,7 @@
       <Name>LearnWithMentorDAL</Name>
     </ProjectReference>
     <ProjectReference Include="..\LearnWithMentorDTO\LearnWithMentorDTO.csproj">
-      <Project>{2fc0c932-6883-4d97-b516-3623bde9222b}</Project>
+      <Project>{3188dbcd-ad9c-4075-88f2-5b4220638473}</Project>
       <Name>LearnWithMentorDTO</Name>
     </ProjectReference>
     <ProjectReference Include="..\LearnWithMentor\LearnWithMentor.csproj">
