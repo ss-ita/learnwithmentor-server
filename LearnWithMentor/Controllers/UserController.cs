@@ -618,8 +618,8 @@ namespace LearnWithMentor.Controllers
             {
                 lines = lines.Take(2).ToArray();
             }
-            var users = criteria != null ? userService.SearchAsync(lines, pageSize, pageNumber, criteria.Id) :
-                userService.SearchAsync(lines, pageSize, pageNumber, searchParametr);
+            var users = criteria != null ? await userService.SearchAsync(lines, pageSize, pageNumber, criteria.Id) :
+              await userService.SearchAsync(lines, pageSize, pageNumber, searchParametr);
             return Request.CreateResponse(HttpStatusCode.OK, users);
         }
 
