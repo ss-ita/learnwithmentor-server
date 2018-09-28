@@ -1,9 +1,10 @@
 ﻿using LearnWithMentorDAL.Entities;
+using System.Threading.Tasks;
 
 namespace LearnWithMentorDAL.Repositories.Interfaces
 {
     public interface ISectionRepository: IRepository<Section>
     {
-        Section Get(int id);
+        Task<Section> GetAsync(int id);
     }
 }

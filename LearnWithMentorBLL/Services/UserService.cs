@@ -5,6 +5,7 @@ using LearnWithMentorDAL.Entities;
 using System;
 using System.Linq;
 using LearnWithMentorDAL.UnitOfWork;
+using System.Threading.Tasks;
 
 namespace LearnWithMentorBLL.Services
 {
@@ -14,19 +15,19 @@ namespace LearnWithMentorBLL.Services
         {
         }
 
-        public UserDto Get(int id)
+        public async Task<UserDto> GetAsync(int id)
         {
-            var user = db.Users.Get(id);
+            User user = await db.Users.GetAsync(id);
             if (user == null)
             {
                 return null;
             }
-            return UserToUserDTO(user);
+            return await UserToUserDTOAsync(user);
         }
 
-        public UserIdentityDto GetByEmail(string email)
+        public async Task<UserIdentityDto> GetByEmailAsync(string email)
         {
-            var user = db.Users.GetByEmail(email);
+            User user = await db.Users.GetByEmailAsync(email);
             if (user == null)
             {
                 return null;
@@ -39,9 +40,9 @@ namespace LearnWithMentorBLL.Services
                 user.Email_Confirmed);
         }
 
-        public List<UserDto> GetAllUsers()
+        public async Task<List<UserDto>> GetAllUsersAsync()
         {
-            var users = db.Users.GetAll();
+            IEnumerable<User> users = db.Users.GetAll();
             if (users == null)
             {
                 return null;
@@ -49,21 +50,21 @@ namespace LearnWithMentorBLL.Services
             var dtos = new List<UserDto>();
             foreach (var user in users)
             {
-                dtos.Add(UserToUserDTO(user));
+                dtos.Add(await UserToUserDTOAsync(user));
             }
             return dtos;
         }
 
-        public PagedListDto<UserDto> GetUsers(int pageSize, int pageNumber = 0)
+        public  Task<PagedListDto<UserDto>> GetUsers(int pageSize, int pageNumber = 0)
         {
             var query = db.Users.GetAll().AsQueryable();
             query = query.OrderBy(x => x.Id);
-            return PagedList<User, UserDto>.GetDTO(query, pageNumber, pageSize, UserToUserDTO);
+            return  PagedList<User, UserDto>.GetDTO(query, pageNumber, pageSize, UserToUserDTOAsync);
         }
 
-        public bool BlockById(int id)
+        public async Task<bool> BlockByIdAsync(int id)
         {
-            var item = db.Users.Get(id);
+            User item = await db.Users.GetAsync(id);
             if (item == null)
             {
                 return false;
@@ -74,11 +75,10 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public bool UpdateById(int id, UserDto user)
+        public async Task<bool> UpdateByIdAsync(int id, UserDto user)
         {
             var modified = false;
-            var item = db.Users.Get(id);
-            Role updatedRole;
+            User item = await db.Users.GetAsync(id);
             if (item != null)
             {
                 if (user.FirstName != null)
@@ -96,7 +96,8 @@ namespace LearnWithMentorBLL.Services
                     item.Blocked = user.Blocked.Value;
                     modified = true;
                 }
-                if (db.Roles.TryGetByName(user.Role, out updatedRole))
+                var updatedRole = await db.Roles.TryGetByName(user.Role);
+                if (updatedRole != null)
                 {
                     item.Role_Id = updatedRole.Id;
                     modified = true;
@@ -106,10 +107,10 @@ namespace LearnWithMentorBLL.Services
             }
             return modified;
         }
-        
-        public bool ConfirmEmailById(int id)
+
+        public async Task<bool> ConfirmEmailByIdAsync(int id)
         {
-            var user = db.Users.Get(id);
+            User user = await db.Users.GetAsync(id);
             if (user != null)
             {
                 user.Email_Confirmed = true;
@@ -120,15 +121,14 @@ namespace LearnWithMentorBLL.Services
             return false;
         }
 
-        public bool Add(UserRegistrationDto userLoginDTO)
+        public async Task<bool> AddAsync(UserRegistrationDto userLoginDTO)
         {
-            Role studentRole;
             var toAdd = new User
             {
                 Email = userLoginDTO.Email,
                 Password = BCrypt.Net.BCrypt.HashPassword(userLoginDTO.Password)
             };
-            db.Roles.TryGetByName("Student", out studentRole);
+            var studentRole = await db.Roles.TryGetByName("Student");
             toAdd.Role_Id = studentRole.Id;
             toAdd.FirstName = userLoginDTO.FirstName;
             toAdd.LastName = userLoginDTO.LastName;
@@ -137,9 +137,9 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public bool UpdatePassword(int userId, string password)
+        public async Task<bool> UpdatePasswordAsync(int userId, string password)
         {
-            var user = db.Users.Get(userId);
+            User user = await db.Users.GetAsync(userId);
             if (user == null)
             {
                 return false;
@@ -150,27 +150,27 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public List<UserDto> Search(string[] str, int? roleId)
+        public async Task<List<UserDto>> SearchAsync(string[] str, int? roleId)
         {
-            var users = db.Users.Search(str, roleId);
+            IEnumerable<User> users = await  db.Users.SearchAsync(str, roleId);
             var dtos = new List<UserDto>();
             foreach (var user in users)
             {
-                dtos.Add(UserToUserDTO(user));
+                dtos.Add( await UserToUserDTOAsync(user));
             }
             return dtos;
         }
 
-        public PagedListDto<UserDto> Search(string[] str, int pageSize, int pageNumber, int? roleId)
+        public async Task<PagedListDto<UserDto>> SearchAsync(string[] str, int pageSize, int pageNumber, int? roleId)
         {
-            var query = db.Users.Search(str, roleId).AsQueryable();
+            var query = (await db.Users.SearchAsync(str, roleId)).AsQueryable();
             query = query.OrderBy(x => x.Id);
-            return PagedList<User, UserDto>.GetDTO(query, pageNumber, pageSize, UserToUserDTO);
+            return await PagedList<User, UserDto>.GetDTO(query, pageNumber, pageSize, UserToUserDTOAsync);
         }
 
-        public List<UserDto> GetUsersByRole(int roleId)
+        public async Task<List<UserDto>> GetUsersByRoleAsync(int roleId)
         {
-            var users = db.Users.GetUsersByRole(roleId);
+            IEnumerable<User> users = await db.Users.GetUsersByRoleAsync(roleId);
             if (users == null)
             {
                 return null;
@@ -178,21 +178,23 @@ namespace LearnWithMentorBLL.Services
             var dtos = new List<UserDto>();
             foreach (var user in users)
             {
-                dtos.Add(UserToUserDTO(user));
+                dtos.Add( await UserToUserDTOAsync(user));
             }
             return dtos;
         }
 
-        public PagedListDto<UserDto> GetUsersByRole(int roleId, int pageSize, int pageNumber)
+        public async Task<PagedListDto<UserDto>> GetUsersByRoleAsync(int roleId, int pageSize, int pageNumber)
         {
-            var query = db.Users.GetUsersByRole(roleId).AsQueryable();
-            query = query.OrderBy(x => x.Id);
-            return PagedList<User, UserDto>.GetDTO(query, pageNumber, pageSize, UserToUserDTO);
+            var query = await db.Users.GetUsersByRoleAsync(roleId);
+            var queryAwait = query.AsQueryable();
+
+            queryAwait = queryAwait.OrderBy(x => x.Id);
+            return await PagedList<User, UserDto>.GetDTO(queryAwait, pageNumber, pageSize, UserToUserDTOAsync);
         }
 
-        public bool SetImage(int id, byte[] image, string imageName)
+        public async Task<bool> SetImageAsync(int id, byte[] image, string imageName)
         {
-            var userToUpdate = db.Users.Get(id);
+            User userToUpdate = await db.Users.GetAsync(id);
             if (userToUpdate == null)
             {
                 return false;
@@ -204,9 +206,9 @@ namespace LearnWithMentorBLL.Services
             return true;
         }
 
-        public ImageDto GetImage(int id)
+        public async Task<ImageDto> GetImageAsync(int id)
         {
-            var userToGetImage = db.Users.Get(id);
+            User userToGetImage = await db.Users.GetAsync(id);
             if (userToGetImage?.Image == null || userToGetImage.Image_Name == null)
             {
                 return null;
@@ -218,14 +220,14 @@ namespace LearnWithMentorBLL.Services
             };
         }
 
-        public bool ContainsId(int id)
+        public async Task<bool> ContainsIdAsync(int id)
         {
-            return db.Users.ContainsId(id);
+            return await db.Users.ContainsIdAsync(id);
         }
 
-        public List<UserDto> GetUsersByState(bool state)
+        public async Task<List<UserDto>> GetUsersByStateAsync(bool state)
         {
-            var users = db.Users.GetUsersByState(state);
+            IEnumerable<User> users = await db.Users.GetUsersByStateAsync(state);
             if (users == null)
             {
                 return null;
@@ -233,19 +235,20 @@ namespace LearnWithMentorBLL.Services
             var dtos = new List<UserDto>();
             foreach (var user in users)
             {
-                dtos.Add(UserToUserDTO(user));
+                  dtos.Add( await UserToUserDTOAsync(user));
             }
             return dtos;
         }
 
-        public PagedListDto<UserDto> GetUsersByState(bool state, int pageSize, int pageNumber)
+        public async Task<PagedListDto<UserDto>> GetUsersByStateAsync(bool state, int pageSize, int pageNumber)
         {
-            var query = db.Users.GetUsersByState(state).AsQueryable();
+            var GetQuery = await db.Users.GetUsersByStateAsync(state);
+            var query =  GetQuery.AsQueryable();
             query = query.OrderBy(x => x.Id);
-            return PagedList<User, UserDto>.GetDTO(query, pageNumber, pageSize, UserToUserDTO);
+            return await PagedList<User, UserDto>.GetDTO(query, pageNumber, pageSize, UserToUserDTOAsync);
         }
 
-        private UserDto UserToUserDTO(User user)
+        private async Task<UserDto> UserToUserDTOAsync(User user)
         {
             return new UserDto(user.Id,
                                user.FirstName,

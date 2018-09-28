@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using ThreadTask = System.Threading.Tasks;
 
 namespace LearnWithMentor.Tests.BLL.Tests
 {
@@ -38,16 +38,16 @@ namespace LearnWithMentor.Tests.BLL.Tests
         }
 
         [Test]
-        public void GetUserById_ShouldReturnUserById()
+        public async ThreadTask.Task GetUserById_ShouldReturnUserById()
         {
             uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);
-            uowMock.Setup(u => u.Users.Get(It.IsAny<int>())).Returns(new User() { Id = 3, Role = new Role() });
+            uowMock.Setup(u => u.Users.GetAsync(It.IsAny<int>())).ReturnsAsync(new User() { Id = 3, Role = new Role() });
 
             //arrange
             int userId = 3;
 
             //act
-            var result = userService.Get(userId);
+           var result = await userService.GetAsync(userId);
 
             //assert
             Assert.IsNotNull(result);
@@ -56,32 +56,32 @@ namespace LearnWithMentor.Tests.BLL.Tests
         }
 
         [Test]
-        public void GetUserById_ShouldReturnNull()
+        public async ThreadTask.Task GetUserById_ShouldReturnNull()
         {
             uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);
-            uowMock.Setup(u => u.Users.Get(It.IsAny<int>())).Returns((User)null);
+            uowMock.Setup(u => u.Users.GetAsync(It.IsAny<int>())).ReturnsAsync((User)null);
 
             //arrange
             int userId = 3;
 
             //act
-            var result = userService.Get(userId);
+            UserDto result = await userService.GetAsync(userId);
 
             //assert
             Assert.IsNull(result);
         }
 
         [Test]
-        public void GetUserByEmail_ShouldReturnUserByEmail()
+        public async ThreadTask.Task GetUserByEmail_ShouldReturnUserByEmail()
         {
             //arrange
             string userEmail = "qwerty@gmail.com";
 
             uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);
-            uowMock.Setup(u => u.Users.GetByEmail(It.IsAny<string>())).Returns(new User() { Email = userEmail, Role = new Role() });
+            uowMock.Setup(u => u.Users.GetByEmailAsync(It.IsAny<string>())).ReturnsAsync(new User() { Email = userEmail, Role = new Role() });
 
             //act
-            var result = userService.GetByEmail(userEmail);
+            UserIdentityDto result = await userService.GetByEmailAsync(userEmail);
 
             //assert
             Assert.IsNotNull(result);
@@ -90,23 +90,23 @@ namespace LearnWithMentor.Tests.BLL.Tests
         }
 
         [Test]
-        public void GetUserByEmail_ShouldReturnNull()
+        public async ThreadTask.Task GetUserByEmail_ShouldReturnNull()
         {
             uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);
-            uowMock.Setup(u => u.Users.GetByEmail(It.IsAny<string>())).Returns((User)null);
+            uowMock.Setup(u => u.Users.GetByEmailAsync(It.IsAny<string>())).ReturnsAsync((User)null);
 
             //arrange
             string userEmail = "qwerty@gmail.com";
 
             //act
-            var result = userService.GetByEmail(userEmail);
+            UserIdentityDto result = await userService.GetByEmailAsync(userEmail);
 
             //assert
             Assert.IsNull(result);
         }
 
         [Test]
-        public void GetAllUsers_ShouldReturnAllUsers()
+        public async ThreadTask.Task GetAllUsers_ShouldReturnAllUsers()
         {
             //arrange
             var users = new List<User>
@@ -118,9 +118,9 @@ namespace LearnWithMentor.Tests.BLL.Tests
 
             uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);
             uowMock.Setup(u => u.Users.GetAll()).Returns(users);
-            
+
             //act
-            var result = userService.GetAllUsers();
+            List<UserDto> result = await userService.GetAllUsersAsync();
 
             //assert
             Assert.IsNotNull(result);
@@ -135,14 +135,14 @@ namespace LearnWithMentor.Tests.BLL.Tests
         }
 
         [Test]
-        public void GetAllUsers_ShouldReturnNull()
+        public async ThreadTask.Task GetAllUsers_ShouldReturnNull()
         {
             //arrange
             uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);
             uowMock.Setup(u => u.Users.GetAll()).Returns((List<User>)null);
 
             //act
-            var result = userService.GetAllUsers();
+          var result = await userService.GetAllUsersAsync();
 
             //assert
             Assert.IsNull(result);

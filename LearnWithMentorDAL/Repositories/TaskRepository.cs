@@ -8,22 +8,22 @@ using TaskEntity = LearnWithMentorDAL.Entities.Task;
 
 namespace LearnWithMentorDAL.Repositories
 {
-    public class TaskRepository: BaseRepository<TaskEntity>, ITaskRepository
+    public class TaskRepository : BaseRepository<TaskEntity>, ITaskRepository
     {
         public TaskRepository(LearnWithMentorContext context) : base(context)
         {
         }
 
-        public TaskEntity Get(int id)
+        public Task<TaskEntity> GetAsync(int id)
         {
-            Task<TaskEntity> findTask = Context.Tasks.FirstOrDefaultAsync(task => task.Id == id);
-            return findTask.GetAwaiter().GetResult();
+            return Context.Tasks.FirstOrDefaultAsync(task => task.Id == id);
+
         }
 
-        public bool IsRemovable(int id)
+        public async Task<bool> IsRemovableAsync(int id)
         {
-            Task<bool> checkTaskExisting = Context.PlanTasks.AnyAsync(planTask => planTask.Task_Id == id);
-            return !checkTaskExisting.GetAwaiter().GetResult();
+            return await Context.PlanTasks.AnyAsync(planTask => planTask.Task_Id == id);
+
         }
 
         public TaskEntity AddAndReturnElement(TaskEntity task)
@@ -32,10 +32,10 @@ namespace LearnWithMentorDAL.Repositories
             return task;
         }
 
-        public IEnumerable<TaskEntity> Search(string[] str, int planId)
+        public async Task<IEnumerable<TaskEntity>> SearchAsync(string[] str, int planId)
         {
-            Task<bool> checkPlanExisting = Context.Plans.AnyAsync(plan => plan.Id == planId);
-            if (!checkPlanExisting.GetAwaiter().GetResult())
+            bool checkPlanExisting = await Context.Plans.AnyAsync(plan => plan.Id == planId);
+            if (!checkPlanExisting)
             {
                 return null;
             }
@@ -56,12 +56,12 @@ namespace LearnWithMentorDAL.Repositories
             return result;
         }
 
-        public IEnumerable<TaskEntity> Search(string[] str)
+        public async Task<IEnumerable<TaskEntity>> SearchAsync(string[] str)
         {
             List<TaskEntity> result = new List<TaskEntity>();
             foreach (var word in str)
             {
-                IEnumerable<TaskEntity> tasks = Context.Tasks.Where(task => task.Name.Contains(word));
+                IEnumerable<TaskEntity> tasks = await Context.Tasks.Where(task => task.Name.Contains(word)).ToListAsync();
                 foreach (var task in tasks)
                 {
                     if (!result.Contains(task))
@@ -73,10 +73,10 @@ namespace LearnWithMentorDAL.Repositories
             return result;
         }
 
-        public IEnumerable<TaskEntity> GetTasksNotInPlan(int planId)
+        public async Task<IEnumerable<TaskEntity>> GetTasksNotInPlanAsync(int planId)
         {
-            var usedTasks = Context.PlanTasks.Where(planTask => planTask.Plan_Id == planId).Select(planTask => planTask.Task_Id);
-            return Context.Tasks.Where(tasks => !usedTasks.Contains(tasks.Id));
+            var usedTasks = await Context.PlanTasks.Where(planTask => planTask.Plan_Id == planId).Select(planTask => planTask.Task_Id).ToListAsync();
+            return await Context.Tasks.Where(tasks => !usedTasks.Contains(tasks.Id)).ToListAsync();
         }
     }
 }
