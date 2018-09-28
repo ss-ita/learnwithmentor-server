@@ -1,13 +1,16 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using LearnWithMentorDAL.Entities;
+using Task = System.Threading.Tasks.Task;
 
 namespace LearnWithMentorDAL.Repositories.Interfaces
 {
     public interface ICommentRepository: IRepository<Comment>
     {
-        Comment Get(int id);
-        bool ContainsId(int id);
+        Task<Comment> GetAsync(int id);
+        Task<bool> ContainsIdAsync(int id);
         void RemoveById(int id);
-        IQueryable<Comment> GetByPlanTaskId(int ptId);
+        Task<IEnumerable<Comment>> GetByPlanTaskIdAsync(int ptId);
     }
 }

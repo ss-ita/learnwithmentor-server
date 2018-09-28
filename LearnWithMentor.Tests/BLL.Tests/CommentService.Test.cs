@@ -9,11 +9,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using ThreadTask = System.Threading.Tasks;
 
 namespace LearnWithMentor.Tests.BLL.Tests
 {
-    class CommentServiceTests
+    [TestFixture]
+    public class CommentServiceTests
     {
         private CommentService commentService;
         private Mock<LearnWithMentorContext> dbContextMock;
@@ -41,113 +42,99 @@ namespace LearnWithMentor.Tests.BLL.Tests
         }
 
         [Test]
-        public void GetCommentById_ShouldReturnCommentById()
+        public async ThreadTask.Task GetCommentById_ShouldReturnNullValue()
         {
             uowMock.SetupGet(c => c.Comments).Returns(commentRepositoryMock.Object);
             uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);
-            uowMock.Setup(u => u.Users.Get(It.IsAny<int>())).Returns(new User() { Comments = new HashSet<Comment>() { new Comment() { Id = 3 } } });
-            uowMock.Setup(c => c.Comments.Get(It.IsAny<int>())).Returns(new Comment() { Id = 3, Creator = new User() { Comments = new HashSet<Comment>() { new Comment() { Id = 3 } } } });
+
+            uowMock.Setup(u => u.Users.GetAsync(It.IsAny<int>())).ReturnsAsync(new User() { Comments = new HashSet<Comment>() { new Comment() { Id = 3 } } });
+            uowMock.Setup(c => c.Comments.GetAsync(It.IsAny<int>())).ReturnsAsync((Comment)null);
 
             //arrange
             int commentId = 3;
 
             //act
-            var result = commentService.GetComment(commentId);
-
-            //assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(commentId, result.Id);
-            Assert.AreSame(result.GetType(), typeof(CommentDto));
-        }
-
-        [Test]
-        public void GetCommentById_ShouldReturnNullValue()
-        {
-            uowMock.SetupGet(c => c.Comments).Returns(commentRepositoryMock.Object);
-            uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);
-            uowMock.Setup(u => u.Users.Get(It.IsAny<int>())).Returns(new User() { Comments = new HashSet<Comment>() { new Comment() { Id = 3 } } });
-            uowMock.Setup(c => c.Comments.Get(It.IsAny<int>())).Returns((Comment)null);
-
-            //arrange
-            int commentId = 3;
-
-            //act
-            var result = commentService.GetComment(commentId);
+            var result = await commentService.GetCommentAsync(commentId);
 
             //assert
             Assert.IsNull(result);
         }
 
         [Test]
-        public void RemoveById_NotRemoveBecauseNotExist()
+        public async ThreadTask.Task RemoveById_NotRemoveBecauseNotExist()
         {
             uowMock.SetupGet(c => c.Comments).Returns(commentRepositoryMock.Object);
             uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);
-            uowMock.Setup(u => u.Users.Get(It.IsAny<int>())).Returns(new User() { Comments = new HashSet<Comment>() { new Comment() { Id = 3 } } });
-            uowMock.Setup(c => c.Comments.Get(It.IsAny<int>())).Returns( (Comment)null);
+
+            uowMock.Setup(u => u.Users.GetAsync(It.IsAny<int>())).ReturnsAsync(new User() { Comments = new HashSet<Comment>() { new Comment() { Id = 3 } } });
+            uowMock.Setup(c => c.Comments.GetAsync(It.IsAny<int>())).ReturnsAsync( (Comment)null);
 
             //arrange
             int commentId = 3;
 
             //act
-            var result = commentService.RemoveById(commentId);
+            var result = await commentService.RemoveByIdAsync(commentId);
 
             //assert
             Assert.IsFalse(result);
         }
 
         [Test]
-        public void UpdateCommentIdText_ShouldReturnUpdatedText()
+        public async ThreadTask.Task UpdateCommentIdText_ShouldReturnUpdatedText()
         {
             uowMock.SetupGet(c => c.Comments).Returns(commentRepositoryMock.Object);
             uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);
-            uowMock.Setup(u => u.Users.Get(It.IsAny<int>())).Returns(new User() { Comments = new HashSet<Comment>() { new Comment() { Id = 3 } } });
-            uowMock.Setup(c => c.Comments.Get(It.IsAny<int>())).Returns(new Comment() { Id = 3, Creator = new User() { Comments = new HashSet<Comment>() { new Comment() { Id = 3 } } } });
+            uowMock.Setup(u => u.Users.GetAsync(It.IsAny<int>())).ReturnsAsync(new User() { Comments = new HashSet<Comment>() { new Comment() { Id = 3 } } });
+            uowMock.Setup(c => c.Comments.GetAsync(It.IsAny<int>())).ReturnsAsync(new Comment() { Id = 3, Creator = new User() { Comments = new HashSet<Comment>() { new Comment() { Id = 3 } } } });
+
 
             //arrange
             string newText = "Hello";
             int commentId = 3;
 
             //act
-            var result = commentService.UpdateCommentIdText(commentId,newText);
+            var result = await commentService.UpdateCommentIdTextAsync(commentId,newText);
 
             //assert
             Assert.IsTrue(result);
         }
 
         [Test]
-        public void UpdateCommentIdText_ShouldReturnNullBecauseEmptyNewString()
+        public async ThreadTask.Task UpdateCommentIdText_ShouldReturnNullBecauseEmptyNewString()
         {
             uowMock.SetupGet(c => c.Comments).Returns(commentRepositoryMock.Object);
             uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);
-            uowMock.Setup(u => u.Users.Get(It.IsAny<int>())).Returns(new User() { Comments = new HashSet<Comment>() { new Comment() { Id = 3 } } });
-            uowMock.Setup(c => c.Comments.Get(It.IsAny<int>())).Returns(new Comment() { Id = 3, Creator = new User() { Comments = new HashSet<Comment>() { new Comment() { Id = 3 } } } });
+
+            uowMock.Setup(u => u.Users.GetAsync(It.IsAny<int>())).ReturnsAsync(new User() { Comments = new HashSet<Comment>() { new Comment() { Id = 3 } } });
+            uowMock.Setup(c => c.Comments.GetAsync(It.IsAny<int>())).ReturnsAsync(new Comment() { Id = 3, Creator = new User() { Comments = new HashSet<Comment>() { new Comment() { Id = 3 } } } });
+
 
             //arrange
             string newText="";
             int commentId = 3;
 
             //act
-            var result = commentService.UpdateCommentIdText(commentId, newText);
+            var result = await commentService.UpdateCommentIdTextAsync(commentId, newText);
 
             //assert
             Assert.IsFalse(result);
         }
 
         [Test]
-        public void UpdateCommentIdText_ShouldReturnNull()
+        public async ThreadTask.Task UpdateCommentIdText_ShouldReturnNull()
         {
             uowMock.SetupGet(c => c.Comments).Returns(commentRepositoryMock.Object);
             uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);
-            uowMock.Setup(u => u.Users.Get(It.IsAny<int>())).Returns(new User() { Comments = new HashSet<Comment>() { new Comment() { Id = 3 } } });
-            uowMock.Setup(c => c.Comments.Get(It.IsAny<int>())).Returns((Comment)null);
+
+            uowMock.Setup(u => u.Users.GetAsync(It.IsAny<int>())).ReturnsAsync(new User() { Comments = new HashSet<Comment>() { new Comment() { Id = 3 } } });
+            uowMock.Setup(c => c.Comments.GetAsync(It.IsAny<int>())).ReturnsAsync((Comment)null);
 
             //arrange
             string newText = "Hello";
             int commentId = 3;
 
             //act
-            var result = commentService.UpdateCommentIdText(commentId, newText);
+            var result = await commentService.UpdateCommentIdTextAsync(commentId, newText);
 
             //assert
             Assert.IsFalse(result);

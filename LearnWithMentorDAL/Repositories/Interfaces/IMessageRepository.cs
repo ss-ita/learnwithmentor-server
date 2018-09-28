@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using LearnWithMentorDAL.Entities;
 
 namespace LearnWithMentorDAL.Repositories.Interfaces
 {
     public interface IMessageRepository : IRepository<Message>
     {
-        Message Get(int id);
-        IEnumerable<Message> GetByUserTaskId(int userTaskId);
-        bool SendForUserTaskId(int userTaskId, Message message);
+        Task<Message>GetAsync(int id);
+        Task<IEnumerable<Message>> GetByUserTaskIdAsync(int userTaskId);
+        Task<bool> SendForUserTaskIdAsync(int userTaskId, Message message);
     }
 }

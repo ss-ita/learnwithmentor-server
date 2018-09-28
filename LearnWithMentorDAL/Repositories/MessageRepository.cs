@@ -13,24 +13,24 @@ namespace LearnWithMentorDAL.Repositories
         {
         }
 
-        public Message Get(int id)
+        public async Task<Message> GetAsync(int id)
         {
-            Task<Message> findMessage = Context.Messages.FirstOrDefaultAsync(m => m.Id == id);
-            return findMessage.GetAwaiter().GetResult();
+            Message findMessage = await Context.Messages.FirstOrDefaultAsync(m => m.Id == id);
+            return findMessage;
         }
 
-        public IEnumerable<Message> GetByUserTaskId(int userTaskId)
+        public async Task<IEnumerable<Message>> GetByUserTaskIdAsync(int userTaskId)
         {
-            Task<UserTask> findUserTask = Context.UserTasks.FirstOrDefaultAsync(userTask => userTask.Id == userTaskId);
-            return findUserTask.GetAwaiter().GetResult()?.Messages;
+            UserTask findUserTask = await Context.UserTasks.FirstOrDefaultAsync(userTask => userTask.Id == userTaskId);
+            return findUserTask?.Messages;
         }
 
-        public bool SendForUserTaskId(int userTaskId, Message message)
+        public async Task<bool> SendForUserTaskIdAsync(int userTaskId, Message message)
         {
-            Task<UserTask> findUserTask = Context.UserTasks.FirstOrDefaultAsync(task => task.Id == userTaskId);
-            if (findUserTask.GetAwaiter().GetResult() != null)
+            UserTask findUserTask = await Context.UserTasks.FirstOrDefaultAsync(task => task.Id == userTaskId);
+            if (findUserTask != null)
             {
-                findUserTask.Result.Messages.Add(message);
+                findUserTask.Messages.Add(message);
                 return true;
             }
             return false;

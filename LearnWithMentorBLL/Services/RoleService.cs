@@ -2,6 +2,7 @@
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDTO;
 using LearnWithMentorDAL.UnitOfWork;
+using System.Threading.Tasks;
 
 namespace LearnWithMentorBLL.Services
 {
@@ -10,9 +11,9 @@ namespace LearnWithMentorBLL.Services
         public RoleService(IUnitOfWork db) : base(db)
         {
         }
-        public RoleDto Get(int id)
+        public async Task<RoleDto> GetAsync(int id)
         {
-            var role = db.Roles.Get(id);
+            var role = await db.Roles.Get(id);
             return role == null ? null :
                 new RoleDto(role.Id, role.Name);
         }
@@ -30,9 +31,10 @@ namespace LearnWithMentorBLL.Services
             }
             return dtos;
         }
-        public RoleDto GetByName(string name)
+        public async Task<RoleDto> GetByNameAsync(string name)
         {
-            if (!db.Roles.TryGetByName(name, out var role))
+            var role = await db.Roles.TryGetByName(name);
+            if (role == null)
             {
                 return null;
             }
