@@ -370,7 +370,7 @@
       <Name>LearnWithMentorDAL</Name>
     </ProjectReference>
     <ProjectReference Include="..\LearnWithMentorDTO\LearnWithMentorDTO.csproj">
-      <Project>{2fc0c932-6883-4d97-b516-3623bde9222b}</Project>
+      <Project>{3188dbcd-ad9c-4075-88f2-5b4220638473}</Project>
       <Name>LearnWithMentorDTO</Name>
     </ProjectReference>
   </ItemGroup>
