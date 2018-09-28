@@ -247,7 +247,7 @@ namespace LearnWithMentor.Controllers
             {
                 var currentId = userIdentityService.GetUserId();
                 var currentRole = userIdentityService.GetUserRole();
-                if (!( await taskService.CheckUserTaskOwnerAsync(userTaskId, currentId) || currentRole == Constants.Roles.Mentor))
+                if (!(await taskService.CheckUserTaskOwnerAsync(userTaskId, currentId) || currentRole == Constants.Roles.Mentor || currentRole == Constants.Roles.Admin))
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
                 }
