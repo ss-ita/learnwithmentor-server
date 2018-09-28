@@ -1,24 +1,25 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using LearnWithMentorDTO;
 
 namespace LearnWithMentorBLL.Interfaces
 {
     public interface IPlanService : IDisposableService
     {
-        PlanDto Get(int id);
+        Task<int?> AddAndGetIdAsync(PlanDto dto);
+        List<PlanDto> Search(string[] searchString);
         List<PlanDto> GetAll();
         List<PlanDto> GetSomeAmount(int prevAmount, int amount);
-        List<TaskDto> GetAllTasks(int planId);
-        string GetInfo(int groupid, int planid);
-        List<int> GetAllPlanTaskids(int planId);
-        List<SectionDto> GetTasksForPlan(int planId);
-        bool UpdateById(PlanDto plan, int id);
-        bool Add(PlanDto dto);
-        int? AddAndGetId(PlanDto dto);
-        List<PlanDto> Search(string[] searchString);
-        bool ContainsId(int id);
-        bool SetImage(int id, byte[] image, string imageName);
-        bool AddTaskToPlan(int planId, int taskId, int? sectionId, int? priority);
-        ImageDto GetImage(int id);
+        Task<PlanDto> GetAsync(int id);
+        Task<List<TaskDto>> GetAllTasksAsync(int planId);
+        Task<string> GetInfoAsync(int groupid, int planid);
+        Task<List<int>> GetAllPlanTaskidsAsync(int planId);
+        Task<List<SectionDto>> GetTasksForPlanAsync(int planId);
+        Task<bool> UpdateByIdAsync(PlanDto plan, int id);
+        Task<bool> AddAsync(PlanDto dto);
+        Task<bool> ContainsId(int id);
+        Task<bool> SetImageAsync(int id, byte[] image, string imageName);
+        Task<bool> AddTaskToPlanAsync(int planId, int taskId, int? sectionId, int? priority);
+        Task<ImageDto> GetImageAsync(int id);
     }
 }

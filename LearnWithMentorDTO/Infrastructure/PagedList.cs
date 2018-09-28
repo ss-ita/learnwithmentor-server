@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace LearnWithMentorDTO
 {
     public static class PagedList<T, TDto>
     {
-        public static PagedListDto<TDto> GetDTO(IQueryable<T> source, int pageNumber, int pageSize, Func<T, TDto> convertToDTO)
+        public async static Task<PagedListDto<TDto>> GetDTO(IQueryable<T> source, int pageNumber, int pageSize, Func<T, Task<TDto>> convertToDTO)
         {
             var maxPageSize = Infrastructure.ValidationRules.MAX_PAGE_SIZE;
             pageSize = (pageSize > maxPageSize) ? maxPageSize : (pageSize < 1) ? 1 : pageSize;
@@ -19,7 +20,7 @@ namespace LearnWithMentorDTO
             var listDTO = new List<TDto>();
             foreach (var user in source)
             {
-                listDTO.Add(convertToDTO(user));
+                listDTO.Add(await convertToDTO(user));
             }
             return new PagedListDto<TDto>(pageNumber, totalPages, totalCount, pageSize, hasPrevious, hasNext, listDTO);
         }

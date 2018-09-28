@@ -9,6 +9,7 @@ using LearnWithMentor.Models;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorBLL.Services;
 using LearnWithMentorDAL.UnitOfWork;
+using LearnWithMentorDTO;
 
 namespace LearnWithMentor.Filters
 {
@@ -34,7 +35,7 @@ namespace LearnWithMentor.Filters
             }
 
             var token = authorization.Parameter;
-            var principal = await AuthenticateJwtToken(token);
+            var principal = await AuthenticateJwtTokenAsync(token);
             if (principal == null)
             {
                 context.ErrorResult = new AuthenticationFailureResult("Invalid token", request);
@@ -84,11 +85,11 @@ namespace LearnWithMentor.Filters
             return true;
         }
 
-        protected Task<IPrincipal> AuthenticateJwtToken(string token)
+        protected async Task<IPrincipal> AuthenticateJwtTokenAsync(string token)
         {
             if (ValidateToken(token, out string email, out string userrole))
             {
-                var userDTO = userService.GetByEmail(email);
+                UserIdentityDto userDTO = await userService.GetByEmailAsync(email);
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Role, userrole),
@@ -97,10 +98,10 @@ namespace LearnWithMentor.Filters
                 };
                 var identity = new ClaimsIdentity(claims, "Jwt");
                 IPrincipal user = new ClaimsPrincipal(identity);
-                return Task.FromResult(user);
+                return await Task.FromResult(user);
             }
 
-            return Task.FromResult<IPrincipal>(null);
+            return await Task.FromResult<IPrincipal>(null);
         }
 
         public Task ChallengeAsync(HttpAuthenticationChallengeContext context, CancellationToken cancellationToken)
