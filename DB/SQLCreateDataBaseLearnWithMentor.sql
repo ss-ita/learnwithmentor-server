@@ -1,118 +1,120 @@
---USE master
---IF EXISTS(select * from sys.databases where name='LearnWithMentor_DB')
---DROP DATABASE LearnWithMentor_DB
+USE master
+IF EXISTS(select * from sys.databases where name='LearnWithMentorDB')
+DROP DATABASE LearnWithMentorDB
 
---CREATE DATABASE LearnWithMentor_DB
---Go 
-use LearnWithMentor_DB
+CREATE DATABASE LearnWithMentorDB
+Go
+
+use LearnWithMentorDB
 
 CREATE TABLE Roles
 (
-    Id INT IDENTITY,
-    Name NVARCHAR(50) NOT NULL,
+    Id INT IDENTITY(1,1),
+    Name NVARCHAR(MAX) NULL,
     
-CONSTRAINT PK_Role_Id PRIMARY KEY (Id),
+CONSTRAINT PK_Role_Id PRIMARY KEY CLUSTERED(Id ASC),
 )
 
 CREATE TABLE Users
 (
-    Id INT IDENTITY,
-    FirstName NVARCHAR(50) NOT NULL,
-	LastName NVARCHAR(50) NOT NULL,
-    Email NVARCHAR(50) NOT NULL,
-    Email_Confirmed BIT NOT NULL CONSTRAINT DF_User_Email_Confirmed DEFAULT 0,
-	Password NVARCHAR(100) NOT NULL,
+    Id INT IDENTITY(1,1),
+    FirstName NVARCHAR(MAX) NOT NULL,
+	LastName NVARCHAR(MAX) NOT NULL,
+    Email NVARCHAR(MAX) NOT NULL,
+    Email_Confirmed BIT NOT NULL,
+	Password NVARCHAR(MAX) NOT NULL,
 	Role_Id INT NOT NULL,
-	Blocked BIT NOT NULL CONSTRAINT DF_User_Blocked DEFAULT 0,
-	Image VARCHAR(MAX),
-	Image_Name NVARCHAR(1000),
+	Blocked BIT NOT NULL,
+	Image NVARCHAR(MAX),
+	Image_Name NVARCHAR(MAX),
 
-CONSTRAINT PK_Users_Id PRIMARY KEY (Id),
-CONSTRAINT UQ_Users_Email UNIQUE (Email),
+CONSTRAINT PK_Users_Id PRIMARY KEY CLUSTERED(Id),
 CONSTRAINT FK_Users_To_Roles FOREIGN KEY (Role_Id)  REFERENCES Roles (Id)
 )
 
 CREATE TABLE Groups
 (
-    Id INT IDENTITY,
-    Name NVARCHAR(50) NOT NULL,
-    Mentor_Id INT,
+    Id INT IDENTITY(1,1),
+    Name NVARCHAR(MAX) NOT NULL,
+    Mentor_Id INT NOT NULL,
 
-CONSTRAINT PK_Group_Id PRIMARY KEY (Id),
-CONSTRAINT UQ_Group_Name UNIQUE (Name),
+CONSTRAINT PK_Group_Id PRIMARY KEY CLUSTERED(Id),
+--CONSTRAINT UQ_Group_Name UNIQUE (Name),
 CONSTRAINT FK_Groups_To_Users FOREIGN KEY (Mentor_Id)  REFERENCES Users (Id)
 )
 
-CREATE TABLE UserGroups
+CREATE TABLE UserGroup
 (
     Group_Id INT NOT NULL,
-    User_Id INT NOT NULL,    
-    
+    User_Id INT NOT NULL,  
+	
+ CONSTRAINT PK_UserGroup PRIMARY KEY CLUSTERED( User_Id ASC, Group_Id ASC),
  CONSTRAINT FK_UserGroups_To_Groups FOREIGN KEY (Group_Id)  REFERENCES Groups (Id),
  CONSTRAINT FK_UserGroups_To_Users FOREIGN KEY (User_Id)  REFERENCES Users (Id)
 )
 
 CREATE TABLE Plans
 (
-    Id INT IDENTITY,
-    Name NVARCHAR(50) NOT NULL,
-    Description NVARCHAR(500),
+    Id INT IDENTITY(1,1),
+    Name NVARCHAR(MAX) NOT NULL,
+    Description NVARCHAR(MAX),
 	Image VARCHAR(MAX),
-	Image_Name NVARCHAR(1000),
-    Published BIT  NOT NULL CONSTRAINT DF_Plans_Published  DEFAULT  0,
+	Image_Name NVARCHAR(MAX),
+    Published BIT  NOT NULL,
     Create_Id INT NOT NULL,
 	Mod_Id INT,
 	Create_Date DATETIME,
 	Mod_Date DATETIME,
 
 
-CONSTRAINT PK_Plans_Id PRIMARY KEY (Id),
+CONSTRAINT PK_Plans_Id PRIMARY KEY  CLUSTERED(Id ASC),
 CONSTRAINT FK_Plans_To_UsersC FOREIGN KEY (Create_Id)  REFERENCES Users (Id),
 CONSTRAINT FK_Plans_To_UsersM FOREIGN KEY (Mod_Id)  REFERENCES Users (Id)
 )
 
 CREATE TABLE Sections
 (
-	Id INT IDENTITY,
-	Name NVARCHAR(50) NOT NULL,
+	Id INT IDENTITY(1,1) NOT NULL,
+	Name NVARCHAR(MAX) NOT NULL,
 
-CONSTRAINT PK_Sections_Id PRIMARY KEY (Id),
+CONSTRAINT PK_Sections_Id PRIMARY KEY (Id ASC),
 )
 
-CREATE TABLE GroupPlans
+CREATE TABLE GroupPlan
 (
-    Group_Id INT NOT NULL,
-    Plan_Id INT NOT NULL,    
+    GroupId INT ,
+    PlanId INT NOT NULL,    
     
- CONSTRAINT FK_GroupPlans_To_Groups FOREIGN KEY (Group_Id)  REFERENCES Groups (Id),
- CONSTRAINT FK_GroupPlans_To_Plans FOREIGN KEY (Plan_Id)  REFERENCES Plans (Id)
+ CONSTRAINT PK_GroupPlan PRIMARY KEY CLUSTERED(GroupId ASC, PlanId ASC),
+ CONSTRAINT FK_GroupPlans_To_Groups FOREIGN KEY (GroupId)  REFERENCES Groups (Id) ON DELETE CASCADE,
+ CONSTRAINT FK_GroupPlans_To_Plans FOREIGN KEY (PlanId)  REFERENCES Plans (Id) ON DELETE CASCADE
 )
 
 CREATE TABLE Tasks
 (
-    Id INT IDENTITY,
-    Name NVARCHAR(50) NOT NULL,
-    Description NVARCHAR(MAX),
-	Private BIT NOT NULL CONSTRAINT DF_Tasks_Private DEFAULT 1,
+    Id INT IDENTITY(1,1) NOT NULL,
+    Name NVARCHAR(MAX)  NULL,
+    Description NVARCHAR(MAX) NULL ,
+	Private BIT NOT NULL,
 	Create_Id INT NOT NULL,
 	Mod_Id INT,
 	Create_Date DATETIME,
 	Mod_Date DATETIME,
     
-CONSTRAINT PK_Tasks_Id PRIMARY KEY (Id),
+CONSTRAINT PK_Tasks_Id PRIMARY KEY  CLUSTERED(Id ASC),
 CONSTRAINT FK_Tasks_To_UsersC FOREIGN KEY (Create_Id)  REFERENCES Users (Id),
 CONSTRAINT FK_Tasks_To_UsersM FOREIGN KEY (Mod_Id)  REFERENCES Users (Id)
 )
 
 CREATE TABLE PlanTasks
 (
-	Id INT IDENTITY,
+	Id INT IDENTITY(1,1),
     Plan_Id INT NOT NULL,
     Task_Id INT NOT NULL,
 	Priority INT,
 	Section_Id INT,   
     
- CONSTRAINT PK_PlanTasks_Id PRIMARY KEY (Id),
+ CONSTRAINT PK_PlanTasks_Id PRIMARY KEY  CLUSTERED(Id ASC),
  CONSTRAINT FK_PlanTasks_To_Plans FOREIGN KEY (Plan_Id)  REFERENCES Plans (Id),
  CONSTRAINT FK_PlanTasks_To_Tasks FOREIGN KEY (Task_Id)  REFERENCES Tasks (Id),
  CONSTRAINT FK_PlanTasks_To_Sections FOREIGN KEY (Section_Id)  REFERENCES Sections (Id)
@@ -120,57 +122,59 @@ CREATE TABLE PlanTasks
 
 CREATE TABLE UserTasks
 (
-    Id INT IDENTITY,
+    Id INT IDENTITY(1,1),
     User_Id INT NOT NULL,
     PlanTask_Id INT NOT NULL,
 	Mentor_Id INT NOT NULL,   
-    State NCHAR NOT NULL CONSTRAINT DF_UserTasks_State DEFAULT 'P',
+    State NCHAR NULL,
     End_Date DATETIME,
-    Result NVARCHAR(MAX) NOT NULL, 
+    Result NVARCHAR(MAX) NULL, 
 	Propose_End_Date DATETIME,
 
- CONSTRAINT PK_UserTasks_Id PRIMARY KEY (Id),
+ CONSTRAINT PK_UserTasks_Id PRIMARY KEY  CLUSTERED(Id ASC),
  CONSTRAINT FK_UserTasks_To_Users FOREIGN KEY (User_Id)  REFERENCES Users (Id),
  CONSTRAINT FK_UserTasks_To_PlanTasks FOREIGN KEY (PlanTask_Id)  REFERENCES PlanTasks (Id),
  CONSTRAINT FK_UserTasks_To_UsersMentor FOREIGN KEY (Mentor_Id)  REFERENCES Users (Id),
- CONSTRAINT CK_UserTasks_State CHECK(State IN ('P', 'D', 'A', 'R'))
+ --CONSTRAINT CK_UserTasks_State CHECK(State IN ('P', 'D', 'A', 'R'))
 )
 
 CREATE TABLE Messages
 (
-    Id INT IDENTITY,
+    Id INT IDENTITY(1,1) NOT NULL ,
 	UserTask_Id INT NOT NULL,
     User_Id INT NOT NULL,
-    Text NVARCHAR(1000) NOT NULL,
+    Text NVARCHAR(MAX) NOT NULL,
     Send_Time DATETIME,
 
-CONSTRAINT PK_Masssage_Id PRIMARY KEY (Id),
+CONSTRAINT PK_Masssage_Id PRIMARY KEY  CLUSTERED(Id),
 CONSTRAINT FK_Masssage_To_Users FOREIGN KEY (User_Id)  REFERENCES Users (Id),
 CONSTRAINT FK_Masssage_To_UserTasks FOREIGN KEY (UserTask_Id)  REFERENCES UserTasks (Id)
 )
 
-CREATE TABLE PlanSuggestion
+CREATE TABLE PlanSuggestions
 (
+	Id  INT IDENTITY(1,1) NOT NULL,
     Plan_Id INT NOT NULL,
     User_Id INT NOT NULL,    
     Mentor_Id INT NOT NULL,    
-    Text NVARCHAR(1000) NOT NULL,
-
- CONSTRAINT FK_PlanSuggestion_To_Plans FOREIGN KEY (Plan_Id)  REFERENCES Plans (Id),
- CONSTRAINT FK_PlanSuggestion_To_Users FOREIGN KEY (User_Id )  REFERENCES Users (Id),
- CONSTRAINT FK_PlanSuggestion_To_Users1 FOREIGN KEY (Mentor_Id)  REFERENCES Users (Id)
+    Text NVARCHAR(MAX) NOT NULL,
+ 
+ CONSTRAINT PK_PlanSuggestions PRIMARY KEY  CLUSTERED(Id ASC),
+ CONSTRAINT FK_PlanSuggestions_To_Plans FOREIGN KEY (Plan_Id)  REFERENCES Plans (Id),
+ CONSTRAINT FK_PlanSuggestions_To_Users FOREIGN KEY (User_Id )  REFERENCES Users (Id),
+ CONSTRAINT FK_PlanSuggestions_To_Users1 FOREIGN KEY (Mentor_Id)  REFERENCES Users (Id)
 )
 
 CREATE TABLE Comments
 (
-    Id INT IDENTITY,
+    Id INT IDENTITY (1,1) NOT NULL,
     PlanTask_Id INT NOT NULL,    
-    Text NVARCHAR(2000) NOT NULL,
+    Text NVARCHAR(MAX) NOT NULL,
 	Create_Id INT NOT NULL,	
 	Create_Date DATETIME,
 	Mod_Date DATETIME,
 
- CONSTRAINT PK_Comments_Id PRIMARY KEY (Id),
+ CONSTRAINT PK_Comments_Id PRIMARY KEY  CLUSTERED(Id),
  CONSTRAINT FK_Comments_To_PlanTasks FOREIGN KEY (PlanTask_Id)  REFERENCES PlanTasks (Id),
  CONSTRAINT FK_Comments_To_UsersC FOREIGN KEY (Create_Id)  REFERENCES Users (Id)
 )
