@@ -12,6 +12,7 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Tracing;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDTO;
+using System.Data.Entity.Core;
 
 namespace LearnWithMentor.Tests.Controllers.Tests
 {
