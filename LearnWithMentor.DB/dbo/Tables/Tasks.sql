@@ -3,7 +3,7 @@
     Id INT IDENTITY(1,1),
     Name NVARCHAR(MAX) NOT NULL,
     Description NVARCHAR(MAX),
-	Private BIT NOT NULL,
+	Private BIT NOT NULL CONSTRAINT DF_Tasks_Private DEFAULT 1,
 	Create_Id INT NOT NULL,
 	Mod_Id INT,
 	Create_Date DATETIME,

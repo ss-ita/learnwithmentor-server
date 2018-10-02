@@ -4,10 +4,10 @@
     FirstName NVARCHAR(MAX) NOT NULL,
 	LastName NVARCHAR(MAX) NOT NULL,
     Email NVARCHAR(MAX) NOT NULL,
-    Email_Confirmed BIT NOT NULL,
+    Email_Confirmed BIT NOT NULL CONSTRAINT DF_User_Email_Confirmed DEFAULT 0,
 	Password NVARCHAR(MAX) NOT NULL,
 	Role_Id INT NOT NULL,
-	Blocked BIT NOT NULL,
+	Blocked BIT NOT NULL CONSTRAINT DF_User_Blocked DEFAULT 0,
 	Image VARCHAR(MAX),
 	Image_Name NVARCHAR(MAX),
 

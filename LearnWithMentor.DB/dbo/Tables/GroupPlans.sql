@@ -1,4 +1,4 @@
-﻿CREATE TABLE GroupPlan
+﻿CREATE TABLE GroupPlans
 (
     GroupId INT NOT NULL,
     PlanId INT NOT NULL,    

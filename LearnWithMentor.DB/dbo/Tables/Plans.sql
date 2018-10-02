@@ -5,7 +5,7 @@
     Description NVARCHAR(MAX),
 	Image VARCHAR(MAX),
 	Image_Name NVARCHAR(MAX),
-    Published BIT  NOT NULL,
+    Published BIT  NOT NULL  CONSTRAINT DF_Plans_Published  DEFAULT  0,
     Create_Id INT NOT NULL,
 	Mod_Id INT,
 	Create_Date DATETIME,

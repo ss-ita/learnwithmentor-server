@@ -4,7 +4,7 @@
     User_Id INT NOT NULL,
     PlanTask_Id INT NOT NULL,
 	Mentor_Id INT NOT NULL,   
-    State NCHAR NOT NULL ,
+    State NCHAR NOT NULL CONSTRAINT DF_UserTasks_State DEFAULT 'P',
     End_Date DATETIME,
     Result NVARCHAR(MAX) NOT NULL, 
 	Propose_End_Date DATETIME,
