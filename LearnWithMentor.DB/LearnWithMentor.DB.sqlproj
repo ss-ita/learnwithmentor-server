@@ -68,7 +68,7 @@
     <Build Include="dbo\Tables\Roles.sql" />
     <Build Include="dbo\Tables\Users.sql" />
     <Build Include="dbo\Tables\Groups.sql" />
-    <Build Include="dbo\Tables\UserGroups.sql" />
+    <Build Include="dbo\Tables\UserGroup.sql" />
     <Build Include="dbo\Tables\Plans.sql" />
     <Build Include="dbo\Tables\Sections.sql" />
     <Build Include="dbo\Tables\GroupPlans.sql" />
