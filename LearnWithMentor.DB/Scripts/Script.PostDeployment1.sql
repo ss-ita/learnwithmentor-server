@@ -242,17 +242,17 @@ insert into Plans ( Name, Description, Published, Create_Id, Mod_Id, Create_Date
 
 
 
-insert into GroupPlan(GroupId, PlanId) SELECT Groups.Id, Plans.Id FROM Groups, Plans WHERE Groups.Name = 'Lv-343.Net' AND Plans.Name = 'C# Essential Training';
-insert into GroupPlan(GroupId, PlanId) SELECT Groups.Id, Plans.Id FROM Groups, Plans WHERE Groups.Name = 'Lv-343.Net' AND Plans.Name = 'ASP.NET';
-insert into GroupPlan(GroupId, PlanId) SELECT Groups.Id, Plans.Id FROM Groups, Plans WHERE Groups.Name = 'Lv-343.Net' AND Plans.Name = 'Angular Guide';
-insert into GroupPlan(GroupId, PlanId) SELECT Groups.Id, Plans.Id FROM Groups, Plans WHERE Groups.Name = 'Lv-343.Net' AND Plans.Name = 'Angular Material Guide';
-insert into GroupPlan(GroupId, PlanId) SELECT Groups.Id, Plans.Id FROM Groups, Plans WHERE Groups.Name = 'Lv-343.Net' AND Plans.Name = 'SQL & Database Design: Learn MS SQL Server';
-insert into GroupPlan(GroupId, PlanId) SELECT Groups.Id, Plans.Id FROM Groups, Plans WHERE Groups.Name = 'Lv-343.Net' AND Plans.Name = 'Building Full Stack Applications';
-insert into GroupPlan(GroupId, PlanId) SELECT Groups.Id, Plans.Id FROM Groups, Plans WHERE Groups.Name = 'Lv-343.Net' AND Plans.Name = 'The complete React course';
-insert into GroupPlan(GroupId, PlanId) SELECT Groups.Id, Plans.Id FROM Groups, Plans WHERE Groups.Name = 'Lv-343.Net' AND Plans.Name = 'Java Essential Training';
-insert into GroupPlan(GroupId, PlanId) SELECT Groups.Id, Plans.Id FROM Groups, Plans WHERE Groups.Name = 'Lv-343.Net' AND Plans.Name = 'The complete JavaScript course';
-insert into GroupPlan(GroupId, PlanId) SELECT Groups.Id, Plans.Id FROM Groups, Plans WHERE Groups.Name = 'Lv-343.Net' AND Plans.Name = 'C++ Essential Training';
-insert into GroupPlan(GroupId, PlanId) SELECT Groups.Id, Plans.Id FROM Groups, Plans WHERE Groups.Name = 'Lv-343.Net' AND Plans.Name = 'Python course: Beginner to Advanced';
+insert into GroupPlans(GroupId, PlanId) SELECT Groups.Id, Plans.Id FROM Groups, Plans WHERE Groups.Name = 'Lv-343.Net' AND Plans.Name = 'C# Essential Training';
+insert into GroupPlans(GroupId, PlanId) SELECT Groups.Id, Plans.Id FROM Groups, Plans WHERE Groups.Name = 'Lv-343.Net' AND Plans.Name = 'ASP.NET';
+insert into GroupPlans(GroupId, PlanId) SELECT Groups.Id, Plans.Id FROM Groups, Plans WHERE Groups.Name = 'Lv-343.Net' AND Plans.Name = 'Angular Guide';
+insert into GroupPlans(GroupId, PlanId) SELECT Groups.Id, Plans.Id FROM Groups, Plans WHERE Groups.Name = 'Lv-343.Net' AND Plans.Name = 'Angular Material Guide';
+insert into GroupPlans(GroupId, PlanId) SELECT Groups.Id, Plans.Id FROM Groups, Plans WHERE Groups.Name = 'Lv-343.Net' AND Plans.Name = 'SQL & Database Design: Learn MS SQL Server';
+insert into GroupPlans(GroupId, PlanId) SELECT Groups.Id, Plans.Id FROM Groups, Plans WHERE Groups.Name = 'Lv-343.Net' AND Plans.Name = 'Building Full Stack Applications';
+insert into GroupPlans(GroupId, PlanId) SELECT Groups.Id, Plans.Id FROM Groups, Plans WHERE Groups.Name = 'Lv-343.Net' AND Plans.Name = 'The complete React course';
+insert into GroupPlans(GroupId, PlanId) SELECT Groups.Id, Plans.Id FROM Groups, Plans WHERE Groups.Name = 'Lv-343.Net' AND Plans.Name = 'Java Essential Training';
+insert into GroupPlans(GroupId, PlanId) SELECT Groups.Id, Plans.Id FROM Groups, Plans WHERE Groups.Name = 'Lv-343.Net' AND Plans.Name = 'The complete JavaScript course';
+insert into GroupPlans(GroupId, PlanId) SELECT Groups.Id, Plans.Id FROM Groups, Plans WHERE Groups.Name = 'Lv-343.Net' AND Plans.Name = 'C++ Essential Training';
+insert into GroupPlans(GroupId, PlanId) SELECT Groups.Id, Plans.Id FROM Groups, Plans WHERE Groups.Name = 'Lv-343.Net' AND Plans.Name = 'Python course: Beginner to Advanced';
 
 
 
