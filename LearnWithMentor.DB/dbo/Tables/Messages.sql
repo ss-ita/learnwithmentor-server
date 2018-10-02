@@ -1,12 +1,12 @@
 ﻿CREATE TABLE Messages
 (
-    Id INT IDENTITY,
+    Id INT IDENTITY(1,1),
 	UserTask_Id INT NOT NULL,
     User_Id INT NOT NULL,
-    Text NVARCHAR(1000) NOT NULL,
+    Text NVARCHAR(MAX) NOT NULL,
     Send_Time DATETIME,
 
-CONSTRAINT PK_Masssage_Id PRIMARY KEY (Id),
+CONSTRAINT PK_Masssage_Id PRIMARY KEY CLUSTERED(Id),
 CONSTRAINT FK_Masssage_To_Users FOREIGN KEY (User_Id)  REFERENCES Users (Id),
 CONSTRAINT FK_Masssage_To_UserTasks FOREIGN KEY (UserTask_Id)  REFERENCES UserTasks (Id)
 )

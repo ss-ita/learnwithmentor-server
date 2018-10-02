@@ -1,0 +1,9 @@
+﻿CREATE TABLE GroupPlan
+(
+    GroupId INT NOT NULL,
+    PlanId INT NOT NULL,    
+
+ CONSTRAINT PK_GroupPlan PRIMARY KEY CLUSTERED(GroupId , PlanId ),   
+ CONSTRAINT FK_GroupPlans_To_Groups FOREIGN KEY (GroupId)  REFERENCES Groups (Id) ON DELETE CASCADE,
+ CONSTRAINT FK_GroupPlans_To_Plans FOREIGN KEY (PlanId)  REFERENCES Plans (Id) ON DELETE CASCADE
+)
