@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using LearnWithMentor.Models;
 using LearnWithMentorBLL.Interfaces;
@@ -29,10 +30,12 @@ namespace LearnWithMentor.Controllers
         /// <param name="value"> User data. </param>
         /// <returns></returns>
         [AllowAnonymous]
-        public HttpResponseMessage Post([FromBody]UserLoginDto value)
+        public async  Task<HttpResponseMessage> PostAsync([FromBody]UserLoginDto value)
         {
             UserIdentityDto user = null;
-            if ((ModelState.IsValid) && (CheckUser(value.Email, value.Password, out user)))
+            user = await CheckUserAsync(value.Email);
+            bool UserCheck =  BCrypt.Net.BCrypt.Verify(value.Password, user.Password);
+            if ((ModelState.IsValid) && (UserCheck))
             {
                 return Request.CreateResponse(HttpStatusCode.OK, JwtManager.GenerateToken(user));
             }
@@ -48,16 +51,10 @@ namespace LearnWithMentor.Controllers
         /// <param name="password"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public bool CheckUser(string email, string password, out UserIdentityDto user)
-        {
 
-            user = userService.GetByEmail(email);
-            if (user == null || user.Blocked == true)
-            {
-                return false;
-            }
-            var result = BCrypt.Net.BCrypt.Verify(password, user.Password);
-            return result;
+        public async Task<UserIdentityDto> CheckUserAsync(string email)
+        {
+            return await userService.GetByEmailAsync(email);
         }
 
         /// <summary>

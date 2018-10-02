@@ -1,10 +1,11 @@
 ﻿using LearnWithMentorDAL.Entities;
+using System.Threading.Tasks;
 
 namespace LearnWithMentorDAL.Repositories.Interfaces
 {
     public interface IRoleRepository : IRepository<Role>
     {
-        Role Get(int id);
-        bool TryGetByName(string name, out Role role);
+        Task<Role> Get(int id);
+        Task<Role> TryGetByName(string name);
     }
 }

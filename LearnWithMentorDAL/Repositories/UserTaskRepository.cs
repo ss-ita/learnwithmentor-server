@@ -12,22 +12,22 @@ namespace LearnWithMentorDAL.Repositories
         {
         }
 
-        public UserTask Get(int id)
+        public Task<UserTask> GetAsync(int id)
         {
-            Task<UserTask> findUserTask = Context.UserTasks.FirstOrDefaultAsync(task => task.Id == id);
-            return findUserTask.GetAwaiter().GetResult();
+            return Context.UserTasks.FirstOrDefaultAsync(task => task.Id == id);
+            
         }
 
-        public int GetNumberOfTasksByState(int userId, string state)
+        public Task<int> GetNumberOfTasksByStateAsync(int userId, string state)
         {
-            Task<int> countTasksWithState = Context.UserTasks.Where(userTask => userTask.User_Id == userId).CountAsync(userTask => userTask.State == state);
-            return countTasksWithState.GetAwaiter().GetResult();
+            return Context.UserTasks.Where(userTask => userTask.User_Id == userId).CountAsync(userTask => userTask.State == state);
+            
         }
 
-        public UserTask GetByPlanTaskForUser(int planTaskId, int userId)
+        public Task<UserTask> GetByPlanTaskForUserAsync(int planTaskId, int userId)
         {
-            Task<UserTask> findUserTask = Context.UserTasks.FirstOrDefaultAsync(userTask => userTask.User_Id == userId && userTask.PlanTask_Id == planTaskId);
-            return findUserTask.GetAwaiter().GetResult();
+           return  Context.UserTasks.FirstOrDefaultAsync(userTask => userTask.User_Id == userId && userTask.PlanTask_Id == planTaskId);
+            
         }
     }
 }

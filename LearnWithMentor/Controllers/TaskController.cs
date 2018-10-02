@@ -10,6 +10,7 @@ using LearnWithMentor.Filters;
 using System.Web.Http.Tracing;
 using System.Data.Entity.Core;
 using LearnWithMentorDTO.Infrastructure;
+using System.Threading.Tasks;
 
 namespace LearnWithMentor.Controllers
 {
@@ -44,11 +45,11 @@ namespace LearnWithMentor.Controllers
         /// </summary>
         [HttpGet]
         [Route("api/task")]
-        public HttpResponseMessage GetAllTasks()
+        public async Task<HttpResponseMessage> GetAllTasksAsync()
         {
             try
             {
-                var allTasks = taskService.GetAllTasks();
+                var allTasks = await taskService.GetAllTasksAsync();
                 if (allTasks != null)
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, allTasks);
@@ -92,9 +93,9 @@ namespace LearnWithMentor.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("api/plan/{planId}/tasks/notinplan")]
-        public HttpResponseMessage GetTasksNotInCurrentPlan(int planId)
+        public async Task<HttpResponseMessage> GetTasksNotInCurrentPlanAsync(int planId)
         {
-            var task = taskService.GetTasksNotInPlan(planId);
+            IEnumerable<TaskDto> task = await taskService.GetTasksNotInPlanAsync(planId);
             if (task != null)
             {
                 return Request.CreateResponse(HttpStatusCode.OK, task);
@@ -107,11 +108,11 @@ namespace LearnWithMentor.Controllers
         /// </summary>
         [HttpGet]
         [Route("api/task/{taskId}")]
-        public HttpResponseMessage GetTaskById(int taskId)
+        public async Task<HttpResponseMessage> GetTaskByIdAsync(int taskId)
         {
             try
             {
-                var task = taskService.GetTaskById(taskId);
+                TaskDto task = await taskService.GetTaskByIdAsync(taskId);
                 if (task == null)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, "This task does not exist in database.");
@@ -131,11 +132,11 @@ namespace LearnWithMentor.Controllers
         /// <param name="planTaskId">Id of the planTask.</param>
         [HttpGet]
         [Route("api/task/plantask/{planTaskId}")]
-        public HttpResponseMessage GetTaskForPlan(int planTaskId)
+        public async Task<HttpResponseMessage> GetTaskForPlanAsync(int planTaskId)
         {
             try
             {
-                var task = taskService.GetTaskForPlan(planTaskId);
+                TaskDto task = await taskService.GetTaskForPlanAsync(planTaskId);
                 if (task != null)
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, task);
@@ -156,7 +157,7 @@ namespace LearnWithMentor.Controllers
         /// <param name="userId">Id of the user.</param>
         [HttpGet]
         [Route("api/task/usertask")]
-        public HttpResponseMessage GetUserTask(int planTaskId, int userId)
+        public async Task<HttpResponseMessage> GetUserTaskAsync(int planTaskId, int userId)
         {
             try
             {
@@ -166,7 +167,7 @@ namespace LearnWithMentor.Controllers
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
                 }
-                var userTask = taskService.GetUserTaskByUserPlanTaskId(userId, planTaskId);
+                UserTaskDto userTask = await taskService.GetUserTaskByUserPlanTaskIdAsync(userId, planTaskId);
                 if (userTask != null)
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, userTask);
@@ -187,14 +188,14 @@ namespace LearnWithMentor.Controllers
         /// <param name="userId">array of the user`s ids.</param>
         [HttpGet]
         [Route("api/task/allusertasks")]
-        public HttpResponseMessage GetUsersTasks([FromUri]int[] userId, [FromUri]int[] planTaskId)
+        public async Task<HttpResponseMessage> GetUsersTasksAsync([FromUri]int[] userId, [FromUri]int[] planTaskId)
         {
             try
             {
                 var allUserTasks = new List<ListUserTasksDto>();
                 foreach (var userid in userId)
                 {
-                    var userTasks = taskService.GetTaskStatesForUser(planTaskId, userid);
+                    var userTasks = await taskService.GetTaskStatesForUserAsync(planTaskId, userid);
                     if (userTasks == null)
                     {
                         return Request.CreateErrorResponse(HttpStatusCode.NoContent,
@@ -218,11 +219,11 @@ namespace LearnWithMentor.Controllers
         /// <param name="userId">array of the user`s ids.</param>
         [HttpGet]
         [Route("api/task/usertasks")]
-        public HttpResponseMessage GetUserTasks(int userId, [FromUri]int[] planTaskId)
+        public async Task<HttpResponseMessage> GetUserTasksAsync(int userId, [FromUri]int[] planTaskId)
         {
             try
             {
-                var userTasks = taskService.GetTaskStatesForUser(planTaskId, userId);
+                List<UserTaskDto> userTasks = await taskService.GetTaskStatesForUserAsync(planTaskId, userId);
                 if (userTasks == null)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"Task for this user with id: {userId}  does not exist in database.");
@@ -240,17 +241,17 @@ namespace LearnWithMentor.Controllers
         /// <param name="userTaskId">Id of the usertask.</param>
         [HttpGet]
         [Route("api/task/userTask/{userTaskId}/messages")]
-        public HttpResponseMessage GetUserTaskMessages(int userTaskId)
+        public async Task<HttpResponseMessage> GetUserTaskMessagesAsync(int userTaskId)
         {
             try
             {
                 var currentId = userIdentityService.GetUserId();
                 var currentRole = userIdentityService.GetUserRole();
-                if (!(taskService.CheckUserTaskOwner(userTaskId, currentId) || currentRole == Constants.Roles.Mentor))
+                if (!(await taskService.CheckUserTaskOwnerAsync(userTaskId, currentId) || currentRole == Constants.Roles.Mentor || currentRole == Constants.Roles.Admin))
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
                 }
-                var messageList = messageService.GetMessages(userTaskId);
+                IEnumerable<MessageDto> messageList = await messageService.GetMessagesAsync(userTaskId);
                 if (messageList != null)
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, messageList);
@@ -305,7 +306,7 @@ namespace LearnWithMentor.Controllers
         /// <param name="newUserTask">New userTask object.</param>
         [HttpPost]
         [Route("api/task/usertask")]
-        public HttpResponseMessage PostNewUserTask([FromBody]UserTaskDto newUserTask)
+        public async Task<HttpResponseMessage> PostNewUserTaskAsync([FromBody]UserTaskDto newUserTask)
         {
             try
             {
@@ -313,7 +314,7 @@ namespace LearnWithMentor.Controllers
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
                 }
-                var success = taskService.CreateUserTask(newUserTask);
+                bool success = await taskService.CreateUserTaskAsync(newUserTask);
                 if (success)
                 {
                     var message = $"Succesfully created task with id = {newUserTask.Id} for user with id = {newUserTask.UserId}";
@@ -335,7 +336,7 @@ namespace LearnWithMentor.Controllers
         /// /// <param name="newStatus">New userTask.</param>
         [HttpPut]
         [Route("api/task/usertask/status")]
-        public HttpResponseMessage PutNewUserTaskStatus(int userTaskId, string newStatus)
+        public async Task<HttpResponseMessage> PutNewUserTaskStatusAsync(int userTaskId, string newStatus)
         {
             try
             {
@@ -343,7 +344,7 @@ namespace LearnWithMentor.Controllers
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "New Status not valid");
                 }
-                var success = taskService.UpdateUserTaskStatus(userTaskId, newStatus);
+                var success = await taskService.UpdateUserTaskStatusAsync(userTaskId, newStatus);
                 if (success)
                 {
                     var message = $"Succesfully updated user task with id = {userTaskId} on status {newStatus}";
@@ -366,7 +367,7 @@ namespace LearnWithMentor.Controllers
         /// <returns></returns>
         [HttpPut]
         [Route("api/task/usertask/result")]
-        public HttpResponseMessage PutNewUserTaskResult(int userTaskId, HttpRequestMessage newMessage)
+        public async Task<HttpResponseMessage> PutNewUserTaskResultAsync(int userTaskId, HttpRequestMessage newMessage)
         {
             try
             {
@@ -375,7 +376,7 @@ namespace LearnWithMentor.Controllers
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "New Result is too long");
                 }
-                var success = taskService.UpdateUserTaskResult(userTaskId, value);
+                bool success = await taskService.UpdateUserTaskResultAsync(userTaskId, value);
                 if (success)
                 {
                     var message = $"Succesfully updated user task with id = {userTaskId} on result {value}";
@@ -396,17 +397,17 @@ namespace LearnWithMentor.Controllers
         /// <param name="key">Key for search.</param>
         [HttpGet]
         [Route("api/task/search")]
-        public HttpResponseMessage Search(string key)
+        public async Task<HttpResponseMessage> SearchAsync(string key)
         {
             try
             {
                 if (string.IsNullOrEmpty(key))
                 {
-                    return GetAllTasks();
+                    return await GetAllTasksAsync();
                 }
                 var lines = key.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                var taskList = taskService.Search(lines);
-                if (taskList == null || taskList.Count == 0)
+                List<TaskDto> taskList = await taskService.SearchAsync(lines);
+                if (taskList == null ||taskList.Count == 0)
                 {
                     return Request.CreateResponse(HttpStatusCode.NoContent, "There are no tasks by this key");
                 }
@@ -426,16 +427,16 @@ namespace LearnWithMentor.Controllers
         /// <param name="planId">Id of the plan.</param>
         [HttpGet]
         [Route("api/task/searchinplan")]
-        public HttpResponseMessage SearchInPlan(string key, int planId)
+        public async Task<HttpResponseMessage> SearchInPlanAsync(string key, int planId)
         {
             try
             {
                 if (string.IsNullOrEmpty(key))
                 {
-                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax.");
+                    return  Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Incorrect request syntax.");
                 }
                 var lines = key.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                var taskList = taskService.Search(lines, planId);
+                IEnumerable<TaskDto> taskList =  await taskService.SearchAsync(lines, planId);
                 if (taskList == null)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, "This plan does not exist.");
@@ -453,10 +454,10 @@ namespace LearnWithMentor.Controllers
         /// Creates new task
         /// </summary>
         /// <param name="newTask">Task object for creation.</param>
-        [Authorize(Roles = "Mentor")]
+        [Authorize(Roles = "Mentor, Admin")]
         [HttpPost]
         [Route("api/task")]
-        public HttpResponseMessage Post([FromBody]TaskDto newTask)
+        public  HttpResponseMessage Post([FromBody]TaskDto newTask)
         {
             try
             {
@@ -464,7 +465,7 @@ namespace LearnWithMentor.Controllers
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
                 }
-                var success = taskService.CreateTask(newTask);
+                bool success =  taskService.CreateTask(newTask);
                 if (success)
                 {
                     var message = $"Succesfully created task with id = {newTask.Id} by user with id = {newTask.CreatorId}";
@@ -486,10 +487,10 @@ namespace LearnWithMentor.Controllers
         /// Creates new task and returns id of the created task.
         /// </summary>
         /// <param name="value"> New plan to be created. </param>
-        [Authorize(Roles = "Mentor")]
+        [Authorize(Roles = "Mentor, Admin")]
         [HttpPost]
         [Route("api/task/return")]
-        public HttpResponseMessage PostAndReturnId([FromBody]TaskDto value)
+        public async Task<HttpResponseMessage> PostAndReturnIdAsync([FromBody]TaskDto value)
         {
             try
             {
@@ -497,7 +498,7 @@ namespace LearnWithMentor.Controllers
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
                 }
-                var result = taskService.AddAndGetId(value);
+                int? result = await taskService.AddAndGetIdAsync(value);
                 if (result != null)
                 {
                     var log = $"Succesfully created task {value.Name} with id = {result} by user with id = {value.CreatorId}";
@@ -523,7 +524,7 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpPut]
         [Route("api/task/{taskId}")]
-        public HttpResponseMessage Put(int taskId, [FromBody]TaskDto task)
+        public async Task<HttpResponseMessage> PutAsync(int taskId, [FromBody]TaskDto task)
         {
             try
             {
@@ -531,7 +532,7 @@ namespace LearnWithMentor.Controllers
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
                 }
-                var success = taskService.UpdateTaskById(taskId, task);
+                bool success = await taskService.UpdateTaskByIdAsync(taskId, task);
                 if (success)
                 {
                     var message = $"Succesfully updated task with id = {taskId}";
@@ -556,11 +557,11 @@ namespace LearnWithMentor.Controllers
         [Authorize]
         [HttpPut]
         [Route("api/task/usertask/proposedEndDate")]
-        public HttpResponseMessage Put(int userTaskId, DateTime proposeEndDate)
+        public async Task<HttpResponseMessage> PutAsync(int userTaskId, DateTime proposeEndDate)
         {
             try
             {
-                var success = taskService.UpdateProposeEndDate(userTaskId, proposeEndDate);
+                bool success = await taskService.UpdateProposeEndDateAsync(userTaskId, proposeEndDate);
                 if (success)
                 {
                     var message = $"Succesfully updated usertask with id = {userTaskId}";
@@ -581,14 +582,14 @@ namespace LearnWithMentor.Controllers
         /// Delete proposeEndDate for userTask
         /// </summary>
         /// <param name="userTaskId">UserTask Id for update.</param>
-        [Authorize(Roles = "Mentor")]
+        [Authorize(Roles = "Mentor, Admin")]
         [HttpDelete]
         [Route("api/task/usertask/proposedEndDate")]
-        public HttpResponseMessage DeleteProposeEndDate(int userTaskId)
+        public async Task<HttpResponseMessage> DeleteProposeEndDateAsync(int userTaskId)
         {
             try
             {
-                var success = taskService.DeleteProposeEndDate(userTaskId);
+                bool success = await taskService.DeleteProposeEndDateAsync(userTaskId);
                 if (success)
                 {
                     var message = $"Succesfully deleted proposeEndDate for usertask with id = {userTaskId}";
@@ -609,14 +610,14 @@ namespace LearnWithMentor.Controllers
         /// Set new endDate for userTask
         /// </summary>
         /// <param name="userTaskId">UserTask Id for update.</param>
-        [Authorize(Roles = "Mentor")]
+        [Authorize(Roles = "Mentor, Admin")]
         [HttpPut]
         [Route("api/task/usertask/endDate")]
-        public HttpResponseMessage SetNewEndDate(int userTaskId)
+        public async Task<HttpResponseMessage> SetNewEndDateAsync(int userTaskId)
         {
             try
             {
-                var success = taskService.SetNewEndDate(userTaskId);
+                bool success = await taskService.SetNewEndDateAsync(userTaskId);
                 if (success)
                 {
                     var message = $"Succesfully changing endDate for usertask with id = {userTaskId}";
@@ -637,14 +638,14 @@ namespace LearnWithMentor.Controllers
         /// Deletes task by Id
         /// </summary>
         /// <param name="taskId">Task Id for delete.</param>
-        [Authorize(Roles = "Mentor")]
+        [Authorize(Roles = "Mentor, Admin")]
         [HttpDelete]
         [Route("api/task/{id}")]
-        public HttpResponseMessage Delete(int taskId)
+        public async Task<HttpResponseMessage> DeleteAsync(int taskId)
         {
             try
             {
-                var success = taskService.RemoveTaskById(taskId);
+                bool success = await taskService.RemoveTaskByIdAsync(taskId);
                 if (success)
                 {
                     var message = $"Succesfully deleted task with id = {taskId}";
