@@ -1,19 +1,20 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using LearnWithMentorDAL.Entities;
 
 namespace LearnWithMentorDAL.Repositories.Interfaces
 {
     public interface IUserRepository: IRepository<User>
     {
-        User Get(int id);
-        User GetByEmail(string email);
-        IEnumerable<User> Search(string[] searchString, int? roleId);
-        IEnumerable<User> GetUsersByRole(int roleId);
-        IEnumerable<User> GetUsersByGroup(int groupId);
-        IEnumerable<User> GetUsersByState(bool state);
-        string ExtractFullName(int? id);
-        string GetImageBase64(int userId);
-        IEnumerable<User> GetUsersNotInGroup(int groupId);
-        bool ContainsId(int id);
+        Task<User> GetAsync(int id);
+        Task<User> GetByEmailAsync(string email);
+        Task<IEnumerable<User>> SearchAsync(string[] searchString, int? roleId);
+        Task<IEnumerable<User>> GetUsersByRoleAsync(int roleId);
+        Task<IEnumerable<User>> GetUsersByGroupAsync(int groupId);
+        Task<IEnumerable<User>> GetUsersByStateAsync(bool state);
+        Task<string> ExtractFullNameAsync(int? id);
+        Task<string> GetImageBase64Async(int userId);
+        Task<IEnumerable<User>> GetUsersNotInGroupAsync(int groupId);
+        Task<bool> ContainsIdAsync(int id);
     }
 }
