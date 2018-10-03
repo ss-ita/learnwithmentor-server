@@ -309,15 +309,9 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         {
             userServiceMock.Setup(u => u.ContainsIdAsync(It.IsInRange(1, 8, Range.Inclusive))).ReturnsAsync(true);
             userServiceMock.Setup(u => u.GetImageAsync(6)).Throws(new EntityException());
-
-<<<<<<< HEAD
-            Assert.Throws(typeof(EntityException), () => userController.GetImage(6));
-        }*/
-=======
             Assert.Throws(typeof(EntityException), () => userController.GetImageAsync(6).GetAwaiter().GetResult());
-        }
->>>>>>> 7f6dfc6b87434f791fb4edd2ae006ba1a9295e65
-
+        }*/
+        
         [Test]
         public async Task BlockUserTest()
         {
