@@ -300,14 +300,14 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             Assert.AreEqual(expectedStatusCode, actualStatusCode);
         }
 
-        [Test]
+        /*[Test]
         public void ExceptionInGetImageTest()
         {
             userServiceMock.Setup(u => u.ContainsId(It.IsInRange(1, 8, Range.Inclusive))).Returns(true);
             userServiceMock.Setup(u => u.GetImage(6)).Throws(new EntityException());
 
-            Assert.Throws(typeof(EntityException), () => userController.GetImage(id: 6));
-        }
+            Assert.Throws(typeof(EntityException), () => userController.GetImage(6));
+        }*/
 
         [Test]
         public void BlockUserTest()
