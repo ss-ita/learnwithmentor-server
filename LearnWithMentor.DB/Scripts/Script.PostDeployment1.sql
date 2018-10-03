@@ -19,7 +19,7 @@ delete Tasks;
 delete GroupPlan;
 delete Sections;
 delete Plans;
-delete UserGroup;
+delete UserGroups;
 delete Groups;
 delete Users;
 delete Roles;
