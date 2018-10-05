@@ -1,11 +1,11 @@
 ﻿use LearnWithMentorDB;
-delete PlanSuggestions;
+delete PlanSuggestion;
 delete Messages;
 delete Comments;
 delete UserTasks;
 delete PlanTasks;
 delete Tasks;
-delete GroupPlan;
+delete GroupPlans;
 delete Sections;
 delete Plans;
 delete UserGroups;
