@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using LearnWithMentor.Models;
 using LearnWithMentorBLL.Interfaces;
@@ -29,15 +30,14 @@ namespace LearnWithMentor.Controllers
         /// <param name="value"> User data. </param>
         /// <returns></returns>
         [AllowAnonymous]
-        public HttpResponseMessage Post([FromBody]UserLoginDTO value)
+        public async  Task<HttpResponseMessage> PostAsync([FromBody]UserLoginDto value)
         {
-            UserIdentityDTO user = null;
-            if (ModelState.IsValid)
+            UserIdentityDto user = null;
+            user = await CheckUserAsync(value.Email);
+            bool UserCheck =  BCrypt.Net.BCrypt.Verify(value.Password, user.Password);
+            if ((ModelState.IsValid) && (UserCheck))
             {
-                if (CheckUser(value.Email, value.Password, out user))
-                {
-                    return Request.CreateResponse(HttpStatusCode.OK, JwtManager.GenerateToken(user));
-                }
+                return Request.CreateResponse(HttpStatusCode.OK, JwtManager.GenerateToken(user));
             }
             var message = " Not valid logination data.";
             if (user != null && user.Blocked == true) message = "This user is blocked!";
@@ -51,16 +51,10 @@ namespace LearnWithMentor.Controllers
         /// <param name="password"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public bool CheckUser(string email, string password, out UserIdentityDTO user)
-        {
 
-            user = userService.GetByEmail(email);
-            if (user == null || user.Blocked == true)
-            {
-                return false;
-            }
-            var result = BCrypt.Net.BCrypt.Verify(password, user.Password);
-            return result;
+        public async Task<UserIdentityDto> CheckUserAsync(string email)
+        {
+            return await userService.GetByEmailAsync(email);
         }
 
         /// <summary>

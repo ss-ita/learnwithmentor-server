@@ -4,30 +4,29 @@ using System.Data.Entity;
 using LearnWithMentorDAL.Entities;
 using LearnWithMentorDAL.Repositories.Interfaces;
 using System.Collections.Generic;
+using Task = System.Threading.Tasks.Task;
 
 namespace LearnWithMentorDAL.Repositories
 {
-    public class CommentRepository: BaseRepository<Comment>, ICommentRepository
+    public class CommentRepository : BaseRepository<Comment>, ICommentRepository
     {
-        public CommentRepository(LearnWithMentor_DBEntities context) : base(context)
+        public CommentRepository(LearnWithMentorContext context) : base(context)
         {
         }
 
-        public Comment Get(int id)
+        public Task<Comment> GetAsync(int id)
         {
-            Task<Comment> findCommnet = Context.Comments.FirstOrDefaultAsync(t => t.Id == id);
-            return findCommnet.GetAwaiter().GetResult();
+            return Context.Comments.FirstOrDefaultAsync(t => t.Id == id);
         }
 
-        public bool ContainsId(int id)
+        public Task<bool> ContainsIdAsync(int id)
         {
-            Task<bool> checkIdExisting = Context.Comments.AnyAsync(t => t.Id == id);
-            return checkIdExisting.GetAwaiter().GetResult();
+            return Context.Comments.AnyAsync(t => t.Id == id);
         }
 
-        public IQueryable<Comment> GetByPlanTaskId(int ptId)
+        public async Task<IEnumerable<Comment>> GetByPlanTaskIdAsync(int ptId)
         {
-            return Context.Comments.Where(c =>c.PlanTask_Id==ptId );
+            return await Context.Comments.Where(c => c.PlanTask_Id == ptId).ToListAsync();
         }
 
         public void RemoveById(int id)
@@ -39,10 +38,10 @@ namespace LearnWithMentorDAL.Repositories
             }
         }
 
-        public void RemoveByPlanTaskId(int planTaskid)
+        public async Task RemoveByPlanTaskIdAsync(int planTaskid)
         {
-            Task<Comment> findComment = Context.Comments.FirstOrDefaultAsync(c => c.PlanTask_Id == planTaskid);
-            Remove(findComment.GetAwaiter().GetResult());
+            Comment findComment = await Context.Comments.FirstOrDefaultAsync(c => c.PlanTask_Id == planTaskid);
+            Remove(findComment);
         }
 
     }

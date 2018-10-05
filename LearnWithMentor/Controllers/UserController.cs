@@ -46,12 +46,12 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Admin, Mentor")]
         [HttpGet]
         [Route("api/user")]
-        public HttpResponseMessage Get()
+        public async Task<HttpResponseMessage> GetAsync()
         {
-            var users = userService.GetAllUsers();
+            List<UserDto> users = await userService.GetAllUsersAsync();
             if (users.Count != 0)
             {
-                return Request.CreateResponse<IEnumerable<UserDTO>>(HttpStatusCode.OK, users);
+                return Request.CreateResponse<IEnumerable<UserDto>>(HttpStatusCode.OK, users);
             }
             const string message = "No users in database.";
             return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
@@ -63,11 +63,11 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Admin, Mentor")]
         [HttpGet]
         [Route("api/user")]
-        public HttpResponseMessage Get([FromUri]int pageSize, [FromUri]int pageNumber)
+        public async Task<HttpResponseMessage> GetAsync([FromUri]int pageSize, [FromUri]int pageNumber)
         {
             try
             {
-                var users = userService.GetUsers(pageSize, pageNumber);
+                PagedListDto<UserDto> users = await userService.GetUsers(pageSize, pageNumber);
                 return Request.CreateResponse(HttpStatusCode.OK, users);
             }
             catch (EntityException e)
@@ -85,24 +85,24 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("api/user/inrole/{roleId}")]
-        public HttpResponseMessage GetUsersbyRole(int roleId)
+        public async Task<HttpResponseMessage> GetUsersbyRoleAsync(int roleId)
         {
             if (roleId != Constants.Roles.BlockedIndex)
             {
-                var role = roleService.Get(roleId);
+                var role = roleService.GetAsync(roleId);
                 if (role == null)
                 {
                     const string roleErorMessage = "No roles with this id  in database.";
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, roleErorMessage);
                 }
             }
-            var users = userService.GetUsersByRole(roleId);
+            List<UserDto> users = await userService.GetUsersByRoleAsync(roleId);
             if (users.Count == 0)
             {
                 const string usersErorMessage = "No users with this role_id  in database.";
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, usersErorMessage);
             }
-            return Request.CreateResponse<IEnumerable<UserDTO>>(HttpStatusCode.OK, users);
+            return Request.CreateResponse<IEnumerable<UserDto>>(HttpStatusCode.OK, users);
         }
         /// <summary>
         /// Returns one page of users with specified role.
@@ -114,18 +114,18 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("api/user/inrole/{roleId}")]
-        public HttpResponseMessage GetUsersbyRole(int roleId, [FromUri]int pageSize, [FromUri]int pageNumber)
+        public async Task<HttpResponseMessage> GetUsersbyRoleAsync(int roleId, [FromUri]int pageSize, [FromUri]int pageNumber)
         {
             if (roleId != Constants.Roles.BlockedIndex)
             {
-                var role = roleService.Get(roleId);
+                var role = roleService.GetAsync(roleId);
                 if (role == null)
                 {
                     const string roleErorMessage = "No roles with this id  in database.";
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, roleErorMessage);
                 }
             }
-            var users = userService.GetUsersByRole(roleId, pageSize, pageNumber);
+            PagedListDto<UserDto> users = await userService.GetUsersByRoleAsync(roleId, pageSize, pageNumber);
             return Request.CreateResponse(HttpStatusCode.OK, users);
         }
 
@@ -137,15 +137,15 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("api/user/instate/{state}")]
-        public HttpResponseMessage GetUsersbyState(bool state)
+        public async Task<HttpResponseMessage> GetUsersbyStateAsync(bool state)
         {
-            var users = userService.GetUsersByState(state);
+            List<UserDto> users = await userService.GetUsersByStateAsync(state);
             if (users.Count == 0)
             {
                 const string usersErorMessage = "No users with this state in database.";
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, usersErorMessage);
             }
-            return Request.CreateResponse<IEnumerable<UserDTO>>(HttpStatusCode.OK, users);
+            return Request.CreateResponse<IEnumerable<UserDto>>(HttpStatusCode.OK, users);
         }
 
         /// <summary>
@@ -158,9 +158,9 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("api/user/instate/{state}")]
-        public HttpResponseMessage GetUsersbyState(bool state, [FromUri]int pageSize, [FromUri]int pageNumber)
+        public async Task<HttpResponseMessage> GetUsersbyStateAsync(bool state, [FromUri]int pageSize, [FromUri]int pageNumber)
         {
-            var users = userService.GetUsersByState(state, pageSize, pageNumber);
+            PagedListDto<UserDto> users = await userService.GetUsersByStateAsync(state, pageSize, pageNumber);
             return Request.CreateResponse(HttpStatusCode.OK, users);
         }
 
@@ -172,14 +172,14 @@ namespace LearnWithMentor.Controllers
         [JwtAuthentication]
         [HttpGet]
         [Route("api/user/profile/{id?}")]
-        public HttpResponseMessage GetSingle(int id = 0 )
+        public async Task<HttpResponseMessage> GetSingleAsync(int id = 0 )
         {
             if (id == 0)
             {
                 id = userIdentityService.GetUserId();
             }
 
-            var user = userService.Get(id);
+            UserDto user = await userService.GetAsync(id);
             if (user != null)
             {
                 return Request.CreateResponse(HttpStatusCode.OK, user);
@@ -195,7 +195,7 @@ namespace LearnWithMentor.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Route("api/user")]
-        public HttpResponseMessage Post([FromBody]UserRegistrationDTO value)
+        public async Task<HttpResponseMessage> PostAsync([FromBody]UserRegistrationDto value)
         {
             if (!ModelState.IsValid)
             {
@@ -203,7 +203,7 @@ namespace LearnWithMentor.Controllers
             }
             try
             {
-                var success = userService.Add(value);
+                var success = await userService.AddAsync(value);
                 if (success)
                 {
                     var okMessage = $"Succesfully created user: {value.Email}.";
@@ -228,13 +228,13 @@ namespace LearnWithMentor.Controllers
         [AllowAnonymous]
         [HttpGet]
         [Route("api/user/verify-token")]
-        public HttpResponseMessage VerifyToken(string token)
+        public async Task<HttpResponseMessage> VerifyTokenAsync(string token)
         {
             try
             {
                 if (JwtAuthenticationAttribute.ValidateToken(token, out string userEmail))
                 {
-                    var user = userService.GetByEmail(userEmail);
+                    UserIdentityDto user = await userService.GetByEmailAsync(userEmail);
                     if (user == null)
                     {
                         return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "User not found");
@@ -256,18 +256,18 @@ namespace LearnWithMentor.Controllers
         [AllowAnonymous]
         [HttpGet]
         [Route("api/user/confirm-email")]
-        public HttpResponseMessage ConfirmEmail(string token)
+        public async Task<HttpResponseMessage> ConfirmEmailAsync(string token)
         {
             try
             {
                 if (JwtAuthenticationAttribute.ValidateToken(token, out string userEmail))
                 {
-                    var user = userService.GetByEmail(userEmail);
+                    UserIdentityDto user = await userService.GetByEmailAsync(userEmail);
                     if (user == null)
                     {
                         return Request.CreateErrorResponse(HttpStatusCode.NoContent, "User not found");
                     }
-                    if (userService.ConfirmEmailById(user.Id))
+                    if ( await userService.ConfirmEmailByIdAsync(user.Id))
                     {
                         return Request.CreateResponse(HttpStatusCode.OK, "Email confirmed");
                     }
@@ -289,7 +289,7 @@ namespace LearnWithMentor.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Route("api/user/password-reset")]
-        public async Task<HttpResponseMessage> SendPasswordResetLink([FromBody] EmailDTO emailModel, string resetPasswordLink)
+        public async Task<HttpResponseMessage> SendPasswordResetLinkAsync([FromBody] EmailDto emailModel, string resetPasswordLink)
         {
             try
             {
@@ -299,7 +299,7 @@ namespace LearnWithMentor.Controllers
                 }
                 if (ModelState.IsValid)
                 {
-                    var user = userService.GetByEmail(emailModel.Email);
+                    UserIdentityDto user = await userService.GetByEmailAsync(emailModel.Email);
                     if (user == null)
                     {
                         return Request.CreateErrorResponse(HttpStatusCode.NoContent, "User not found");
@@ -329,7 +329,7 @@ namespace LearnWithMentor.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Route("api/user/confirm-email")]
-        public async Task<HttpResponseMessage> SendEmailConfirmLink([FromBody] EmailDTO emailModel, string emailConfirmLink)
+        public async Task<HttpResponseMessage> SendEmailConfirmLinkAsync([FromBody] EmailDto emailModel, string emailConfirmLink)
         {
             try
             {
@@ -339,7 +339,7 @@ namespace LearnWithMentor.Controllers
                 }
                 if (ModelState.IsValid)
                 {
-                    var user = userService.GetByEmail(emailModel.Email);
+                    UserIdentityDto user = await userService.GetByEmailAsync(emailModel.Email);
                     if (user == null)
                     {
                         return Request.CreateErrorResponse(HttpStatusCode.NoContent, "User not found");
@@ -366,10 +366,10 @@ namespace LearnWithMentor.Controllers
         [JwtAuthentication]
         [HttpGet]
         [Route("api/user/statistics")]
-        public HttpResponseMessage GetStatistics()
+        public async Task<HttpResponseMessage> GetStatisticsAsync()
         {
             var id = userIdentityService.GetUserId();
-            var statistics = taskService.GetUserStatistics(id);
+            StatisticsDto statistics = await taskService.GetUserStatisticsAsync(id);
             if (statistics == null)
             {
                 const string errorMessage = "No user with this id in database.";
@@ -385,9 +385,9 @@ namespace LearnWithMentor.Controllers
         [JwtAuthentication]
         [HttpPost]
         [Route("api/user/{id}/image")]
-        public HttpResponseMessage PostImage(int id)
+        public async Task<HttpResponseMessage> PostImageAsync(int id)
         {
-            if (!userService.ContainsId(id))
+            if (!( await userService.ContainsIdAsync(id)))
             {
                 const string errorMessage = "No user with this id in database.";
                 return Request.CreateResponse(HttpStatusCode.NoContent, errorMessage);
@@ -420,7 +420,7 @@ namespace LearnWithMentor.Controllers
                     {
                         imageData = binaryReader.ReadBytes(postedFile.ContentLength);
                     }
-                    userService.SetImage(id, imageData, postedFile.FileName);
+                   await userService.SetImageAsync(id, imageData, postedFile.FileName);
                     const string okMessage = "Successfully created image.";
                     return Request.CreateResponse(HttpStatusCode.OK, okMessage);
                 }
@@ -440,16 +440,16 @@ namespace LearnWithMentor.Controllers
         [JwtAuthentication]
         [HttpGet]
         [Route("api/user/{id}/image")]
-        public HttpResponseMessage GetImage(int id)
+        public async Task<HttpResponseMessage> GetImageAsync(int id)
         {
             try
             {
-                if (!userService.ContainsId(id))
+                if (!(await userService.ContainsIdAsync(id)))
                 {
                     const string errorMessage = "No user with this id in database.";
                     return Request.CreateResponse(HttpStatusCode.NoContent, errorMessage);
                 }
-                var dto = userService.GetImage(id);
+                ImageDto dto = await userService.GetImageAsync(id);
                 if (dto == null)
                 {
                     const string message = "No image for this user in database.";
@@ -471,11 +471,11 @@ namespace LearnWithMentor.Controllers
         [JwtAuthentication]
         [HttpPut]
         [Route("api/user/{id}")]
-        public HttpResponseMessage Put(int id, [FromBody]UserDTO value)
+        public async Task<HttpResponseMessage> PutAsync(int id, [FromBody]UserDto value)
         {
             try
             {
-                var success = userService.UpdateById(id, value);
+                bool success = await userService.UpdateByIdAsync(id, value);
                 if (success)
                 {
                     var okMessage = $"Succesfully updated user id: {id}.";
@@ -493,6 +493,36 @@ namespace LearnWithMentor.Controllers
             return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
         }
 
+        [JwtAuthentication]
+        [HttpPut]
+        [Route("api/user/update-multiple")]
+        public async Task<HttpResponseMessage> UpdateUsersAsync([FromBody]UserDto[] value)
+        {
+            try
+            {
+                bool success = true;
+                foreach (var item in value)
+                {
+                    var result = await userService.UpdateByIdAsync(item.Id, item);
+                    success = success && result;
+                }
+                if (success)
+                {
+                    var okMessage = "Succesfully updated users.";
+                    tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, okMessage);
+                    return Request.CreateResponse(HttpStatusCode.OK, okMessage);
+                }
+            }
+            catch (EntityException e)
+            {
+                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
+            const string message = "Incorrect request syntax or users do not exist.";
+            tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, message);
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, message);
+        }
+
         /// <summary>
         /// Blocks user by Id.
         /// </summary>
@@ -501,11 +531,11 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Admin")]
         [HttpDelete]
         [Route("api/user/{id}")]
-        public HttpResponseMessage Delete(int id)
+        public async Task<HttpResponseMessage> DeleteAsync(int id)
         {
             try
             {
-                var success = userService.BlockById(id);
+                bool success = await userService.BlockByIdAsync(id);
                 if (success)
                 {
                     var okMessage = $"Succesfully blocked user id: {id}.";
@@ -532,13 +562,14 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Admin, Mentor")]
         [HttpGet]
         [Route("api/user/search")]
-        public HttpResponseMessage Search(string key, string role)
+        public async Task<HttpResponseMessage> SearchAsync(string key, string role)
         {
             if (key == null)
             {
                 key = "";
             }
-            var criteria = roleService.GetByName(role);
+
+            RoleDto criteria = await  roleService.GetByNameAsync(role);
             var lines = key.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             int? searchParametr = null;
             if (role == Constants.Roles.Blocked)
@@ -549,11 +580,11 @@ namespace LearnWithMentor.Controllers
             {
                 lines = lines.Take(2).ToArray();
             }
-            var users = criteria != null ? userService.Search(lines, criteria.Id) :
-                userService.Search(lines, searchParametr);
-            if (users.Count != 0)
+            List<UserDto> users =  criteria != null ? await userService.SearchAsync(lines, criteria.Id) :
+                await userService.SearchAsync(lines, searchParametr);
+            if ( users.Count != 0)
             {
-                return Request.CreateResponse<IEnumerable<UserDTO>>(HttpStatusCode.OK, users);
+                return Request.CreateResponse<IEnumerable<UserDto>>(HttpStatusCode.OK, users);
             }
             const string message = "No users found.";
             return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);
@@ -570,13 +601,13 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Admin, Mentor")]
         [HttpGet]
         [Route("api/user/search")]
-        public HttpResponseMessage Search(string key, string role, [FromUri]int pageSize, [FromUri]int pageNumber)
+        public async Task<HttpResponseMessage> SearchAsync(string key, string role, [FromUri]int pageSize, [FromUri]int pageNumber)
         {
             if (key == null)
             {
                 key = "";
             }
-            var criteria = roleService.GetByName(role);
+            var criteria = await roleService.GetByNameAsync(role);
             var lines = key.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             int? searchParametr = null;
             if (role == Constants.Roles.Blocked)
@@ -587,8 +618,8 @@ namespace LearnWithMentor.Controllers
             {
                 lines = lines.Take(2).ToArray();
             }
-            var users = criteria != null ? userService.Search(lines, pageSize, pageNumber, criteria.Id) :
-                userService.Search(lines, pageSize, pageNumber, searchParametr);
+            var users = criteria != null ? await userService.SearchAsync(lines, pageSize, pageNumber, criteria.Id) :
+              await userService.SearchAsync(lines, pageSize, pageNumber, searchParametr);
             return Request.CreateResponse(HttpStatusCode.OK, users);
         }
 
@@ -601,11 +632,11 @@ namespace LearnWithMentor.Controllers
         [AllowAnonymous]
         [HttpPut]
         [Route("api/user/resetpasswotd")]
-        public HttpResponseMessage ResetPassword([FromBody]string password, int id)
+        public async Task<HttpResponseMessage> ResetPasswordAsync([FromBody]string password, int id)
         {
             try
             {
-                var success = userService.UpdatePassword(id, password);
+                bool success = await userService.UpdatePasswordAsync(id, password);
                 if (success)
                 {
                     const string okMessage = "Succesfully updated password.";
@@ -630,10 +661,10 @@ namespace LearnWithMentor.Controllers
         [JwtAuthentication]
         [HttpPut]
         [Route("api/user/newpassword")]
-        public HttpResponseMessage UpdatePassword([FromBody]string value)
+        public async Task<HttpResponseMessage> UpdatePasswordAsync([FromBody]string value)
         {
-            var id = userIdentityService.GetUserId();
-            return ResetPassword(value, id);
+            int id = userIdentityService.GetUserId();
+            return await ResetPasswordAsync(value, id);
         }
 
         /// <summary>
@@ -648,7 +679,7 @@ namespace LearnWithMentor.Controllers
             var roles = roleService.GetAllRoles();
             if (roles.Count != 0)
             {
-                return Request.CreateResponse<IEnumerable<RoleDTO>>(HttpStatusCode.OK, roles);
+                return Request.CreateResponse<IEnumerable<RoleDto>>(HttpStatusCode.OK, roles);
             }
             const string message = "No roles in database.";
             return Request.CreateErrorResponse(HttpStatusCode.NoContent, message);

@@ -1,26 +1,27 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using LearnWithMentorDTO;
 
 namespace LearnWithMentorBLL.Interfaces
 {
-    public interface IGroupService: IDisposableService
+    public interface IGroupService : IDisposableService
     {
-        GroupDTO GetGroupById(int id);
-        int GroupsCount();
-        int? GetMentorIdByGroup(int groupId);
-        IEnumerable<GroupDTO> GetGroupsByMentor(int mentorId);
-        IEnumerable<UserIdentityDTO> GetUsers(int groupId);
-        IEnumerable<UserWithImageDTO> GetUsersWithImage(int groupId);
-        IEnumerable<PlanDTO> GetPlans(int groupId);
-        bool AddGroup(GroupDTO group);        
-        bool AddUsersToGroup(int []usersId , int groupId);
-        bool AddPlansToGroup(int[] usersId, int groupId);
-        IEnumerable<UserIdentityDTO> GetUsersNotInGroup(int groupId);
-        IEnumerable<UserIdentityDTO> SearchUserNotInGroup(string[] searchCases, int groupId);
-        IEnumerable<PlanDTO> GetPlansNotUsedInGroup(int groupId);
-        IEnumerable<PlanDTO> SearchPlansNotUsedInGroup(string[] searchCases, int groupId);
-        bool RemoveUserFromGroup(int groupId, int userIdToRemove);
-        bool RemovePlanFromGroup(int groupId, int planIdToRemove);
-        IEnumerable<GroupDTO> GetUserGroups(int userId);
+        Task<GroupDto> GetGroupByIdAsync(int id);
+        Task<int> GroupsCountAsync();
+        Task<int?> GetMentorIdByGroupAsync(int groupId);
+        Task<IEnumerable<GroupDto>> GetGroupsByMentorAsync(int mentorId);
+        Task<IEnumerable<UserIdentityDto>> GetUsersAsync(int groupId);
+        Task<IEnumerable<UserWithImageDto>> GetUsersWithImageAsync(int groupId);
+        Task<IEnumerable<PlanDto>> GetPlansAsync(int groupId);
+        Task<bool> AddGroupAsync(GroupDto group);        
+        Task<bool> AddUsersToGroupAsync(int[] usersId, int groupId);
+        Task<bool> AddPlansToGroupAsync(int[] plansId, int groupId);
+        Task<IEnumerable<UserIdentityDto>> GetUsersNotInGroupAsync(int groupId);
+        Task<IEnumerable<UserIdentityDto>> SearchUserNotInGroupAsync(string[] searchCases, int groupId);
+        Task<IEnumerable<PlanDto>> GetPlansNotUsedInGroupAsync(int groupId);
+        Task<IEnumerable<PlanDto>> SearchPlansNotUsedInGroupAsync(string[] searchCases, int groupId);
+        Task<bool> RemoveUserFromGroupAsync(int groupId, int userIdToRemove);
+        Task<bool> RemovePlanFromGroupAsync(int groupId, int planIdToRemove);
+        Task<IEnumerable<GroupDto>> GetUserGroupsAsync(int userId);
     }
 }

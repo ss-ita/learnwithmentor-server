@@ -2,7 +2,7 @@
 
 namespace LearnWithMentorDTO
 {
-    public class GroupDTO
+    public class GroupDto
     {
         public int Id { get; set; }
         [Required]
@@ -11,9 +11,9 @@ namespace LearnWithMentorDTO
         public int? MentorId { get; set; }
         public string MentorName { get; set; }
 
-        public GroupDTO() { }
+        public GroupDto() { }
 
-        public GroupDTO(int id, string name, int? mentorId, string mentorName)
+        public GroupDto(int id, string name, int? mentorId, string mentorName)
         {
             Id = id;
             Name = name;

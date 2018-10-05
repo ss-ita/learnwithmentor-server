@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using LearnWithMentorDTO;
 
 namespace LearnWithMentorBLL.Interfaces
 {
     public interface IMessageService : IDisposableService
     {
-        IEnumerable<MessageDTO> GetMessages(int planTaskId);
-        bool SendMessage(MessageDTO newMessage);
+        Task<IEnumerable<MessageDto>> GetMessagesAsync(int userTaskId);
+        bool SendMessage(MessageDto newMessage);
     }
 }

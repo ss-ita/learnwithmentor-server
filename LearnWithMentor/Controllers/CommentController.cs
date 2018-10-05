@@ -6,6 +6,7 @@ using LearnWithMentorDTO;
 using LearnWithMentorBLL.Interfaces;
 using System.Web.Http.Tracing;
 using System.Data.Entity.Core;
+using System.Threading.Tasks;
 
 namespace LearnWithMentor.Controllers
 {
@@ -35,11 +36,11 @@ namespace LearnWithMentor.Controllers
         /// <param name="id">Id of the comment.</param>
         [HttpGet]
         [Route("api/comment")]
-        public HttpResponseMessage GetComment(int id)
+        public async Task<HttpResponseMessage> GetCommentAsync(int id)
         {
             try
             {
-                var comment = commentService.GetComment(id);
+                CommentDto comment = await commentService.GetCommentAsync(id);
                 if (comment == null)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, "Comment with this Id does not exist in database.");
@@ -57,11 +58,11 @@ namespace LearnWithMentor.Controllers
         /// <param name="planTaskId">Id of the plantask.</param>
         [HttpGet]
         [Route("api/comment/plantask/{planTaskId}")]
-        public HttpResponseMessage GetCommentsForPlanTask(int planTaskId)
+        public async Task<HttpResponseMessage> GetCommentsForPlanTaskAsync(int planTaskId)
         {
             try
             {
-                var comments = commentService.GetCommentsForPlanTask(planTaskId);
+                var comments = await commentService.GetCommentsForPlanTaskAsync(planTaskId);
                 if (comments == null)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, "There are no comments for this task in that plan");
@@ -80,7 +81,7 @@ namespace LearnWithMentor.Controllers
         /// <param name="comment">New comment.</param>
         [HttpPost]
         [Route("api/comment")]
-        public HttpResponseMessage Post(int planTaskId, CommentDTO comment)
+        public  async Task<HttpResponseMessage> PostAsync(int planTaskId, CommentDto comment)
         {
             if (!ModelState.IsValid)
             {
@@ -88,7 +89,7 @@ namespace LearnWithMentor.Controllers
             }
             try
             {
-                if (commentService.AddCommentToPlanTask(planTaskId, comment))
+                if ( await commentService.AddCommentToPlanTaskAsync(planTaskId, comment))
                 {
                     var log = $"Succesfully created comment with id = {comment.Id} by user id = {comment.CreatorId}";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
@@ -109,11 +110,11 @@ namespace LearnWithMentor.Controllers
         /// <param name="comment">New comment.</param>
         [HttpPut]
         [Route("api/comment")]
-        public HttpResponseMessage PutComment(int commentId, [FromBody]CommentDTO comment)
+        public async Task<HttpResponseMessage> PutCommentAsync(int commentId, [FromBody]CommentDto comment)
         {
             try
             {
-                if (commentService.UpdateComment(commentId, comment))
+                if (await commentService.UpdateCommentAsync(commentId, comment))
                 {
                     var log = $"Succesfully updated comment with id = {commentId}";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
@@ -133,11 +134,11 @@ namespace LearnWithMentor.Controllers
         /// <param name="commentId">Id of the comment.</param>
         [HttpDelete]
         [Route("api/comment/{commentId}")]
-        public HttpResponseMessage Delete(int commentId)
+        public async Task<HttpResponseMessage> DeleteAsync(int commentId)
         {
             try
             {
-                if (commentService.RemoveById(commentId))
+                if (await commentService.RemoveByIdAsync(commentId))
                 {
                     var log = $"Succesfully deleted comment with id = {commentId}";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);

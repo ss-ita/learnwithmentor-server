@@ -7,6 +7,10 @@ using LearnWithMentorDTO;
 using LearnWithMentorBLL.Interfaces;
 using System.Web.Http.Tracing;
 using System.Data.Entity.Core;
+using LearnWithMentorDAL.Entities;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace LearnWithMentor.Controllers
 {
@@ -40,9 +44,9 @@ namespace LearnWithMentor.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("api/group/mentor/{id}")]
-        public HttpResponseMessage GetByMentor(int id)
+        public async Task<HttpResponseMessage> GetByMentorAsync(int id)
         {
-            var allGroups = groupService.GetGroupsByMentor(id);
+            IEnumerable<GroupDto> allGroups = await groupService.GetGroupsByMentorAsync(id);
             if (allGroups != null)
             {
                 return Request.CreateResponse(HttpStatusCode.OK, allGroups);
@@ -57,9 +61,9 @@ namespace LearnWithMentor.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("api/group/{id}")]
-        public HttpResponseMessage GetById(int id)
+        public async Task<HttpResponseMessage> GetByIdAsync(int id)
         {
-            var group = groupService.GetGroupById(id);
+            GroupDto group = await groupService.GetGroupByIdAsync(id);
             if (group != null)
             {
                 return Request.CreateResponse(HttpStatusCode.OK, group);
@@ -74,12 +78,12 @@ namespace LearnWithMentor.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("api/group/{id}/plans")]
-        public HttpResponseMessage GetPlans(int id)
+        public async Task<HttpResponseMessage> GetPlansAsync(int id)
         {
             try
             {
-                var group = groupService.GetPlans(id);
-                if (group != null)
+                IEnumerable<PlanDto> group = await groupService.GetPlansAsync(id);
+                if (group != Enumerable.Empty<PlanDto>())
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, group);
                 }
@@ -99,11 +103,11 @@ namespace LearnWithMentor.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("api/group/{id}/users")]
-        public HttpResponseMessage GetUsers(int id)
+        public async Task<HttpResponseMessage> GetUsersAsync(int id)
         {
             try
             {
-                var group = groupService.GetUsers(id);
+                IEnumerable<UserIdentityDto> group = await groupService.GetUsersAsync(id);
                 if (group != null)
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, group);
@@ -124,11 +128,11 @@ namespace LearnWithMentor.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("api/group/{id}/userimages")]
-        public HttpResponseMessage GetUsersWithImage(int id)
+        public async Task<HttpResponseMessage> GetUsersWithImageAsync(int id)
         {
             try
             {
-                var group = groupService.GetUsersWithImage(id);
+                var group = await groupService.GetUsersWithImageAsync(id);
                 if (group != null)
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, group);
@@ -150,9 +154,9 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpGet]
         [Route("api/group/{groupId}/users/notingroup")]
-        public HttpResponseMessage GetUsersNotInCurrentGroup(int groupId)
+        public async Task<HttpResponseMessage> GetUsersNotInCurrentGroupAsync(int groupId)
         {
-            var group = groupService.GetUsersNotInGroup(groupId);
+            IEnumerable<UserIdentityDto> group = await groupService.GetUsersNotInGroupAsync(groupId);
             if (group != null)
             {
                 return Request.CreateResponse(HttpStatusCode.OK, group);
@@ -166,9 +170,9 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpGet]
         [Route("api/plan/notingroup/{groupId}")]
-        public HttpResponseMessage GetPlansNotUsedInCurrentGroup(int groupId)
+        public async Task<HttpResponseMessage> GetPlansNotUsedInCurrentGroupAsync(int groupId)
         {
-            var notUsedPlans = groupService.GetPlansNotUsedInGroup(groupId);
+            var notUsedPlans = await groupService.GetPlansNotUsedInGroupAsync(groupId);
             if (notUsedPlans != null)
             {
                 return Request.CreateResponse(HttpStatusCode.OK, notUsedPlans);
@@ -186,7 +190,7 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpPost]
         [Route("api/group")]
-        public HttpResponseMessage Post([FromBody]GroupDTO group)
+        public async Task<HttpResponseMessage> PostAsync([FromBody]GroupDto group)
         {
             try
             {
@@ -194,8 +198,8 @@ namespace LearnWithMentor.Controllers
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
                 }
-                var success = groupService.AddGroup(group);
-                if (success)
+                var success = groupService.AddGroupAsync(group);
+                if (await success)
                 {
                     const string log = "Group succesfully created.";
                     tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, log);
@@ -220,17 +224,17 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpPut]
         [Route("api/group/{id}/user")]
-        public HttpResponseMessage PutUsersToGroup(int id, [FromBody] int[] userId)
+        public async Task<HttpResponseMessage> PutUsersToGroupAsync(int id, [FromBody] int[] userId)
         {
             try
             {
                 var currentUserId = userIdentityService.GetUserId();
-                var mentorId = groupService.GetMentorIdByGroup(id);
+                int? mentorId = await groupService.GetMentorIdByGroupAsync(id);
                 if (mentorId != currentUserId)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
                 }
-                var success = groupService.AddUsersToGroup(userId, id);
+                bool success = await groupService.AddUsersToGroupAsync(userId, id);
                 if (success)
                 {
                     var log = $"Succesfully add user with id {userId} to group with id = {id}";
@@ -256,17 +260,17 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpPut]
         [Route("api/group/{id}/plan")]
-        public HttpResponseMessage PutPlansToGroup(int id, [FromBody] int[] planId)
+        public async Task<HttpResponseMessage> PutPlansToGroupAsync(int id, [FromBody] int[] planId)
         {
             try
             {
                 var userId = userIdentityService.GetUserId();
-                var mentorId = groupService.GetMentorIdByGroup(id);
+                int? mentorId = await groupService.GetMentorIdByGroupAsync(id);
                 if (mentorId != userId)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
                 }
-                var success = groupService.AddPlansToGroup(planId, id);
+                bool success = await groupService.AddPlansToGroupAsync(planId, id);
                 if (success)
                 {
                     var log = $"Succesfully add plan with id = {planId} to group with id = {id}";
@@ -290,16 +294,16 @@ namespace LearnWithMentor.Controllers
         /// <param name="groupId">Id of the plan.</param>
         [HttpGet]
         [Route("api/group/searchinNotUsedPlan")]
-        public HttpResponseMessage SearchPlansNotUsedInCurrentGroup(string searchKey, int groupId)
+        public async Task<HttpResponseMessage> SearchPlansNotUsedInCurrentGroupAsync(string searchKey, int groupId)
         {
             try
             {
                 if (searchKey == null)
                 {
-                    return GetPlansNotUsedInCurrentGroup(groupId);
+                    return await GetPlansNotUsedInCurrentGroupAsync(groupId);
                 }
                 var lines = searchKey.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                var plansList = groupService.SearchPlansNotUsedInGroup(lines, groupId);
+                var plansList = await groupService.SearchPlansNotUsedInGroupAsync(lines, groupId);
                 if (plansList == null)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, "This plan does not exist.");
@@ -320,16 +324,16 @@ namespace LearnWithMentor.Controllers
         /// <param name="groupId">Id of the plan.</param>
         [HttpGet]
         [Route("api/group/searchinNotInvolvedUsers")]
-        public HttpResponseMessage SearchUsersNotUsedInCurrentGroup(string searchKey, int groupId)
+        public async Task<HttpResponseMessage> SearchUsersNotUsedInCurrentGroupAsync(string searchKey, int groupId)
         {
             try
             {
                 if (searchKey == null)
                 {
-                    return GetUsersNotInCurrentGroup(groupId);
+                    return await GetUsersNotInCurrentGroupAsync(groupId);
                 }
                 var lines = searchKey.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                var usersList = groupService.SearchUserNotInGroup(lines, groupId);
+                var usersList = groupService.SearchUserNotInGroupAsync(lines, groupId);
                 if (usersList == null)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, "This user does not exist.");
@@ -351,17 +355,17 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpDelete]
         [Route("api/group/removeUserFromGroup")]
-        public HttpResponseMessage RemoveUserFromCurrentGroup(int groupId, int userToRemoveId)
+        public async Task<HttpResponseMessage> RemoveUserFromCurrentGroupAsync(int groupId, int userToRemoveId)
         {
             try
             {
                 var id = userIdentityService.GetUserId();
-                var mentorId = groupService.GetMentorIdByGroup(groupId);
+                int? mentorId = await groupService.GetMentorIdByGroupAsync(groupId);
                 if (mentorId != id)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Authorization denied.");
                 }
-                var successfullyRemoved = groupService.RemoveUserFromGroup(groupId, userToRemoveId);
+                bool successfullyRemoved = await groupService.RemoveUserFromGroupAsync(groupId, userToRemoveId);
                 if (successfullyRemoved)
                 {
                     var log = $"Succesfully removed user with id = {userToRemoveId} from group with id = {groupId}";
@@ -387,11 +391,11 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor")]
         [HttpDelete]
         [Route("api/group/removePlanFromGroup")]
-        public HttpResponseMessage RemovePlanFromCurrentGroup(int groupId, int planToRemoveId)
+        public async Task<HttpResponseMessage> RemovePlanFromCurrentGroupAsync(int groupId, int planToRemoveId)
         {
             try
             {
-                var successfullyRemoved = groupService.RemovePlanFromGroup(groupId, planToRemoveId);
+                bool successfullyRemoved = await groupService.RemovePlanFromGroupAsync(groupId, planToRemoveId);
                 if (successfullyRemoved)
                 {
                     var log = $"Succesfully removed plan with id = {planToRemoveId} from group with id = {groupId}";
@@ -415,20 +419,20 @@ namespace LearnWithMentor.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("api/group/mygroups")]
-        public HttpResponseMessage GetUserGroups()
+        public async Task<HttpResponseMessage> GetUserGroupsAsync()
         {
             try
             {
                 var userId = userIdentityService.GetUserId();
-                if (!userService.ContainsId(userId))
+                if (!(await userService.ContainsIdAsync(userId)))
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, $"There are no users with id = {userId}");
                 }
-                if (groupService.GroupsCount() == 0)
+                if (await groupService.GroupsCountAsync() == 0)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.NoContent, "There are no groups in database.");
                 }
-                var groups = groupService.GetUserGroups(userId);
+                var groups = await groupService.GetUserGroupsAsync(userId);
                 if (groups == null)
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "There are no groups for this user");

@@ -1,17 +1,18 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using LearnWithMentorDTO;
 
 namespace LearnWithMentorBLL.Interfaces
 {
     public interface ICommentService: IDisposableService
     {
-        CommentDTO GetComment(int id);
-        IEnumerable<CommentDTO> GetCommentsForPlanTask(int taskId, int planId);
-        IEnumerable<CommentDTO> GetCommentsForPlanTask(int planTaskId);
-        bool AddCommentToPlanTask(int planTaskId, CommentDTO c);
-        bool AddCommentToPlanTask(int planId, int taskId, CommentDTO c);
-        bool UpdateCommentIdText(int id, string text);
-        bool UpdateComment(int id, CommentDTO c);
-        bool RemoveById(int id);
+        Task<CommentDto> GetCommentAsync(int commentId);
+        Task<IEnumerable<CommentDto>> GetCommentsForPlanTaskAsync(int taskId, int planId);
+        Task<IEnumerable<CommentDto>> GetCommentsForPlanTaskAsync(int planTaskId);
+        Task<bool> AddCommentToPlanTaskAsync(int planTaskId, CommentDto comment);
+        Task<bool> AddCommentToPlanTaskAsync(int planId, int taskId, CommentDto comment);
+        Task<bool> UpdateCommentIdTextAsync(int commentId, string text);
+        Task<bool> UpdateCommentAsync(int commentId, CommentDto commentDTO);
+        Task<bool> RemoveByIdAsync(int commentId);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace LearnWithMentorDTO
 {
-    public class EmailDTO
+    public class EmailDto
     {
         [Required]
         [EmailAddress]

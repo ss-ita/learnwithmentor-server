@@ -8,21 +8,18 @@ namespace LearnWithMentorDAL.Repositories
 {
     public class RoleRepository : BaseRepository<Role>, IRoleRepository
     {
-        public RoleRepository(LearnWithMentor_DBEntities context) : base(context)
+        public RoleRepository(LearnWithMentorContext context) : base(context)
         {
         }
 
-        public Role Get(int id)
+        public Task<Role> Get(int id)
         {
-            Task<Role> findRole = Context.Roles.FirstOrDefaultAsync(r => r.Id == id);
-            return findRole.GetAwaiter().GetResult();
+           return Context.Roles.FirstOrDefaultAsync(r => r.Id == id);
         }
 
-        public bool TryGetByName(string name, out Role role)
+        public Task<Role> TryGetByName(string name)
         {
-            Task<Role> findRole = Context.Roles.FirstOrDefaultAsync(r => r.Name == name);
-            role = findRole.GetAwaiter().GetResult();
-            return role != null;
+            return Context.Roles.FirstOrDefaultAsync(r => r.Name == name);
         }
     }
 }

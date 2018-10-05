@@ -18,7 +18,7 @@ namespace LearnWithMentor
 			var container = new UnityContainer();
 
             container.RegisterType<ICommentService, CommentService>();
-            container.RegisterType<ITraceWriter, LWMLogger>();
+            container.RegisterType<ITraceWriter, LwmLogger>();
             container.RegisterType<IPlanService, PlanService>();
             container.RegisterType<IGroupService, GroupService>();
             container.RegisterType<ITaskService, TaskService>();
@@ -27,7 +27,7 @@ namespace LearnWithMentor
             container.RegisterType<IRoleService, RoleService>();
             container.RegisterType<IUserIdentityService, UserIdentityService>();
 
-            container.RegisterType<IUnitOfWork, UnitOfWork>(new InjectionConstructor(typeof (LearnWithMentor_DBEntities)));
+            container.RegisterType<IUnitOfWork, UnitOfWork>(new InjectionConstructor(typeof (LearnWithMentorContext)));
 
             GlobalConfiguration.Configuration.DependencyResolver = new UnityDependencyResolver(container);
         }

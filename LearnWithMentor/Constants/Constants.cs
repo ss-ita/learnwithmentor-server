@@ -14,7 +14,7 @@
         public static class ImageRestrictions
         {
             public const int MaxSize = 1024 * 1024 * 1; // 1MB
-            public static string[] Extensions = {".jpeg", ".jpg", ".png"};
+            public static readonly string[] Extensions = {".jpeg", ".jpg", ".png"};
         }
     }
 }

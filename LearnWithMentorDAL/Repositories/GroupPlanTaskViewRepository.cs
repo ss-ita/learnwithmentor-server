@@ -5,6 +5,6 @@ namespace LearnWithMentorDAL.Repositories
 {
     public class GroupPlanTaskViewRepository: BaseRepository<GROUP_PLAN_TASK>, IGroupPlanTaskViewRepository
     {
-        public GroupPlanTaskViewRepository(LearnWithMentor_DBEntities context) : base(context) { }
+        public GroupPlanTaskViewRepository(LearnWithMentorContext context) : base(context) { }
     }
 }

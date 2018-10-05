@@ -3,6 +3,7 @@ using LearnWithMentorDAL.Entities;
 using LearnWithMentorDTO;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDAL.UnitOfWork;
+using System.Threading.Tasks;
 
 namespace LearnWithMentorBLL.Services
 {
@@ -12,34 +13,34 @@ namespace LearnWithMentorBLL.Services
         {
         }
 
-        public IEnumerable<MessageDTO> GetMessages(int userTaskId)
+        public async Task<IEnumerable<MessageDto>> GetMessagesAsync(int userTaskId)
         {
-            var userTask = db.UserTasks.Get(userTaskId);
+            UserTask userTask = await db.UserTasks.GetAsync(userTaskId);
             if (userTask == null)
             {
                 return null;
             }
             var messages = userTask.Messages;
-            var messageDTOs = new List<MessageDTO>();
+            var messageDTOs = new List<MessageDto>();
             foreach (var message in messages)
             {
-                messageDTOs.Add(new MessageDTO(message.Id,
+                messageDTOs.Add(new MessageDto(message.Id,
                                        message.User_Id,
                                        message.UserTask_Id,
-                                       db.Users.ExtractFullName(message.User_Id),
+                                       await db.Users.ExtractFullNameAsync(message.User_Id),
                                        message.Text,
                                        message.Send_Time));
             }
             return messageDTOs;
         }
 
-        public bool SendMessage(MessageDTO messageDTO)
+        public bool SendMessage(MessageDto newMessage)
         {
             var message = new Message()
             {
-                User_Id = messageDTO.SenderId,
-                Text = messageDTO.Text,
-                UserTask_Id = messageDTO.UserTaskId
+                User_Id = newMessage.SenderId,
+                Text = newMessage.Text,
+                UserTask_Id = newMessage.UserTaskId
             };
             db.Messages.Add(message);
             db.Save();
