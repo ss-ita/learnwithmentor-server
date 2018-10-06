@@ -18,17 +18,17 @@ namespace LearnWithMentorDAL.Repositories
             return Context.Set<T>();
         }
 
-        public void Add(T item)
+        public async System.Threading.Tasks.Task AddAsync(T item)
         {
             Context.Set<T>().Add(item);
         }
 
-        public void Update(T item)
+        public async System.Threading.Tasks.Task UpdateAsync(T item)
         {
             Context.Entry(item).State = EntityState.Modified;
         }
 
-        public void Remove(T item)
+        public async System.Threading.Tasks.Task RemoveAsync(T item)
         {
             Context.Set<T>().Remove(item);
         }

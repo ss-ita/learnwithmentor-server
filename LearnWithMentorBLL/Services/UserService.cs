@@ -70,7 +70,7 @@ namespace LearnWithMentorBLL.Services
                 return false;
             }
             item.Blocked = true;
-            db.Users.Update(item);
+            db.Users.UpdateAsync(item);
             db.Save();
             return true;
         }
@@ -102,7 +102,7 @@ namespace LearnWithMentorBLL.Services
                     item.Role_Id = updatedRole.Id;
                     modified = true;
                 }
-                db.Users.Update(item);
+                db.Users.UpdateAsync(item);
                 db.Save();
             }
             return modified;
@@ -114,7 +114,7 @@ namespace LearnWithMentorBLL.Services
             if (user != null)
             {
                 user.Email_Confirmed = true;
-                db.Users.Update(user);
+                db.Users.UpdateAsync(user);
                 db.Save();
                 return true;
             }
@@ -132,7 +132,7 @@ namespace LearnWithMentorBLL.Services
             toAdd.Role_Id = studentRole.Id;
             toAdd.FirstName = userLoginDTO.FirstName;
             toAdd.LastName = userLoginDTO.LastName;
-            db.Users.Add(toAdd);
+            db.Users.AddAsync(toAdd);
             db.Save();
             return true;
         }
@@ -145,7 +145,7 @@ namespace LearnWithMentorBLL.Services
                 return false;
             }
             user.Password = BCrypt.Net.BCrypt.HashPassword(password);
-            db.Users.Update(user);
+            db.Users.UpdateAsync(user);
             db.Save();
             return true;
         }
