@@ -10,8 +10,10 @@ namespace LearnWithMentorDAL.Entities
         public int User_Id { get; set; }
         public string Text { get; set; }
         public DateTime? Send_Time { get; set; }
-        
+        public bool IsRead { get; set; }
+
         public virtual User Creator { get; set; }
         public virtual UserTask UserTask { get; set; }
+        
     }
 }

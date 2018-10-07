@@ -77,8 +77,8 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         {
             var testMessages = new List<MessageDto>
             {
-                new MessageDto(1, 1, 1, "petro", "good result", DateTime.Now),
-                new MessageDto(2, 1, 1, "petro",  new string('*',5000), DateTime.Now)
+                new MessageDto(1, 1, 1, "petro", "good result", DateTime.Now,false),
+                new MessageDto(2, 1, 1, "petro",  new string('*',5000), DateTime.Now,false)
             };
             return testMessages;
         }
