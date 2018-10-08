@@ -24,6 +24,8 @@ namespace LearnWithMentorDAL.Entities
             CreateSectionReferences(modelBuilder);
             CreateTaskReferences(modelBuilder);
             CreateUserTaskReferences(modelBuilder);
+            CreateUserGroupReferences(modelBuilder);
+
             CreateManyToManyReferences(modelBuilder);
         }
 
@@ -34,12 +36,13 @@ namespace LearnWithMentorDAL.Entities
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Section> Sections { get; set; }
         public virtual DbSet<Task> Tasks { get; set; }
-        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<GroupUser> Users { get; set; }
         public virtual DbSet<UserTask> UserTasks { get; set; }
         public virtual DbSet<PlanSuggestion> PlanSuggestion { get; set; }
         public virtual DbSet<GROUP_PLAN_TASK> GROUPS_PLANS_TASKS { get; set; }
         public virtual DbSet<USER_ROLE> USERS_ROLES { get; set; }
         public virtual DbSet<Message> Messages { get; set; }
+        public virtual DbSet<UserGroup> UserGroups { get; set; }
 
         public virtual int sp_Total_Ammount_of_Users(ObjectParameter total)
         {
@@ -48,7 +51,7 @@ namespace LearnWithMentorDAL.Entities
 
         private void CreateUserReferences(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>()
+            modelBuilder.Entity<GroupUser>()
                 .HasKey(user => user.Id)
                 .HasRequired(user => user.Role)
                 .WithMany(role => role.Users)
@@ -158,6 +161,23 @@ namespace LearnWithMentorDAL.Entities
                 .WillCascadeOnDelete(false);
         }
 
+
+        private void CreateUserGroupReferences(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<UserGroup>()
+                .HasKey(userGroup => userGroup.Id)
+                .HasRequired(userGroup => userGroup.User)
+                .WithMany(plan => plan.UserGroups)
+                .HasForeignKey(planTask => planTask.UserId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<UserGroup>()
+                .HasRequired(planTask => planTask.Group)
+                .WithMany(task => task.UserGroups)
+                .HasForeignKey(planTask => planTask.GroupId)
+                .WillCascadeOnDelete(false);
+        }
+
         private void CreateRoleReferences(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Role>()
@@ -210,7 +230,7 @@ namespace LearnWithMentorDAL.Entities
 
         private void CreateManyToManyReferences(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>()
+            modelBuilder.Entity<GroupUser>()
                 .HasMany(user => user.Groups)
                 .WithMany(group => group.Users)
                 .Map(userGroup =>

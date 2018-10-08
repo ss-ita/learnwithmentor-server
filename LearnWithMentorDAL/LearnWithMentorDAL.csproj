@@ -68,6 +68,7 @@
     <Compile Include="Entities\Section.cs" />
     <Compile Include="Entities\Task.cs" />
     <Compile Include="Entities\User.cs" />
+    <Compile Include="Entities\UserGroup.cs" />
     <Compile Include="Entities\UserTask.cs" />
     <Compile Include="Entities\USER_ROLE.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="Repositories\Interfaces\IGroupPlanTaskViewRepository.cs" />
     <Compile Include="Repositories\Interfaces\IGroupRepository.cs" />
     <Compile Include="Repositories\Interfaces\IPlanSuggestionRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IUserGroupRepository.cs" />
     <Compile Include="Repositories\Interfaces\IPlanTaskRepository.cs" />
     <Compile Include="Repositories\Interfaces\IRepository.cs" />
     <Compile Include="Repositories\Interfaces\IRoleRepository.cs" />
@@ -91,6 +93,7 @@
     <Compile Include="Repositories\Interfaces\IUserRepository.cs" />
     <Compile Include="Repositories\Interfaces\IUserRoleViewRepository.cs" />
     <Compile Include="Repositories\PlanSuggestionRepository.cs" />
+    <Compile Include="Repositories\UserGroupRepository.cs" />
     <Compile Include="Repositories\PlanTaskRepository.cs" />
     <Compile Include="Repositories\RoleRepository.cs" />
     <Compile Include="Repositories\SectionRepository.cs" />

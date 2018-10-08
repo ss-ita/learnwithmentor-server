@@ -41,8 +41,52 @@ namespace LearnWithMentorDAL.EF
                 InitializeMessages(context);
                 InitializeComments(context);
                 InitializePlanSugestion(context);
+                InitializeUserGroups(context);
             }
         }
+
+        private static void InitializeUserGroups(LearnWithMentorContext context)
+        {
+            //var rng = new Random();
+            //var userGroups = new List<UserGroup>();
+            //var users = context.Users.ToList();
+            //var groups = context.Groups.ToList();
+
+            var userGroups = new List<UserGroup>()
+            {
+                new UserGroup {UserId = 1 , GroupId = 1},
+                new UserGroup {UserId = 1 , GroupId = 2},
+                new UserGroup {UserId = 2 , GroupId = 1},
+                new UserGroup {UserId = 2 , GroupId = 3},
+                new UserGroup {UserId = 2 , GroupId = 5},
+                new UserGroup {UserId = 3 , GroupId = 5},
+                new UserGroup {UserId = 4 , GroupId = 6},
+                new UserGroup {UserId = 5 , GroupId = 9},
+                new UserGroup {UserId = 6 , GroupId = 11},
+                new UserGroup {UserId = 6 , GroupId = 4},
+                new UserGroup {UserId = 7 , GroupId = 5},
+                new UserGroup {UserId = 8 , GroupId = 6},
+                new UserGroup {UserId = 9 , GroupId = 7},
+                new UserGroup {UserId = 10 , GroupId = 10},
+                new UserGroup {UserId = 10, GroupId = 11},
+                new UserGroup {UserId = 11 , GroupId = 1},
+                new UserGroup {UserId = 11 , GroupId = 4},
+            };
+
+            //foreach (var user in users)
+            //{
+            //    var randomGroupIndex = rng.Next(0, groups.Count);
+            //    var groupCount = rng.Next(0, 4);
+            //    for (int i = 0; i < groupCount; i++)
+            //    {
+            //        userGroups.Add(new UserGroup() { UserId = user.Id, GroupId = groups[randomGroupIndex].Id });
+            //    }
+            //}
+
+            context.UserGroups.AddRange(userGroups);
+            context.SaveChanges();
+        }
+
         private static void InitializeRoles(LearnWithMentorContext context)
         {
             context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('Roles', RESEED, 0)");
@@ -58,44 +102,44 @@ namespace LearnWithMentorDAL.EF
         private static void InitializeUsers(LearnWithMentorContext context)
         {
             context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('Users', RESEED, 0)");
-            var users = new List<User>
+            var users = new List<GroupUser>
             {
                 //mentors
-                new User() {FirstName = "Vyacheslav", LastName = "Koldovsky", Email = "koldovsky@gmail.com"},
-                new User() {FirstName = "Khrystyna ", LastName = "Romaniv", Email = "romaniv@gmail.com"},
-                new User() {FirstName = "Orysia", LastName = "Khoroshchak", Email = "khoroshchak@gmail.com"},
-                new User() {FirstName = "Lesya", LastName = "Klakovych", Email = "klakovych@gmail.com"},
-                new User() {FirstName = "Viktoria", LastName = "Ryazhska", Email = "ryazhska@gmail.com"},
-                new User() {FirstName = "Liubomyr", LastName = "Halamaha", Email = "halamaha@gmail.com"},
-                new User() {FirstName = "Igor", LastName = "Kohut", Email = "kohut@gmail.com"},
-                new User() {FirstName = "Andriy", LastName = "Korkuna", Email = "korkuna@gmail.com"},
-                new User() {FirstName = "Yaroslav", LastName = "Harasym", Email = "harasym@gmail.com"},
-                new User() {FirstName = "Mykhaylo", LastName = "Plesna", Email = "plesna@gmail.com"},
-                new User() {FirstName = "Maryana", LastName = "Lopatynska", Email = "lopatynska@gmail.com"},
+                new GroupUser() {FirstName = "Vyacheslav", LastName = "Koldovsky", Email = "koldovsky@gmail.com"},
+                new GroupUser() {FirstName = "Khrystyna ", LastName = "Romaniv", Email = "romaniv@gmail.com"},
+                new GroupUser() {FirstName = "Orysia", LastName = "Khoroshchak", Email = "khoroshchak@gmail.com"},
+                new GroupUser() {FirstName = "Lesya", LastName = "Klakovych", Email = "klakovych@gmail.com"},
+                new GroupUser() {FirstName = "Viktoria", LastName = "Ryazhska", Email = "ryazhska@gmail.com"},
+                new GroupUser() {FirstName = "Liubomyr", LastName = "Halamaha", Email = "halamaha@gmail.com"},
+                new GroupUser() {FirstName = "Igor", LastName = "Kohut", Email = "kohut@gmail.com"},
+                new GroupUser() {FirstName = "Andriy", LastName = "Korkuna", Email = "korkuna@gmail.com"},
+                new GroupUser() {FirstName = "Yaroslav", LastName = "Harasym", Email = "harasym@gmail.com"},
+                new GroupUser() {FirstName = "Mykhaylo", LastName = "Plesna", Email = "plesna@gmail.com"},
+                new GroupUser() {FirstName = "Maryana", LastName = "Lopatynska", Email = "lopatynska@gmail.com"},
                 //students of Lv-343.Net
-                new User() {FirstName = "Bohdan", LastName = "Bondarets", Email = "bondarets.bogdan@gmail.com"},
-                new User() {FirstName = "Yura", LastName = "Vasko", Email = "zhydetskyi@gmail.com"},
-                new User() {FirstName = "Yura", LastName = "Kozlovsky", Email = "yurikozlovskiJ@gmail.com"},
-                new User() {FirstName = "Nazar", LastName = "Polevyy", Email = "nazarp06@gmail.com"},
-                new User() {FirstName = "Valentyn", LastName = "Kravchenko", Email = "kravchenkov.me@gmail.com"},
-                new User() {FirstName = "Yura", LastName = "Stashko", Email = "yura.stashko98@gmail.com"},
-                new User() {FirstName = "Solomia", LastName = "Yusko", Email = "solayusko@gmail.com"},
-                new User() {FirstName = "Sofia", LastName = "Flys", Email = "flyssoffia@gmail.com"},
+                new GroupUser() {FirstName = "Bohdan", LastName = "Bondarets", Email = "bondarets.bogdan@gmail.com"},
+                new GroupUser() {FirstName = "Yura", LastName = "Vasko", Email = "zhydetskyi@gmail.com"},
+                new GroupUser() {FirstName = "Yura", LastName = "Kozlovsky", Email = "yurikozlovskiJ@gmail.com"},
+                new GroupUser() {FirstName = "Nazar", LastName = "Polevyy", Email = "nazarp06@gmail.com"},
+                new GroupUser() {FirstName = "Valentyn", LastName = "Kravchenko", Email = "kravchenkov.me@gmail.com"},
+                new GroupUser() {FirstName = "Yura", LastName = "Stashko", Email = "yura.stashko98@gmail.com"},
+                new GroupUser() {FirstName = "Solomia", LastName = "Yusko", Email = "solayusko@gmail.com"},
+                new GroupUser() {FirstName = "Sofia", LastName = "Flys", Email = "flyssoffia@gmail.com"},
                 //Next users are administators
-                new User() {FirstName = "Pedro", LastName = "Alvares", Email = "alvares@gmail.com"},
-                new User() {FirstName = "Dmytro", LastName = "Chalyi", Email = "chalyi@gmail.com"},
-                new User() {FirstName = "Adriana", LastName = "Prudyvus", Email = "prudyvus@gmail.com"},
-                new User() {FirstName = "Yaromyr", LastName = "Oryshchyn", Email = "oryshchyn@gmail.com"},
-                new User() {FirstName = "Andrii", LastName = "Danyliuk", Email = "danyliuk@gmail.com"},
-                new User() {FirstName = "Maksym", LastName = "Prytyka", Email = "prytyka@gmail.com"},
-                new User() {FirstName = "Mykhailo", LastName = "Kyzyma", Email = "kyzyma@gmail.com"},
-                new User() {FirstName = "Dmytro", LastName = "Khomyk", Email = "khomyk@gmail.com"},
-                new User() {FirstName = "Pavlo", LastName = "Kruk", Email = "kruk@gmail.com"},
-                new User() {FirstName = "Kateryna", LastName = "Obrizan", Email = "obrizan@gmail.com"},
-                new User() {FirstName = "Viktor", LastName = "Levak", Email = "levak@gmail.com"},
-                new User() {FirstName = "Oleksandr", LastName = "Mykhalchuk", Email = "mykhalchuk@gmail.com"},
-                new User() {FirstName = "El", LastName = "Admino", Email = "admino@gmail.com"},
-                new User() {FirstName = "La", LastName = "Admina", Email = "admina@gmail.com"}
+                new GroupUser() {FirstName = "Pedro", LastName = "Alvares", Email = "alvares@gmail.com"},
+                new GroupUser() {FirstName = "Dmytro", LastName = "Chalyi", Email = "chalyi@gmail.com"},
+                new GroupUser() {FirstName = "Adriana", LastName = "Prudyvus", Email = "prudyvus@gmail.com"},
+                new GroupUser() {FirstName = "Yaromyr", LastName = "Oryshchyn", Email = "oryshchyn@gmail.com"},
+                new GroupUser() {FirstName = "Andrii", LastName = "Danyliuk", Email = "danyliuk@gmail.com"},
+                new GroupUser() {FirstName = "Maksym", LastName = "Prytyka", Email = "prytyka@gmail.com"},
+                new GroupUser() {FirstName = "Mykhailo", LastName = "Kyzyma", Email = "kyzyma@gmail.com"},
+                new GroupUser() {FirstName = "Dmytro", LastName = "Khomyk", Email = "khomyk@gmail.com"},
+                new GroupUser() {FirstName = "Pavlo", LastName = "Kruk", Email = "kruk@gmail.com"},
+                new GroupUser() {FirstName = "Kateryna", LastName = "Obrizan", Email = "obrizan@gmail.com"},
+                new GroupUser() {FirstName = "Viktor", LastName = "Levak", Email = "levak@gmail.com"},
+                new GroupUser() {FirstName = "Oleksandr", LastName = "Mykhalchuk", Email = "mykhalchuk@gmail.com"},
+                new GroupUser() {FirstName = "El", LastName = "Admino", Email = "admino@gmail.com"},
+                new GroupUser() {FirstName = "La", LastName = "Admina", Email = "admina@gmail.com"}
             };
             foreach (var user in users)
             {

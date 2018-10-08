@@ -163,6 +163,52 @@ namespace LearnWithMentorBLL.Services
             return userList;
         }
 
+        public async Task<bool> AddGroupToMentorUser(int userId, int groupId)
+        {
+            var group = await db.Groups.GetAsync(groupId);
+            if (group == null)         
+                return false;
+
+            var user = await db.Users.GetAsync(userId);
+            if (user == null)
+                return false;
+
+            var userRole = await db.Roles.Get(user.Role_Id);
+            if (userRole == null)
+                return false;
+
+            if (userRole.Name != "Mentor")           
+                return false;
+
+            db.UserGroups.Add(new UserGroup {UserId = userId, GroupId = groupId});
+            db.Save();
+
+            return true;
+        }
+
+        public async Task<bool> RemoveGroupFromMentorUser(int userId, int groupId)
+        {
+            var group = await db.Groups.GetAsync(groupId);
+            if (group == null)
+                return false;
+
+            var user = await db.Users.GetAsync(userId);
+            if (user == null)
+                return false;
+
+            var userRole = await db.Roles.Get(user.Role_Id);
+            if (userRole == null)
+                return false;
+
+            if (userRole.Name != "Mentor")
+                return false;
+
+            db.UserGroups.Remove(new UserGroup { UserId = userId, GroupId = groupId });
+            db.Save();
+
+            return true;
+        }
+
         public async ThreadTask.Task<IEnumerable<UserWithImageDto>> GetUsersWithImageAsync(int groupId)
         {
             var group = await db.Groups.GetGroupsByMentorAsync(groupId);
@@ -178,7 +224,7 @@ namespace LearnWithMentorBLL.Services
             var userList = new List<UserWithImageDto>();
             foreach (var user in users)
             {
-                User userToGetImage = await db.Users.GetAsync(user.Id);
+                GroupUser userToGetImage = await db.Users.GetAsync(user.Id);
                 userList.Add(new UserWithImageDto(user.Email,
                     user.Id,
                     user.FirstName,
@@ -216,7 +262,7 @@ namespace LearnWithMentorBLL.Services
 
         public async ThreadTask.Task<IEnumerable<GroupDto>> GetUserGroupsAsync(int userId)
         {
-            User user = await db.Users.GetAsync(userId);
+            GroupUser user = await db.Users.GetAsync(userId);
             if (user == null)
             {
                 return null;
@@ -263,7 +309,7 @@ namespace LearnWithMentorBLL.Services
             var added = false;
             foreach (var userId in usersId)
             {
-                User addUser = await db.Users.GetAsync(userId);
+                GroupUser addUser = await db.Users.GetAsync(userId);
                 if (addUser != null)
                 {
                     added = await db.Groups.AddUserToGroupAsync(userId, groupId);
@@ -416,7 +462,7 @@ namespace LearnWithMentorBLL.Services
             }
         }
 
-        private bool IsSamePlanAndUserInOtherGroup(Plan plan, User user)
+        private bool IsSamePlanAndUserInOtherGroup(Plan plan, GroupUser user)
         {
             var matchNumber = 0;
             foreach (var group in db.Groups.GetAll())
@@ -463,7 +509,7 @@ namespace LearnWithMentorBLL.Services
         public async ThreadTask.Task<bool> RemoveUserFromGroupAsync(int groupId, int userIdToRemove)
         {
             var group = await db.Groups.GetAsync(groupId);
-            User userToRemove = await db.Users.GetAsync(userIdToRemove);
+            GroupUser userToRemove = await db.Users.GetAsync(userIdToRemove);
             if (group == null)
             {
                 return false;

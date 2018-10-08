@@ -41,7 +41,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
         public async ThreadTask.Task GetUserById_ShouldReturnUserById()
         {
             uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);
-            uowMock.Setup(u => u.Users.GetAsync(It.IsAny<int>())).ReturnsAsync(new User() { Id = 3, Role = new Role() });
+            uowMock.Setup(u => u.Users.GetAsync(It.IsAny<int>())).ReturnsAsync(new GroupUser() { Id = 3, Role = new Role() });
 
             //arrange
             int userId = 3;
@@ -59,7 +59,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
         public async ThreadTask.Task GetUserById_ShouldReturnNull()
         {
             uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);
-            uowMock.Setup(u => u.Users.GetAsync(It.IsAny<int>())).ReturnsAsync((User)null);
+            uowMock.Setup(u => u.Users.GetAsync(It.IsAny<int>())).ReturnsAsync((GroupUser)null);
 
             //arrange
             int userId = 3;
@@ -78,7 +78,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
             string userEmail = "qwerty@gmail.com";
 
             uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);
-            uowMock.Setup(u => u.Users.GetByEmailAsync(It.IsAny<string>())).ReturnsAsync(new User() { Email = userEmail, Role = new Role() });
+            uowMock.Setup(u => u.Users.GetByEmailAsync(It.IsAny<string>())).ReturnsAsync(new GroupUser() { Email = userEmail, Role = new Role() });
 
             //act
             UserIdentityDto result = await userService.GetByEmailAsync(userEmail);
@@ -93,7 +93,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
         public async ThreadTask.Task GetUserByEmail_ShouldReturnNull()
         {
             uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);
-            uowMock.Setup(u => u.Users.GetByEmailAsync(It.IsAny<string>())).ReturnsAsync((User)null);
+            uowMock.Setup(u => u.Users.GetByEmailAsync(It.IsAny<string>())).ReturnsAsync((GroupUser)null);
 
             //arrange
             string userEmail = "qwerty@gmail.com";
@@ -109,11 +109,11 @@ namespace LearnWithMentor.Tests.BLL.Tests
         public async ThreadTask.Task GetAllUsers_ShouldReturnAllUsers()
         {
             //arrange
-            var users = new List<User>
+            var users = new List<GroupUser>
             {
-                new User() {Id=1, Role=new Role() },
-                new User() {Id=2, Role=new Role() },
-                new User() {Id=3, Role=new Role() }
+                new GroupUser() {Id=1, Role=new Role() },
+                new GroupUser() {Id=2, Role=new Role() },
+                new GroupUser() {Id=3, Role=new Role() }
             };
 
             uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);
@@ -139,7 +139,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
         {
             //arrange
             uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);
-            uowMock.Setup(u => u.Users.GetAll()).Returns((List<User>)null);
+            uowMock.Setup(u => u.Users.GetAll()).Returns((List<GroupUser>)null);
 
             //act
           var result = await userService.GetAllUsersAsync();

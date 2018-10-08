@@ -4,17 +4,17 @@ using LearnWithMentorDAL.Entities;
 
 namespace LearnWithMentorDAL.Repositories.Interfaces
 {
-    public interface IUserRepository: IRepository<User>
+    public interface IUserRepository: IRepository<GroupUser>
     {
-        Task<User> GetAsync(int id);
-        Task<User> GetByEmailAsync(string email);
-        Task<IEnumerable<User>> SearchAsync(string[] searchString, int? roleId);
-        Task<IEnumerable<User>> GetUsersByRoleAsync(int roleId);
-        Task<IEnumerable<User>> GetUsersByGroupAsync(int groupId);
-        Task<IEnumerable<User>> GetUsersByStateAsync(bool state);
+        Task<GroupUser> GetAsync(int id);
+        Task<GroupUser> GetByEmailAsync(string email);
+        Task<IEnumerable<GroupUser>> SearchAsync(string[] searchString, int? roleId);
+        Task<IEnumerable<GroupUser>> GetUsersByRoleAsync(int roleId);
+        Task<IEnumerable<GroupUser>> GetUsersByGroupAsync(int groupId);
+        Task<IEnumerable<GroupUser>> GetUsersByStateAsync(bool state);
         Task<string> ExtractFullNameAsync(int? id);
         Task<string> GetImageBase64Async(int userId);
-        Task<IEnumerable<User>> GetUsersNotInGroupAsync(int groupId);
+        Task<IEnumerable<GroupUser>> GetUsersNotInGroupAsync(int groupId);
         Task<bool> ContainsIdAsync(int id);
     }
 }

@@ -4,10 +4,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace LearnWithMentorDAL.Entities
 {
-    public class User
+    public class GroupUser
     {
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public User()
+        public GroupUser()
         {
             Comments = new HashSet<Comment>();
             GroupMentor = new HashSet<Group>();
@@ -21,6 +21,7 @@ namespace LearnWithMentorDAL.Entities
             Groups = new HashSet<Group>();
             UserTaskMentor = new HashSet<UserTask>();
             Messages = new HashSet<Message>();
+            UserGroups = new HashSet<UserGroup>();
         }
 
         public int Id { get; set; }
@@ -59,5 +60,7 @@ namespace LearnWithMentorDAL.Entities
         public virtual ICollection<UserTask> UserTaskMentor { get; set; }
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Message> Messages { get; set; }
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<UserGroup> UserGroups { get; set; }
     }
 }

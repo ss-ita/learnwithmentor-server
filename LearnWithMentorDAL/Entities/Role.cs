@@ -8,13 +8,13 @@ namespace LearnWithMentorDAL.Entities
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Role()
         {
-            Users = new HashSet<User>();
+            Users = new HashSet<GroupUser>();
         }
 
         public int Id { get; set; }
         public string Name { get; set; }
 
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<User> Users { get; set; }
+        public virtual ICollection<GroupUser> Users { get; set; }
     }
 }

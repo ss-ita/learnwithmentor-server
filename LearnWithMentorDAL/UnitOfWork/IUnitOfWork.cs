@@ -18,6 +18,7 @@ namespace LearnWithMentorDAL.UnitOfWork
         IUserRepository Users { get; }
         IUserRoleViewRepository UserRoleView { get; }
         IUserTaskRepository UserTasks { get;  }
+        IUserGroupRepository UserGroups { get;  }
 
         void Save();
     }
