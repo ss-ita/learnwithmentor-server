@@ -270,27 +270,30 @@ namespace LearnWithMentor.Controllers
         /// <param name="userTaskId">Id of the usertask.</param>
         /// <param name="newMessage">New message to be created.</param>
         /// <returns></returns>
+
+
+
         [HttpPost]
         [Route("api/task/userTask/{userTaskId}/messages")]
         public HttpResponseMessage PostUserTaskMessage(int userTaskId, [FromBody]MessageDto newMessage)
-        {
-            try
             {
-                if (!ModelState.IsValid)
+                try
                 {
-                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
-                }
-                newMessage.UserTaskId = userTaskId;
-                var currentId = userIdentityService.GetUserId();
-                newMessage.SenderId = currentId;
-                var success = messageService.SendMessage(newMessage);
-                if (success)
-                {
-                    var message = $"Succesfully created message with id = {newMessage.Id} by user with id = {newMessage.SenderId}";
-                    tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, message);
-                    return Request.CreateResponse(HttpStatusCode.OK, "Succesfully created message");
-                }
-                tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on message creating");
+                    if (!ModelState.IsValid)
+                    {
+                        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                    }
+                    newMessage.UserTaskId = userTaskId;
+                    var currentId = userIdentityService.GetUserId();
+                    newMessage.SenderId = currentId;
+                    var success = messageService.SendMessage(newMessage);
+                    if (success)
+                    {
+                        var message = $"Succesfully created message with id = {newMessage.Id} by user with id = {newMessage.SenderId}";
+                        tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, message);
+                        return Request.CreateResponse(HttpStatusCode.OK, "Succesfully created message");
+                    }
+                    tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on message creating");
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Creation error.");
             }
             catch (EntityException e)
@@ -361,10 +364,38 @@ namespace LearnWithMentor.Controllers
             }
         }
 
+        /// <summary>
+        /// <param name="userTaskId">Id of the userTask status to be changed.</param>
+        /// <param name="NewMessage">New userTask.</param>
+        /// </summary>
+        [HttpPut]
+        [Route("api/task/userTask/{userTaskId}/messages/isRead")]
+        public async Task<HttpResponseMessage> PutNewIsReadValueAsync(int userTaskId, MessageDto NewMessage)
+        {
+            try   
+            {
+                bool success = await messageService.UpdateIsReadStateAsync(userTaskId, NewMessage);
+                if (success)
+                {
+                    var message = $"Succesfully updated usertask message isRead state with id = {userTaskId}";
+                    tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, message);
+                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully updated usertask id: {userTaskId}.");
+                }
+                tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on updating usertask message isRead state");
+                return Request.CreateErrorResponse(HttpStatusCode.NoContent, "Usertask doesn't exist.");
+            }
+            catch (EntityException e)
+            {
+                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
+        }
+
         /// <summary> Changes UserTask result by usertask id. </summary>
         /// <param name="userTaskId">Id of the userTask status to be changed</param>
         /// <param name="newMessage">>New userTask result</param>
         /// <returns></returns>
+        /// 
         [HttpPut]
         [Route("api/task/usertask/result")]
         public async Task<HttpResponseMessage> PutNewUserTaskResultAsync(int userTaskId, HttpRequestMessage newMessage)
