@@ -44,7 +44,7 @@ namespace LearnWithMentorBLL.Services
                 Text = newMessage.Text,
                 UserTask_Id = newMessage.UserTaskId
             };
-            db.Messages.Add(message);
+            db.Messages.AddAsync(message);
             db.Save();
             return true;
         }

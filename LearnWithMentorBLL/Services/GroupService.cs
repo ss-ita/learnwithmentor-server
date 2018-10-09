@@ -43,7 +43,7 @@ namespace LearnWithMentorBLL.Services
             {
                 if ((db.UserTasks.GetByPlanTaskForUserAsync(planTask.Id, userId) == null) && (group.Mentor_Id != null))
                 {
-                    db.UserTasks.Add(CreateDefaultUserTask(userId, planTask.Id, group.Mentor_Id.Value));
+                    db.UserTasks.AddAsync(CreateDefaultUserTask(userId, planTask.Id, group.Mentor_Id.Value));
                 }
             }
         }
@@ -63,7 +63,7 @@ namespace LearnWithMentorBLL.Services
                 {
                     if ((db.UserTasks.GetByPlanTaskForUserAsync(planTask.Id, user.Id) == null) && (group.Mentor_Id != null))
                     {
-                        db.UserTasks.Add(CreateDefaultUserTask(user.Id, planTask.Id, group.Mentor_Id.Value));
+                        db.UserTasks.AddAsync(CreateDefaultUserTask(user.Id, planTask.Id, group.Mentor_Id.Value));
                     }
                 }
             }
@@ -79,7 +79,7 @@ namespace LearnWithMentorBLL.Services
                 Name = group.Name,
                 Mentor_Id = group.MentorId
             };
-            db.Groups.Add(groupNew);
+            db.Groups.AddAsync(groupNew);
             db.Save();
             return true;
         }
@@ -412,7 +412,7 @@ namespace LearnWithMentorBLL.Services
             }
             foreach (var message in messages)
             {
-                db.Messages.Remove(message);
+                db.Messages.RemoveAsync(message);
             }
         }
 
@@ -455,7 +455,7 @@ namespace LearnWithMentorBLL.Services
                         continue;
                     }
                     await RemoveMessagesForUserTaskAsync(userTask.Id);
-                    db.UserTasks.Remove(userTask);
+                    db.UserTasks.RemoveAsync(userTask);
                 }
             }
         }
@@ -501,7 +501,7 @@ namespace LearnWithMentorBLL.Services
                         continue;
                     }
                     await RemoveMessagesForUserTaskAsync(userTask.Id);
-                    db.UserTasks.Remove(userTask);
+                    db.UserTasks.RemoveAsync(userTask);
                 }
             }
         }
