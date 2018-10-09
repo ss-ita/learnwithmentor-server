@@ -41,7 +41,7 @@ namespace LearnWithMentorDAL.Repositories
         public async Task RemoveByPlanTaskIdAsync(int planTaskid)
         {
             Comment findComment = await Context.Comments.FirstOrDefaultAsync(c => c.PlanTask_Id == planTaskid);
-            Remove(findComment);
+            RemoveAsync(findComment);
         }
 
     }

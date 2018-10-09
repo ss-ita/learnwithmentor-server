@@ -29,7 +29,9 @@ namespace LearnWithMentorBLL.Services
                                        message.UserTask_Id,
                                        await db.Users.ExtractFullNameAsync(message.User_Id),
                                        message.Text,
-                                       message.Send_Time));
+                                       message.Send_Time,
+                                       message.IsRead
+                                       ));
             }
             return messageDTOs;
         }
@@ -42,7 +44,17 @@ namespace LearnWithMentorBLL.Services
                 Text = newMessage.Text,
                 UserTask_Id = newMessage.UserTaskId
             };
-            db.Messages.Add(message);
+            db.Messages.AddAsync(message);
+            db.Save();
+            return true;
+        }
+
+        public async Task<bool> UpdateIsReadStateAsync(int userTaskId, MessageDto message)
+        {
+            Message GetMessage= await db.Messages.GetAsync(message.Id);
+            if (GetMessage == null) return false;
+             GetMessage.IsRead = message.IsRead;
+            db.Messages.Update(GetMessage);
             db.Save();
             return true;
         }
