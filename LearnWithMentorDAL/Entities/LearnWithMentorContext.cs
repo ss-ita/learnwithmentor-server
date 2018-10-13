@@ -213,21 +213,21 @@ namespace LearnWithMentorDAL.Entities
             modelBuilder.Entity<User>()
                 .HasMany(user => user.Groups)
                 .WithMany(group => group.Users)
-                .Map(userGroup =>
+                .Map(userGroups =>
                 {
-                    userGroup.MapLeftKey("UserId");
-                    userGroup.MapRightKey("GroupId");
-                    userGroup.ToTable("UserGroup");
+                    userGroups.MapLeftKey("UserId");
+                    userGroups.MapRightKey("GroupId");
+                    userGroups.ToTable("UserGroups");
                 });
 
             modelBuilder.Entity<Group>()
                 .HasMany(group => group.Plans)
                 .WithMany(plan => plan.Groups)
-                .Map(groupPlan =>
+                .Map(groupPlans =>
                 {
-                    groupPlan.MapLeftKey("GroupId");
-                    groupPlan.MapRightKey("PlanId");
-                    groupPlan.ToTable("GroupPlan");
+                    groupPlans.MapLeftKey("GroupId");
+                    groupPlans.MapRightKey("PlanId");
+                    groupPlans.ToTable("GroupPlans");
                 });
         }
     }
