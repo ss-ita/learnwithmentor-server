@@ -54,7 +54,7 @@ namespace LearnWithMentorBLL.Services
             Message GetMessage= await db.Messages.GetAsync(message.Id);
             if (GetMessage == null) return false;
              GetMessage.IsRead = message.IsRead;
-            db.Messages.Update(GetMessage);
+            await db.Messages.UpdateAsync(GetMessage);
             db.Save();
             return true;
         }

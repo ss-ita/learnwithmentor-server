@@ -397,16 +397,190 @@ insert into Users ( FirstName, LastName, Email, Password, Blocked, Image, Image_
 
 
 
-insert into UserGroups(Group_Id, User_Id) SELECT Groups.Id, Users.Id FROM Groups, Users WHERE Groups.Name = 'Lv-343.Net' AND Users.Email = 'bondarets.bogdan@gmail.com';
-insert into UserGroups(Group_Id, User_Id) SELECT Groups.Id, Users.Id FROM Groups, Users WHERE Groups.Name = 'Lv-343.Net' AND Users.Email = 'yuravasko2016@gmail.com';
-insert into UserGroups(Group_Id, User_Id) SELECT Groups.Id, Users.Id FROM Groups, Users WHERE Groups.Name = 'Lv-343.Net' AND Users.Email = 'yurikozlovskiJ@gmail.com';
-insert into UserGroups(Group_Id, User_Id) SELECT Groups.Id, Users.Id FROM Groups, Users WHERE Groups.Name = 'Lv-343.Net' AND Users.Email = 'nazarp06@gmail.com';
-insert into UserGroups(Group_Id, User_Id) SELECT Groups.Id, Users.Id FROM Groups, Users WHERE Groups.Name = 'Lv-343.Net' AND Users.Email = 'kravchenkov.me@gmail.com';
-insert into UserGroups(Group_Id, User_Id) SELECT Groups.Id, Users.Id FROM Groups, Users WHERE Groups.Name = 'Lv-343.Net' AND Users.Email = 'yura.stashko98@gmail.com';
-insert into UserGroups(Group_Id, User_Id) SELECT Groups.Id, Users.Id FROM Groups, Users WHERE Groups.Name = 'Lv-343.Net' AND Users.Email = 'solayusko@gmail.com';
-insert into UserGroups(Group_Id, User_Id) SELECT Groups.Id, Users.Id FROM Groups, Users WHERE Groups.Name = 'Lv-343.Net' AND Users.Email = 'flyssofia@gmail.com';
+insert into UserGroups(UserId, GroupId) SELECT Users.Id, Groups.Id FROM Users, Groups WHERE  Users.Email = 'bondarets.bogdan@gmail.com' AND Groups.Name = 'Lv-343.Net';
+insert into UserGroups(UserId, GroupId) SELECT Users.Id, Groups.Id FROM Users, Groups WHERE  Users.Email = 'yuravasko2016@gmail.com' AND Groups.Name = 'Lv-343.Net';
+insert into UserGroups(UserId, GroupId) SELECT Users.Id, Groups.Id FROM Users, Groups WHERE  Users.Email = 'yurikozlovskiJ@gmail.com' AND Groups.Name = 'Lv-343.Net';
+insert into UserGroups(UserId, GroupId) SELECT Users.Id, Groups.Id FROM Users, Groups WHERE  Users.Email = 'nazarp06@gmail.com' AND Groups.Name = 'Lv-343.Net';
+insert into UserGroups(UserId, GroupId) SELECT Users.Id, Groups.Id FROM Users, Groups WHERE  Users.Email = 'kravchenkov.me@gmail.com' AND Groups.Name = 'Lv-343.Net';
+insert into UserGroups(UserId, GroupId) SELECT Users.Id, Groups.Id FROM Users, Groups WHERE  Users.Email = 'yura.stashko98@gmail.com' AND Groups.Name = 'Lv-343.Net';
+insert into UserGroups(UserId, GroupId) SELECT Users.Id, Groups.Id FROM Users, Groups WHERE  Users.Email = 'solayusko@gmail.com' AND Groups.Name = 'Lv-343.Net';
+insert into UserGroups(UserId, GroupId) SELECT Users.Id, Groups.Id FROM Users, Groups WHERE  Users.Email = 'flyssofia@gmail.com' AND Groups.Name = 'Lv-343.Net';
 
 
+--insert into UserGroups(Group_Id, User_Id) SELECT Groups.Id, Users.Id FROM Groups, Users WHERE Groups.Name = 'Lv-343.Net' AND Users.Email = 'bondarets.bogdan@gmail.com';
+--insert into UserGroups(Group_Id, User_Id) SELECT Groups.Id, Users.Id FROM Groups, Users WHERE Groups.Name = 'Lv-343.Net' AND Users.Email = 'yuravasko2016@gmail.com';
+--insert into UserGroups(Group_Id, User_Id) SELECT Groups.Id, Users.Id FROM Groups, Users WHERE Groups.Name = 'Lv-343.Net' AND Users.Email = 'yurikozlovskiJ@gmail.com';
+--insert into UserGroups(Group_Id, User_Id) SELECT Groups.Id, Users.Id FROM Groups, Users WHERE Groups.Name = 'Lv-343.Net' AND Users.Email = 'nazarp06@gmail.com';
+--insert into UserGroups(Group_Id, User_Id) SELECT Groups.Id, Users.Id FROM Groups, Users WHERE Groups.Name = 'Lv-343.Net' AND Users.Email = 'kravchenkov.me@gmail.com';
+--insert into UserGroups(Group_Id, User_Id) SELECT Groups.Id, Users.Id FROM Groups, Users WHERE Groups.Name = 'Lv-343.Net' AND Users.Email = 'yura.stashko98@gmail.com';
+--insert into UserGroups(Group_Id, User_Id) SELECT Groups.Id, Users.Id FROM Groups, Users WHERE Groups.Name = 'Lv-343.Net' AND Users.Email = 'solayusko@gmail.com';
+--insert into UserGroups(Group_Id, User_Id) SELECT Groups.Id, Users.Id FROM Groups, Users WHERE Groups.Name = 'Lv-343.Net' AND Users.Email = 'flyssofia@gmail.com';
 
+
+insert into PlanSuggestion(Plan_Id, User_Id, Mentor_Id, Text) VALUES (1, 12, 1, 'Suggest you to increase number of tasks');
+insert into PlanSuggestion(Plan_Id, User_Id, Mentor_Id, Text) VALUES (1, 13, 1, 'Suggest you to increase number of tasks');
+insert into PlanSuggestion(Plan_Id, User_Id, Mentor_Id, Text) VALUES (1, 14, 1, 'Suggest you to increase number of tasks');
+insert into PlanSuggestion(Plan_Id, User_Id, Mentor_Id, Text) VALUES (1, 15, 1, 'Suggest you to increase number of tasks');
+insert into PlanSuggestion(Plan_Id, User_Id, Mentor_Id, Text) VALUES (1, 16, 1, 'Suggest you to increase number of tasks');
+insert into PlanSuggestion(Plan_Id, User_Id, Mentor_Id, Text) VALUES (1, 17, 1, 'Suggest you to increase number of tasks');
+insert into PlanSuggestion(Plan_Id, User_Id, Mentor_Id, Text) VALUES (1, 18, 1, 'Suggest you to increase number of tasks');
+insert into PlanSuggestion(Plan_Id, User_Id, Mentor_Id, Text) VALUES (1, 19, 1, 'Suggest you to increase number of tasks');
+
+insert into PlanSuggestion(Plan_Id, User_Id, Mentor_Id, Text) VALUES (2, 12, 1, 'Suggest you to increase number of tasks');
+insert into PlanSuggestion(Plan_Id, User_Id, Mentor_Id, Text) VALUES (2, 13, 1, 'Suggest you to increase number of tasks');
+insert into PlanSuggestion(Plan_Id, User_Id, Mentor_Id, Text) VALUES (2, 14, 1, 'Suggest you to increase number of tasks');
+insert into PlanSuggestion(Plan_Id, User_Id, Mentor_Id, Text) VALUES (2, 15, 1, 'Suggest you to increase number of tasks');
+insert into PlanSuggestion(Plan_Id, User_Id, Mentor_Id, Text) VALUES (2, 16, 1, 'Suggest you to increase number of tasks');
+insert into PlanSuggestion(Plan_Id, User_Id, Mentor_Id, Text) VALUES (2, 17, 1, 'Suggest you to increase number of tasks');
+insert into PlanSuggestion(Plan_Id, User_Id, Mentor_Id, Text) VALUES (2, 18, 1, 'Suggest you to increase number of tasks');
+insert into PlanSuggestion(Plan_Id, User_Id, Mentor_Id, Text) VALUES (2, 19, 1, 'Suggest you to increase number of tasks');
+
+
+insert into PlanSuggestion(Plan_Id, User_Id, Mentor_Id, Text) VALUES (3, 12, 1, 'Suggest you to increase number of tasks');
+insert into PlanSuggestion(Plan_Id, User_Id, Mentor_Id, Text) VALUES (3, 13, 1, 'Suggest you to increase number of tasks');
+insert into PlanSuggestion(Plan_Id, User_Id, Mentor_Id, Text) VALUES (3, 14, 1, 'Suggest you to increase number of tasks');
+insert into PlanSuggestion(Plan_Id, User_Id, Mentor_Id, Text) VALUES (3, 15, 1, 'Suggest you to increase number of tasks');
+insert into PlanSuggestion(Plan_Id, User_Id, Mentor_Id, Text) VALUES (3, 16, 1, 'Suggest you to increase number of tasks');
+insert into PlanSuggestion(Plan_Id, User_Id, Mentor_Id, Text) VALUES (3, 17, 1, 'Suggest you to increase number of tasks');
+insert into PlanSuggestion(Plan_Id, User_Id, Mentor_Id, Text) VALUES (3, 18, 1, 'Suggest you to increase number of tasks');
+insert into PlanSuggestion(Plan_Id, User_Id, Mentor_Id, Text) VALUES (3, 19, 1, 'Suggest you to increase number of tasks');
+
+insert into PlanSuggestion(Plan_Id, User_Id, Mentor_Id, Text) VALUES (4, 12, 1, 'Suggest you to increase number of tasks');
+insert into PlanSuggestion(Plan_Id, User_Id, Mentor_Id, Text) VALUES (4, 13, 1, 'Suggest you to increase number of tasks');
+insert into PlanSuggestion(Plan_Id, User_Id, Mentor_Id, Text) VALUES (4, 14, 1, 'Suggest you to increase number of tasks');
+insert into PlanSuggestion(Plan_Id, User_Id, Mentor_Id, Text) VALUES (4, 15, 1, 'Suggest you to increase number of tasks');
+insert into PlanSuggestion(Plan_Id, User_Id, Mentor_Id, Text) VALUES (4, 16, 1, 'Suggest you to increase number of tasks');
+insert into PlanSuggestion(Plan_Id, User_Id, Mentor_Id, Text) VALUES (4, 17, 1, 'Suggest you to increase number of tasks');
+insert into PlanSuggestion(Plan_Id, User_Id, Mentor_Id, Text) VALUES (4, 18, 1, 'Suggest you to increase number of tasks');
+insert into PlanSuggestion(Plan_Id, User_Id, Mentor_Id, Text) VALUES (4, 19, 1, 'Suggest you to increase number of tasks');
+
+
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (12, 1, 'D', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (12, 2, 'D', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (12, 3, 'D', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (12, 4, 'D', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (12, 6, 'D', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (12, 7, 'D', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (12, 8, 'D', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (12, 9, 'D', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (12, 10, 'D', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (12, 11, 'D', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (12, 12, 'D', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (12, 13, 'D', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (12, 14, 'D', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (12, 15, 'D', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (12, 16, 'D', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (13, 1, 'D', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (13, 2, 'D', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (13, 3, 'D', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (13, 4, 'D', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (13, 6, 'D', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (13, 7, 'D', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (13, 8, 'D', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (13, 9, 'D', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (13, 10, 'D', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (13, 11, 'D', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (13, 12, 'D', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (13, 13, 'D', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (13, 14, 'D', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (13, 15, 'D', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (13, 16, 'D', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (14, 1, 'P', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (14, 2, 'P', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (14, 3, 'P', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (14, 4, 'P', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (14, 6, 'P', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (14, 7, 'P', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (14, 8, 'P', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (14, 9, 'P', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (14, 10, 'P', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (14, 11, 'P', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (14, 12, 'P', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (14, 13, 'P', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (14, 14, 'P', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (14, 15, 'P', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (14, 16, 'P', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (15, 1, 'P', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (15, 2, 'P', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (15, 3, 'P', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (15, 4, 'P', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (15, 6, 'P', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (15, 7, 'P', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (15, 8, 'P', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (15, 9, 'P', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (15, 10, 'P', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (15, 11, 'P', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (15, 12, 'P', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (15, 13, 'P', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (15, 14, 'P', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (15, 15, 'P', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (15, 16, 'P', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (16, 1, 'A', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (16, 2, 'A', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (16, 3, 'A', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (16, 4, 'A', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (16, 6, 'A', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (16, 7, 'A', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (16, 8, 'A', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (16, 9, 'A', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (16, 10, 'A', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (16, 11, 'A', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (16, 12, 'A', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (16, 13, 'A', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (16, 14, 'A', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (16, 15, 'A', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (16, 16, 'A', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (17, 1, 'A', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (17, 2, 'A', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (17, 3, 'A', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (17, 4, 'A', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (17, 6, 'A', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (17, 7, 'A', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (17, 8, 'A', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (17, 9, 'A', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (17, 10, 'A', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (17, 11, 'A', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (17, 12, 'A', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (17, 13, 'A', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (17, 14, 'A', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (17, 15, 'A', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (17, 16, 'A', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (18, 1, 'R', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (18, 2, 'R', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (18, 3, 'R', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (18, 4, 'R', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (18, 6, 'R', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (18, 7, 'R', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (18, 8, 'R', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (18, 9, 'R', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (18, 10, 'R', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (18, 11, 'R', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (18, 12, 'R', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (18, 13, 'R', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (18, 14, 'R', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (18, 15, 'R', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (18, 16, 'R', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (19, 1, 'R', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (19, 2, 'R', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (19, 3, 'R', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (19, 4, 'R', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (19, 6, 'R', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (19, 7, 'R', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (19, 8, 'R', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (19, 9, 'R', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (19, 10, 'R', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (19, 11, 'R', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (19, 12, 'R', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (19, 13, 'R', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (19, 14, 'R', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (19, 15, 'R', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
+insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (19, 16, 'R', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
 
 
