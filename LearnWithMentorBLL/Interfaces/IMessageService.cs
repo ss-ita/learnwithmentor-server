@@ -8,5 +8,6 @@ namespace LearnWithMentorBLL.Interfaces
     {
         Task<IEnumerable<MessageDto>> GetMessagesAsync(int userTaskId);
         bool SendMessage(MessageDto newMessage);
+        Task<bool> UpdateIsReadStateAsync(int userTaskId, MessageDto message);
     }
 }

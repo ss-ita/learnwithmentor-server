@@ -37,11 +37,15 @@ namespace LearnWithMentor.Controllers
             bool UserCheck =  BCrypt.Net.BCrypt.Verify(value.Password, user.Password);
             if ((ModelState.IsValid) && (UserCheck))
             {
+                if (user.Blocked.HasValue && user.Blocked.Value)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "This user is blocked!");
+                }
+
                 return Request.CreateResponse(HttpStatusCode.OK, JwtManager.GenerateToken(user));
             }
-            var message = " Not valid logination data.";
-            if (user != null && user.Blocked == true) message = "This user is blocked!";
-            return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, message);
+
+            return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Not valid logination data.");
         }
 
         /// <summary>

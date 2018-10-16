@@ -221,7 +221,7 @@ namespace LearnWithMentorBLL.Services
                 modified = true;
             }
             toUpdate.Published = plan.Published;
-            db.Plans.Update(toUpdate);
+            db.Plans.UpdateAsync(toUpdate);
             db.Save();
             return modified;
         }
@@ -253,7 +253,7 @@ namespace LearnWithMentorBLL.Services
                             Mentor_Id = group.Mentor_Id.Value,
                             Result = ""
                         };
-                        db.UserTasks.Add(toInsert);
+                        db.UserTasks.AddAsync(toInsert);
                     }
                 }
             }
@@ -319,7 +319,7 @@ namespace LearnWithMentorBLL.Services
                 Create_Id = dto.CreatorId,
                 Published = dto.Published
             };
-            db.Plans.Add(plan);
+            db.Plans.AddAsync(plan);
             db.Save();
             return true;
         }
