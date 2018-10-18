@@ -191,7 +191,8 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public async Task GetAllPlansTest_ShouldReturnNoContentResponse()
         {
-            planServiceMock.Setup(ps => ps.GetAll());
+            planServiceMock.Setup(ps => ps.GetAll())
+                .ReturnsAsync(()=>null);
 
             var response = await planController.Get();
 
