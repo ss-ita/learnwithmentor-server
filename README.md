@@ -1,10 +1,16 @@
-# learnwithmentor-server
+# learnwithmentor-server(Local)
 LearnWithMentor is a helper service with plan-based system of learning
 # Requirements
 Microsoft SQL Server 2017 and Visual Studio 2017 are required.
 # Installation
 1. Clone this repository to your computer.
-2. Run SQLCreateDataBaseLearnWithMentor.sql script from DB folder.
-3. Run Inserting data into LearnWithMentor_DB .sql script from DB folder.
-4. If you have installed not express edition of sql server, open learnwithmentor.sln in Visual Studio, remove \SQLEXPRESS from Data Source section in connection strings in LearnWithMentor/Web.config and LearnWithMentorDAL/app.config.
-5. Start learnwithmentor.sln.
+2. Install Entity Framework with NuGet Packages Manager.
+3. Create an empty DB with name LearnWithMentor.DB.
+4. Add conection strings to LearnWithMentor/Web.config and LearnWithMentorDAL/app.config.
+5. If you have installed express edition of sql server, open learnwithmentor.sln in Visual Studio, add \SQLEXPRESS to Data Source section in connection strings in LearnWithMentor/Web.config and LearnWithMentorDAL/app.config.
+6. Publish script for creating and initializing database to your local DB:
+  a) right click on LearnWithMentor.DB(SQL project) and choose publish.
+  b) choose your DB in Target database connection.
+  c) click Generate Script;
+  d) execute script that has been generated.
+7. Start learnwithmentor.sln.
