@@ -36,7 +36,7 @@ namespace LearnWithMentorBLL.Services
                                plan.Create_Date,
                                plan.Mod_Date);
         }
-        public List<PlanDto> GetAll()
+        public async Task<List<PlanDto>> GetAll()
         {
             var allPlans = db.Plans.GetAll();
             if (allPlans == null)
@@ -44,7 +44,7 @@ namespace LearnWithMentorBLL.Services
                 return null;
             }
             var dtosList = new List<PlanDto>();
-            foreach (var plan in allPlans)
+            foreach (var plan in await allPlans)
             {
                 dtosList.Add(new PlanDto(plan.Id,
                                plan.Name,
@@ -94,12 +94,18 @@ namespace LearnWithMentorBLL.Services
             {
                 return null;
             }
-            var planTaskIds = db.PlanTasks.GetAll()
+            /*var planTaskIds = await db.PlanTasks.GetAll()
                 .Where(pt => pt.Plan_Id == plan.Id)
                 .Select(pt => pt.Task_Id).ToList();
-            var tasksForConcretePlan = db.Tasks.GetAll()
+            var tasksForConcretePlan = await db.Tasks.GetAll()
                 .Where(t => planTaskIds.Contains(t.Id))
-                .ToList();
+                .ToList();*/
+            var planTasksId = await db.PlanTasks.GetAll();
+            var planTasksIds = planTasksId.Where(pt => pt.Plan_Id == plan.Id).Select(pt => pt.Task_Id).ToList();
+
+            var taskForConcretePlan = await db.Tasks.GetAll();
+            var tasksForConcretePlan = taskForConcretePlan.Where(t => planTasksIds.Contains(t.Id)).ToList();
+
             if (!tasksForConcretePlan.Any())
             {
                 return null;
@@ -132,9 +138,11 @@ namespace LearnWithMentorBLL.Services
             {
                 return null;
             }
-            var planTaskIds = db.PlanTasks.GetAll()
+            /*var planTaskIds = await db.PlanTasks.GetAll()
                 .Where(pt => pt.Plan_Id == planId)
-                .Select(pt => pt.Id).ToList();
+                .Select(pt => pt.Id).ToList();*/
+            var planTaskId = await db.PlanTasks.GetAll();
+            var planTaskIds = planTaskId.Where(pt => pt.Plan_Id == planId).Select(pt => pt.Id).ToList();
             if (!planTaskIds.Any())
             {
                 return null;
@@ -150,7 +158,20 @@ namespace LearnWithMentorBLL.Services
                 return null;
             }
 
-            var section = db.PlanTasks.GetAll()
+            /*var section = await db.PlanTasks.GetAll()
+                .Where(pt => pt.Plan_Id == planId)
+                .GroupBy(s => s.Sections)
+                .Select(p => new
+                {
+                    Id = p.Key.Id,
+                    Name = p.Key.Name,
+                    Tasks = p.Key.PlanTasks
+                        .Where(pt => pt.Plan_Id == planId)
+                        .Select(pt => pt.Tasks)
+                }).ToList();*/
+
+            var sections = await db.PlanTasks.GetAll();
+            var section = sections
                 .Where(pt => pt.Plan_Id == planId)
                 .GroupBy(s => s.Sections)
                 .Select(p => new

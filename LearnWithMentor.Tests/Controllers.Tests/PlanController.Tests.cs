@@ -15,7 +15,6 @@ using System.Web.Http.Results;
 using System.Web.Http.Tracing;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDTO;
-using System.Threading.Tasks;
 
 
 namespace LearnWithMentor.Tests.Controllers.Tests
