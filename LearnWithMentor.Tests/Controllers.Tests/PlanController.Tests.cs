@@ -15,7 +15,6 @@ using System.Web.Http.Results;
 using System.Web.Http.Tracing;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDTO;
-using System.Threading.Tasks;
 
 
 namespace LearnWithMentor.Tests.Controllers.Tests
@@ -88,13 +87,14 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public void GetAllPlansTest_ShouldReturnAllPlans()
+        public async Task GetAllPlansTest_ShouldReturnAllPlans()
         {
-            planServiceMock.Setup(mts => mts.GetAll()).Returns(plans);
+            planServiceMock.Setup(mts => mts.GetAll()).ReturnsAsync(plans);
 
-            var response = planController.Get();
+            var response = await planController.Get();
             var successfull = response.TryGetContentValue<IEnumerable<PlanDto>>(out var planDTOs);
-            var expected = planServiceMock.Object.GetAll().Count;
+            var getall = await planServiceMock.Object.GetAll();
+            var expected = getall.Count;
             var actual = planDTOs.Count();
 
             Assert.IsTrue(successfull);
@@ -189,11 +189,12 @@ namespace LearnWithMentor.Tests.Controllers.Tests
 
         
         [Test]
-        public void GetAllPlansTest_ShouldReturnNoContentResponse()
+        public async Task GetAllPlansTest_ShouldReturnNoContentResponse()
         {
-            planServiceMock.Setup(ps => ps.GetAll());
+            planServiceMock.Setup(ps => ps.GetAll())
+                .ReturnsAsync(()=>null);
 
-            var response = planController.Get();
+            var response = await planController.Get();
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.NoContent);
         }
@@ -360,13 +361,14 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public void SearchTest_ShouldReturnAllPlansByNullKey()
+        public async Task SearchTest_ShouldReturnAllPlansByNullKey()
         {
-            planServiceMock.Setup(mts => mts.GetAll()).Returns(plans);
+            planServiceMock.Setup(mts => mts.GetAll()).ReturnsAsync(plans);
 
-            var response = planController.Search(null);
+            var response = await planController.Search(null);
             var successfull = response.TryGetContentValue<List<PlanDto>>(out var planDTOs);
-            var expected = planServiceMock.Object.GetAll().Count;
+            var getall =  await planServiceMock.Object.GetAll();
+            var expected = getall.Count;
             var actual = planDTOs.Count;
 
             Assert.IsTrue(successfull);
@@ -375,13 +377,13 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public void SearchTest_ShouldReturnPlansByKey()
+        public async Task SearchTest_ShouldReturnPlansByKey()
         {
             planServiceMock.Setup(mts => mts.Search(It.IsAny<string[]>())).Returns(
                 (string[] lines) => GetTestPlansSearch(lines));
 
             var searchKey = "1";
-            var response = planController.Search(searchKey);
+            var response = await planController.Search(searchKey);
             var successfull = response.TryGetContentValue<List<PlanDto>>(out var planDTOs);
             var expected = planServiceMock.Object.Search(new[] { searchKey });
             var actual = planDTOs;
@@ -392,13 +394,13 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public void SearchTest_ShouldReturnNoContentResponse()
+        public async Task SearchTest_ShouldReturnNoContentResponse()
         {
             planServiceMock.Setup(mts => mts.Search(It.IsAny<string[]>())).Returns(
                 (string[] lines) => null);
 
             var searchKey = "1";
-            var response = planController.Search(searchKey);
+            var response = await planController.Search(searchKey);
 
             Assert.AreEqual(response.StatusCode, HttpStatusCode.NoContent);
         }
