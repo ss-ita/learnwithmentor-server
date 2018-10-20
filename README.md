@@ -14,3 +14,18 @@ Microsoft SQL Server 2017 and Visual Studio 2017 are required.
     * click Generate Script;
     * execute script that has been generated.
 7. Start learnwithmentor.sln.
+
+# learnwithmentor-server(Azure )
+# Installation
+1. Change target platform
+    * right click on LearnWithMentor.DB(SQL project);
+    * open Properties;
+    * change target platform to Microsoft Azure Database V12.
+2. Publish script for creating and initializing database to your Azure DB:
+    * right click on LearnWithMentor.DB(SQL project) and choose Publish;
+    * click on Edit button and select Browse in the menu strip;
+    * fill in the Azure database information and click Ok;
+    * click Generate Script;
+    * check if the name in 'Available database' is the name of your Azure DB, if not- click 'change connection' and select your one;
+    * execute script that has been generated.
+    
