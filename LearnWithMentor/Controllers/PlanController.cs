@@ -41,9 +41,9 @@ namespace LearnWithMentor.Controllers
         [AllowAnonymous]
         [HttpGet]
         [Route("api/plan")]
-        public HttpResponseMessage Get()
+        public async Task<HttpResponseMessage> Get()
         {
-            var dtoList = planService.GetAll();
+            var dtoList = await planService.GetAll();
             if (dtoList == null || dtoList.Count == 0)
             {
                 const string errorMessage = "No plans in database.";
@@ -395,11 +395,11 @@ namespace LearnWithMentor.Controllers
         /// <param name="q">Match string</param>
         [HttpGet]
         [Route("api/plan/search")]
-        public HttpResponseMessage Search(string q)
+        public async Task<HttpResponseMessage> Search(string q)
         {
             if (string.IsNullOrEmpty(q))
             {
-                return Get();
+                return await Get();
             }
             var lines = q.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             var dto = planService.Search(lines);

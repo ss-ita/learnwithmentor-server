@@ -117,7 +117,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
             };
 
             uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);
-            uowMock.Setup(u => u.Users.GetAll()).Returns(users);
+            uowMock.Setup(u => u.Users.GetAll()).ReturnsAsync(users);
 
             //act
             List<UserDto> result = await userService.GetAllUsersAsync();
@@ -139,7 +139,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
         {
             //arrange
             uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);
-            uowMock.Setup(u => u.Users.GetAll()).Returns((List<User>)null);
+            uowMock.Setup(u => u.Users.GetAll()).ReturnsAsync((List<User>)null);
 
             //act
           var result = await userService.GetAllUsersAsync();

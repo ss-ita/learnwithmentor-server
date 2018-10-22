@@ -43,7 +43,7 @@ namespace LearnWithMentorBLL.Services
             {
                 if ((db.UserTasks.GetByPlanTaskForUserAsync(planTask.Id, userId) == null) && (group.Mentor_Id != null))
                 {
-                    db.UserTasks.AddAsync(CreateDefaultUserTask(userId, planTask.Id, group.Mentor_Id.Value));
+                    await db.UserTasks.AddAsync(CreateDefaultUserTask(userId, planTask.Id, group.Mentor_Id.Value));
                 }
             }
         }
@@ -63,7 +63,7 @@ namespace LearnWithMentorBLL.Services
                 {
                     if ((db.UserTasks.GetByPlanTaskForUserAsync(planTask.Id, user.Id) == null) && (group.Mentor_Id != null))
                     {
-                        db.UserTasks.AddAsync(CreateDefaultUserTask(user.Id, planTask.Id, group.Mentor_Id.Value));
+                        await db.UserTasks.AddAsync(CreateDefaultUserTask(user.Id, planTask.Id, group.Mentor_Id.Value));
                     }
                 }
             }
@@ -79,7 +79,7 @@ namespace LearnWithMentorBLL.Services
                 Name = group.Name,
                 Mentor_Id = group.MentorId
             };
-            db.Groups.AddAsync(groupNew);
+            await db.Groups.AddAsync(groupNew);
             db.Save();
             return true;
         }
@@ -232,7 +232,7 @@ namespace LearnWithMentorBLL.Services
             }
             else
             {
-                groups =  db.Groups.GetAll();
+                groups =  await db.Groups.GetAll();
             }
             if (groups == null)
             {
@@ -412,14 +412,14 @@ namespace LearnWithMentorBLL.Services
             }
             foreach (var message in messages)
             {
-                db.Messages.RemoveAsync(message);
+                await db.Messages.RemoveAsync(message);
             }
         }
 
-        private bool IsSamePlanAndUserInOtherGroup(Plan plan, User user)
+        private async  ThreadTask.Task<bool> IsSamePlanAndUserInOtherGroup(Plan plan, User user)
         {
             var matchNumber = 0;
-            foreach (var group in db.Groups.GetAll())
+            foreach (var group in await db.Groups.GetAll())
             {
                 if (group.Users.Contains(user) && group.Plans.Contains(plan))
                 {
@@ -443,7 +443,7 @@ namespace LearnWithMentorBLL.Services
                 {
                     continue;
                 }
-                if (IsSamePlanAndUserInOtherGroup(plan, user))
+                if (await IsSamePlanAndUserInOtherGroup(plan, user))
                 {
                     continue;
                 }
@@ -455,7 +455,7 @@ namespace LearnWithMentorBLL.Services
                         continue;
                     }
                     await RemoveMessagesForUserTaskAsync(userTask.Id);
-                    db.UserTasks.RemoveAsync(userTask);
+                    await db.UserTasks.RemoveAsync(userTask);
                 }
             }
         }
@@ -488,7 +488,7 @@ namespace LearnWithMentorBLL.Services
             }
             foreach (var user in group.Users)
             {
-                if (IsSamePlanAndUserInOtherGroup(plan, user))
+                if (await IsSamePlanAndUserInOtherGroup(plan, user))
                 {
                     continue;
                 }
@@ -501,7 +501,7 @@ namespace LearnWithMentorBLL.Services
                         continue;
                     }
                     await RemoveMessagesForUserTaskAsync(userTask.Id);
-                    db.UserTasks.RemoveAsync(userTask);
+                    await db.UserTasks.RemoveAsync(userTask);
                 }
             }
         }

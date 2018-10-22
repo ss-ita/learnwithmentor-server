@@ -17,9 +17,9 @@ namespace LearnWithMentorBLL.Services
             return role == null ? null :
                 new RoleDto(role.Id, role.Name);
         }
-        public List<RoleDto> GetAllRoles()
+        public async Task<List<RoleDto>> GetAllRoles()
         {
-            var roles = db.Roles.GetAll();
+            var roles = await db.Roles.GetAll();
             if (roles == null)
             {
                 return null;
