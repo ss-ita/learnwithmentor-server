@@ -58,7 +58,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EF\LearnWithMentorInitializer.cs" />
     <Compile Include="Entities\Comment.cs" />
     <Compile Include="Entities\Group.cs" />
     <Compile Include="Entities\GROUP_PLAN_TASK.cs" />
