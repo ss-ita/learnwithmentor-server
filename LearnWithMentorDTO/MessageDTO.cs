@@ -11,7 +11,8 @@ namespace LearnWithMentorDTO
                         int userTaskId,
                         string senderName,
                         string text,
-                        DateTime? sendTime)
+                        DateTime? sendTime,
+                        bool isRead)
         {
             Id = id;
             SenderId = senderId;
@@ -19,6 +20,7 @@ namespace LearnWithMentorDTO
             Text = text;
             SendTime = sendTime;
             SenderName = senderName;
+            IsRead = isRead;
         }
 
         public int Id { get; set; }
@@ -30,5 +32,7 @@ namespace LearnWithMentorDTO
             ErrorMessage = "Message is too long")]
         public string Text { get; set; }
         public DateTime? SendTime { get; set; }
+        public bool IsRead { get; set; }
+
     }
 }

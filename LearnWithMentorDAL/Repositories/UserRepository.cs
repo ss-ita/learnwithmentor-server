@@ -7,33 +7,33 @@ using LearnWithMentorDAL.Repositories.Interfaces;
 
 namespace LearnWithMentorDAL.Repositories
 {
-    public class UserRepository : BaseRepository<GroupUser>, IUserRepository
+    public class UserRepository : BaseRepository<User>, IUserRepository
     {
         public UserRepository(LearnWithMentorContext context) : base(context)
         {
         }
 
-        public Task<GroupUser> GetAsync(int id)
+        public Task<User> GetAsync(int id)
         {
          return  Context.Users.FirstOrDefaultAsync(user => user.Id == id);
         }
 
-        public Task<GroupUser> GetByEmailAsync(string email)
+        public Task<User> GetByEmailAsync(string email)
         {
             return Context.Users.FirstOrDefaultAsync(user => user.Email == email);
            
         }
 
-        public async Task<IEnumerable<GroupUser>> GetUsersByGroupAsync(int groupId)
+        public async Task<IEnumerable<User>> GetUsersByGroupAsync(int groupId)
         {
             Group findGroup = await Context.Groups.FirstOrDefaultAsync(group => group.Id == groupId);
             return findGroup?.Users;
         }
         
-        public async  Task<IEnumerable<GroupUser>> SearchAsync(string[] searchString, int? roleId)
+        public async  Task<IEnumerable<User>> SearchAsync(string[] searchString, int? roleId)
         {
-            List<GroupUser> result = new List<GroupUser>();
-            IQueryable<GroupUser> usersWithCriteria;
+            List<User> result = new List<User>();
+            IQueryable<User> usersWithCriteria;
             string firstWord = searchString.Length >= 1 ? searchString[0] : "";
             string secondWord = searchString.Length == 2 ? searchString[1] : "";
             if (roleId == null)
@@ -64,7 +64,7 @@ namespace LearnWithMentorDAL.Repositories
 
         public async Task<string> GetImageBase64Async(int userId)
         {
-            GroupUser findUser = await Context.Users.FirstOrDefaultAsync(user => user.Id == userId);
+            User findUser = await Context.Users.FirstOrDefaultAsync(user => user.Id == userId);
             return findUser?.Image;
         }
 
@@ -74,12 +74,12 @@ namespace LearnWithMentorDAL.Repositories
             
         }
 
-        public async Task<IEnumerable<GroupUser>> GetUsersByRoleAsync(int roleId)
+        public async Task<IEnumerable<User>> GetUsersByRoleAsync(int roleId)
         {
             return await Context.Users.Where(user => user.Role_Id == roleId).ToListAsync();
         }
 
-        public async Task<IEnumerable<GroupUser>> GetUsersByStateAsync(bool state)
+        public async Task<IEnumerable<User>> GetUsersByStateAsync(bool state)
         {
             return await Context.Users.Where(user => user.Blocked == state).ToListAsync();
         }
@@ -91,7 +91,7 @@ namespace LearnWithMentorDAL.Repositories
                 return null;
             }
 
-            GroupUser findUser  =  await Context.Users.FirstOrDefaultAsync(user => user.Id == id.Value);
+            User findUser  =  await Context.Users.FirstOrDefaultAsync(user => user.Id == id.Value);
             string fullName = null;
             if (findUser != null)
             {
@@ -101,7 +101,7 @@ namespace LearnWithMentorDAL.Repositories
             return fullName;
         }
 
-        public async Task<IEnumerable<GroupUser>> GetUsersNotInGroupAsync(int groupId)
+        public async Task<IEnumerable<User>> GetUsersNotInGroupAsync(int groupId)
         {
             return await Context.Users.Where(user => !user.Groups.Select(group => group.Id).Contains(groupId))
                 .Where(user => !user.Blocked && user.Role.Name == "Student").ToListAsync();

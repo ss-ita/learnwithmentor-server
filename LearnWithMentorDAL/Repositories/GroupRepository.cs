@@ -36,7 +36,7 @@ namespace LearnWithMentorDAL.Repositories
 
         public async Task<IEnumerable<Group>> GetStudentGroupsAsync(int studentId)
         {
-            GroupUser findStudent = await Context.Users.FirstOrDefaultAsync(u => u.Id == studentId);
+            User findStudent = await Context.Users.FirstOrDefaultAsync(u => u.Id == studentId);
             return findStudent?.Groups;
         }
 
@@ -55,7 +55,7 @@ namespace LearnWithMentorDAL.Repositories
 
         public async Task<bool> AddUserToGroupAsync(int userId, int groupId)
         {
-            GroupUser findUser = await Context.Users.FirstOrDefaultAsync(user => user.Id == userId);
+            User findUser = await Context.Users.FirstOrDefaultAsync(user => user.Id == userId);
             Group findGroup = await Context.Groups.FirstOrDefaultAsync(group => group.Id == groupId);
             findGroup?.Users.Add(findUser);
             return true;
@@ -64,7 +64,7 @@ namespace LearnWithMentorDAL.Repositories
         public async ThreadTask.Task RemoveUserFromGroupAsync(int groupId, int userId)
         {
             Group group = await GetAsync(groupId); 
-            GroupUser findUser = await Context.Users.FirstOrDefaultAsync(user => user.Id == userId);
+            User findUser = await Context.Users.FirstOrDefaultAsync(user => user.Id == userId);
             group.Users.Remove(findUser);
         }
 

@@ -9,7 +9,7 @@
         public string Text { get; set; }
         
         public virtual Plan Plan { get; set; }
-        public virtual GroupUser User { get; set; }
-        public virtual GroupUser Mentor { get; set; }
+        public virtual User User { get; set; }
+        public virtual User Mentor { get; set; }
     }
 }

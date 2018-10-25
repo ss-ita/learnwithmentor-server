@@ -23,7 +23,7 @@ namespace LearnWithMentorDAL.Entities
 
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PlanTask> PlanTasks { get; set; }
-        public virtual GroupUser Creator { get; set; }
-        public virtual GroupUser Modifier { get; set; }
+        public virtual User Creator { get; set; }
+        public virtual User Modifier { get; set; }
     }
 }

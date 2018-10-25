@@ -46,7 +46,7 @@ namespace LearnWithMentorBLL.Services
                 PlanTask_Id = planTaskId,
                 Create_Id = comment.CreatorId,
             };
-            db.Comments.Add(newComment);
+            db.Comments.AddAsync(newComment);
             db.Save();
             return true;
         }
@@ -73,7 +73,7 @@ namespace LearnWithMentorBLL.Services
                 return false;
             }
             comment.Text = text;
-            db.Comments.Update(comment);
+            db.Comments.UpdateAsync(comment);
             db.Save();
             return true;
         }

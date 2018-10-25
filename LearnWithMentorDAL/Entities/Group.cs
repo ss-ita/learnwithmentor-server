@@ -9,7 +9,7 @@ namespace LearnWithMentorDAL.Entities
         public Group()
         {
             Plans = new HashSet<Plan>();
-            Users = new HashSet<GroupUser>();
+            Users = new HashSet<User>();
             UserGroups = new HashSet<UserGroup>();
         }
 
@@ -17,11 +17,11 @@ namespace LearnWithMentorDAL.Entities
         public string Name { get; set; }
         public int? Mentor_Id { get; set; }
         
-        public virtual GroupUser Mentor { get; set; }
+        public virtual User Mentor { get; set; }
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Plan> Plans { get; set; }
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<GroupUser> Users { get; set; }
+        public virtual ICollection<User> Users { get; set; }
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserGroup> UserGroups { get; set; }
     }

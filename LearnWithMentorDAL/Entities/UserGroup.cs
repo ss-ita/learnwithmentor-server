@@ -10,7 +10,7 @@ namespace LearnWithMentorDAL.Entities
         [ForeignKey(nameof(Group))]
         public int GroupId { get; set; }
 
-        public virtual GroupUser User { get; set; }
+        public virtual User User { get; set; }
         public virtual Group Group { get; set; }
     }
 }

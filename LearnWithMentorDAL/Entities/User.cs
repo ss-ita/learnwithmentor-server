@@ -4,10 +4,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace LearnWithMentorDAL.Entities
 {
-    public class GroupUser
+    public class User
     {
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public GroupUser()
+        public User()
         {
             Comments = new HashSet<Comment>();
             GroupMentor = new HashSet<Group>();

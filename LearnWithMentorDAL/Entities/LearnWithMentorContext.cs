@@ -36,7 +36,7 @@ namespace LearnWithMentorDAL.Entities
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Section> Sections { get; set; }
         public virtual DbSet<Task> Tasks { get; set; }
-        public virtual DbSet<GroupUser> Users { get; set; }
+        public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserTask> UserTasks { get; set; }
         public virtual DbSet<PlanSuggestion> PlanSuggestion { get; set; }
         public virtual DbSet<GROUP_PLAN_TASK> GROUPS_PLANS_TASKS { get; set; }
@@ -51,7 +51,7 @@ namespace LearnWithMentorDAL.Entities
 
         private void CreateUserReferences(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<GroupUser>()
+            modelBuilder.Entity<User>()
                 .HasKey(user => user.Id)
                 .HasRequired(user => user.Role)
                 .WithMany(role => role.Users)
@@ -230,24 +230,24 @@ namespace LearnWithMentorDAL.Entities
 
         private void CreateManyToManyReferences(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<GroupUser>()
+            modelBuilder.Entity<User>()
                 .HasMany(user => user.Groups)
                 .WithMany(group => group.Users)
-                .Map(userGroup =>
+                .Map(userGroups =>
                 {
-                    userGroup.MapLeftKey("UserId");
-                    userGroup.MapRightKey("GroupId");
-                    userGroup.ToTable("UserGroup");
+                    userGroups.MapLeftKey("UserId");
+                    userGroups.MapRightKey("GroupId");
+                    userGroups.ToTable("UserGroups");
                 });
 
             modelBuilder.Entity<Group>()
                 .HasMany(group => group.Plans)
                 .WithMany(plan => plan.Groups)
-                .Map(groupPlan =>
+                .Map(groupPlans =>
                 {
-                    groupPlan.MapLeftKey("GroupId");
-                    groupPlan.MapRightKey("PlanId");
-                    groupPlan.ToTable("GroupPlan");
+                    groupPlans.MapLeftKey("GroupId");
+                    groupPlans.MapRightKey("PlanId");
+                    groupPlans.ToTable("GroupPlans");
                 });
         }
     }

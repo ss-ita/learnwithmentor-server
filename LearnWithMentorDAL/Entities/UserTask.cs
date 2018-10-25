@@ -21,9 +21,9 @@ namespace LearnWithMentorDAL.Entities
         public DateTime? Propose_End_Date { get; set; }
         public int Mentor_Id { get; set; }
         
-        public virtual GroupUser User { get; set; }
+        public virtual User User { get; set; }
         public virtual PlanTask PlanTask { get; set; }
-        public virtual GroupUser Mentor { get; set; }
+        public virtual User Mentor { get; set; }
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Message> Messages { get; set; }
     }

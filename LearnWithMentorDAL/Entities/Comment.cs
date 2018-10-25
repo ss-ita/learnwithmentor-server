@@ -12,6 +12,6 @@ namespace LearnWithMentorDAL.Entities
         public DateTime? Mod_Date { get; set; }
         
         public virtual PlanTask PlanTask { get; set; }
-        public virtual GroupUser Creator { get; set; }
+        public virtual User Creator { get; set; }
     }
 }
