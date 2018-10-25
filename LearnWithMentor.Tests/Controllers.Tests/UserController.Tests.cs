@@ -306,14 +306,6 @@ namespace LearnWithMentor.Tests.Controllers.Tests
 
             Assert.AreEqual(expectedStatusCode, actualStatusCode);
         }
-
-        /*[Test]
-        public void ExceptionInGetImageTest()
-        {
-            userServiceMock.Setup(u => u.ContainsIdAsync(It.IsInRange(1, 8, Range.Inclusive))).ReturnsAsync(true);
-            userServiceMock.Setup(u => u.GetImageAsync(6)).Throws(new EntityException());
-            Assert.Throws(typeof(EntityException), () => userController.GetImageAsync(6).GetAwaiter().GetResult());
-        }*/
         
         [Test]
         public async Task BlockUserTest()
