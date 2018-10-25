@@ -129,6 +129,8 @@ namespace LearnWithMentorDAL.EF
                 users[i].Image_Name = "adminImage";
                 users[i].Image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(pathToImagesFolder, @"admin.png")));
             }
+            users[17].Image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(pathToImagesFolder, "18.jpg")));
+
             for (var i = 12; i < 19; i++)
             {
                 users[i - 1].Image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(pathToImagesFolder, @i + ".jpg")));
@@ -136,6 +138,9 @@ namespace LearnWithMentorDAL.EF
             context.Users.AddRange(users);
             context.SaveChanges();
         }
+
+
+
         private static void InitializePlans(LearnWithMentorContext context)
         {
             context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('[Plans]', RESEED, 0)");

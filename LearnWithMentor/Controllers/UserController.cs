@@ -674,9 +674,9 @@ namespace LearnWithMentor.Controllers
         [HttpGet]
         [Authorize(Roles = "Admin")]
         [Route("api/user/roles")]
-        public HttpResponseMessage GetRoles()
+        public async Task<HttpResponseMessage> GetRoles()
         {
-            var roles = roleService.GetAllRoles();
+            var roles = await roleService.GetAllRoles();
             if (roles.Count != 0)
             {
                 return Request.CreateResponse<IEnumerable<RoleDto>>(HttpStatusCode.OK, roles);

@@ -21,7 +21,7 @@ namespace LearnWithMentorBLL.Services
         public async Task<IEnumerable<TaskDto>> GetAllTasksAsync()
         {
             var taskDTO = new List<TaskDto>();
-            var tasks = db.Tasks.GetAll();
+            var tasks = await db.Tasks.GetAll();
             if (tasks == null)
             {
                 return null;
@@ -209,7 +209,7 @@ namespace LearnWithMentorBLL.Services
             if (userTask == null) return false;
             userTask.End_Date = userTask.Propose_End_Date;
             userTask.Propose_End_Date = null;
-            db.UserTasks.UpdateAsync(userTask);
+            await db.UserTasks.UpdateAsync(userTask);
             db.Save();
             return true;
         }
@@ -219,7 +219,7 @@ namespace LearnWithMentorBLL.Services
             UserTask userTask = await db.UserTasks.GetAsync(userTaskId);
             if (userTask == null) return false;
             userTask.Propose_End_Date = null;
-            db.UserTasks.UpdateAsync(userTask);
+            await db.UserTasks.UpdateAsync(userTask);
             db.Save();
             return true;
         }
@@ -244,7 +244,7 @@ namespace LearnWithMentorBLL.Services
             {
                 item.Mod_Id = taskDTO.ModifierId;
             }
-            db.Tasks.UpdateAsync(item);
+            await db.Tasks.UpdateAsync(item);
             db.Save();
             return true;
         }
@@ -254,7 +254,7 @@ namespace LearnWithMentorBLL.Services
             TaskEntity item = await db.Tasks.GetAsync(taskId);
             if (item != null || await db.Tasks.IsRemovableAsync(taskId))
             {
-                db.Tasks.RemoveAsync(item);
+                await db.Tasks.RemoveAsync(item);
                 db.Save();
                 return true;
             }
@@ -345,7 +345,7 @@ namespace LearnWithMentorBLL.Services
                 return false;
             }
             userTask.State = newStatus;
-            db.UserTasks.UpdateAsync(userTask);
+            await db.UserTasks.UpdateAsync(userTask);
             db.Save();
             return true;
         }
@@ -362,16 +362,16 @@ namespace LearnWithMentorBLL.Services
                 return false;
             }
             userTask.Result = newResult;
-            db.UserTasks.UpdateAsync(userTask);
+            await db.UserTasks.UpdateAsync(userTask);
             db.Save();
             return true;
         }
-        public Task<PagedListDto<TaskDto>> GetTasks(int pageSize, int pageNumber = 1)
+        public async Task<PagedListDto<TaskDto>> GetTasks(int pageSize, int pageNumber = 1)
         {
-            var queryLan = db.Tasks.GetAll();
+            var queryLan = await db.Tasks.GetAll();
             var query = queryLan.AsQueryable();
             query = query.OrderBy(x => x.Id);
-            return PagedList<TaskEntity, TaskDto>.GetDTO(query, pageNumber, pageSize, TaskToTaskDTOAsync);
+            return await PagedList<TaskEntity, TaskDto>.GetDTO(query, pageNumber, pageSize, TaskToTaskDTOAsync);
         }
 
         private async Task<TaskDto> TaskToTaskDTOAsync(TaskEntity task)

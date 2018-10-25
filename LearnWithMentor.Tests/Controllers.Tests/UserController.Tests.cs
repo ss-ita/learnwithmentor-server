@@ -138,13 +138,15 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         }
 
         [Test]
-        public void GetRolesTest()
+        public async Task GetRolesTest()
         {
-            roleServiceMock.Setup(r => r.GetAllRoles()).Returns(roles);
+            roleServiceMock.Setup(r => r.GetAllRoles()).ReturnsAsync(roles);
 
-            var response = userController.GetRoles();
+            var response = await userController.GetRoles();
             response.TryGetContentValue<IEnumerable<RoleDto>>(out var roleDTOs);
-            var expected = roleServiceMock.Object.GetAllRoles().Count;
+            //var expected = await roleServiceMock.Object.GetAllRoles().Count;
+            var expect = await roleServiceMock.Object.GetAllRoles();
+            var expected = expect.Count;
             var actual = roleDTOs.Count();
 
             Assert.AreEqual(expected, actual);
@@ -212,7 +214,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         [Test]
         public async Task NoUsersInDatabaseTest()
         {
-            roleServiceMock.Setup(r => r.GetAllRoles()).Returns(new List<RoleDto>());
+            roleServiceMock.Setup(r => r.GetAllRoles()).ReturnsAsync(new List<RoleDto>());
 
             HttpResponseMessage response = await userController.GetAsync();
             var expected = HttpStatusCode.NoContent;

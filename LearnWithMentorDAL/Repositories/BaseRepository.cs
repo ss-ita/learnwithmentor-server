@@ -13,7 +13,7 @@ namespace LearnWithMentorDAL.Repositories
             Context = context;
         }
 
-        public IEnumerable<T> GetAll()
+        public async System.Threading.Tasks.Task<IEnumerable<T>> GetAll()
         {
             return Context.Set<T>();
         }

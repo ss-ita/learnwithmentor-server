@@ -42,7 +42,7 @@ namespace LearnWithMentorBLL.Services
 
         public async Task<List<UserDto>> GetAllUsersAsync()
         {
-            IEnumerable<User> users = db.Users.GetAll();
+            IEnumerable<User> users = await db.Users.GetAll();
             if (users == null)
             {
                 return null;
@@ -55,11 +55,15 @@ namespace LearnWithMentorBLL.Services
             return dtos;
         }
 
-        public  Task<PagedListDto<UserDto>> GetUsers(int pageSize, int pageNumber = 0)
+        public async Task<PagedListDto<UserDto>> GetUsers(int pageSize, int pageNumber = 0)
         {
-            var query = db.Users.GetAll().AsQueryable();
+            //var query =  await db.Users.GetAll().AsQueryable();
+            //query = query.OrderBy(x => x.Id);
+            var queryLan =  await db.Users.GetAll();
+            var query = queryLan.AsQueryable();
             query = query.OrderBy(x => x.Id);
-            return  PagedList<User, UserDto>.GetDTO(query, pageNumber, pageSize, UserToUserDTOAsync);
+
+            return await PagedList<User, UserDto>.GetDTO(query, pageNumber, pageSize, UserToUserDTOAsync);
         }
 
         public async Task<bool> BlockByIdAsync(int id)
@@ -145,7 +149,7 @@ namespace LearnWithMentorBLL.Services
                 return false;
             }
             user.Password = BCrypt.Net.BCrypt.HashPassword(password);
-            db.Users.UpdateAsync(user);
+            await db.Users.UpdateAsync(user);
             db.Save();
             return true;
         }

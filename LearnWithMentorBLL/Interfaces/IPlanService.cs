@@ -8,7 +8,7 @@ namespace LearnWithMentorBLL.Interfaces
     {
         Task<int?> AddAndGetIdAsync(PlanDto dto);
         List<PlanDto> Search(string[] searchString);
-        List<PlanDto> GetAll();
+        Task<List<PlanDto>> GetAll();
         List<PlanDto> GetSomeAmount(int prevAmount, int amount);
         Task<PlanDto> GetAsync(int id);
         Task<List<TaskDto>> GetAllTasksAsync(int planId);
