@@ -46,7 +46,7 @@ namespace LearnWithMentorDAL.Repositories
             }
             else
             {
-                usersWithCriteria =  Context.Users.Where(user => user.Role_Id == roleId);
+                usersWithCriteria =  Context.Users.Where(user => user.RoleId == roleId);
             }
            var users = await usersWithCriteria.Where(user =>
                 (user.FirstName.Contains(firstWord) && user.LastName.Contains(secondWord))
@@ -76,7 +76,7 @@ namespace LearnWithMentorDAL.Repositories
 
         public async Task<IEnumerable<User>> GetUsersByRoleAsync(int roleId)
         {
-            return await Context.Users.Where(user => user.Role_Id == roleId).ToListAsync();
+            return await Context.Users.Where(user => user.RoleId == roleId).ToListAsync();
         }
 
         public async Task<IEnumerable<User>> GetUsersByStateAsync(bool state)

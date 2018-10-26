@@ -37,7 +37,7 @@ namespace LearnWithMentorBLL.Services
                 user.LastName,
                 user.Role.Name,
                 user.Blocked,
-                user.Email_Confirmed);
+                user.EmailConfirmed);
         }
 
         public async Task<List<UserDto>> GetAllUsersAsync()
@@ -103,7 +103,7 @@ namespace LearnWithMentorBLL.Services
                 var updatedRole = await db.Roles.TryGetByName(user.Role);
                 if (updatedRole != null)
                 {
-                    item.Role_Id = updatedRole.Id;
+                    item.RoleId = updatedRole.Id;
                     modified = true;
                 }
                 db.Users.UpdateAsync(item);
@@ -117,7 +117,7 @@ namespace LearnWithMentorBLL.Services
             User user = await db.Users.GetAsync(id);
             if (user != null)
             {
-                user.Email_Confirmed = true;
+                user.EmailConfirmed = true;
                 db.Users.UpdateAsync(user);
                 db.Save();
                 return true;
@@ -133,7 +133,7 @@ namespace LearnWithMentorBLL.Services
                 Password = BCrypt.Net.BCrypt.HashPassword(userLoginDTO.Password)
             };
             var studentRole = await db.Roles.TryGetByName("Student");
-            toAdd.Role_Id = studentRole.Id;
+            toAdd.RoleId = studentRole.Id;
             toAdd.FirstName = userLoginDTO.FirstName;
             toAdd.LastName = userLoginDTO.LastName;
             db.Users.AddAsync(toAdd);
@@ -205,7 +205,7 @@ namespace LearnWithMentorBLL.Services
             }
             var converted = Convert.ToBase64String(image);
             userToUpdate.Image = converted;
-            userToUpdate.Image_Name = imageName;
+            userToUpdate.ImageName = imageName;
             db.Save();
             return true;
         }
@@ -213,13 +213,13 @@ namespace LearnWithMentorBLL.Services
         public async Task<ImageDto> GetImageAsync(int id)
         {
             User userToGetImage = await db.Users.GetAsync(id);
-            if (userToGetImage?.Image == null || userToGetImage.Image_Name == null)
+            if (userToGetImage?.Image == null || userToGetImage.ImageName == null)
             {
                 return null;
             }
             return new ImageDto()
             {
-                Name = userToGetImage.Image_Name,
+                Name = userToGetImage.ImageName,
                 Base64Data = userToGetImage.Image
             };
         }
@@ -260,7 +260,7 @@ namespace LearnWithMentorBLL.Services
                                user.Email,
                                user.Role.Name,
                                user.Blocked,
-                               user.Email_Confirmed);
+                               user.EmailConfirmed);
         }
     }
 }

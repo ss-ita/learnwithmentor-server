@@ -22,10 +22,10 @@ namespace LearnWithMentorBLL.Services
             }
             var commentDTO = new  CommentDto(comment.Id,
                                    comment.Text,
-                                   comment.Create_Id,
-                                   await db.Users.ExtractFullNameAsync(comment.Create_Id),
-                                   comment.Create_Date,
-                                   comment.Mod_Date);
+                                   comment.CreateId,
+                                   await db.Users.ExtractFullNameAsync(comment.CreateId),
+                                   comment.CreateDate,
+                                   comment.ModDate);
             return  commentDTO;
         }
 
@@ -43,8 +43,8 @@ namespace LearnWithMentorBLL.Services
             var newComment = new Comment()
             {
                 Text = comment.Text,
-                PlanTask_Id = planTaskId,
-                Create_Id = comment.CreatorId,
+                PlanTaskId = planTaskId,
+                CreateId = comment.CreatorId,
             };
             db.Comments.AddAsync(newComment);
             db.Save();
@@ -110,10 +110,10 @@ namespace LearnWithMentorBLL.Services
             {
                 commentsList.Add(new CommentDto(c.Id,
                                        c.Text,
-                                       c.Create_Id,
-                                       await db.Users.ExtractFullNameAsync(c.Create_Id),
-                                       c.Create_Date,
-                                       c.Mod_Date));
+                                       c.CreateId,
+                                       await db.Users.ExtractFullNameAsync(c.CreateId),
+                                       c.CreateDate,
+                                       c.ModDate));
             }
             return commentsList;
         }

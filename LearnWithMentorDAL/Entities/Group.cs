@@ -14,7 +14,7 @@ namespace LearnWithMentorDAL.Entities
 
         public int Id { get; set; }
         public string Name { get; set; }
-        public int? Mentor_Id { get; set; }
+        public int? MentorId { get; set; }
         
         public virtual User Mentor { get; set; }
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

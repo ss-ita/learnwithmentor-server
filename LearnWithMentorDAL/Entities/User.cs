@@ -13,8 +13,8 @@ namespace LearnWithMentorDAL.Entities
             GroupMentor = new HashSet<Group>();
             PlansCreated = new HashSet<Plan>();
             PlansModified = new HashSet<Plan>();
-            TasksCreated = new HashSet<Task>();
-            TasksModified = new HashSet<Task>();
+            TasksCreated = new HashSet<StudentTask>();
+            TasksModified = new HashSet<StudentTask>();
             PlanSuggestionsStudent = new HashSet<PlanSuggestion>();
             PlanSuggestionsMentor = new HashSet<PlanSuggestion>();
             UserTasks = new HashSet<UserTask>();
@@ -30,9 +30,9 @@ namespace LearnWithMentorDAL.Entities
         public string Password { get; set; }
         public bool Blocked { get; set; }
         public string Image { get; set; }
-        public string Image_Name { get; set; }
-        public bool Email_Confirmed { get; set; }
-        public int Role_Id { get; set; }
+        public string ImageName { get; set; }
+        public bool EmailConfirmed { get; set; }
+        public int RoleId { get; set; }
 
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Comment> Comments { get; set; }
@@ -44,9 +44,9 @@ namespace LearnWithMentorDAL.Entities
         public virtual ICollection<Plan> PlansModified { get; set; }
         public virtual Role Role { get; set; }
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Task> TasksCreated { get; set; }
+        public virtual ICollection<StudentTask> TasksCreated { get; set; }
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Task> TasksModified { get; set; }
+        public virtual ICollection<StudentTask> TasksModified { get; set; }
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PlanSuggestion> PlanSuggestionsStudent { get; set; }
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

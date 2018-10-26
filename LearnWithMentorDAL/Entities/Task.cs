@@ -4,10 +4,11 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace LearnWithMentorDAL.Entities
 {
-    public class Task
+    [System.ComponentModel.DataAnnotations.Schema.Table("Task")]
+    public class StudentTask
     {
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Task()
+        public StudentTask()
         {
             PlanTasks = new HashSet<PlanTask>();
         }
@@ -16,10 +17,10 @@ namespace LearnWithMentorDAL.Entities
         public string Name { get; set; }
         public string Description { get; set; }
         public bool Private { get; set; }
-        public int Create_Id { get; set; }
-        public int? Mod_Id { get; set; }
-        public DateTime? Create_Date { get; set; }
-        public DateTime? Mod_Date { get; set; }
+        public int CreateId { get; set; }
+        public int? ModId { get; set; }
+        public DateTime? CreateDate { get; set; }
+        public DateTime? ModDate { get; set; }
 
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PlanTask> PlanTasks { get; set; }

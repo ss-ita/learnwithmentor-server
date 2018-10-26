@@ -31,7 +31,7 @@ namespace LearnWithMentorDAL.Repositories
 
         public async Task<IEnumerable<Group>> GetGroupsByMentorAsync(int mentorId)
         {
-            return await Context.Groups.Where(group => group.Mentor_Id == mentorId).ToListAsync();
+            return await Context.Groups.Where(group => group.MentorId == mentorId).ToListAsync();
         }
 
         public async Task<IEnumerable<Group>> GetStudentGroupsAsync(int studentId)
