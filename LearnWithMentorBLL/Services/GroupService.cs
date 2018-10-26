@@ -18,9 +18,9 @@ namespace LearnWithMentorBLL.Services
         {
             return new UserTask()
             {
-                User_Id = userId,
-                PlanTask_Id = planTaskId,
-                Mentor_Id = mentorId,
+                UserId = userId,
+                PlanTaskId = planTaskId,
+                MentorId = mentorId,
                 Result = "",
                 State = "P"
             };
@@ -41,9 +41,9 @@ namespace LearnWithMentorBLL.Services
             }
             foreach (var planTask in planTasks)
             {
-                if ((db.UserTasks.GetByPlanTaskForUserAsync(planTask.Id, userId) == null) && (group.Mentor_Id != null))
+                if ((db.UserTasks.GetByPlanTaskForUserAsync(planTask.Id, userId) == null) && (group.MentorId != null))
                 {
-                    await db.UserTasks.AddAsync(CreateDefaultUserTask(userId, planTask.Id, group.Mentor_Id.Value));
+                    await db.UserTasks.AddAsync(CreateDefaultUserTask(userId, planTask.Id, group.MentorId.Value));
                 }
             }
         }
@@ -61,9 +61,9 @@ namespace LearnWithMentorBLL.Services
             {
                 foreach (var planTask in planTasks)
                 {
-                    if ((db.UserTasks.GetByPlanTaskForUserAsync(planTask.Id, user.Id) == null) && (group.Mentor_Id != null))
+                    if ((db.UserTasks.GetByPlanTaskForUserAsync(planTask.Id, user.Id) == null) && (group.MentorId != null))
                     {
-                        await db.UserTasks.AddAsync(CreateDefaultUserTask(user.Id, planTask.Id, group.Mentor_Id.Value));
+                        await db.UserTasks.AddAsync(CreateDefaultUserTask(user.Id, planTask.Id, group.MentorId.Value));
                     }
                 }
             }
@@ -77,7 +77,7 @@ namespace LearnWithMentorBLL.Services
             var groupNew = new Group
             {
                 Name = group.Name,
-                Mentor_Id = group.MentorId
+                MentorId = group.MentorId
             };
             await db.Groups.AddAsync(groupNew);
             db.Save();
@@ -91,8 +91,8 @@ namespace LearnWithMentorBLL.Services
                 return null;
             return new GroupDto(group.Id,
                                group.Name,
-                               group.Mentor_Id,
-                               await db.Users.ExtractFullNameAsync(group.Mentor_Id));
+                               group.MentorId,
+                               await db.Users.ExtractFullNameAsync(group.MentorId));
         }
         
         public async ThreadTask.Task<int?> GetMentorIdByGroupAsync(int groupId)
@@ -122,14 +122,14 @@ namespace LearnWithMentorBLL.Services
                                      plan.Name,
                                      plan.Description,
                                      plan.Published,
-                                     plan.Create_Id,
+                                     plan.CreateId,
                                      plan.Creator.FirstName,
                                      plan.Creator.LastName,
-                                     plan.Mod_Id,
+                                     plan.ModId,
                                      plan.Modifier?.FirstName,
                                      plan.Modifier?.LastName,
-                                     plan.Create_Date,
-                                     plan.Mod_Date
+                                     plan.CreateDate,
+                                     plan.ModDate
                                     ));
             }
             return planList;
@@ -157,7 +157,7 @@ namespace LearnWithMentorBLL.Services
                                      user.LastName,
                                      user.Role.Name,
                                      user.Blocked,
-                                     user.Email_Confirmed
+                                     user.EmailConfirmed
                                     ));
             }
             return userList;
@@ -187,7 +187,7 @@ namespace LearnWithMentorBLL.Services
                     user.Blocked,
                     new ImageDto()
                     {
-                        Name = userToGetImage.Image_Name,
+                        Name = userToGetImage.ImageName,
                         Base64Data = userToGetImage.Image
                     }
                 ));
@@ -208,8 +208,8 @@ namespace LearnWithMentorBLL.Services
             {
                 groupList.Add(new GroupDto(group.Id,
                                          group.Name,
-                                         group.Mentor_Id,
-                                         await db.Users.ExtractFullNameAsync(group.Mentor_Id)));
+                                         group.MentorId,
+                                         await db.Users.ExtractFullNameAsync(group.MentorId)));
             }
             return groupList;
         }
@@ -243,8 +243,8 @@ namespace LearnWithMentorBLL.Services
             {
                 groupList.Add(new GroupDto(group.Id,
                                          group.Name,
-                                         group.Mentor_Id,
-                                         await db.Users.ExtractFullNameAsync(group.Mentor_Id)));
+                                         group.MentorId,
+                                         await db.Users.ExtractFullNameAsync(group.MentorId)));
             }
             if (groupList.Count < 1)
             {
@@ -323,7 +323,7 @@ namespace LearnWithMentorBLL.Services
                     user.LastName,
                     user.Role.Name,
                     user.Blocked,
-                    user.Email_Confirmed);
+                    user.EmailConfirmed);
                 if (!usersNotInGroupList.Contains(rdDto))
                 {
                     usersNotInGroupList.Add(rdDto);
@@ -369,14 +369,14 @@ namespace LearnWithMentorBLL.Services
                     plan.Name,
                     plan.Description,
                     plan.Published,
-                    plan.Create_Id,
+                    plan.CreateId,
                     plan.Creator.FirstName,
                     plan.Creator.LastName,
-                    plan.Mod_Id,
+                    plan.ModId,
                     plan.Modifier?.FirstName,
                     plan.Modifier?.LastName,
-                    plan.Create_Date,
-                    plan.Mod_Date);
+                    plan.CreateDate,
+                    plan.ModDate);
 
                 if (!plansNotUsedInGroupList.Contains(planDto))
                 {

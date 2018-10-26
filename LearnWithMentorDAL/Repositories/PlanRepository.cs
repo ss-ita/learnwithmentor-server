@@ -72,10 +72,10 @@ namespace LearnWithMentorDAL.Repositories
 
             PlanTask toInsert = new PlanTask()
             {
-                Plan_Id = planId,
-                Task_Id = taskId,
+                PlanId = planId,
+                TaskId = taskId,
                 Priority = priority,
-                Section_Id = section?.Id
+                SectionId = section?.Id
             };
 
             Context.PlanTasks.Add(toInsert);

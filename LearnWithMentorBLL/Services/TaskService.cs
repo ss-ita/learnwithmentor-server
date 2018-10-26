@@ -8,7 +8,7 @@ using LearnWithMentorDAL.UnitOfWork;
 using LearnWithMentorDTO.Infrastructure;
 using System;
 using System.Threading.Tasks;
-using TaskEntity = LearnWithMentorDAL.Entities.Task;
+using TaskEntity = LearnWithMentorDAL.Entities.StudentTask;
 
 namespace LearnWithMentorBLL.Services
 {
@@ -54,8 +54,8 @@ namespace LearnWithMentorBLL.Services
                 Name = taskDTO.Name,
                 Description = taskDTO.Description,
                 Private = taskDTO.Private,
-                Create_Id = taskDTO.CreatorId,
-                Mod_Id = taskDTO.ModifierId
+                CreateId = taskDTO.CreatorId,
+                ModId = taskDTO.ModifierId
             };
             var createdTask =  db.Tasks.AddAndReturnElement(task);
             db.Save();
@@ -89,14 +89,14 @@ namespace LearnWithMentorBLL.Services
                                     task.Name,
                                     task.Description,
                                     task.Private,
-                                    task.Create_Id,
-                                    await db.Users.ExtractFullNameAsync(task.Create_Id),
-                                    task.Mod_Id,
-                                    await db.Users.ExtractFullNameAsync(task.Mod_Id),
-                                    task.Create_Date,
-                                    task.Mod_Date,
+                                    task.CreateId,
+                                    await db.Users.ExtractFullNameAsync(task.CreateId),
+                                    task.ModId,
+                                    await db.Users.ExtractFullNameAsync(task.ModId),
+                                    task.CreateDate,
+                                    task.ModDate,
                                     planTask.Priority,
-                                    planTask.Section_Id,
+                                    planTask.SectionId,
                                     planTask.Id);
             return taskDTO;
         }
@@ -129,15 +129,15 @@ namespace LearnWithMentorBLL.Services
                                     task.Name,
                                     task.Description,
                                     task.Private,
-                                    task.Create_Id,
-                                    await db.Users.ExtractFullNameAsync(task.Create_Id),
-                                    task.Mod_Id,
-                                    await db.Users.ExtractFullNameAsync(task.Mod_Id),
-                                    task.Create_Date,
-                                    task.Mod_Date,
-                                    task.PlanTasks.FirstOrDefault(pt => pt.Task_Id == task.Id && pt.Plan_Id == planId)?.Priority,
-                                    task.PlanTasks.FirstOrDefault(pt => pt.Task_Id == task.Id && pt.Plan_Id == planId)?.Section_Id,
-                                    task.PlanTasks.FirstOrDefault(pt => pt.Task_Id == task.Id && pt.Plan_Id == planId)?.Id));
+                                    task.CreateId,
+                                    await db.Users.ExtractFullNameAsync(task.CreateId),
+                                    task.ModId,
+                                    await db.Users.ExtractFullNameAsync(task.ModId),
+                                    task.CreateDate,
+                                    task.ModDate,
+                                    task.PlanTasks.FirstOrDefault(pt => pt.TaskId == task.Id && pt.PlanId == planId)?.Priority,
+                                    task.PlanTasks.FirstOrDefault(pt => pt.TaskId == task.Id && pt.PlanId == planId)?.SectionId,
+                                    task.PlanTasks.FirstOrDefault(pt => pt.TaskId == task.Id && pt.PlanId == planId)?.Id));
             }
             return taskList;
         }
@@ -159,8 +159,8 @@ namespace LearnWithMentorBLL.Services
                 Name = taskDTO.Name,
                 Description = taskDTO.Description,
                 Private = taskDTO.Private,
-                Create_Id = taskDTO.CreatorId,
-                Mod_Id = taskDTO.ModifierId
+                CreateId = taskDTO.CreatorId,
+                ModId = taskDTO.ModifierId
             };
             db.Tasks.AddAsync(task);
             db.Save();
@@ -180,13 +180,13 @@ namespace LearnWithMentorBLL.Services
             }
             var userTask = new UserTask()
             {
-                User_Id = userTaskDTO.UserId,
-                PlanTask_Id = userTaskDTO.PlanTaskId,
+                UserId = userTaskDTO.UserId,
+                PlanTaskId = userTaskDTO.PlanTaskId,
                 State = userTaskDTO.State,
-                End_Date = userTaskDTO.EndDate,
+                EndDate = userTaskDTO.EndDate,
                 Result = userTaskDTO.Result,
-                Propose_End_Date = userTaskDTO.ProposeEndDate,
-                Mentor_Id = userTaskDTO.MentorId
+                ProposeEndDate = userTaskDTO.ProposeEndDate,
+                MentorId = userTaskDTO.MentorId
             };
             db.UserTasks.AddAsync(userTask);
             db.Save();
@@ -197,7 +197,7 @@ namespace LearnWithMentorBLL.Services
         {
             UserTask userTask = await db.UserTasks.GetAsync(userTaskId);
             if (userTask == null) return false;
-            userTask.Propose_End_Date = proposeEndDate;
+            userTask.ProposeEndDate = proposeEndDate;
             db.UserTasks.UpdateAsync(userTask);
             db.Save();
             return true;
@@ -207,8 +207,8 @@ namespace LearnWithMentorBLL.Services
         {
             UserTask userTask = await db.UserTasks.GetAsync(userTaskId);
             if (userTask == null) return false;
-            userTask.End_Date = userTask.Propose_End_Date;
-            userTask.Propose_End_Date = null;
+            userTask.EndDate = userTask.ProposeEndDate;
+            userTask.ProposeEndDate = null;
             await db.UserTasks.UpdateAsync(userTask);
             db.Save();
             return true;
@@ -218,7 +218,7 @@ namespace LearnWithMentorBLL.Services
         {
             UserTask userTask = await db.UserTasks.GetAsync(userTaskId);
             if (userTask == null) return false;
-            userTask.Propose_End_Date = null;
+            userTask.ProposeEndDate = null;
             await db.UserTasks.UpdateAsync(userTask);
             db.Save();
             return true;
@@ -242,7 +242,7 @@ namespace LearnWithMentorBLL.Services
             item.Private = taskDTO.Private;
             if (taskDTO.ModifierId != null)
             {
-                item.Mod_Id = taskDTO.ModifierId;
+                item.ModId = taskDTO.ModifierId;
             }
             await db.Tasks.UpdateAsync(item);
             db.Save();
@@ -269,8 +269,8 @@ namespace LearnWithMentorBLL.Services
                 UserTask userTask = await db.UserTasks.GetByPlanTaskForUserAsync(planTaskId, userId);
                 if (userTask != null)
                 {
-                    dtoList.Add(new UserTaskDto(userTask.Id, userTask.User_Id, userTask.PlanTask_Id, userTask.End_Date,
-                        userTask.Propose_End_Date, userTask.Mentor_Id, userTask.State, userTask.Result));
+                    dtoList.Add(new UserTaskDto(userTask.Id, userTask.UserId, userTask.PlanTaskId, userTask.EndDate,
+                        userTask.ProposeEndDate, userTask.MentorId, userTask.State, userTask.Result));
                 }
             }
             return dtoList;
@@ -297,12 +297,12 @@ namespace LearnWithMentorBLL.Services
                                 task.Name,
                                 task.Description,
                                 task.Private,
-                                task.Create_Id,
-                                await db.Users.ExtractFullNameAsync(task.Create_Id),
-                                task.Mod_Id,
-                                await db.Users.ExtractFullNameAsync(task.Mod_Id),
-                                task.Create_Date,
-                                task.Mod_Date,
+                                task.CreateId,
+                                await db.Users.ExtractFullNameAsync(task.CreateId),
+                                task.ModId,
+                                await db.Users.ExtractFullNameAsync(task.ModId),
+                                task.CreateDate,
+                                task.ModDate,
                                 null,
                                 null,
                                 null);
@@ -323,11 +323,11 @@ namespace LearnWithMentorBLL.Services
                 return null;
             }
             var userTaskDto = new UserTaskDto(userTask.Id,
-                                      userTask.User_Id,
-                                      userTask.PlanTask_Id,
-                                      userTask.End_Date,
-                                      userTask.Propose_End_Date,
-                                      userTask.Mentor_Id,
+                                      userTask.UserId,
+                                      userTask.PlanTaskId,
+                                      userTask.EndDate,
+                                      userTask.ProposeEndDate,
+                                      userTask.MentorId,
                                       userTask.State,
                                       userTask.Result);
             return userTaskDto;
@@ -380,12 +380,12 @@ namespace LearnWithMentorBLL.Services
                                 task.Name,
                                 task.Description,
                                 task.Private,
-                                task.Create_Id,
-                                await db.Users.ExtractFullNameAsync(task.Create_Id),
-                                task.Mod_Id,
-                                await db.Users.ExtractFullNameAsync(task.Mod_Id),
-                                task.Create_Date,
-                                task.Mod_Date,
+                                task.CreateId,
+                                await db.Users.ExtractFullNameAsync(task.CreateId),
+                                task.ModId,
+                                await db.Users.ExtractFullNameAsync(task.ModId),
+                                task.CreateDate,
+                                task.ModDate,
                                 null,
                                 null,
                                 null);
@@ -393,7 +393,7 @@ namespace LearnWithMentorBLL.Services
         public async Task<bool> CheckUserTaskOwnerAsync(int userTaskId, int userId)
         {
             UserTask userTask = await db.UserTasks.GetAsync(userTaskId);
-            return userTask.User_Id == userId;
+            return userTask.UserId == userId;
         }
     }
 }

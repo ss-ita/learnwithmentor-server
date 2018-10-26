@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Data.Entity;
 using LearnWithMentorDAL.Entities;
 using LearnWithMentorDAL.Repositories.Interfaces;
-using TaskEntity = LearnWithMentorDAL.Entities.Task;
+using TaskEntity = LearnWithMentorDAL.Entities.StudentTask;
 
 namespace LearnWithMentorDAL.Repositories
 {
@@ -22,7 +22,7 @@ namespace LearnWithMentorDAL.Repositories
 
         public async Task<bool> IsRemovableAsync(int id)
         {
-            return await Context.PlanTasks.AnyAsync(planTask => planTask.Task_Id == id);
+            return await Context.PlanTasks.AnyAsync(planTask => planTask.TaskId == id);
 
         }
 
@@ -42,7 +42,7 @@ namespace LearnWithMentorDAL.Repositories
             List<TaskEntity> result = new List<TaskEntity>();
             foreach (var word in str)
             {
-                IEnumerable<TaskEntity> tasks = Context.PlanTasks.Where(plan => plan.Plan_Id == planId)
+                IEnumerable<TaskEntity> tasks = Context.PlanTasks.Where(plan => plan.PlanId == planId)
                                              .Select(planTask => planTask.Tasks)
                                              .Where(task => task.Name.Contains(word));
                 foreach (var task in tasks)
@@ -75,7 +75,7 @@ namespace LearnWithMentorDAL.Repositories
 
         public async Task<IEnumerable<TaskEntity>> GetTasksNotInPlanAsync(int planId)
         {
-            var usedTasks = await Context.PlanTasks.Where(planTask => planTask.Plan_Id == planId).Select(planTask => planTask.Task_Id).ToListAsync();
+            var usedTasks = await Context.PlanTasks.Where(planTask => planTask.PlanId == planId).Select(planTask => planTask.TaskId).ToListAsync();
             return await Context.Tasks.Where(tasks => !usedTasks.Contains(tasks.Id)).ToListAsync();
         }
     }

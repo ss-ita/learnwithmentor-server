@@ -19,12 +19,12 @@ namespace LearnWithMentorDAL.Entities
         public string Name { get; set; }
         public string Description { get; set; }
         public bool Published { get; set; }
-        public int Create_Id { get; set; }
-        public int? Mod_Id { get; set; }
-        public DateTime? Create_Date { get; set; }
-        public DateTime? Mod_Date { get; set; }
+        public int CreateId { get; set; }
+        public int? ModId { get; set; }
+        public DateTime? CreateDate { get; set; }
+        public DateTime? ModDate { get; set; }
         public string Image { get; set; }
-        public string Image_Name { get; set; }
+        public string ImageName { get; set; }
         
         public virtual User Creator { get; set; }
         public virtual User Modifier { get; set; }

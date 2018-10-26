@@ -3,9 +3,9 @@
     public class PlanSuggestion
     {
         public int Id { get; set; }
-        public int Plan_Id { get; set; }
-        public int User_Id { get; set; }
-        public int Mentor_Id { get; set; }
+        public int PlanId { get; set; }
+        public int UserId { get; set; }
+        public int MentorId { get; set; }
         public string Text { get; set; }
         
         public virtual Plan Plan { get; set; }

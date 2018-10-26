@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using TaskEntity = LearnWithMentorDAL.Entities.Task;
+using TaskEntity = LearnWithMentorDAL.Entities.StudentTask;
 
 namespace LearnWithMentorDAL.Repositories.Interfaces
 {
