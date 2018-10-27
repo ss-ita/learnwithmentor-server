@@ -314,7 +314,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             userServiceMock.Setup(u => u.GetImageAsync(6)).Throws(new EntityException());
             Assert.Throws(typeof(EntityException), () => userController.GetImageAsync(6).GetAwaiter().GetResult());
         }*/
-        
+
         [Test]
         public async Task BlockUserTest()
         {
