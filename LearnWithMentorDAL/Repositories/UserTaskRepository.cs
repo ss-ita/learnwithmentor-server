@@ -20,13 +20,13 @@ namespace LearnWithMentorDAL.Repositories
 
         public Task<int> GetNumberOfTasksByStateAsync(int userId, string state)
         {
-            return Context.UserTasks.Where(userTask => userTask.UserId == userId).CountAsync(userTask => userTask.State == state);
+            return Context.UserTasks.Where(userTask => userTask.User_Id == userId).CountAsync(userTask => userTask.State == state);
             
         }
 
         public Task<UserTask> GetByPlanTaskForUserAsync(int planTaskId, int userId)
         {
-           return  Context.UserTasks.FirstOrDefaultAsync(userTask => userTask.UserId == userId && userTask.PlanTaskId == planTaskId);
+           return  Context.UserTasks.FirstOrDefaultAsync(userTask => userTask.User_Id == userId && userTask.PlanTask_Id == planTaskId);
             
         }
     }

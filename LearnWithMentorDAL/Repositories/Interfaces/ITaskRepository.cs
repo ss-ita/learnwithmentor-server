@@ -1,16 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using LearnWithMentorDAL.Entities;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using TaskEntity = LearnWithMentorDAL.Entities.StudentTask;
 
 namespace LearnWithMentorDAL.Repositories.Interfaces
 {
-    public interface ITaskRepository: IRepository<TaskEntity>
+    public interface ITaskRepository: IRepository<StudentTask>
     {
-        Task<TaskEntity> GetAsync(int id);
+        Task<StudentTask> GetAsync(int id);
         Task<bool> IsRemovableAsync(int id);
-        TaskEntity AddAndReturnElement(TaskEntity task);
-        Task<IEnumerable<TaskEntity>> SearchAsync(string[] str, int planId);
-        Task<IEnumerable<TaskEntity>> SearchAsync(string[] str);
-        Task<IEnumerable<TaskEntity>> GetTasksNotInPlanAsync(int planId);
+        StudentTask AddAndReturnElement(StudentTask task);
+        Task<IEnumerable<StudentTask>> SearchAsync(string[] str, int planId);
+        Task<IEnumerable<StudentTask>> SearchAsync(string[] str);
+        Task<IEnumerable<StudentTask>> GetTasksNotInPlanAsync(int planId);
     }
 }

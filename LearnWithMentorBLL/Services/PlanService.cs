@@ -8,7 +8,6 @@ using LearnWithMentorDAL.UnitOfWork;
 using ThreadTask = System.Threading.Tasks;
 using System.Threading.Tasks;
 
-
 namespace LearnWithMentorBLL.Services
 {
     public class PlanService : BaseService, IPlanService
@@ -16,6 +15,7 @@ namespace LearnWithMentorBLL.Services
         public PlanService(IUnitOfWork db) : base(db)
         {
         }
+
         public async Task<PlanDto> GetAsync(int id)
         {
             var plan = await db.Plans.Get(id);
@@ -27,14 +27,14 @@ namespace LearnWithMentorBLL.Services
                                plan.Name,
                                plan.Description,
                                plan.Published,
-                               plan.CreateId,
+                               plan.Create_Id,
                                plan.Creator.FirstName,
                                plan.Creator.LastName,
-                               plan.ModId,
+                               plan.Mod_Id,
                                plan.Modifier?.FirstName,
                                plan.Modifier?.LastName,
-                               plan.CreateDate,
-                               plan.ModDate);
+                               plan.Create_Date,
+                               plan.Mod_Date);
         }
         public async Task<List<PlanDto>> GetAll()
         {
@@ -50,14 +50,14 @@ namespace LearnWithMentorBLL.Services
                                plan.Name,
                                plan.Description,
                                plan.Published,
-                               plan.CreateId,
+                               plan.Create_Id,
                                plan.Creator.FirstName,
                                plan.Creator.LastName,
-                               plan.ModId,
+                               plan.Mod_Id,
                                plan.Modifier?.FirstName,
                                plan.Modifier?.LastName,
-                               plan.CreateDate,
-                               plan.ModDate));
+                               plan.Create_Date,
+                               plan.Mod_Date));
             }
             return dtosList;
         }
@@ -75,14 +75,14 @@ namespace LearnWithMentorBLL.Services
                                plan.Name,
                                plan.Description,
                                plan.Published,
-                               plan.CreateId,
+                               plan.Create_Id,
                                plan.Creator.FirstName,
                                plan.Creator.LastName,
-                               plan.ModId,
+                               plan.Mod_Id,
                                plan.Modifier?.FirstName,
                                plan.Modifier?.LastName,
-                               plan.CreateDate,
-                               plan.ModDate));
+                               plan.Create_Date,
+                               plan.Mod_Date));
             }
             return dtosList;
         }
@@ -101,7 +101,7 @@ namespace LearnWithMentorBLL.Services
                 .Where(t => planTaskIds.Contains(t.Id))
                 .ToList();*/
             var planTasksId = await db.PlanTasks.GetAll();
-            var planTasksIds = planTasksId.Where(pt => pt.PlanId == plan.Id).Select(pt => pt.TaskId).ToList();
+            var planTasksIds = planTasksId.Where(pt => pt.Plan_Id == plan.Id).Select(pt => pt.Task_Id).ToList();
 
             var taskForConcretePlan = await db.Tasks.GetAll();
             var tasksForConcretePlan = taskForConcretePlan.Where(t => planTasksIds.Contains(t.Id)).ToList();
@@ -117,12 +117,12 @@ namespace LearnWithMentorBLL.Services
                                          task.Name,
                                          task.Description,
                                          task.Private,
-                                         task.CreateId,
-                                         await db.Users.ExtractFullNameAsync(task.CreateId),
-                                         task.ModId,
-                                         await db.Users.ExtractFullNameAsync(task.ModId),
-                                         task.CreateDate,
-                                         task.ModDate,
+                                         task.Create_Id,
+                                         await db.Users.ExtractFullNameAsync(task.Create_Id),
+                                         task.Mod_Id,
+                                         await db.Users.ExtractFullNameAsync(task.Mod_Id),
+                                         task.Create_Date,
+                                         task.Mod_Date,
                                          await db.PlanTasks.GetTaskPriorityInPlanAsync(task.Id, planId),
                                          await db.PlanTasks.GetTaskSectionIdInPlanAsync(task.Id, planId),
                                          await db.PlanTasks.GetIdByTaskAndPlanAsync(task.Id, planId));
@@ -142,7 +142,7 @@ namespace LearnWithMentorBLL.Services
                 .Where(pt => pt.Plan_Id == planId)
                 .Select(pt => pt.Id).ToList();*/
             var planTaskId = await db.PlanTasks.GetAll();
-            var planTaskIds = planTaskId.Where(pt => pt.PlanId == planId).Select(pt => pt.Id).ToList();
+            var planTaskIds = planTaskId.Where(pt => pt.Plan_Id == planId).Select(pt => pt.Id).ToList();
             if (!planTaskIds.Any())
             {
                 return null;
@@ -172,14 +172,14 @@ namespace LearnWithMentorBLL.Services
 
             var sections = await db.PlanTasks.GetAll();
             var section = sections
-                .Where(pt => pt.PlanId == planId)
+                .Where(pt => pt.Plan_Id == planId)
                 .GroupBy(s => s.Sections)
                 .Select(p => new
                 {
                     Id = p.Key.Id,
                     Name = p.Key.Name,
                     Tasks = p.Key.PlanTasks
-                        .Where(pt => pt.PlanId == planId)
+                        .Where(pt => pt.Plan_Id == planId)
                         .Select(pt => pt.Tasks)
                 }).ToList();
 
@@ -195,12 +195,12 @@ namespace LearnWithMentorBLL.Services
                         task.Name,
                         task.Description,
                         task.Private,
-                        task.CreateId,
-                        await db.Users.ExtractFullNameAsync(task.CreateId),
-                        task.ModId,
-                        await db.Users.ExtractFullNameAsync(task.ModId),
-                        task.CreateDate,
-                        task.ModDate,
+                        task.Create_Id,
+                        await db.Users.ExtractFullNameAsync(task.Create_Id),
+                        task.Mod_Id,
+                        await db.Users.ExtractFullNameAsync(task.Mod_Id),
+                        task.Create_Date,
+                        task.Mod_Date,
                         await db.PlanTasks.GetTaskPriorityInPlanAsync(task.Id, planId),
                         await db.PlanTasks.GetTaskSectionIdInPlanAsync(task.Id, planId),
                         await db.PlanTasks.GetIdByTaskAndPlanAsync(task.Id, planId));
@@ -238,7 +238,7 @@ namespace LearnWithMentorBLL.Services
             }
             if (plan.Modid != null)
             {
-                toUpdate.ModId = plan.Modid;
+                toUpdate.Mod_Id = plan.Modid;
                 modified = true;
             }
             toUpdate.Published = plan.Published;
@@ -262,16 +262,16 @@ namespace LearnWithMentorBLL.Services
                 {
                     if (db.UserTasks.  GetByPlanTaskForUserAsync(planTaskId.Value, user.Id) == null)
                     {
-                        if (group.MentorId == null)
+                        if (group.Mentor_Id == null)
                         {
                             continue;
                         }
                         var toInsert = new UserTask()
                         {
-                            UserId = user.Id,
-                            PlanTaskId = planTaskId.Value,
+                            User_Id = user.Id,
+                            PlanTask_Id = planTaskId.Value,
                             State = "P",
-                            MentorId = group.MentorId.Value,
+                            Mentor_Id = group.Mentor_Id.Value,
                             Result = ""
                         };
                         db.UserTasks.AddAsync(toInsert);
@@ -308,7 +308,7 @@ namespace LearnWithMentorBLL.Services
             }
             var converted = Convert.ToBase64String(image);
             toUpdate.Image = converted;
-            toUpdate.ImageName = imageName;
+            toUpdate.Image_Name = imageName;
             db.Save();
             return true;
         }
@@ -316,13 +316,13 @@ namespace LearnWithMentorBLL.Services
         public async ThreadTask.Task<ImageDto> GetImageAsync(int id)
         {
             var toGetImage = await db.Plans.Get(id);
-            if (toGetImage?.Image == null || toGetImage.ImageName == null)
+            if (toGetImage?.Image == null || toGetImage.Image_Name == null)
             {
                 return null;
             }
             return new ImageDto()
             {
-                Name = toGetImage.ImageName,
+                Name = toGetImage.Image_Name,
                 Base64Data = toGetImage.Image
             };
         }
@@ -337,7 +337,7 @@ namespace LearnWithMentorBLL.Services
             {
                 Name = dto.Name,
                 Description = dto.Description,
-                CreateId = dto.CreatorId,
+                Create_Id = dto.CreatorId,
                 Published = dto.Published
             };
             db.Plans.AddAsync(plan);
@@ -354,7 +354,7 @@ namespace LearnWithMentorBLL.Services
             {
                 Name = dto.Name,
                 Description = dto.Description,
-                CreateId = dto.CreatorId,
+                Create_Id = dto.CreatorId,
                 Published = dto.Published
             };
             var createdPlan = db.Plans.AddAndReturnElement(plan);
@@ -376,14 +376,14 @@ namespace LearnWithMentorBLL.Services
                                          plan.Name,
                                          plan.Description,
                                          plan.Published,
-                                         plan.CreateId,
+                                         plan.Create_Id,
                                          plan.Creator.FirstName,
                                          plan.Creator.LastName,
-                                         plan.ModId,
+                                         plan.Mod_Id,
                                          plan.Modifier?.FirstName,
                                          plan.Modifier?.LastName,
-                                         plan.CreateDate,
-                                         plan.ModDate));
+                                         plan.Create_Date,
+                                         plan.Mod_Date));
             }
             return dtosList;
         }

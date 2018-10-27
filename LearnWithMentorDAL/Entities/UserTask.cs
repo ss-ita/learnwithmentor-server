@@ -13,13 +13,13 @@ namespace LearnWithMentorDAL.Entities
         }
 
         public int Id { get; set; }
-        public int UserId { get; set; }
-        public int PlanTaskId { get; set; }
+        public int User_Id { get; set; }
+        public int PlanTask_Id { get; set; }
         public string State { get; set; }
-        public DateTime? EndDate { get; set; }
+        public DateTime? End_Date { get; set; }
         public string Result { get; set; }
-        public DateTime? ProposeEndDate { get; set; }
-        public int MentorId { get; set; }
+        public DateTime? Propose_End_Date { get; set; }
+        public int Mentor_Id { get; set; }
         
         public virtual User User { get; set; }
         public virtual PlanTask PlanTask { get; set; }
