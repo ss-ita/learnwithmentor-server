@@ -13,10 +13,10 @@ namespace LearnWithMentorDAL.Entities
         }
 
         public int Id { get; set; }
-        public int PlanId { get; set; }
-        public int TaskId { get; set; }
+        public int Plan_Id { get; set; }
+        public int Task_Id { get; set; }
         public int? Priority { get; set; }
-        public int? SectionId { get; set; }
+        public int? Section_Id { get; set; }
 
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Comment> Comments { get; set; }

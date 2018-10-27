@@ -30,9 +30,9 @@ namespace LearnWithMentorDAL.Entities
         public string Password { get; set; }
         public bool Blocked { get; set; }
         public string Image { get; set; }
-        public string ImageName { get; set; }
-        public bool EmailConfirmed { get; set; }
-        public int RoleId { get; set; }
+        public string Image_Name { get; set; }
+        public bool Email_Confirmed { get; set; }
+        public int Role_Id { get; set; }
 
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Comment> Comments { get; set; }

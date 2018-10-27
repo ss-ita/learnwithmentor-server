@@ -37,8 +37,8 @@ namespace LearnWithMentorDAL.Entities
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserTask> UserTasks { get; set; }
         public virtual DbSet<PlanSuggestion> PlanSuggestion { get; set; }
-        public virtual DbSet<GroupPlanTask> GroupsPlansTasks { get; set; }
-        public virtual DbSet<UserRole> UsersRoles { get; set; }
+        public virtual DbSet<GroupPlanTask> GROUPS_PLANS_TASKS { get; set; }
+        public virtual DbSet<UserRole> USERS_ROLES { get; set; }
         public virtual DbSet<Message> Messages { get; set; }
 
         public virtual int sp_Total_Ammount_of_Users(ObjectParameter total)
@@ -52,7 +52,7 @@ namespace LearnWithMentorDAL.Entities
                 .HasKey(user => user.Id)
                 .HasRequired(user => user.Role)
                 .WithMany(role => role.Users)
-                .HasForeignKey(user => user.RoleId)
+                .HasForeignKey(user => user.Role_Id)
                 .WillCascadeOnDelete(false);
         }
 
@@ -62,13 +62,13 @@ namespace LearnWithMentorDAL.Entities
                 .HasKey(comment => comment.Id)
                 .HasRequired(comment => comment.Creator)
                 .WithMany(user => user.Comments)
-                .HasForeignKey(comment => comment.CreateId)
+                .HasForeignKey(comment => comment.Create_Id)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Comment>()
                 .HasRequired(comment => comment.PlanTask)
                 .WithMany(planTask => planTask.Comments)
-                .HasForeignKey(comment => comment.PlanTaskId)
+                .HasForeignKey(comment => comment.PlanTask_Id)
                 .WillCascadeOnDelete(false);
         }
 
@@ -78,7 +78,7 @@ namespace LearnWithMentorDAL.Entities
                 .HasKey(group => group.Id)
                 .HasRequired(group => group.Mentor)
                 .WithMany(mentor => mentor.GroupMentor)
-                .HasForeignKey(group => group.MentorId)
+                .HasForeignKey(group => group.Mentor_Id)
                 .WillCascadeOnDelete(false);
         }
 
@@ -88,13 +88,13 @@ namespace LearnWithMentorDAL.Entities
                 .HasKey(message => message.Id)
                 .HasRequired(message => message.Creator)
                 .WithMany(user => user.Messages)
-                .HasForeignKey(message => message.UserId)
+                .HasForeignKey(message => message.User_Id)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Message>()
                 .HasRequired(message => message.UserTask)
                 .WithMany(userTask => userTask.Messages)
-                .HasForeignKey(message => message.UserTaskId)
+                .HasForeignKey(message => message.UserTask_Id)
                 .WillCascadeOnDelete(false);
         }
 
@@ -104,13 +104,13 @@ namespace LearnWithMentorDAL.Entities
                 .HasKey(plan => plan.Id)
                 .HasRequired(plan => plan.Creator)
                 .WithMany(creator => creator.PlansCreated)
-                .HasForeignKey(plan => plan.CreateId)
+                .HasForeignKey(plan => plan.Create_Id)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Plan>()
                 .HasOptional(plan => plan.Modifier)
                 .WithMany(modifier => modifier.PlansModified)
-                .HasForeignKey(plans => plans.ModId)
+                .HasForeignKey(plans => plans.Mod_Id)
                 .WillCascadeOnDelete(false);
         }
 
@@ -120,19 +120,19 @@ namespace LearnWithMentorDAL.Entities
                 .HasKey(planSug => planSug.Id)
                 .HasRequired(planSug => planSug.Mentor)
                 .WithMany(user => user.PlanSuggestionsMentor)
-                .HasForeignKey(planSug => planSug.MentorId)
+                .HasForeignKey(planSug => planSug.Mentor_Id)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<PlanSuggestion>()
                 .HasRequired(planSug => planSug.User)
                 .WithMany(user => user.PlanSuggestionsStudent)
-                .HasForeignKey(planSug => planSug.UserId)
+                .HasForeignKey(planSug => planSug.User_Id)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<PlanSuggestion>()
                 .HasRequired(planSug => planSug.Plan)
                 .WithMany(plan => plan.PlanSuggestion)
-                .HasForeignKey(planSug => planSug.PlanId)
+                .HasForeignKey(planSug => planSug.Plan_Id)
                 .WillCascadeOnDelete(false);
         }
 
@@ -142,19 +142,19 @@ namespace LearnWithMentorDAL.Entities
                 .HasKey(planTask => planTask.Id)
                 .HasRequired(planTask => planTask.Plans)
                 .WithMany(plan => plan.PlanTasks)
-                .HasForeignKey(planTask => planTask.PlanId)
+                .HasForeignKey(planTask => planTask.Plan_Id)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<PlanTask>()
                 .HasRequired(planTask => planTask.Tasks)
                 .WithMany(task => task.PlanTasks)
-                .HasForeignKey(planTask => planTask.TaskId)
+                .HasForeignKey(planTask => planTask.Task_Id)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<PlanTask>()
                 .HasOptional(planTask => planTask.Sections)
                 .WithMany(section => section.PlanTasks)
-                .HasForeignKey(planTask => planTask.SectionId)
+                .HasForeignKey(planTask => planTask.Section_Id)
                 .WillCascadeOnDelete(false);
         }
 
@@ -176,13 +176,13 @@ namespace LearnWithMentorDAL.Entities
                 .HasKey(task => task.Id)
                 .HasRequired(task => task.Creator)
                 .WithMany(user => user.TasksCreated)
-                .HasForeignKey(task => task.CreateId)
+                .HasForeignKey(task => task.Create_Id)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<StudentTask>()
                 .HasOptional(task => task.Modifier)
                 .WithMany(user => user.TasksModified)
-                .HasForeignKey(task => task.ModId)
+                .HasForeignKey(task => task.Mod_Id)
                 .WillCascadeOnDelete(false);
         }
 
@@ -192,19 +192,19 @@ namespace LearnWithMentorDAL.Entities
                 .HasKey(userTask => userTask.Id)
                 .HasRequired(userTask => userTask.User)
                 .WithMany(user => user.UserTasks)
-                .HasForeignKey(userTask => userTask.UserId)
+                .HasForeignKey(userTask => userTask.User_Id)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<UserTask>()
                 .HasRequired(userTask => userTask.Mentor)
                 .WithMany(user => user.UserTaskMentor)
-                .HasForeignKey(userTask => userTask.MentorId)
+                .HasForeignKey(userTask => userTask.Mentor_Id)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<UserTask>()
                 .HasRequired(userTask => userTask.PlanTask)
                 .WithMany(planTask => planTask.UserTasks)
-                .HasForeignKey(userTask => userTask.PlanTaskId)
+                .HasForeignKey(userTask => userTask.PlanTask_Id)
                 .WillCascadeOnDelete(false);
         }
 

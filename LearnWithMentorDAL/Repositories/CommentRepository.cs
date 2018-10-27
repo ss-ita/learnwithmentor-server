@@ -26,7 +26,7 @@ namespace LearnWithMentorDAL.Repositories
 
         public async Task<IEnumerable<Comment>> GetByPlanTaskIdAsync(int ptId)
         {
-            return await Context.Comments.Where(c => c.PlanTaskId == ptId).ToListAsync();
+            return await Context.Comments.Where(c => c.PlanTask_Id == ptId).ToListAsync();
         }
 
         public void RemoveById(int id)
@@ -40,7 +40,7 @@ namespace LearnWithMentorDAL.Repositories
 
         public async Task RemoveByPlanTaskIdAsync(int planTaskid)
         {
-            Comment findComment = await Context.Comments.FirstOrDefaultAsync(c => c.PlanTaskId == planTaskid);
+            Comment findComment = await Context.Comments.FirstOrDefaultAsync(c => c.PlanTask_Id == planTaskid);
             RemoveAsync(findComment);
         }
 

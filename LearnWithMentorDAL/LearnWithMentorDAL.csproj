@@ -68,7 +68,7 @@
     <Compile Include="Entities\PlanTask.cs" />
     <Compile Include="Entities\Role.cs" />
     <Compile Include="Entities\Section.cs" />
-    <Compile Include="Entities\Task.cs" />
+    <Compile Include="Entities\StudentTask.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Entities\UserTask.cs" />
     <Compile Include="Entities\UserRole.cs" />

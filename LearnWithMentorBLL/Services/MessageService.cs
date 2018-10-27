@@ -25,11 +25,11 @@ namespace LearnWithMentorBLL.Services
             foreach (var message in messages)
             {
                 messageDTOs.Add(new MessageDto(message.Id,
-                                       message.UserId,
-                                       message.UserTaskId,
-                                       await db.Users.ExtractFullNameAsync(message.UserId),
+                                       message.User_Id,
+                                       message.UserTask_Id,
+                                       await db.Users.ExtractFullNameAsync(message.User_Id),
                                        message.Text,
-                                       message.SendTime,
+                                       message.Send_Time,
                                        message.IsRead
                                        ));
             }
@@ -40,9 +40,9 @@ namespace LearnWithMentorBLL.Services
         {
             var message = new Message()
             {
-                UserId = newMessage.SenderId,
+                User_Id = newMessage.SenderId,
                 Text = newMessage.Text,
-                UserTaskId = newMessage.UserTaskId
+                UserTask_Id = newMessage.UserTaskId
             };
             db.Messages.AddAsync(message);
             db.Save();
