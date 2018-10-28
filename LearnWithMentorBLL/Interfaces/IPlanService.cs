@@ -16,6 +16,7 @@ namespace LearnWithMentorBLL.Interfaces
         Task<List<int>> GetAllPlanTaskidsAsync(int planId);
         Task<List<SectionDto>> GetTasksForPlanAsync(int planId);
         Task<bool> UpdateByIdAsync(PlanDto plan, int id);
+        Task<bool> RemovePlanByIdAsync(int planId);
         Task<bool> AddAsync(PlanDto dto);
         Task<bool> ContainsId(int id);
         Task<bool> SetImageAsync(int id, byte[] image, string imageName);

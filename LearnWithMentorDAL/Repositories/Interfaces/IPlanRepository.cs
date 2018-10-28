@@ -10,6 +10,7 @@ namespace LearnWithMentorDAL.Repositories.Interfaces
         IEnumerable<Plan> Search(string[] searchString);
         Plan AddAndReturnElement(Plan plan);
         Task<Plan> Get(int id);
+        Task<bool> IsRemovableAsync(int id);
         Task<bool> ContainsId(int id);
         Task<bool> AddTaskToPlanAsync(int planId, int taskId, int? sectionId, int? priority);
         Task<IEnumerable<Plan>> GetPlansNotUsedInGroupAsync(int groupId);

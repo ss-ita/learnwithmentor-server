@@ -19,6 +19,12 @@ namespace LearnWithMentorDAL.Repositories
             return Context.Plans.FirstOrDefaultAsync(p => p.Id == id);
         }
 
+        public async Task<bool> IsRemovableAsync(int id)
+        {
+            return await Context.Plans.AnyAsync(plan => plan.Id == id);
+
+        }
+
         public Plan AddAndReturnElement(Plan plan)
         {
             Context.Plans.Add(plan);
