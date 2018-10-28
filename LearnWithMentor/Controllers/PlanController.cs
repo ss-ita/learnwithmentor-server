@@ -412,6 +412,34 @@ namespace LearnWithMentor.Controllers
         }
 
         /// <summary>
+        /// Deletes plan by Id
+        /// </summary>
+        /// <param name="id">Plan Id for delete.</param>
+        [Authorize(Roles = "Mentor, Admin")]
+        [HttpDelete]
+        [Route("api/plan/{id}")]
+        public async Task<HttpResponseMessage> DeleteAsync(int id)
+        {
+            try
+            {
+                bool success = await planService.RemovePlanByIdAsync(id);
+                if (success)
+                {
+                    var message = $"Succesfully deleted plan with id = {id}";
+                    tracer.Info(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, message);
+                    return Request.CreateResponse(HttpStatusCode.OK, $"Succesfully deleted plan id: {id}.");
+                }
+                tracer.Warn(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, "Error occured on deleting plan of dependency conflict.");
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, $"No plan with id: {id} or cannot be deleted because of dependency conflict.");
+            }
+            catch (EntityException e)
+            {
+                tracer.Error(Request, ControllerContext.ControllerDescriptor.ControllerType.FullName, e);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
+        }
+
+        /// <summary>
         /// Releases memory
         /// </summary>
         protected override void Dispose(bool disposing)
