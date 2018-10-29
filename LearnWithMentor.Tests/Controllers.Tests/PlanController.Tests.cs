@@ -15,7 +15,8 @@ using System.Web.Http.Results;
 using System.Web.Http.Tracing;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDTO;
-
+using System.Web;
+using System.Security.Principal;
 
 namespace LearnWithMentor.Tests.Controllers.Tests
 {
@@ -32,7 +33,6 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         private Mock<IUserService> userServiceMock;
         private Mock<ITaskService> taskServiceMock;
         private Mock<IUserIdentityService> userIdentityServiceMock;
-
 
         [OneTimeSetUp]
         public void SetUp()
@@ -90,6 +90,16 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public async Task GetAllPlansTest_ShouldReturnAllPlans()
         {
             planServiceMock.Setup(mts => mts.GetAll()).ReturnsAsync(plans);
+
+            var httpControllerContext = new HttpControllerContext()
+            {
+                RequestContext = new HttpRequestContext()
+                {
+                    Principal = new GenericPrincipal(new GenericIdentity("User"), null)
+                }
+            };
+
+            planController.ControllerContext = httpControllerContext;
 
             var response = await planController.Get();
             var successfull = response.TryGetContentValue<IEnumerable<PlanDto>>(out var planDTOs);

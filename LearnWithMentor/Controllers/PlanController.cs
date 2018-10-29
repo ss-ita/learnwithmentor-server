@@ -57,7 +57,7 @@ namespace LearnWithMentor.Controllers
             var currentRole = string.Empty;
             var currentId = -1;
 
-            if ((HttpContext.Current.User.Identity as ClaimsIdentity).Claims.Any())
+            if (HttpContext.Current.User.Identity.IsAuthenticated)
             {
                 currentRole = userIdentityService.GetUserRole();
                 currentId = userIdentityService.GetUserId();
