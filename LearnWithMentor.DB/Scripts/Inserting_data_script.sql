@@ -570,3 +570,5 @@ insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End
 insert into UserTasks(User_Id, PlanTask_Id, State, End_Date, Result, Propose_End_Date, Mentor_Id) VALUES (19, 16, 'R', '2018-09-01 23:59:59', 'Ref to Github','2018-09-12 23:59:59', 1);
 
 
+
+

@@ -139,7 +139,7 @@ namespace LearnWithMentor.Tests.BLL.Tests
         {
             //arrange
             uowMock.SetupGet(u => u.Users).Returns(userRepositoryMock.Object);
-            uowMock.Setup(u => u.Users.GetAll()).ReturnsAsync((List<User>)null);
+            uowMock.Setup(u => u.Users.GetAll()).Returns((List<User>)null);
 
             //act
           var result = await userService.GetAllUsersAsync();

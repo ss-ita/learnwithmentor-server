@@ -22,6 +22,7 @@ namespace LearnWithMentorDAL.UnitOfWork
         private IUserRepository users;
         private IUserRoleViewRepository userRoleView;
         private IUserTaskRepository userTasks;
+        private IUserGroupRepository userGroups;
 
         public UnitOfWork(LearnWithMentorContext context)
         {
@@ -54,6 +55,8 @@ namespace LearnWithMentorDAL.UnitOfWork
         public IUserRoleViewRepository UserRoleView => userRoleView ?? (userRoleView = new UserRoleViewRepository(context));
 
         public IUserTaskRepository UserTasks => userTasks ?? (userTasks = new UserTaskRepository(context));
+
+        public IUserGroupRepository UserGroups => userGroups ?? (userGroups = new UserGroupRepository(context));
 
         public void Save()
         {

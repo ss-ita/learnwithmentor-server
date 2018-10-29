@@ -69,6 +69,7 @@
     <Compile Include="StatisticsDTO.cs" />
     <Compile Include="TaskDTO.cs" />
     <Compile Include="UserDTO.cs" />
+    <Compile Include="UserGroupDTO.cs" />
     <Compile Include="UserIdentityDTO.cs" />
     <Compile Include="UserRegistrationDTO.cs" />
     <Compile Include="UserLoginDTO.cs" />

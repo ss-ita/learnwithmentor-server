@@ -164,6 +164,52 @@ namespace LearnWithMentorBLL.Services
             return userList;
         }
 
+        public async Task<bool> AddGroupToMentorUser(int userId, int groupId)
+        {
+            var group = await db.Groups.GetAsync(groupId);
+            if (group == null)         
+                return false;
+
+            var user = await db.Users.GetAsync(userId);
+            if (user == null)
+                return false;
+
+            var userRole = await db.Roles.Get(user.Role_Id);
+            if (userRole == null)
+                return false;
+
+            if (userRole.Name != "Mentor")           
+                return false;
+
+            db.UserGroups.AddAsync(new UserGroup {UserId = userId, GroupId = groupId});
+            db.Save();
+
+            return true;
+        }
+
+        public async Task<bool> RemoveGroupFromMentorUser(int userId, int groupId)
+        {
+            var group = await db.Groups.GetAsync(groupId);
+            if (group == null)
+                return false;
+
+            var user = await db.Users.GetAsync(userId);
+            if (user == null)
+                return false;
+
+            var userRole = await db.Roles.Get(user.Role_Id);
+            if (userRole == null)
+                return false;
+
+            if (userRole.Name != "Mentor")
+                return false;
+
+            db.UserGroups.RemoveAsync(new UserGroup { UserId = userId, GroupId = groupId });
+            db.Save();
+
+            return true;
+        }
+
         public async ThreadTask.Task<IEnumerable<UserWithImageDto>> GetUsersWithImageAsync(int groupId)
         {
             var group = await db.Groups.GetGroupsByMentorAsync(groupId);
@@ -417,6 +463,7 @@ namespace LearnWithMentorBLL.Services
             }
         }
 
+        
         private async  ThreadTask.Task<bool> IsSamePlanAndUserInOtherGroup(Plan plan, User user)
         {
             var matchNumber = 0;
@@ -433,7 +480,7 @@ namespace LearnWithMentorBLL.Services
         private async ThreadTask.Task DeleteUserTasksOnRemovingUserAsync(int groupId, int userId)
         {
             Group group = await db.Groups.GetAsync(groupId);
-            var user = await db.Users.GetAsync(userId);
+            User user = await db.Users.GetAsync(userId);
             if (group?.Plans == null || user == null)
             {
                 return;
@@ -487,7 +534,7 @@ namespace LearnWithMentorBLL.Services
             {
                 return;
             }
-            foreach (var user in group.Users)
+            foreach (User user in group.Users)
             {
                 if (await IsSamePlanAndUserInOtherGroup(plan, user))
                 {
