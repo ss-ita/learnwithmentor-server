@@ -11,6 +11,8 @@ using System.Data.Entity.Core;
 using System.Web;
 using System.IO;
 using System.Threading.Tasks;
+using System.Linq;
+using System.Security.Claims;
 
 namespace LearnWithMentor.Controllers
 {
@@ -24,15 +26,17 @@ namespace LearnWithMentor.Controllers
         private readonly IPlanService planService;
         private readonly ITaskService taskService;
         private readonly ITraceWriter tracer;
+        private readonly IUserIdentityService userIdentityService;
 
         /// <summary>
         /// Creates new instance of controller.
         /// </summary>
-        public PlanController(IPlanService planService, ITaskService taskService, ITraceWriter tracer)
+        public PlanController(IPlanService planService, ITaskService taskService, ITraceWriter tracer, IUserIdentityService userIdentityService)
         {
             this.planService = planService;
             this.taskService = taskService;
             this.tracer = tracer;
+            this.userIdentityService = userIdentityService;
         }
 
         /// <summary>
@@ -49,6 +53,38 @@ namespace LearnWithMentor.Controllers
                 const string errorMessage = "No plans in database.";
                 return Request.CreateErrorResponse(HttpStatusCode.NoContent, errorMessage);
             }
+
+            var currentRole = string.Empty;
+            var currentId = -1;
+
+            if ((HttpContext.Current.User.Identity as ClaimsIdentity).Claims.Any())
+            {
+                currentRole = userIdentityService.GetUserRole();
+                currentId = userIdentityService.GetUserId();
+            }
+
+            switch (currentRole)
+            {
+                case Constants.Roles.Admin:
+                    break;
+
+                case Constants.Roles.Mentor:
+                    dtoList = dtoList
+                    .Where(plan => !plan.IsPrivate || (plan.IsPrivate && plan.CreatorId == currentId))
+                    .ToList();
+                    break;
+
+                case Constants.Roles.Student:
+                    dtoList = dtoList
+                   .Where(plan => !plan.IsPrivate || (plan.IsPrivate && plan.RelatedStudentsIds.Contains(currentId)))
+                   .ToList();
+                    break;
+
+                default:
+                    dtoList = dtoList.Where(plan => !plan.IsPrivate).ToList();
+                    break;
+            }
+
             return Request.CreateResponse<IEnumerable<PlanDto>>(HttpStatusCode.OK, dtoList);
         }
 
@@ -79,7 +115,6 @@ namespace LearnWithMentor.Controllers
         [Route("api/plan/{planid}/group/{groupid}")]
         public async Task<HttpResponseMessage> GetInfoAsync(int groupid, int planid)
         {
-
             var info = await planService.GetInfoAsync(groupid, planid);
             if (info == null)
             {
@@ -265,7 +300,7 @@ namespace LearnWithMentor.Controllers
         [Authorize(Roles = "Mentor, Admin")]
         [HttpPut]
         [Route("api/plan/{id}/task/{taskId}")]
-        public async Task<HttpResponseMessage> PutTaskToPlanAsync(int id, int taskId,string sectionId, string priority)
+        public async Task<HttpResponseMessage> PutTaskToPlanAsync(int id, int taskId, string sectionId, string priority)
         {
             try
             {

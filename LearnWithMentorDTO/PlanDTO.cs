@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using LearnWithMentorDTO.Infrastructure;
 
@@ -18,7 +19,8 @@ namespace LearnWithMentorDTO
             string modfirstname,
             string modlastname,
             DateTime? createdate,
-            DateTime? moddate
+            DateTime? moddate,
+            bool isprivate
 
             )
         {
@@ -34,6 +36,7 @@ namespace LearnWithMentorDTO
             CreatorLastName = creatorlastname;
             ModFirstName= modfirstname;
             ModLastName= modlastname;
+            IsPrivate = isprivate;
 
         }
         public int Id { get; set; }
@@ -55,5 +58,7 @@ namespace LearnWithMentorDTO
         public string ModLastName { get; set; }
         public DateTime? CreateDate { get; set; }
         public DateTime? ModDate { get; set; }
+        public bool IsPrivate { get; set; }
+        public IEnumerable<int> RelatedStudentsIds { get; set; }
     }
 }
