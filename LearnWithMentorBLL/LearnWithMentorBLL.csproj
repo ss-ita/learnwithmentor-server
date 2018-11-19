@@ -69,11 +69,13 @@
     <Compile Include="Interfaces\IRoleService.cs" />
     <Compile Include="Interfaces\ITaskService.cs" />
     <Compile Include="Interfaces\IUserIdentityService.cs" />
+    <Compile Include="Interfaces\IUserProviderService.cs" />
     <Compile Include="Interfaces\IUserService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\BaseService.cs" />
     <Compile Include="Services\CommentService.cs" />
     <Compile Include="Services\GroupService.cs" />
+    <Compile Include="Services\HttpContextUserProvider.cs" />
     <Compile Include="Services\MessageService.cs" />
     <Compile Include="Services\PlanService.cs" />
     <Compile Include="Services\RoleService.cs" />

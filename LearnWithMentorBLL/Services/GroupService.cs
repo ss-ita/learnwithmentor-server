@@ -130,7 +130,8 @@ namespace LearnWithMentorBLL.Services
                                      plan.Modifier?.FirstName,
                                      plan.Modifier?.LastName,
                                      plan.Create_Date,
-                                     plan.Mod_Date
+                                     plan.Mod_Date,
+                                     plan.IsPrivate
                                     ));
             }
             return planList;
@@ -377,7 +378,8 @@ namespace LearnWithMentorBLL.Services
                     plan.Modifier?.FirstName,
                     plan.Modifier?.LastName,
                     plan.Create_Date,
-                    plan.Mod_Date);
+                    plan.Mod_Date,
+                    plan.IsPrivate);
 
                 if (!plansNotUsedInGroupList.Contains(planDto))
                 {

@@ -26,6 +26,7 @@ namespace LearnWithMentor
             container.RegisterType<IUserService, UserService>();
             container.RegisterType<IRoleService, RoleService>();
             container.RegisterType<IUserIdentityService, UserIdentityService>();
+            container.RegisterType<IUserProviderService, HttpContextUserProvider>();
 
             container.RegisterType<IUnitOfWork, UnitOfWork>(new InjectionConstructor(typeof (LearnWithMentorContext)));
 

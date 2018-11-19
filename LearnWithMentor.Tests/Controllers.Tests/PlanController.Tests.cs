@@ -15,7 +15,8 @@ using System.Web.Http.Results;
 using System.Web.Http.Tracing;
 using LearnWithMentorBLL.Interfaces;
 using LearnWithMentorDTO;
-
+using System.Web;
+using System.Security.Principal;
 
 namespace LearnWithMentor.Tests.Controllers.Tests
 {
@@ -32,17 +33,17 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         private Mock<IUserService> userServiceMock;
         private Mock<ITaskService> taskServiceMock;
         private Mock<IUserIdentityService> userIdentityServiceMock;
+        private Mock<IUserProviderService> userProviderServiceMock;
 
-
-        [OneTimeSetUp]
+        [SetUp]
         public void SetUp()
         {
             plans = new List<PlanDto>()
             {
-                new PlanDto(1, "name1","description1",true,1,"nameCreator1","lastenameCreator1",1,"nameCreator1","lastenameCreator1", DateTime.Now, DateTime.Now),
-                new PlanDto(2, "name2", "description2",true,2,"nameCreator2","lastenameCreator2",2,"nameCreator1","lastenameCreator1",DateTime.Now, DateTime.Now),
-                new PlanDto(3, "name3", "description3",true,3,"nameCreator3","lastenameCreator3",3,"nameCreator1","lastenameCreator1",DateTime.Now, DateTime.Now),
-                new PlanDto(4, "name4", "description4",true,4,"nameCreator4","lastenameCreator4",4,"nameCreator1","lastenameCreator1",DateTime.Now, DateTime.Now)
+                new PlanDto(1, "name1", "description1", true,1,"nameCreator1","lastenameCreator1",1,"nameCreator1","lastenameCreator1", DateTime.Now, DateTime.Now, false),
+                new PlanDto(2, "name2", "description2", true,2,"nameCreator2","lastenameCreator2",2,"nameCreator1","lastenameCreator1",DateTime.Now, DateTime.Now, false),
+                new PlanDto(3, "name3", "description3", true,3,"nameCreator3","lastenameCreator3",3,"nameCreator1","lastenameCreator1",DateTime.Now, DateTime.Now, false),
+                new PlanDto(4, "name4", "description4", true,4,"nameCreator4","lastenameCreator4",4,"nameCreator1","lastenameCreator1",DateTime.Now, DateTime.Now, false)
             };
 
             planServiceMock = new Mock<IPlanService>();
@@ -50,13 +51,16 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             taskServiceMock = new Mock<ITaskService>();
             userServiceMock = new Mock<IUserService>();
             userIdentityServiceMock = new Mock<IUserIdentityService>();
+            userProviderServiceMock = new Mock<IUserProviderService>();
+            
 
             var userPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
                 new Claim(ClaimTypes.Role, "Admin")
             }));
 
-            planController = new PlanController(planServiceMock.Object, taskServiceMock.Object, traceWriterMock.Object);
+            userProviderServiceMock.Setup(x => x.User).Returns(userPrincipal);
+            planController = new PlanController(planServiceMock.Object, taskServiceMock.Object, traceWriterMock.Object, userIdentityServiceMock.Object,userProviderServiceMock.Object);
             planController.ControllerContext.RequestContext.Principal = userPrincipal;
             planController.Request = new HttpRequestMessage();
             planController.Configuration = new HttpConfiguration();
@@ -64,7 +68,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
                 planController.Configuration, "PlanController", planController.GetType());
         }
 
-        [OneTimeTearDown]
+        [TearDown]
         public void TearDown()
         {
             planController.Dispose();
@@ -73,6 +77,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             userIdentityServiceMock = null;
             traceWriterMock = null;
             plans = null;
+            userProviderServiceMock = null;
         }
 
         private List<PlanDto> GetTestPlansSearch(string[] lines)
@@ -118,7 +123,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         {
             planServiceMock.Setup(u => u.UpdateByIdAsync( It.IsAny<PlanDto>(), It.IsAny<int>())).ReturnsAsync(true);
 
-            PlanDto forUpdating = new PlanDto(1, "name1", "description1", true, 1, "nameCreator1", "lastenameCreator1", 1, "nameCreator1", "lastenameCreator1", DateTime.Now, DateTime.Now);
+            PlanDto forUpdating = new PlanDto(1, "name1", "description1", true, 1, "nameCreator1", "lastenameCreator1", 1, "nameCreator1", "lastenameCreator1", DateTime.Now, DateTime.Now,false);
             var response = await planController.PutAsync(1, forUpdating);
             var expectedStatusCode = HttpStatusCode.OK;
             var actualStatusCode = response.StatusCode;
@@ -131,7 +136,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         {
             planServiceMock.Setup(u => u.UpdateByIdAsync(It.IsAny<PlanDto>(), It.IsAny<int>())).ReturnsAsync(false);
 
-            PlanDto forUpdating = new PlanDto(1, "name1", "description1", true, 1, "nameCreator1", "lastenameCreator1", 1, "nameCreator1", "lastenameCreator1", DateTime.Now, DateTime.Now);
+            PlanDto forUpdating = new PlanDto(1, "name1", "description1", true, 1, "nameCreator1", "lastenameCreator1", 1, "nameCreator1", "lastenameCreator1", DateTime.Now, DateTime.Now, false);
             var response = await planController.PutAsync(1, forUpdating);
             var expectedStatusCode = HttpStatusCode.BadRequest;
             var actualStatusCode = response.StatusCode;
@@ -145,7 +150,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             planServiceMock.Setup(u => u.UpdateByIdAsync(It.IsAny<PlanDto>(), It.IsAny<int>()))
                 .Throws(new EntityException());
 
-            PlanDto forUpdating = new PlanDto(1, "name1", "description1", true, 1, "nameCreator1", "lastenameCreator1", 1, "nameCreator1", "lastenameCreator1", DateTime.Now, DateTime.Now);
+            PlanDto forUpdating = new PlanDto(1, "name1", "description1", true, 1, "nameCreator1", "lastenameCreator1", 1, "nameCreator1", "lastenameCreator1", DateTime.Now, DateTime.Now, false);
             var response = await planController.PutAsync(1, forUpdating);
             var expectedStatusCode = HttpStatusCode.InternalServerError;
             var actualStatusCode = response.StatusCode;

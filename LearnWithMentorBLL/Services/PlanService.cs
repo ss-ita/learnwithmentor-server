@@ -34,7 +34,8 @@ namespace LearnWithMentorBLL.Services
                                plan.Modifier?.FirstName,
                                plan.Modifier?.LastName,
                                plan.Create_Date,
-                               plan.Mod_Date);
+                               plan.Mod_Date,
+                               plan.IsPrivate);
         }
         public async Task<List<PlanDto>> GetAll()
         {
@@ -57,7 +58,13 @@ namespace LearnWithMentorBLL.Services
                                plan.Modifier?.FirstName,
                                plan.Modifier?.LastName,
                                plan.Create_Date,
-                               plan.Mod_Date));
+                               plan.Mod_Date,
+                               plan.IsPrivate)
+                {
+                    RelatedStudentsIds = plan.Groups
+                    .SelectMany(g => g.Users
+                        .Select(u => u.Id)).Distinct()
+                });
             }
             return dtosList;
         }
@@ -82,7 +89,8 @@ namespace LearnWithMentorBLL.Services
                                plan.Modifier?.FirstName,
                                plan.Modifier?.LastName,
                                plan.Create_Date,
-                               plan.Mod_Date));
+                               plan.Mod_Date,
+                               plan.IsPrivate));
             }
             return dtosList;
         }
@@ -94,7 +102,7 @@ namespace LearnWithMentorBLL.Services
             {
                 return null;
             }
-            
+
             var planTasksId = await db.PlanTasks.GetAll();
             var planTasksIds = planTasksId.Where(pt => pt.Plan_Id == plan.Id).Select(pt => pt.Task_Id).ToList();
 
@@ -133,7 +141,7 @@ namespace LearnWithMentorBLL.Services
             {
                 return null;
             }
-            
+
             var planTaskId = await db.PlanTasks.GetAll();
             var planTaskIds = planTaskId.Where(pt => pt.Plan_Id == planId).Select(pt => pt.Id).ToList();
             if (!planTaskIds.Any())
@@ -233,7 +241,7 @@ namespace LearnWithMentorBLL.Services
             var planTaskId = await db.PlanTasks.GetIdByTaskAndPlanAsync(taskId, planId);
             var plan = await db.Plans.Get(planId);
             var groups = await db.Groups.GetGroupsByPlanAsync(planId);
-            if (plan == null ||groups.Any() || planTaskId == null)
+            if (plan == null || groups.Any() || planTaskId == null)
             {
                 return;
             }
@@ -241,7 +249,7 @@ namespace LearnWithMentorBLL.Services
             {
                 foreach (var user in group.Users)
                 {
-                    if (db.UserTasks.  GetByPlanTaskForUserAsync(planTaskId.Value, user.Id) == null)
+                    if (db.UserTasks.GetByPlanTaskForUserAsync(planTaskId.Value, user.Id) == null)
                     {
                         if (group.Mentor_Id == null)
                         {
@@ -310,7 +318,7 @@ namespace LearnWithMentorBLL.Services
 
         public async ThreadTask.Task<bool> AddAsync(PlanDto dto)
         {
-            if (! await ContainsId(dto.CreatorId))
+            if (!await ContainsId(dto.CreatorId))
             {
                 return false;
             }
@@ -336,8 +344,10 @@ namespace LearnWithMentorBLL.Services
                 Name = dto.Name,
                 Description = dto.Description,
                 Create_Id = dto.CreatorId,
-                Published = dto.Published
+                Published = dto.Published,
+                IsPrivate = dto.IsPrivate
             };
+
             var createdPlan = db.Plans.AddAndReturnElement(plan);
             db.Save();
             return createdPlan?.Id;
@@ -364,7 +374,8 @@ namespace LearnWithMentorBLL.Services
                                          plan.Modifier?.FirstName,
                                          plan.Modifier?.LastName,
                                          plan.Create_Date,
-                                         plan.Mod_Date));
+                                         plan.Mod_Date,
+                                         plan.IsPrivate));
             }
             return dtosList;
         }

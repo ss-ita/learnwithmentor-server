@@ -25,7 +25,8 @@ namespace LearnWithMentorDAL.Entities
         public DateTime? Mod_Date { get; set; }
         public string Image { get; set; }
         public string Image_Name { get; set; }
-        
+        public bool IsPrivate { get; set; }
+
         public virtual User Creator { get; set; }
         public virtual User Modifier { get; set; }
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
