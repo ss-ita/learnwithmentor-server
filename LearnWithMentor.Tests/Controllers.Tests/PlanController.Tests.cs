@@ -33,8 +33,9 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         private Mock<IUserService> userServiceMock;
         private Mock<ITaskService> taskServiceMock;
         private Mock<IUserIdentityService> userIdentityServiceMock;
+        private Mock<IUserProviderService> userProviderServiceMock;
 
-        [OneTimeSetUp]
+        [SetUp]
         public void SetUp()
         {
             plans = new List<PlanDto>()
@@ -50,13 +51,16 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             taskServiceMock = new Mock<ITaskService>();
             userServiceMock = new Mock<IUserService>();
             userIdentityServiceMock = new Mock<IUserIdentityService>();
+            userProviderServiceMock = new Mock<IUserProviderService>();
+            
 
             var userPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
                 new Claim(ClaimTypes.Role, "Admin")
             }));
 
-            planController = new PlanController(planServiceMock.Object, taskServiceMock.Object, traceWriterMock.Object, userIdentityServiceMock.Object);
+            userProviderServiceMock.Setup(x => x.User).Returns(userPrincipal);
+            planController = new PlanController(planServiceMock.Object, taskServiceMock.Object, traceWriterMock.Object, userIdentityServiceMock.Object,userProviderServiceMock.Object);
             planController.ControllerContext.RequestContext.Principal = userPrincipal;
             planController.Request = new HttpRequestMessage();
             planController.Configuration = new HttpConfiguration();
@@ -64,7 +68,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
                 planController.Configuration, "PlanController", planController.GetType());
         }
 
-        [OneTimeTearDown]
+        [TearDown]
         public void TearDown()
         {
             planController.Dispose();
@@ -73,6 +77,7 @@ namespace LearnWithMentor.Tests.Controllers.Tests
             userIdentityServiceMock = null;
             traceWriterMock = null;
             plans = null;
+            userProviderServiceMock = null;
         }
 
         private List<PlanDto> GetTestPlansSearch(string[] lines)
@@ -90,16 +95,6 @@ namespace LearnWithMentor.Tests.Controllers.Tests
         public async Task GetAllPlansTest_ShouldReturnAllPlans()
         {
             planServiceMock.Setup(mts => mts.GetAll()).ReturnsAsync(plans);
-
-            var httpControllerContext = new HttpControllerContext()
-            {
-                RequestContext = new HttpRequestContext()
-                {
-                    Principal = new GenericPrincipal(new GenericIdentity("User"), null)
-                }
-            };
-
-            planController.ControllerContext = httpControllerContext;
 
             var response = await planController.Get();
             var successfull = response.TryGetContentValue<IEnumerable<PlanDto>>(out var planDTOs);

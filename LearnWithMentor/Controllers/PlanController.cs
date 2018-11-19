@@ -27,16 +27,18 @@ namespace LearnWithMentor.Controllers
         private readonly ITaskService taskService;
         private readonly ITraceWriter tracer;
         private readonly IUserIdentityService userIdentityService;
+        private readonly IUserProviderService userProviderService;
 
         /// <summary>
         /// Creates new instance of controller.
         /// </summary>
-        public PlanController(IPlanService planService, ITaskService taskService, ITraceWriter tracer, IUserIdentityService userIdentityService)
+        public PlanController(IPlanService planService, ITaskService taskService, ITraceWriter tracer, IUserIdentityService userIdentityService, IUserProviderService userProviderService)
         {
             this.planService = planService;
             this.taskService = taskService;
             this.tracer = tracer;
             this.userIdentityService = userIdentityService;
+            this.userProviderService = userProviderService;
         }
 
         /// <summary>
@@ -57,7 +59,8 @@ namespace LearnWithMentor.Controllers
             var currentRole = string.Empty;
             var currentId = -1;
 
-            if (HttpContext.Current.User.Identity.IsAuthenticated)
+
+            if (userProviderService.User.Identity.IsAuthenticated)
             {
                 currentRole = userIdentityService.GetUserRole();
                 currentId = userIdentityService.GetUserId();
